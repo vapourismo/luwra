@@ -19,14 +19,11 @@
 LUWRA_NS_BEGIN
 
 namespace internal {
-	template <typename T>
-	struct MetatableNameStorage {
-		static
-		std::string Name;
-	};
+	static
+	std::atomic_size_t user_type_counter;
 
 	template <typename T>
-	std::string MetatableNameStorage<T>::Name;
+	std::string user_type_name = "";
 
 	template <typename T, typename... A>
 	int user_type_ctor(State* state) {
@@ -45,7 +42,7 @@ namespace internal {
 	int user_type_tostring(State* state) {
 		return Value<std::string>::push(
 			state,
-			internal::MetatableNameStorage<T>::Name
+			internal::user_type_name<T>
 		);
 	}
 }
@@ -58,16 +55,16 @@ template <typename T>
 struct Value<T&> {
 	static inline
 	T& read(State* state, int n) {
-		assert(!internal::MetatableNameStorage<T>::Name.empty());
+		assert(!internal::user_type_name<T>.empty());
 
 		return *static_cast<T*>(
-			luaL_checkudata(state, n, internal::MetatableNameStorage<T>::Name.c_str())
+			luaL_checkudata(state, n, internal::user_type_name<T>.c_str())
 		);
 	}
 
 	template <typename... A> static inline
 	int push(State* state, A&&... args) {
-		assert(!internal::MetatableNameStorage<T>::Name.empty());
+		assert(!internal::user_type_name<T>.empty());
 
 		void* mem = lua_newuserdata(state, sizeof(T));
 
@@ -80,7 +77,7 @@ struct Value<T&> {
 		new (mem) T(std::forward<A>(args)...);
 
 		// Set metatable for this type
-		luaL_getmetatable(state, internal::MetatableNameStorage<T>::Name.c_str());
+		luaL_getmetatable(state, internal::user_type_name<T>.c_str());
 		lua_setmetatable(state, -2);
 
 		return 1;
@@ -99,14 +96,11 @@ void register_user_type(
 	std::initializer_list<std::pair<const char*, CFunction>> methods,
 	std::initializer_list<std::pair<const char*, CFunction>> meta_methods = {}
 ) {
-	static
-	std::atomic_size_t mt_counter;
-
 	// Setup an appropriate meta table name
-	if (internal::MetatableNameStorage<T>::Name.empty())
-		internal::MetatableNameStorage<T>::Name = "UD#" + std::to_string(mt_counter++);
+	if (internal::user_type_name<T>.empty())
+		internal::user_type_name<T> = "UD#" + std::to_string(internal::user_type_counter++);
 
-	luaL_newmetatable(state, internal::MetatableNameStorage<T>::Name.c_str());
+	luaL_newmetatable(state, internal::user_type_name<T>.c_str());
 
 	// Register methods
 	lua_pushstring(state, "__index");
