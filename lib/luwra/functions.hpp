@@ -4,8 +4,8 @@
  * Copyright (C) 2015, Ole Krüger <ole@vprsm.de>
  */
 
-#ifndef LUWRA_WRAPPERS_H_
-#define LUWRA_WRAPPERS_H_
+#ifndef LUWRA_FUNCTIONS_H_
+#define LUWRA_FUNCTIONS_H_
 
 #include "common.hpp"
 #include "types.hpp"
@@ -24,37 +24,37 @@ namespace internal {
 
 	template <>
 	struct FunctionWrapper<void()> {
-		template <void(*funptr)()> static
-		int invoke(State*) {
-			funptr();
+		template <void(*FunctionPointer)()> static
+		int Invoke(State*) {
+			FunctionPointer();
 			return 0;
 		}
 	};
 
 	template <typename R>
 	struct FunctionWrapper<R()> {
-		template <R(*funptr)()> static
-		int invoke(State* state) {
-			return Value<R>::push(state, funptr());
+		template <R(*FunctionPointer)()> static
+		int Invoke(State* state) {
+			return Value<R>::push(state, FunctionPointer());
 		}
 	};
 
 	template <typename... A>
 	struct FunctionWrapper<void(A...)> {
-		template <void (*funptr)(A...)> static
-		int invoke(State* state) {
-			apply(state, funptr);
+		template <void (*FunctionPointer)(A...)> static
+		int Invoke(State* state) {
+			apply(state, FunctionPointer);
 			return 0;
 		}
 	};
 
 	template <typename R, typename... A>
 	struct FunctionWrapper<R(A...)> {
-		template <R (*funptr)(A...)> static
-		int invoke(State* state) {
+		template <R (*FunctionPointer)(A...)> static
+		int Invoke(State* state) {
 			return Value<R>::push(
 				state,
-				apply(state, funptr)
+				apply(state, FunctionPointer)
 			);
 		}
 	};
@@ -78,7 +78,7 @@ template <
 	S* FunctionPointer
 >
 constexpr CFunction WrapFunction =
-	&internal::FunctionWrapper<S>::template invoke<FunctionPointer>;
+	&internal::FunctionWrapper<S>::template Invoke<FunctionPointer>;
 
 LUWRA_NS_END
 

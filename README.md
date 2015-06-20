@@ -1,6 +1,8 @@
 # Luwra
 A header-only C++ library which provides a Lua wrapper with minimal overhead.
 
+NOTE: Luwra is under heavy development the documentation might not be current.
+
 ## Usage
 Most of Luwra's features are based on template specialization. If you are not familiar with
 templates in C++, I highly recommend you inform yourself about them. Otherwise the following
@@ -97,5 +99,3 @@ lua_CFunction cfunc = WrapFunction<lua_Number(lua_Number, lua_Number), my_add>;
 
 ### User types
 Something is going be here soon.
-
-Have a look at [the example](https://github.com/vapourismo/luwra/blob/master/examples/methods.cpp).
