@@ -46,8 +46,8 @@ int main() {
 	luaL_openlibs(state);
 
 	// Build stack
-	lua_pushstring(state, "H");
-	lua_pushstring(state, "i");
+	Value<char>::push(state, 'H');
+	Value<char>::push(state, 'i');
 
 	// Apply function to stack values
 	apply(state, read_chars);
