@@ -12,8 +12,8 @@ struct Value<char> {
 	 * Retrieve the value at position `n`.
 	 */
 	static inline
-	char read(State* state, int n) {
-		auto str = Value<std::string>::read(state, n);
+	char Read(State* state, int n) {
+		auto str = Value<std::string>::Read(state, n);
 
 		if (str.length() < 1) {
 			luaL_argerror(state, n, "Given empty string instead of character");
@@ -26,7 +26,7 @@ struct Value<char> {
 	 * Push the value onto the stack.
 	 */
 	static inline
-	int push(State* state, char val) {
+	int Push(State* state, char val) {
 		if (val == 0)
 			return 0;
 
@@ -46,8 +46,8 @@ int main() {
 	luaL_openlibs(state);
 
 	// Build stack
-	Value<char>::push(state, 'H');
-	Value<char>::push(state, 'i');
+	Value<char>::Push(state, 'H');
+	Value<char>::Push(state, 'i');
 
 	// Apply function to stack values
 	apply(state, read_chars);

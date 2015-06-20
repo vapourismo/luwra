@@ -20,9 +20,9 @@ int main() {
 	lua_pushnumber(state, 42);
 
 	// Each value can be retrieved individually.
-	std::cout << "a = " << Value<int>::read(state, 1) << std::endl;
-	std::cout << "b = " << Value<int>::read(state, 2) << std::endl;
-	std::cout << "c = " << Value<double>::read(state, 3) << std::endl;
+	std::cout << "a = " << Value<int>::Read(state, 1) << std::endl;
+	std::cout << "b = " << Value<int>::Read(state, 2) << std::endl;
+	std::cout << "c = " << Value<double>::Read(state, 3) << std::endl;
 
 	// ... which is a little cumbersome. Instead we might apply a fitting function to our stack.
 	std::cout << "(a + b) * c = "

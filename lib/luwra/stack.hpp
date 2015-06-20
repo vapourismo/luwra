@@ -25,7 +25,7 @@ namespace internal {
 		R Direct(State* state, int n, F hook, A&&... args) {
 			return hook(
 				std::forward<A>(args)...,
-				Value<T>::read(state, n)
+				Value<T>::Read(state, n)
 			);
 		}
 	};
@@ -39,7 +39,7 @@ namespace internal {
 				n + 1,
 				hook,
 				std::forward<A>(args)...,
-				Value<T1>::read(state, n)
+				Value<T1>::Read(state, n)
 			);
 		}
 	};

@@ -28,19 +28,19 @@ namespace internal {
 	template <typename T, typename... A>
 	int UserTypeConstructor(State* state) {
 		return apply(state, std::function<int(A...)>([state](A... args) {
-			return Value<T&>::push(state, args...);
+			return Value<T&>::Push(state, args...);
 		}));
 	}
 
 	template <typename T>
 	int UserTypeDestructor(State* state) {
-		Value<T&>::read(state, 1).~T();
+		Value<T&>::Read(state, 1).~T();
 		return 0;
 	}
 
 	template <typename T>
 	int UserTypeToString(State* state) {
-		return Value<std::string>::push(
+		return Value<std::string>::Push(
 			state,
 			internal::UserTypeName<T>
 		);
@@ -74,7 +74,7 @@ namespace internal {
 template <typename T>
 struct Value<T&> {
 	static inline
-	T& read(State* state, int n) {
+	T& Read(State* state, int n) {
 		assert(!internal::UserTypeName<T>.empty());
 
 		return *static_cast<T*>(
@@ -83,7 +83,7 @@ struct Value<T&> {
 	}
 
 	template <typename... A> static inline
-	int push(State* state, A&&... args) {
+	int Push(State* state, A&&... args) {
 		assert(!internal::UserTypeName<T>.empty());
 
 		void* mem = lua_newuserdata(state, sizeof(T));

@@ -30,13 +30,13 @@ struct Value<T> {
 	 * Read T value at index n.
 	 */
 	static inline
-	T read(State* state, int n);
+	T Read(State* state, int n);
 
 	/**
 	 * Push T value onto the stack and return how many values you have pushed.
 	 */
 	static inline
-	int push(State* state, T value);
+	int Push(State* state, T value);
 };
 ```
 
