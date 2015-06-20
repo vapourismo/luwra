@@ -127,7 +127,7 @@ template <
 >
 constexpr CFunction WrapMethod =
 	WrapFunction<
-		internal::MethodWrapper<T, S>::FunctionSignature,
+		typename internal::MethodWrapper<T, S>::FunctionSignature,
 		internal::MethodWrapper<T, S>::template delegate<MethodPointer>
 	>;
 
