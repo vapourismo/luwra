@@ -22,6 +22,7 @@ Integer my_function_3(Integer a, Integer b) {
 
 int main() {
 	lua_State* state = luaL_newstate();
+	luaL_openlibs(state);
 
 	// Register 'my_function_1'
 	auto wrapped_1 = WrapFunction<void(), my_function_1>;
@@ -39,10 +40,14 @@ int main() {
 	lua_setglobal(state, "my_function_3");
 
 	// Invoke the attached script
-	luaL_loadfile(state, "functions.lua");
-	lua_call(state, 0, LUA_MULTRET);
+	if (luaL_loadfile(state, "functions.lua") != 0 || lua_pcall(state, 0, LUA_MULTRET, 0) != 0) {
+		const char* error_msg = lua_tostring(state, -1);
+		std::cerr << "An error occured: " << error_msg << std::endl;
 
-	lua_close(state);
-
-	return 0;
+		lua_close(state);
+		return 1;
+	} else {
+		lua_close(state);
+		return 0;
+	}
 }
