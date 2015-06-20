@@ -4,7 +4,7 @@
 #include "luwra/common.hpp"
 #include "luwra/types.hpp"
 #include "luwra/stack.hpp"
-#include "luwra/userdata.hpp"
+#include "luwra/usertypes.hpp"
 #include "luwra/wrappers.hpp"
 
 #endif

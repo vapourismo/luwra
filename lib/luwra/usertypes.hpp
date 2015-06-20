@@ -4,12 +4,13 @@
  * Copyright (C) 2015, Ole Krüger <ole@vprsm.de>
  */
 
-#ifndef LUWRA_USERDATA_H_
-#define LUWRA_USERDATA_H_
+#ifndef LUWRA_USERTYPES_H_
+#define LUWRA_USERTYPES_H_
 
 #include "common.hpp"
 #include "types.hpp"
 #include "stack.hpp"
+#include "wrappers.hpp"
 
 #include <sstream>
 #include <utility>
@@ -20,31 +21,50 @@ LUWRA_NS_BEGIN
 
 namespace internal {
 	static
-	std::atomic_size_t user_type_counter;
+	std::atomic_size_t UserTypeCounter;
 
 	template <typename T>
-	std::string user_type_name = "";
+	std::string UserTypeName = "";
 
 	template <typename T, typename... A>
-	int user_type_ctor(State* state) {
+	int UserTypeConstructor(State* state) {
 		return apply(state, std::function<int(A...)>([state](A... args) {
 			return Value<T&>::push(state, args...);
 		}));
 	}
 
 	template <typename T>
-	int user_type_dtor(State* state) {
+	int UserTypeDestructor(State* state) {
 		Value<T&>::read(state, 1).~T();
 		return 0;
 	}
 
 	template <typename T>
-	int user_type_tostring(State* state) {
+	int UserTypeToString(State* state) {
 		return Value<std::string>::push(
 			state,
-			internal::user_type_name<T>
+			internal::UserTypeName<T>
 		);
 	}
+
+	template <typename T, typename S>
+	struct MethodWrapper {
+		static_assert(
+			sizeof(T) == -1,
+			"The MethodWrapper template expects a type name and a function signature as parameter"
+		);
+	};
+
+	template <typename T, typename R, typename... A>
+	struct MethodWrapper<T, R(A...)> {
+		using MethodPointerType = R (T::*)(A...);
+		using FunctionSignature = R (T&, A...);
+
+		template <MethodPointerType MethodPointer> static
+		R delegate(T& parent, A... args) {
+			return (parent.*MethodPointer)(std::forward<A>(args)...);
+		}
+	};
 }
 
 /**
@@ -56,16 +76,16 @@ template <typename T>
 struct Value<T&> {
 	static inline
 	T& read(State* state, int n) {
-		assert(!internal::user_type_name<T>.empty());
+		assert(!internal::UserTypeName<T>.empty());
 
 		return *static_cast<T*>(
-			luaL_checkudata(state, n, internal::user_type_name<T>.c_str())
+			luaL_checkudata(state, n, internal::UserTypeName<T>.c_str())
 		);
 	}
 
 	template <typename... A> static inline
 	int push(State* state, A&&... args) {
-		assert(!internal::user_type_name<T>.empty());
+		assert(!internal::UserTypeName<T>.empty());
 
 		void* mem = lua_newuserdata(state, sizeof(T));
 
@@ -78,7 +98,7 @@ struct Value<T&> {
 		new (mem) T(std::forward<A>(args)...);
 
 		// Set metatable for this type
-		luaL_getmetatable(state, internal::user_type_name<T>.c_str());
+		luaL_getmetatable(state, internal::UserTypeName<T>.c_str());
 		lua_setmetatable(state, -2);
 
 		return 1;
@@ -97,10 +117,10 @@ void RegisterUserType(
 	std::initializer_list<std::pair<const char*, CFunction>> meta_methods = {}
 ) {
 	// Setup an appropriate meta table name
-	if (internal::user_type_name<T>.empty())
-		internal::user_type_name<T> = "UD#" + std::to_string(internal::user_type_counter++);
+	if (internal::UserTypeName<T>.empty())
+		internal::UserTypeName<T> = "UD#" + std::to_string(internal::UserTypeCounter++);
 
-	luaL_newmetatable(state, internal::user_type_name<T>.c_str());
+	luaL_newmetatable(state, internal::UserTypeName<T>.c_str());
 
 	// Register methods
 	lua_pushstring(state, "__index");
@@ -116,12 +136,12 @@ void RegisterUserType(
 
 	// Register garbage-collection hook
 	lua_pushstring(state, "__gc");
-	lua_pushcfunction(state, &internal::user_type_dtor<T>);
+	lua_pushcfunction(state, &internal::UserTypeDestructor<T>);
 	lua_rawset(state, -3);
 
 	// Register string representation function
 	lua_pushstring(state, "__tostring");
-	lua_pushcfunction(state, &internal::user_type_tostring<T>);
+	lua_pushcfunction(state, &internal::UserTypeToString<T>);
 	lua_rawset(state, -3);
 
 	// Insert meta methods
@@ -140,7 +160,35 @@ void RegisterUserType(
  * to use during construction.
  */
 template <typename T, typename... A>
-constexpr CFunction WrapConstructor = &internal::user_type_ctor<T, A...>;
+constexpr CFunction WrapConstructor = &internal::UserTypeConstructor<T, A...>;
+
+/**
+ * Works similiar to `WrapFunction`. Given a class or struct declaration as follows:
+ *
+ *   struct T {
+ *     R my_method(A0, A1 ... An);
+ *   };
+ *
+ * You might wrap this method easily:
+ *
+ *   CFunction wrapped_meth = WrapMethod<T, R(A0, A1 ... An), &T::my_method>;
+ *
+ * In Lua, assuming `instance` is a userdata instance of type `T`, x0, x1 ... xn are instances
+ * of A0, A1 ... An, and the method has been bound as `my_method`; it is possible to invoke the
+ * method like so:
+ *
+ *   instance:my_method(x0, x1 ... xn)
+ */
+template <
+	typename T,
+	typename S,
+	typename internal::MethodWrapper<T, S>::MethodPointerType MethodPointer
+>
+constexpr CFunction WrapMethod =
+	WrapFunction<
+		typename internal::MethodWrapper<T, S>::FunctionSignature,
+		internal::MethodWrapper<T, S>::template delegate<MethodPointer>
+	>;
 
 LUWRA_NS_END
 
