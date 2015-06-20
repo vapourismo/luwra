@@ -182,7 +182,7 @@ namespace internal {
 }
 
 /**
- * Define an integral type which will be transported via `Integer`.
+ * Define an integral type which will be transported via `base`.
  */
 #define LUWRA_DEF_NUMERIC(base, type) \
 	template <> \
