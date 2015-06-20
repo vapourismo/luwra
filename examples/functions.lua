@@ -1,5 +1,5 @@
 -- Invoke 'my_function_1'
-my_function_1()
+my_function_1(1337, "Hello")
 
 -- Invoke 'my_function_2'
 local result2 = my_function_2()
