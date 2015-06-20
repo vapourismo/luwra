@@ -50,6 +50,7 @@ namespace internal {
 /**
  * Instances of user types shall always be used as references, because Lua values can not be
  * referenced, hence this allows the compiler to differentiate between them.
+ * The life-time of such instance is determined by Lua.
  */
 template <typename T>
 struct Value<T&> {
@@ -85,13 +86,12 @@ struct Value<T&> {
 };
 
 /**
- * Generate the metatable for the userdata type `T`. This function allows you to register methods
+ * Register the metatable for the user type `T`. This function allows you to register methods
  * which are shared across all instances of this type. A garbage-collector hook is also inserted;
- * it destructs the underlying type when the garbage-collector says it is time to say good-bye
- * needed.
+ * it destructs the underlying type when the garbage-collector says it is time to say good-bye.
  */
 template <typename T> static inline
-void register_user_type(
+void RegisterUserType(
 	State* state,
 	std::initializer_list<std::pair<const char*, CFunction>> methods,
 	std::initializer_list<std::pair<const char*, CFunction>> meta_methods = {}
@@ -122,40 +122,6 @@ void register_user_type(
 	// Register string representation function
 	lua_pushstring(state, "__tostring");
 	lua_pushcfunction(state, &internal::user_type_tostring<T>);
-	lua_rawset(state, -3);
-
-	// Insert meta methods
-	for (auto& metamethod: meta_methods) {
-		lua_pushstring(state, metamethod.first);
-		lua_pushcfunction(state, metamethod.second);
-		lua_rawset(state, -3);
-	}
-
-	// Pop meta table off the stack
-	lua_pop(state, -1);
-}
-
-static inline
-void register_user_type_metatable(
-	State* state, const char* name,
-	std::initializer_list<std::pair<const char*, CFunction>> methods,
-	std::initializer_list<std::pair<const char*, CFunction>> meta_methods = {}
-) {
-	// Create meta table
-	luaL_newmetatable(state, name);
-
-	// Prepare for method registration
-	lua_pushstring(state, "__index");
-	lua_newtable(state);
-
-	// Insert methods
-	for (auto& method: methods) {
-		lua_pushstring(state, method.first);
-		lua_pushcfunction(state, method.second);
-		lua_rawset(state, -3);
-	}
-
-	// Commit '__index' field
 	lua_rawset(state, -3);
 
 	// Insert meta methods
