@@ -4,10 +4,6 @@
 #include <iostream>
 
 struct Point {
-	// Luwra needs the MetatableName field in order to add a meta table to the Lua registry
-	static constexpr
-	const char* MetatableName = "Point";
-
 	lua_Number x, y;
 
 	Point(lua_Number x, lua_Number y):
@@ -34,10 +30,10 @@ int main() {
 	lua_State* state = luaL_newstate();
 	luaL_openlibs(state);
 
-	// Register the metatable for our Point type.
+	// Register our user type.
 	// This function also registers a garbage-collector hook and a string representation function.
 	// Both can be overwritten using the third parameter, which lets you add custom meta methods.
-	luwra::register_type_metatable<Point>(
+	luwra::register_user_type<Point>(
 		state,
 		// Methods which shall be availabe in the Lua user data, need to be declared here
 		{
@@ -49,7 +45,7 @@ int main() {
 		}
 	);
 
-	// What's left, is register a constructor for our type.
+	// What's left, is registering a constructor for our type.
 	// We have to specify which parameters our constructor takes, because there might be more than
 	// one constructor to deal with.
 	auto wrapped_ctor = luwra::WrapConstructor<Point, lua_Number, lua_Number>;

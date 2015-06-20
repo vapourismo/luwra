@@ -9,14 +9,13 @@ examples will have no use to you.
 ### Types
 A template `Value<T>` exists to capsulate push and check mechanisms for a type `T`. Default
 specializations are implemented for C/C++ numeric types, `bool`, `const char*`,
-`std::string`, `Arbitrary` and `U&` where `U` is any type with a static field
-`const char* MetatableName` and a meta table registered with that name.
+`std::string`, `Arbitrary` and `U&` where `U` is a user type.
 
 The `Arbitrary` struct symbolizes any value on the stack. Instances of `Arbitrary` can be seen as
 references to an index on an execution stack. Note, these kind of references are only valid as long
 as their referenced value exists at the given index on the given stack.
 
-The `Value<U&>` specialization is designated to the instantiation and reference of  a user data
+The `Value<U&>` specialization is designated to the instantiation and reference of a user data
 type `U`.
 
 Any template specialization of `Value` which is expected to work with Luwra must provide a
@@ -115,6 +114,6 @@ lua_CFunction cfunc = WrapMethod<MyClass, lua_Number(lua_Number, lua_Number), &M
 ```
 
 ### User types
-Luwra also provides means to implement Lua user data types.
-Check out this [example](https://github.com/vapourismo/luwra/blob/master/examples/methods.cpp) for
-more.
+Something is going be here soon.
+
+Have a look at [the example](https://github.com/vapourismo/luwra/blob/master/examples/methods.cpp).

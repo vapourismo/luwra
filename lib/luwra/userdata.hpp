@@ -13,28 +13,37 @@
 
 #include <sstream>
 #include <utility>
+#include <atomic>
+#include <cassert>
 
 LUWRA_NS_BEGIN
 
 /**
- * Instances of userdata shall always be used as references, because other Lua types can not be
- * converted to references, hence this allows the compiler to differentiate between them.
+ * Instances of user types shall always be used as references, because Lua values can not be
+ * referenced, hence this allows the compiler to differentiate between them.
  */
 template <typename T>
 struct Value<T&> {
+	static
+	std::string MetatableName;
+
 	static inline
 	T& read(State* state, int n) {
+		assert(MetatableName.size() > 0);
+
 		return *static_cast<T*>(
-			luaL_checkudata(state, n, T::MetatableName)
+			luaL_checkudata(state, n, MetatableName.c_str())
 		);
 	}
 
 	template <typename... A> static inline
 	int push(State* state, A&&... args) {
+		assert(MetatableName.size() > 0);
+
 		void* mem = lua_newuserdata(state, sizeof(T));
 
 		if (!mem) {
-			luaL_error(state, "Failed to allocate user data");
+			luaL_error(state, "Failed to allocate user type");
 			return -1;
 		}
 
@@ -42,32 +51,35 @@ struct Value<T&> {
 		new (mem) T(std::forward<A>(args)...);
 
 		// Set metatable for this type
-		luaL_getmetatable(state, T::MetatableName);
+		luaL_getmetatable(state, MetatableName.c_str());
 		lua_setmetatable(state, -2);
 
 		return 1;
 	}
 };
 
+template <typename T>
+std::string Value<T&>::MetatableName;
+
 namespace internal {
 	template <typename T, typename... A>
-	int userdata_ctor(State* state) {
+	int user_type_ctor(State* state) {
 		return apply(state, std::function<int(A...)>([state](A... args) {
 			return Value<T&>::push(state, args...);
 		}));
 	}
 
 	template <typename T>
-	int userdata_dtor(State* state) {
+	int user_type_dtor(State* state) {
 		Value<T&>::read(state, 1).~T();
 		return 0;
 	}
 
 	template <typename T>
-	int userdata_tostring(State* state) {
+	int user_type_tostring(State* state) {
 		return Value<std::string>::push(
 			state,
-			"TypeInstance" + std::string(T::MetatableName)
+			Value<T&>::MetatableName
 		);
 	}
 }
@@ -79,12 +91,19 @@ namespace internal {
  * needed.
  */
 template <typename T> static inline
-void register_type_metatable(
+void register_user_type(
 	State* state,
 	std::initializer_list<std::pair<const char*, CFunction>> methods,
 	std::initializer_list<std::pair<const char*, CFunction>> meta_methods = {}
 ) {
-	luaL_newmetatable(state, T::MetatableName);
+	static
+	std::atomic_size_t mt_counter;
+
+	// Setup an appropriate meta table name
+	if (Value<T&>::MetatableName.size() == 0)
+		Value<T&>::MetatableName = "UD#" + std::to_string(mt_counter++);
+
+	luaL_newmetatable(state, Value<T&>::MetatableName.c_str());
 
 	// Register methods
 	lua_pushstring(state, "__index");
@@ -100,12 +119,12 @@ void register_type_metatable(
 
 	// Register garbage-collection hook
 	lua_pushstring(state, "__gc");
-	lua_pushcfunction(state, &internal::userdata_dtor<T>);
+	lua_pushcfunction(state, &internal::user_type_dtor<T>);
 	lua_rawset(state, -3);
 
 	// Register string representation function
 	lua_pushstring(state, "__tostring");
-	lua_pushcfunction(state, &internal::userdata_tostring<T>);
+	lua_pushcfunction(state, &internal::user_type_tostring<T>);
 	lua_rawset(state, -3);
 
 	// Insert meta methods
@@ -120,7 +139,7 @@ void register_type_metatable(
 }
 
 static inline
-void register_userdata_metatable(
+void register_user_type_metatable(
 	State* state, const char* name,
 	std::initializer_list<std::pair<const char*, CFunction>> methods,
 	std::initializer_list<std::pair<const char*, CFunction>> meta_methods = {}
@@ -158,7 +177,7 @@ void register_userdata_metatable(
  * to use during construction.
  */
 template <typename T, typename... A>
-constexpr CFunction WrapConstructor = &internal::userdata_ctor<T, A...>;
+constexpr CFunction WrapConstructor = &internal::user_type_ctor<T, A...>;
 
 LUWRA_NS_END
 
