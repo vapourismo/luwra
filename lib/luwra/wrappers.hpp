@@ -7,9 +7,9 @@
 #ifndef LUWRA_WRAPPERS_H_
 #define LUWRA_WRAPPERS_H_
 
-#include "common.h"
-#include "types.h"
-#include "stack.h"
+#include "common.hpp"
+#include "types.hpp"
+#include "stack.hpp"
 
 LUWRA_NS_BEGIN
 

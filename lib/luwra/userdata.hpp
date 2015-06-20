@@ -7,9 +7,9 @@
 #ifndef LUWRA_USERDATA_H_
 #define LUWRA_USERDATA_H_
 
-#include "common.h"
-#include "types.h"
-#include "stack.h"
+#include "common.hpp"
+#include "types.hpp"
+#include "stack.hpp"
 
 #include <sstream>
 #include <utility>

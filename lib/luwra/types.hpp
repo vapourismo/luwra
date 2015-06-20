@@ -7,7 +7,7 @@
 #ifndef LUWRA_TYPES_H_
 #define LUWRA_TYPES_H_
 
-#include "common.h"
+#include "common.hpp"
 
 #include <utility>
 #include <tuple>

@@ -9,14 +9,14 @@
 
 // Check C++ version
 #if !defined(__cplusplus) || __cplusplus < 201402L
-	#error "You need a C++14 compliant compiler"
+	#error You need a C++14 compliant compiler
 #endif
 
 #include <lua.hpp>
 
 // Check for proper Lua version
 #if !defined(LUA_VERSION_NUM) || LUA_VERSION_NUM < 503 || LUA_VERSION_NUM >= 600
-	#error "Luwra has not been tested against your installed version of Lua"
+	#error Luwra has not been tested against your installed version of Lua
 #endif
 
 #define LUWRA_NS_BEGIN namespace luwra {

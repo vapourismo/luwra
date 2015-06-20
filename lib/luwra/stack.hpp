@@ -7,8 +7,8 @@
 #ifndef LUWRA_STACK_H_
 #define LUWRA_STACK_H_
 
-#include "common.h"
-#include "types.h"
+#include "common.hpp"
+#include "types.hpp"
 
 #include <utility>
 #include <functional>
