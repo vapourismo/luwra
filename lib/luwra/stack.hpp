@@ -35,7 +35,7 @@ namespace internal {
 	struct Layout<R(T1, TR...)> {
 		template <typename F, typename... A> static inline
 		R direct(State* state, int n, F hook, A&&... args) {
-			return Layout<TR...>::template direct<F, R>(
+			return Layout<R(TR...)>::template direct<F, R>(
 				state,
 				n + 1,
 				hook,
