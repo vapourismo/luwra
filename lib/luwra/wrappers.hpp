@@ -74,11 +74,11 @@ namespace internal {
 	template <typename T, typename R, typename... A>
 	struct MethodWrapper<T, R(A...)> {
 		using MethodPointerType = R (T::*)(A...);
-		using FunctionSignature = R (T*, A...);
+		using FunctionSignature = R (T&, A...);
 
 		template <MethodPointerType MethodPointer> static
-		R delegate(T* parent, A... args) {
-			return (parent->*MethodPointer)(std::forward<A>(args)...);
+		R delegate(T& parent, A... args) {
+			return (parent.*MethodPointer)(std::forward<A>(args)...);
 		}
 	};
 }

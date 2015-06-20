@@ -17,14 +17,14 @@
 LUWRA_NS_BEGIN
 
 /**
- * Instances of userdata shall always be used as pointers, because other Lua types can not be
- * converted to pointers, hence this allows the compiler to differentiate between them.
+ * Instances of userdata shall always be used as references, because other Lua types can not be
+ * converted to references, hence this allows the compiler to differentiate between them.
  */
 template <typename T>
-struct Value<T*> {
+struct Value<T&> {
 	static inline
-	T* read(State* state, int n) {
-		return static_cast<T*>(
+	T& read(State* state, int n) {
+		return *static_cast<T*>(
 			luaL_checkudata(state, n, T::MetatableName)
 		);
 	}
@@ -53,23 +53,21 @@ namespace internal {
 	template <typename T, typename... A>
 	int userdata_ctor(State* state) {
 		return apply(state, std::function<int(A...)>([state](A... args) {
-			return Value<T*>::push(state, args...);
+			return Value<T&>::push(state, args...);
 		}));
 	}
 
 	template <typename T>
 	int userdata_dtor(State* state) {
-		Value<T*>::read(state, 1)->~T();
+		Value<T&>::read(state, 1).~T();
 		return 0;
 	}
 
 	template <typename T>
 	int userdata_tostring(State* state) {
-		T* instance = Value<T*>::read(state, 1);
-
 		return Value<std::string>::push(
 			state,
-			std::string(T::MetatableName) + ": #" + std::to_string(uintmax_t(instance))
+			"TypeInstance" + std::string(T::MetatableName)
 		);
 	}
 }
