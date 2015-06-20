@@ -15,8 +15,8 @@
 #include <lua.hpp>
 
 // Check for proper Lua version
-#if !defined(LUA_VERSION_NUM) || LUA_VERSION_NUM < 503 || LUA_VERSION >= 600
-	#warning "Luwra has not been tested against your installed version of Lua"
+#if !defined(LUA_VERSION_NUM) || LUA_VERSION_NUM < 503 || LUA_VERSION_NUM >= 600
+	#error "Luwra has not been tested against your installed version of Lua"
 #endif
 
 #define LUWRA_NS_BEGIN namespace luwra {
