@@ -50,7 +50,7 @@ int main() {
 	Value<char>::Push(state, 'i');
 
 	// Apply function to stack values
-	apply(state, read_chars);
+	Apply(state, read_chars);
 
 	lua_close(state);
 	return 0;

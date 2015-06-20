@@ -63,7 +63,7 @@ lua_Number foo(lua_Number a, lua_Number b, lua_Number c);
 Simply apply the function:
 
 ```c++
-lua_Integer result = apply(lua_state, foo);
+lua_Integer result = Apply(lua_state, foo);
 ```
 
 The above statement is equivalent to

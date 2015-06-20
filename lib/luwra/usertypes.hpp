@@ -27,7 +27,7 @@ namespace internal {
 
 	template <typename T, typename... A>
 	int UserTypeConstructor(State* state) {
-		return apply(state, std::function<int(A...)>([state](A... args) {
+		return Apply(state, std::function<int(A...)>([state](A... args) {
 			return Value<T&>::Push(state, args...);
 		}));
 	}
