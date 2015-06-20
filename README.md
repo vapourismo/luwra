@@ -2,16 +2,25 @@
 A header-only C++ library which provides a Lua wrapper with minimal overhead.
 
 ## Usage
-Most of Luwra's features are based on template specialization. If you are not familiar with templates in C++, I highly recommend you inform yourself about them. Otherwise the following examples will have no use to you.
+Most of Luwra's features are based on template specialization. If you are not familiar with
+templates in C++, I highly recommend you inform yourself about them. Otherwise the following
+examples will have no use to you.
 
 ### Types
-A template `Value<T>` exists to capsulate push and check mechanisms for a type `T`. Default specializations are implemented for `lua_Integer`, `lua_Number`, `bool`, `const char*`, `std::string`, `Arbitrary` and `U&` where `U` is any type with a static field `const char* MetatableName` and a meta table registered with that name.
+A template `Value<T>` exists to capsulate push and check mechanisms for a type `T`. Default
+specializations are implemented for C/C++ numeric types, `bool`, `const char*`,
+`std::string`, `Arbitrary` and `U&` where `U` is any type with a static field
+`const char* MetatableName` and a meta table registered with that name.
 
-The `Arbitrary` struct symbolizes any value on the stack. Instances of `Arbitrary` can be seen as references to an index on an execution stack. Note, these kind of references are only valid as long as their referenced value exists at the given index on the given stack.
+The `Arbitrary` struct symbolizes any value on the stack. Instances of `Arbitrary` can be seen as
+references to an index on an execution stack. Note, these kind of references are only valid as long
+as their referenced value exists at the given index on the given stack.
 
-The `Value<U&>` specialization is designated to the instantiation and reference of  a user data type `U`.
+The `Value<U&>` specialization is designated to the instantiation and reference of  a user data
+type `U`.
 
-Any template specialization of `Value` which is expected to work with Luwra must provide a compatible interface:
+Any template specialization of `Value` which is expected to work with Luwra must provide a
+compatible interface:
 
 ```c++
 template <>
@@ -33,7 +42,8 @@ struct Value<T> {
 Have a look at the [type example](https://github.com/vapourismo/luwra/blob/master/examples/types.cpp).
 
 ### Stack
-Instead of retrieving each value from the stack seperately, you can make use of `apply` which lets you invoke a function, whose parameters map to the stack layout, using the stack values.
+Instead of retrieving each value from the stack seperately, you can make use of `apply` which lets
+you invoke a function, whose parameters map to the stack layout, using the stack values.
 
 Assuming your stack looks like this
 
@@ -42,13 +52,13 @@ Position | Value
  3       | c = 42.32
  2       | b = 73.31
  1       | a = 13.37
- 
- and you have a function with a signature like this:
- 
- ```c++
- lua_Number foo(lua_Number a, lua_Number b, lua_Number c);
- ```
- 
+
+and you have a function with a signature like this:
+
+```c++
+lua_Number foo(lua_Number a, lua_Number b, lua_Number c);
+```
+
 Simply apply the function:
 
 ```c++
@@ -106,4 +116,5 @@ lua_CFunction cfunc = WrapMethod<MyClass, lua_Number(lua_Number, lua_Number), &M
 
 ### User types
 Luwra also provides means to implement Lua user data types.
-Check out this [example](https://github.com/vapourismo/luwra/blob/master/examples/methods.cpp) for more.
+Check out this [example](https://github.com/vapourismo/luwra/blob/master/examples/methods.cpp) for
+more.
