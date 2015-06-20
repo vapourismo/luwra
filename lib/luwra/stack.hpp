@@ -12,7 +12,6 @@
 
 #include <utility>
 #include <functional>
-#include <type_traits>
 
 LUWRA_NS_BEGIN
 
@@ -23,7 +22,7 @@ namespace internal {
 	template <typename R, typename T>
 	struct Layout<R(T)> {
 		template <typename F, typename... A> static inline
-		R direct(State* state, int n, F hook, A&&... args) {
+		R Direct(State* state, int n, F hook, A&&... args) {
 			return hook(
 				std::forward<A>(args)...,
 				Value<T>::read(state, n)
@@ -34,8 +33,8 @@ namespace internal {
 	template <typename R, typename T1, typename... TR>
 	struct Layout<R(T1, TR...)> {
 		template <typename F, typename... A> static inline
-		R direct(State* state, int n, F hook, A&&... args) {
-			return Layout<R(TR...)>::direct(
+		R Direct(State* state, int n, F hook, A&&... args) {
+			return Layout<R(TR...)>::Direct(
 				state,
 				n + 1,
 				hook,
@@ -70,7 +69,7 @@ namespace internal {
  */
 template <typename R, typename... A> static inline
 R apply(State* state, int pos, R (*funptr)(A...)) {
-	return internal::Layout<R(A...)>::direct(state, pos, funptr);
+	return internal::Layout<R(A...)>::Direct(state, pos, funptr);
 }
 
 /**
@@ -86,7 +85,7 @@ R apply(State* state, R (*funptr)(A...)) {
  */
 template <typename R, typename... A> static inline
 R apply(State* state, int pos, std::function<R(A...)> fun) {
-	return internal::Layout<R(A...)>::direct(state, pos, fun);
+	return internal::Layout<R(A...)>::Direct(state, pos, fun);
 }
 
 /**
