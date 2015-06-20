@@ -16,31 +16,6 @@
 
 LUWRA_NS_BEGIN
 
-namespace internal {
-	template <typename T, typename... A>
-	int userdata_ctor(State* state) {
-		return apply(state, [state](A... args) {
-			return Value<T>::push(state, args...);
-		});
-	}
-
-	template <typename T>
-	int userdata_dtor(State* state) {
-		Value<T*>::read(state, 1)->~T();
-		return 0;
-	}
-
-	template <typename T>
-	int userdata_tostring(State* state) {
-		T* instance = Value<T*>::read(state, 1);
-
-		return Value<std::string>::push(
-			state,
-			std::string(T::MetatableName) + ": #" + std::to_string(uintmax_t(instance))
-		);
-	}
-}
-
 /**
  * Instances of userdata shall always be used as pointers, because other Lua types can not be
  * converted to pointers, hence this allows the compiler to differentiate between them.
@@ -73,6 +48,31 @@ struct Value<T*> {
 		return 1;
 	}
 };
+
+namespace internal {
+	template <typename T, typename... A>
+	int userdata_ctor(State* state) {
+		return apply(state, std::function<int(A...)>([state](A... args) {
+			return Value<T*>::push(state, args...);
+		}));
+	}
+
+	template <typename T>
+	int userdata_dtor(State* state) {
+		Value<T*>::read(state, 1)->~T();
+		return 0;
+	}
+
+	template <typename T>
+	int userdata_tostring(State* state) {
+		T* instance = Value<T*>::read(state, 1);
+
+		return Value<std::string>::push(
+			state,
+			std::string(T::MetatableName) + ": #" + std::to_string(uintmax_t(instance))
+		);
+	}
+}
 
 /**
  * Generate the metatable for the userdata type `T`. This function allows you to register methods
