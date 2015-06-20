@@ -3,7 +3,7 @@ RM              = rm -rf
 EXEC            = exec
 
 # Artifacts
-OBJS            = functions.out
+OBJS            = functions.out methods.out
 DEPS            = $(OBJS:%=%.d)
 
 # Compiler
@@ -13,8 +13,10 @@ CXXFLAGS        += -std=c++14 -O2 -fno-exceptions -fno-rtti -fmessage-length=0 -
 LDLIBS          += -llua
 
 # Default Targets
-all: $(OBJS)
-	$(foreach OBJ,$(OBJS),$(EXEC) ./$(OBJ))
+all: $(OBJS) $(foreach obj,$(OBJS),exec-$(obj))
+
+exec-%: %
+	$(EXEC) ./$<
 
 clean:
 	$(RM) $(DEPS) $(OBJS)
