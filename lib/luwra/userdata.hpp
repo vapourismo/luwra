@@ -36,7 +36,7 @@ namespace internal {
 
 		return Value<std::string>::push(
 			state,
-			std::string(T::MetatableName) + ": " + std::to_string(instance)
+			std::string(T::MetatableName) + ": #" + std::to_string(uintmax_t(instance))
 		);
 	}
 }
