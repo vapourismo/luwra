@@ -18,50 +18,16 @@
 
 LUWRA_NS_BEGIN
 
-/**
- * Instances of user types shall always be used as references, because Lua values can not be
- * referenced, hence this allows the compiler to differentiate between them.
- */
-template <typename T>
-struct Value<T&> {
-	static
-	std::string MetatableName;
-
-	static inline
-	T& read(State* state, int n) {
-		assert(MetatableName.size() > 0);
-
-		return *static_cast<T*>(
-			luaL_checkudata(state, n, MetatableName.c_str())
-		);
-	}
-
-	template <typename... A> static inline
-	int push(State* state, A&&... args) {
-		assert(MetatableName.size() > 0);
-
-		void* mem = lua_newuserdata(state, sizeof(T));
-
-		if (!mem) {
-			luaL_error(state, "Failed to allocate user type");
-			return -1;
-		}
-
-		// Call constructor on instance
-		new (mem) T(std::forward<A>(args)...);
-
-		// Set metatable for this type
-		luaL_getmetatable(state, MetatableName.c_str());
-		lua_setmetatable(state, -2);
-
-		return 1;
-	}
-};
-
-template <typename T>
-std::string Value<T&>::MetatableName;
-
 namespace internal {
+	template <typename T>
+	struct MetatableNameStorage {
+		static
+		std::string Name;
+	};
+
+	template <typename T>
+	std::string MetatableNameStorage<T>::Name;
+
 	template <typename T, typename... A>
 	int user_type_ctor(State* state) {
 		return apply(state, std::function<int(A...)>([state](A... args) {
@@ -79,10 +45,47 @@ namespace internal {
 	int user_type_tostring(State* state) {
 		return Value<std::string>::push(
 			state,
-			Value<T&>::MetatableName
+			internal::MetatableNameStorage<T>::Name
 		);
 	}
 }
+
+/**
+ * Instances of user types shall always be used as references, because Lua values can not be
+ * referenced, hence this allows the compiler to differentiate between them.
+ */
+template <typename T>
+struct Value<T&> {
+	static inline
+	T& read(State* state, int n) {
+		assert(!internal::MetatableNameStorage<T>::Name.empty());
+
+		return *static_cast<T*>(
+			luaL_checkudata(state, n, internal::MetatableNameStorage<T>::Name.c_str())
+		);
+	}
+
+	template <typename... A> static inline
+	int push(State* state, A&&... args) {
+		assert(!internal::MetatableNameStorage<T>::Name.empty());
+
+		void* mem = lua_newuserdata(state, sizeof(T));
+
+		if (!mem) {
+			luaL_error(state, "Failed to allocate user type");
+			return -1;
+		}
+
+		// Call constructor on instance
+		new (mem) T(std::forward<A>(args)...);
+
+		// Set metatable for this type
+		luaL_getmetatable(state, internal::MetatableNameStorage<T>::Name.c_str());
+		lua_setmetatable(state, -2);
+
+		return 1;
+	}
+};
 
 /**
  * Generate the metatable for the userdata type `T`. This function allows you to register methods
@@ -100,10 +103,10 @@ void register_user_type(
 	std::atomic_size_t mt_counter;
 
 	// Setup an appropriate meta table name
-	if (Value<T&>::MetatableName.size() == 0)
-		Value<T&>::MetatableName = "UD#" + std::to_string(mt_counter++);
+	if (internal::MetatableNameStorage<T>::Name.empty())
+		internal::MetatableNameStorage<T>::Name = "UD#" + std::to_string(mt_counter++);
 
-	luaL_newmetatable(state, Value<T&>::MetatableName.c_str());
+	luaL_newmetatable(state, internal::MetatableNameStorage<T>::Name.c_str());
 
 	// Register methods
 	lua_pushstring(state, "__index");
