@@ -25,7 +25,7 @@ int main() {
 	std::cout << "c = " << Value<double>::read(state, 3) << std::endl;
 
 	// ... which is a little cumbersome. Instead we might apply a fitting function to our stack.
-	std::cout << "a + b + c = "
+	std::cout << "(a + b) * c = "
 	          << apply(state, sum3)
 	          << std::endl;
 
