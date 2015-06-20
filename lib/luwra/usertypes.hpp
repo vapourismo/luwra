@@ -12,7 +12,6 @@
 #include "stack.hpp"
 #include "functions.hpp"
 
-#include <sstream>
 #include <utility>
 #include <atomic>
 #include <cassert>
