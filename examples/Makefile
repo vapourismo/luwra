@@ -14,6 +14,7 @@ LDLIBS          += -llua
 
 # Default Targets
 all: $(OBJS)
+	$(foreach OBJ,$(OBJS),$(EXEC) ./$(OBJ))
 
 clean:
 	$(RM) $(DEPS) $(OBJS)
@@ -21,9 +22,8 @@ clean:
 # Objects
 -include $(DEPS)
 
-%.out: %.cc Makefile
+%.out: %.cpp Makefile
 	$(CXX) $(CXXFLAGS) -MMD -MF$(@:%=%.d) -MT$@ -o$@ $< $(LDLIBS)
-	$(EXEC) ./$@
 
 # Phony
 .PHONY: clean
