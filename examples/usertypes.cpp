@@ -57,7 +57,7 @@ int main() {
 	lua_setglobal(state, "Point");
 
 	// Invoke the attached script
-	if (luaL_loadfile(state, "methods.lua") != 0 || lua_pcall(state, 0, LUA_MULTRET, 0) != 0) {
+	if (luaL_loadfile(state, "usertypes.lua") != 0 || lua_pcall(state, 0, LUA_MULTRET, 0) != 0) {
 		const char* error_msg = lua_tostring(state, -1);
 		std::cerr << "An error occured: " << error_msg << std::endl;
 

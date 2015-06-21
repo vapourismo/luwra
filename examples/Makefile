@@ -3,7 +3,7 @@ RM              = rm -rf
 EXEC            = exec
 
 # Artifacts
-OBJS            = functions.out methods.out stack.out types.out
+OBJS            = functions.out usertypes.out stack.out types.out
 DEPS            = $(OBJS:%=%.d)
 
 # Compiler
