@@ -35,24 +35,24 @@ int main() {
 	// Register our user type.
 	// This function also registers a garbage-collector hook and a string representation function.
 	// Both can be overwritten using the third parameter, which lets you add custom meta methods.
-	RegisterUserType<Point>(
+	register_user_type<Point>(
 		state,
 		// Methods which shall be availabe in the Lua user data, need to be declared here
 		{
-			{"scale", WrapMethod<Point, void(double), &Point::scale>},
-			{"x",     WrapProperty<Point, double, &Point::x>},
-			{"y",     WrapProperty<Point, double, &Point::y>}
+			{"scale", wrap_method<Point, void(double), &Point::scale>},
+			{"x",     wrap_property<Point, double, &Point::x>},
+			{"y",     wrap_property<Point, double, &Point::y>}
 		},
 		// Meta methods may be registered aswell
 		{
-			{"__tostring", WrapMethod<Point, std::string(), &Point::toString>}
+			{"__tostring", wrap_method<Point, std::string(), &Point::toString>}
 		}
 	);
 
 	// What's left, is registering a constructor for our type.
 	// We have to specify which parameters our constructor takes, because there might be more than
 	// one constructor to deal with.
-	Push(state, WrapConstructor<Point, double, double>);
+	push(state, wrap_constructor<Point, double, double>);
 	lua_setglobal(state, "Point");
 
 	// Invoke the attached script

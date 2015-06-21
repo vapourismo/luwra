@@ -34,21 +34,21 @@ struct Value {
 	 * Retrieve the value at position `n`.
 	 */
 	static
-	T Read(State*, int);
+	T read(State*, int);
 
 	/**
-	 * Push the value onto the stack.
+	 * push the value onto the stack.
 	 */
 	static
-	int Push(State*, T);
+	int push(State*, T);
 };
 
 /**
  * Convenient wrapped for `Value<T>::push`.
  */
 template <typename T> static inline
-int Push(State* state, T value) {
-	return Value<T>::Push(state, value);
+int push(State* state, T value) {
+	return Value<T>::push(state, value);
 }
 
 /**
@@ -60,12 +60,12 @@ int Push(State* state, T value) {
 	template <>                                                      \
 	struct Value<type> {                                             \
 		static inline                                                \
-		type Read(State* state, int n) {                             \
+		type read(State* state, int n) {                             \
 			return retrf(state, n);                                  \
 		}                                                            \
                                                                      \
 		static inline                                                \
-		int Push(State* state, type value) {                         \
+		int push(State* state, type value) {                         \
 			pushf(state, value);                                     \
 			return 1;                                                \
 		}                                                            \
@@ -89,7 +89,7 @@ int Push(State* state, T value) {
 
 #ifndef luaL_pushstdstring
 	/**
-	 * Push a `std::string` as string onto the stack.
+	 * push a `std::string` as string onto the stack.
 	 */
 	#define luaL_pushstdstring(state, stdstring) \
 		(lua_pushstring(state, stdstring.c_str()))
@@ -103,12 +103,12 @@ namespace internal {
 	template <>
 	struct NumericTransportValue<Integer> {
 		static inline
-		Integer Read(State* state, int index) {
+		Integer read(State* state, int index) {
 			return luaL_checkinteger(state, index);
 		}
 
 		static inline
-		int Push(State* state, Integer value) {
+		int push(State* state, Integer value) {
 			lua_pushinteger(state, value);
 			return 1;
 		}
@@ -118,12 +118,12 @@ namespace internal {
 	template <>
 	struct NumericTransportValue<Number> {
 		static inline
-		Number Read(State* state, int index) {
+		Number read(State* state, int index) {
 			return luaL_checknumber(state, index);
 		}
 
 		static inline
-		int Push(State* state, Number value) {
+		int push(State* state, Number value) {
 			lua_pushnumber(state, value);
 			return 1;
 		}
@@ -134,25 +134,25 @@ namespace internal {
 	template <typename I, typename B>
 	struct NumericContainedValueBase {
 		static constexpr
-		bool Qualifies =
+		bool qualifies =
 			std::numeric_limits<I>::max() < std::numeric_limits<B>::max()
 			&& std::numeric_limits<I>::min() > std::numeric_limits<B>::min();
 
 		static inline
-		I Read(State* state, int index) {
+		I read(State* state, int index) {
 			return
 				std::max<B>(
 					std::numeric_limits<I>::min(),
 					std::min<B>(
 						std::numeric_limits<I>::max(),
-						NumericTransportValue<B>::Read(state, index)
+						NumericTransportValue<B>::read(state, index)
 					)
 				);
 		}
 
 		static inline
-		int Push(State* state, I value) {
-			NumericTransportValue<B>::Push(state, static_cast<B>(value));
+		int push(State* state, I value) {
+			NumericTransportValue<B>::push(state, static_cast<B>(value));
 			return 1;
 		}
 	};
@@ -162,15 +162,15 @@ namespace internal {
 	template <typename I, typename B>
 	struct NumericTruncatingValueBase {
 		static inline
-		I Read(State* state, int index) {
-			return static_cast<I>(NumericTransportValue<B>::Read(state, index));
+		I read(State* state, int index) {
+			return static_cast<I>(NumericTransportValue<B>::read(state, index));
 		}
 
 		static inline
-		int Push(State*, I) {
+		int push(State*, I) {
 			static_assert(
 				sizeof(I) == -1,
-				"You shold not use 'Value<I>::Push' specializations which inherit from NumericTruncatingValueBase"
+				"You shold not use 'Value<I>::push' specializations which inherit from NumericTruncatingValueBase"
 			);
 		}
 	};
@@ -182,7 +182,7 @@ namespace internal {
 			std::is_same<I, B>::value,
 			NumericTransportValue<B>,
 			typename std::conditional<
-				NumericContainedValueBase<I, B>::Qualifies,
+				NumericContainedValueBase<I, B>::qualifies,
 				NumericContainedValueBase<I, B>,
 				NumericTruncatingValueBase<I, B>
 			>::type
@@ -223,7 +223,7 @@ LUWRA_DEF_VALUE(std::string, luaL_checkstring,  luaL_pushstdstring);
 template <>
 struct Value<CFunction> {
 	static inline
-	int Push(State* state, CFunction fun) {
+	int push(State* state, CFunction fun) {
 		lua_pushcfunction(state, fun);
 		return 1;
 	}
@@ -241,7 +241,7 @@ struct Arbitrary {
 template <>
 struct Value<Arbitrary> {
 	static inline
-	Arbitrary Read(State* state, int index) {
+	Arbitrary read(State* state, int index) {
 		if (index < 0)
 			index = lua_gettop(state) + (index + 1);
 
@@ -249,7 +249,7 @@ struct Value<Arbitrary> {
 	}
 
 	static inline
-	int Push(State* state, const Arbitrary& value) {
+	int push(State* state, const Arbitrary& value) {
 		lua_pushvalue(value.state, value.index);
 
 		if (value.state != state)
@@ -261,29 +261,29 @@ struct Value<Arbitrary> {
 
 namespace internal {
 	template <typename>
-	struct StackPusher;
+	struct Stackpusher;
 
 	template <size_t I>
-	struct StackPusher<std::index_sequence<I>> {
+	struct Stackpusher<std::index_sequence<I>> {
 		template <typename T> static inline
-		int Push(State* state, const T& package) {
-			// return Value<typename std::tuple_element<I, T>::type>::Push(state, std::get<I>(package));
-			return Push(state, std::get<I>(package));
+		int push(State* state, const T& package) {
+			// return Value<typename std::tuple_element<I, T>::type>::push(state, std::get<I>(package));
+			return push(state, std::get<I>(package));
 		}
 	};
 
 	template <size_t I, size_t... Is>
-	struct StackPusher<std::index_sequence<I, Is...>> {
+	struct Stackpusher<std::index_sequence<I, Is...>> {
 		template <typename T> static inline
-		int Push(State* state, const T& package) {
-			// int r = Value<typename std::tuple_element<I, T>::type>::Push(
+		int push(State* state, const T& package) {
+			// int r = Value<typename std::tuple_element<I, T>::type>::push(
 			// 	state,
 			// 	std::get<I>(package)
 			// );
 
-			int r = Push(state, std::get<I>(package));
+			int r = push(state, std::get<I>(package));
 
-			return std::max(0, r) + StackPusher<std::index_sequence<Is...>>::Push(state, package);
+			return std::max(0, r) + Stackpusher<std::index_sequence<Is...>>::push(state, package);
 		}
 	};
 }
@@ -294,13 +294,13 @@ namespace internal {
 template <typename... A>
 struct Value<std::tuple<A...>> {
 	static inline
-	std::tuple<A...> Read(State*, int) {
+	std::tuple<A...> read(State*, int) {
 		static_assert(sizeof(std::tuple<A...>) == -1, "std::tuples cannot be read from the stack");
 	}
 
 	static inline
-	int Push(State* state, const std::tuple<A...>& value) {
-		return internal::StackPusher<std::make_index_sequence<sizeof...(A)>>::Push(state, value);
+	int push(State* state, const std::tuple<A...>& value) {
+		return internal::Stackpusher<std::make_index_sequence<sizeof...(A)>>::push(state, value);
 	}
 };
 

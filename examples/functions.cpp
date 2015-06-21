@@ -25,18 +25,18 @@ int main() {
 	luaL_openlibs(state);
 
 	// Register 'my_function_1'
-	auto wrapped_1 = WrapFunction<void(float, const char*), my_function_1>;
-	Push(state, wrapped_1);
+	auto wrapped_1 = wrap_function<void(float, const char*), my_function_1>;
+	push(state, wrapped_1);
 	lua_setglobal(state, "my_function_1");
 
 	// Register 'my_function_2'
-	auto wrapped_2 = WrapFunction<std::string(), my_function_2>;
-	Push(state, wrapped_2);
+	auto wrapped_2 = wrap_function<std::string(), my_function_2>;
+	push(state, wrapped_2);
 	lua_setglobal(state, "my_function_2");
 
 	// Register 'my_function_3'
-	auto wrapped_3 = WrapFunction<int(int, int), my_function_3>;
-	Push(state, wrapped_3);
+	auto wrapped_3 = wrap_function<int(int, int), my_function_3>;
+	push(state, wrapped_3);
 	lua_setglobal(state, "my_function_3");
 
 	// Invoke the attached script

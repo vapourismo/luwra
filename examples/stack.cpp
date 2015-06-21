@@ -15,18 +15,18 @@ int main() {
 	luaL_openlibs(state);
 
 	// Build stack
-	Push(state, 13);
-	Push(state, 37);
-	Push(state, 42.2);
+	push(state, 13);
+	push(state, 37);
+	push(state, 42.2);
 
 	// Each value can be retrieved individually.
-	std::cout << "a = " << Value<int>::Read(state, 1) << std::endl;
-	std::cout << "b = " << Value<int>::Read(state, 2) << std::endl;
-	std::cout << "c = " << Value<double>::Read(state, 3) << std::endl;
+	std::cout << "a = " << Value<int>::read(state, 1) << std::endl;
+	std::cout << "b = " << Value<int>::read(state, 2) << std::endl;
+	std::cout << "c = " << Value<double>::read(state, 3) << std::endl;
 
 	// ... which is a little cumbersome. Instead we might apply a fitting function to our stack.
 	std::cout << "(a + b) * c = "
-	          << Apply(state, sum3) // Equivalent to Apply(state, 1, sum3) or Apply(state, -3, sum3)
+	          << apply(state, sum3) // Equivalent to apply(state, 1, sum3) or apply(state, -3, sum3)
 	          << std::endl;
 
 	lua_close(state);

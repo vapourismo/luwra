@@ -21,43 +21,43 @@ LUWRA_NS_BEGIN
 
 namespace internal {
 	static
-	std::atomic_size_t UserTypeCounter;
+	std::atomic_size_t user_type_counter;
 
 	template <typename T>
-	std::string UserTypeName = "";
+	std::string user_type_name = "";
 
 	template <typename T, typename... A>
-	int UserTypeConstructor(State* state) {
-		return internal::Layout<int(A...)>::Direct(
+	int construct_user_type(State* state) {
+		return internal::Layout<int(A...)>::direct(
 			state,
 			1,
-			&Value<T&>::template Push<A...>,
+			&Value<T&>::template push<A...>,
 			state
 		);
 	}
 
 	template <typename T>
-	int UserTypeDestructor(State* state) {
+	int destruct_user_type(State* state) {
 		if (!lua_islightuserdata(state, 1))
-			Value<T&>::Read(state, 1).~T();
+			Value<T&>::read(state, 1).~T();
 
 		return 0;
 	}
 
 	template <typename T>
-	int UserTypeToString(State* state) {
-		return Push(state, internal::UserTypeName<T>);
+	int stringify_user_type(State* state) {
+		return push(state, internal::user_type_name<T>);
 	}
 
-	template <typename T, typename R, R T::* PropertyPointer>
-	int UserTypeAccessor(State* state) {
+	template <typename T, typename R, R T::* property_pointer>
+	int access_user_type_property(State* state) {
 		if (lua_gettop(state) > 1) {
 			// Setter
-			(Value<T&>::Read(state, 1).*PropertyPointer) = Value<R>::Read(state, 2);
+			(Value<T&>::read(state, 1).*property_pointer) = Value<R>::read(state, 2);
 			return 0;
 		} else {
 			// Getter
-			return Push(state, Value<T&>::Read(state, 1).*PropertyPointer);
+			return push(state, Value<T&>::read(state, 1).*property_pointer);
 		}
 	}
 
@@ -74,9 +74,9 @@ namespace internal {
 		using MethodPointerType = R (T::*)(A...);
 		using FunctionSignature = R (T&, A...);
 
-		template <MethodPointerType MethodPointer> static
-		R Delegate(T& parent, A... args) {
-			return (parent.*MethodPointer)(std::forward<A>(args)...);
+		template <MethodPointerType method_pointer> static
+		R delegate(T& parent, A... args) {
+			return (parent.*method_pointer)(std::forward<A>(args)...);
 		}
 	};
 }
@@ -90,17 +90,17 @@ namespace internal {
 template <typename T>
 struct Value<T&> {
 	static inline
-	T& Read(State* state, int n) {
-		assert(!internal::UserTypeName<T>.empty());
+	T& read(State* state, int n) {
+		assert(!internal::user_type_name<T>.empty());
 
 		return *static_cast<T*>(
-			luaL_checkudata(state, n, internal::UserTypeName<T>.c_str())
+			luaL_checkudata(state, n, internal::user_type_name<T>.c_str())
 		);
 	}
 
 	template <typename... A> static inline
-	int Push(State* state, A&&... args) {
-		assert(!internal::UserTypeName<T>.empty());
+	int push(State* state, A&&... args) {
+		assert(!internal::user_type_name<T>.empty());
 
 		void* mem = lua_newuserdata(state, sizeof(T));
 
@@ -113,7 +113,7 @@ struct Value<T&> {
 		new (mem) T(std::forward<A>(args)...);
 
 		// Set metatable for this type
-		luaL_getmetatable(state, internal::UserTypeName<T>.c_str());
+		luaL_getmetatable(state, internal::user_type_name<T>.c_str());
 		lua_setmetatable(state, -2);
 
 		return 1;
@@ -128,23 +128,23 @@ struct Value<T&> {
 template <typename T>
 struct Value<T*> {
 	static inline
-	T* Read(State* state, int n) {
-		assert(!internal::UserTypeName<T>.empty());
+	T* read(State* state, int n) {
+		assert(!internal::user_type_name<T>.empty());
 
 		return static_cast<T*>(
-			luaL_checkudata(state, n, internal::UserTypeName<T>.c_str())
+			luaL_checkudata(state, n, internal::user_type_name<T>.c_str())
 		);
 	}
 
 	static inline
-	int Push(State* state, T* instance) {
-		assert(!internal::UserTypeName<T>.empty());
+	int push(State* state, T* instance) {
+		assert(!internal::user_type_name<T>.empty());
 
-		// Push instance as light user data
+		// push instance as light user data
 		lua_pushlightuserdata(state, instance);
 
 		// Set metatable for this type
-		luaL_getmetatable(state, internal::UserTypeName<T>.c_str());
+		luaL_getmetatable(state, internal::user_type_name<T>.c_str());
 		lua_setmetatable(state, -2);
 
 		return 1;
@@ -157,16 +157,16 @@ struct Value<T*> {
  * Meta-methods can be added and/or overwritten aswell.
  */
 template <typename T> static inline
-void RegisterUserType(
+void register_user_type(
 	State* state,
 	const std::map<const char*, CFunction>& methods,
 	const std::map<const char*, CFunction>& meta_methods = {}
 ) {
 	// Setup an appropriate meta table name
-	if (internal::UserTypeName<T>.empty())
-		internal::UserTypeName<T> = "UD#" + std::to_string(internal::UserTypeCounter++);
+	if (internal::user_type_name<T>.empty())
+		internal::user_type_name<T> = "UD#" + std::to_string(internal::user_type_counter++);
 
-	luaL_newmetatable(state, internal::UserTypeName<T>.c_str());
+	luaL_newmetatable(state, internal::user_type_name<T>.c_str());
 
 	// Register methods
 	if (methods.size() > 0 && meta_methods.count("__index") == 0) {
@@ -185,14 +185,14 @@ void RegisterUserType(
 	// Register garbage-collection hook
 	if (meta_methods.count("__gc") == 0) {
 		lua_pushstring(state, "__gc");
-		lua_pushcfunction(state, &internal::UserTypeDestructor<T>);
+		lua_pushcfunction(state, &internal::destruct_user_type<T>);
 		lua_rawset(state, -3);
 	}
 
 	// Register string representation function
 	if (meta_methods.count("__tostring") == 0) {
 		lua_pushstring(state, "__tostring");
-		lua_pushcfunction(state, &internal::UserTypeToString<T>);
+		lua_pushcfunction(state, &internal::stringify_user_type<T>);
 		lua_rawset(state, -3);
 	}
 
@@ -212,10 +212,10 @@ void RegisterUserType(
  * to use during construction.
  */
 template <typename T, typename... A>
-constexpr CFunction WrapConstructor = &internal::UserTypeConstructor<T, A...>;
+constexpr CFunction wrap_constructor = &internal::construct_user_type<T, A...>;
 
 /**
- * Works similiar to `WrapFunction`. Given a class or struct declaration as follows:
+ * Works similiar to `wrap_function`. Given a class or struct declaration as follows:
  *
  *   struct T {
  *     R my_method(A0, A1 ... An);
@@ -223,7 +223,7 @@ constexpr CFunction WrapConstructor = &internal::UserTypeConstructor<T, A...>;
  *
  * You might wrap this method easily:
  *
- *   CFunction wrapped_meth = WrapMethod<T, R(A0, A1 ... An), &T::my_method>;
+ *   CFunction wrapped_meth = wrap_method<T, R(A0, A1 ... An), &T::my_method>;
  *
  * In Lua, assuming `instance` is a userdata instance of type `T`, x0, x1 ... xn are instances
  * of A0, A1 ... An, and the method has been bound as `my_method`; it is possible to invoke the
@@ -234,12 +234,12 @@ constexpr CFunction WrapConstructor = &internal::UserTypeConstructor<T, A...>;
 template <
 	typename T,
 	typename S,
-	typename internal::MethodWrapper<T, S>::MethodPointerType MethodPointer
+	typename internal::MethodWrapper<T, S>::MethodPointerType method_pointer
 >
-constexpr CFunction WrapMethod =
-	WrapFunction<
+constexpr CFunction wrap_method =
+	wrap_function<
 		typename internal::MethodWrapper<T, S>::FunctionSignature,
-		internal::MethodWrapper<T, S>::template Delegate<MethodPointer>
+		internal::MethodWrapper<T, S>::template delegate<method_pointer>
 	>;
 
 /**
@@ -251,14 +251,14 @@ constexpr CFunction WrapMethod =
  *
  * The wrapped property accessor is also a function:
  *
- *   CFunction wrapped_property = WrapProperty<T, R, &T::my_property>;
+ *   CFunction wrapped_property = wrap_property<T, R, &T::my_property>;
  */
 template <
 	typename T,
 	typename R,
-	R T::* PropertyPointer
+	R T::* property_pointer
 >
-constexpr CFunction WrapProperty = &internal::UserTypeAccessor<T, R, PropertyPointer>;
+constexpr CFunction wrap_property = &internal::access_user_type_property<T, R, property_pointer>;
 
 LUWRA_NS_END
 

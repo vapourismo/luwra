@@ -22,10 +22,10 @@ namespace internal {
 	template <typename R, typename T>
 	struct Layout<R(T)> {
 		template <typename F, typename... A> static inline
-		R Direct(State* state, int n, F hook, A&&... args) {
+		R direct(State* state, int n, F hook, A&&... args) {
 			return hook(
 				std::forward<A>(args)...,
-				Value<T>::Read(state, n)
+				Value<T>::read(state, n)
 			);
 		}
 	};
@@ -33,13 +33,13 @@ namespace internal {
 	template <typename R, typename T1, typename... TR>
 	struct Layout<R(T1, TR...)> {
 		template <typename F, typename... A> static inline
-		R Direct(State* state, int n, F hook, A&&... args) {
-			return Layout<R(TR...)>::Direct(
+		R direct(State* state, int n, F hook, A&&... args) {
+			return Layout<R(TR...)>::direct(
 				state,
 				n + 1,
 				hook,
 				std::forward<A>(args)...,
-				Value<T1>::Read(state, n)
+				Value<T1>::read(state, n)
 			);
 		}
 	};
@@ -59,7 +59,7 @@ namespace internal {
  * Given a function `R f(A0, A1, ... An)` you are able to map over
  * the values on the stack on the stack like so:
  *
- *   R my_result = Apply(lua_state, pos, f);
+ *   R my_result = apply(lua_state, pos, f);
  *
  * which is equivalent to
  *
@@ -68,32 +68,32 @@ namespace internal {
  * where x0, x1, ... xn are the values on the stack.
  */
 template <typename R, typename... A> static inline
-R Apply(State* state, int pos, R (*funptr)(A...)) {
-	return internal::Layout<R(A...)>::Direct(state, pos, funptr);
+R apply(State* state, int pos, R (*function_pointer)(A...)) {
+	return internal::Layout<R(A...)>::direct(state, pos, function_pointer);
 }
 
 /**
- * Same as `Apply(state, 1, funptr)`.
+ * Same as `apply(state, 1, function_pointer)`.
  */
 template <typename R, typename... A> static inline
-R Apply(State* state, R (*funptr)(A...)) {
-	return Apply(state, 1, funptr);
+R apply(State* state, R (*function_pointer)(A...)) {
+	return apply(state, 1, function_pointer);
 }
 
 /**
- * Specialization of `Apply` which works for `std::function`.
+ * Specialization of `apply` which works for `std::function`.
  */
 template <typename R, typename... A> static inline
-R Apply(State* state, int pos, std::function<R(A...)> fun) {
-	return internal::Layout<R(A...)>::Direct(state, pos, fun);
+R apply(State* state, int pos, std::function<R(A...)> function_object) {
+	return internal::Layout<R(A...)>::direct(state, pos, function_object);
 }
 
 /**
- * Same as `Apply(state, 1, fun)`.
+ * Same as `apply(state, 1, function_object)`.
  */
 template <typename R, typename... A> static inline
-R Apply(State* state, std::function<R(A...)> fun) {
-	return Apply(state, 1, fun);
+R apply(State* state, std::function<R(A...)> function_object) {
+	return apply(state, 1, function_object);
 }
 
 LUWRA_NS_END

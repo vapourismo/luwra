@@ -24,37 +24,37 @@ namespace internal {
 
 	template <>
 	struct FunctionWrapper<void()> {
-		template <void(*FunctionPointer)()> static
-		int Invoke(State*) {
-			FunctionPointer();
+		template <void(*function_pointer)()> static
+		int invoke(State*) {
+			function_pointer();
 			return 0;
 		}
 	};
 
 	template <typename R>
 	struct FunctionWrapper<R()> {
-		template <R(*FunctionPointer)()> static
-		int Invoke(State* state) {
-			return Push(state, FunctionPointer());
+		template <R(*function_pointer)()> static
+		int invoke(State* state) {
+			return push(state, function_pointer());
 		}
 	};
 
 	template <typename... A>
 	struct FunctionWrapper<void(A...)> {
-		template <void (*FunctionPointer)(A...)> static
-		int Invoke(State* state) {
-			Apply(state, FunctionPointer);
+		template <void (*function_pointer)(A...)> static
+		int invoke(State* state) {
+			apply(state, function_pointer);
 			return 0;
 		}
 	};
 
 	template <typename R, typename... A>
 	struct FunctionWrapper<R(A...)> {
-		template <R (*FunctionPointer)(A...)> static
-		int Invoke(State* state) {
-			return Push(
+		template <R (*function_pointer)(A...)> static
+		int invoke(State* state) {
+			return push(
 				state,
-				Apply(state, FunctionPointer)
+				apply(state, function_pointer)
 			);
 		}
 	};
@@ -62,7 +62,7 @@ namespace internal {
 
 /**
  * Assuming its parameters can be retrieved from the Lua stack, ordinary functions can be wrapped
- * using the `WrapFunction` instance in order to produce a C function which can be used by the
+ * using the `wrap_function` instance in order to produce a C function which can be used by the
  * Lua VM.
  *
  * Assuming your function has the following signature:
@@ -71,14 +71,14 @@ namespace internal {
  *
  * Generate a Lua-compatible like so:
  *
- *   CFunction wrapped_fun = WrapFunction<R(A0, A1 ... An), my_fun>;
+ *   CFunction wrapped_fun = wrap_function<R(A0, A1 ... An), my_fun>;
  */
 template <
 	typename S,
-	S* FunctionPointer
+	S* function_pointer
 >
-constexpr CFunction WrapFunction =
-	&internal::FunctionWrapper<S>::template Invoke<FunctionPointer>;
+constexpr CFunction wrap_function =
+	&internal::FunctionWrapper<S>::template invoke<function_pointer>;
 
 LUWRA_NS_END
 
