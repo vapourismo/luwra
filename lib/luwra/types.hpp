@@ -79,6 +79,14 @@ int Push(State* state, T value) {
 		(luaL_checktype(state, n, LUA_TBOOLEAN), lua_toboolean(state, n))
 #endif
 
+#ifndef luaL_checkcfunction
+	/**
+	 * Check if the value at index `n` is a C function and retrieve it.
+	 */
+	#define luaL_checkcfunction(state, n) \
+		(luaL_checktype(state, n, LUA_TCFUNCTION), lua_toboolean(state, n))
+#endif
+
 #ifndef luaL_pushstdstring
 	/**
 	 * Push a `std::string` as string onto the stack.
@@ -211,6 +219,15 @@ LUWRA_DEF_VALUE(std::string, luaL_checkstring,  luaL_pushstdstring);
 // Do not export these macros
 #undef LUWRA_DEF_VALUE
 #undef LUWRA_DEF_NUMERIC
+
+template <>
+struct Value<CFunction> {
+	static inline
+	int Push(State* state, CFunction fun) {
+		lua_pushcfunction(state, fun);
+		return 1;
+	}
+};
 
 /**
  * An arbitrary value on an execution stack.
