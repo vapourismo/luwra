@@ -40,6 +40,8 @@ int main() {
 		// Methods which shall be availabe in the Lua user data, need to be declared here
 		{
 			{"scale", WrapMethod<Point, void(double), &Point::scale>},
+			{"x",     WrapProperty<Point, double, &Point::x>},
+			{"y",     WrapProperty<Point, double, &Point::y>}
 		},
 		// Meta methods may be registered aswell
 		{
