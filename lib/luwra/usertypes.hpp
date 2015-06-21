@@ -12,6 +12,7 @@
 #include "stack.hpp"
 #include "functions.hpp"
 
+#include <map>
 #include <utility>
 #include <atomic>
 #include <cassert>
@@ -27,14 +28,19 @@ namespace internal {
 
 	template <typename T, typename... A>
 	int UserTypeConstructor(State* state) {
-		return Apply(state, std::function<int(A...)>([state](A... args) {
-			return Value<T&>::Push(state, args...);
-		}));
+		return internal::Layout<int(A...)>::Direct(
+			state,
+			1,
+			&Value<T&>::template Push<A...>,
+			state
+		);
 	}
 
 	template <typename T>
 	int UserTypeDestructor(State* state) {
-		Value<T&>::Read(state, 1).~T();
+		if (!lua_islightuserdata(state, 1))
+			Value<T&>::Read(state, 1).~T();
+
 		return 0;
 	}
 
@@ -67,9 +73,10 @@ namespace internal {
 }
 
 /**
- * Instances of user types shall always be used as references, because Lua values can not be
- * referenced, hence this allows the compiler to differentiate between them.
- * The life-time of such instance is determined by Lua.
+ * User type T.
+ * Instances created using this specialization are allocated and constructed as full user data
+ * types in Lua. The default garbage-collecting hook will destruct the user type, once it has
+ * been marked.
  */
 template <typename T>
 struct Value<T&> {
@@ -105,15 +112,46 @@ struct Value<T&> {
 };
 
 /**
- * Register the metatable for the user type `T`. This function allows you to register methods
- * which are shared across all instances of this type. A garbage-collector hook is also inserted;
- * it destructs the underlying type when the garbage-collector says it is time to say good-bye.
+ * User type T.
+ * Instances created using this specialization are allocated as light user data in Lua.
+ * The default garbage-collector does not destruct light user data types.
+ */
+template <typename T>
+struct Value<T*> {
+	static inline
+	T* Read(State* state, int n) {
+		assert(!internal::UserTypeName<T>.empty());
+
+		return static_cast<T*>(
+			luaL_checkudata(state, n, internal::UserTypeName<T>.c_str())
+		);
+	}
+
+	static inline
+	int Push(State* state, T* instance) {
+		assert(!internal::UserTypeName<T>.empty());
+
+		// Push instance as light user data
+		lua_pushlightuserdata(state, instance);
+
+		// Set metatable for this type
+		luaL_getmetatable(state, internal::UserTypeName<T>.c_str());
+		lua_setmetatable(state, -2);
+
+		return 1;
+	}
+};
+
+/**
+ * Register the metatable for user type `T`. This function allows you to register methods
+ * which are shared across all instances of this type. A garbage-collector hook is also inserted.
+ * Meta-methods can be added and/or overwritten aswell.
  */
 template <typename T> static inline
 void RegisterUserType(
 	State* state,
-	std::initializer_list<std::pair<const char*, CFunction>> methods,
-	std::initializer_list<std::pair<const char*, CFunction>> meta_methods = {}
+	const std::map<const char*, CFunction>& methods,
+	const std::map<const char*, CFunction>& meta_methods = {}
 ) {
 	// Setup an appropriate meta table name
 	if (internal::UserTypeName<T>.empty())
@@ -122,29 +160,35 @@ void RegisterUserType(
 	luaL_newmetatable(state, internal::UserTypeName<T>.c_str());
 
 	// Register methods
-	lua_pushstring(state, "__index");
-	lua_newtable(state);
+	if (methods.size() > 0 && meta_methods.count("__index") == 0) {
+		lua_pushstring(state, "__index");
+		lua_newtable(state);
 
-	for (auto& method: methods) {
-		lua_pushstring(state, method.first);
-		lua_pushcfunction(state, method.second);
+		for (auto& method: methods) {
+			lua_pushstring(state, method.first);
+			lua_pushcfunction(state, method.second);
+			lua_rawset(state, -3);
+		}
+
 		lua_rawset(state, -3);
 	}
 
-	lua_rawset(state, -3);
-
 	// Register garbage-collection hook
-	lua_pushstring(state, "__gc");
-	lua_pushcfunction(state, &internal::UserTypeDestructor<T>);
-	lua_rawset(state, -3);
+	if (meta_methods.count("__gc") == 0) {
+		lua_pushstring(state, "__gc");
+		lua_pushcfunction(state, &internal::UserTypeDestructor<T>);
+		lua_rawset(state, -3);
+	}
 
 	// Register string representation function
-	lua_pushstring(state, "__tostring");
-	lua_pushcfunction(state, &internal::UserTypeToString<T>);
-	lua_rawset(state, -3);
+	if (meta_methods.count("__tostring") == 0) {
+		lua_pushstring(state, "__tostring");
+		lua_pushcfunction(state, &internal::UserTypeToString<T>);
+		lua_rawset(state, -3);
+	}
 
 	// Insert meta methods
-	for (auto& metamethod: meta_methods) {
+	for (const auto& metamethod: meta_methods) {
 		lua_pushstring(state, metamethod.first);
 		lua_pushcfunction(state, metamethod.second);
 		lua_rawset(state, -3);
