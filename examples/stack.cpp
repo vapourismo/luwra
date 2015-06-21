@@ -15,9 +15,9 @@ int main() {
 	luaL_openlibs(state);
 
 	// Build stack
-	lua_pushinteger(state, 13);
-	lua_pushinteger(state, 37);
-	lua_pushnumber(state, 42);
+	Push(state, 13);
+	Push(state, 37);
+	Push(state, 42.2);
 
 	// Each value can be retrieved individually.
 	std::cout << "a = " << Value<int>::Read(state, 1) << std::endl;

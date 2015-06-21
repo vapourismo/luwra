@@ -52,8 +52,7 @@ int main() {
 	// What's left, is registering a constructor for our type.
 	// We have to specify which parameters our constructor takes, because there might be more than
 	// one constructor to deal with.
-	auto wrapped_ctor = WrapConstructor<Point, double, double>;
-	lua_pushcfunction(state, wrapped_ctor);
+	Push(state, WrapConstructor<Point, double, double>);
 	lua_setglobal(state, "Point");
 
 	// Invoke the attached script
