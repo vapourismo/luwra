@@ -3,38 +3,38 @@
 
 #include <iostream>
 
-using namespace luwra;
+namespace luwra {
+	// You may add custom specializations of luwra::Value in order to retrieve them from the stack.
+	template <>
+	struct Value<char> {
+		/**
+		 * Retrieve the value at position `n`.
+		 */
+		static inline
+		char read(lua_State* state, int n) {
+			auto str = Value<std::string>::read(state, n);
 
-// You may add custom specializations of luwra::Value in order to retrieve them from the stack.
-template <>
-struct Value<char> {
-	/**
-	 * Retrieve the value at position `n`.
-	 */
-	static inline
-	char read(State* state, int n) {
-		auto str = Value<std::string>::read(state, n);
+			if (str.length() < 1) {
+				luaL_argerror(state, n, "Given empty string instead of character");
+			}
 
-		if (str.length() < 1) {
-			luaL_argerror(state, n, "Given empty string instead of character");
+			return str[0];
 		}
 
-		return str[0];
-	}
+		/**
+		 * push the value onto the stack.
+		 */
+		static inline
+		int push(lua_State* state, char val) {
+			if (val == 0)
+				return 0;
 
-	/**
-	 * push the value onto the stack.
-	 */
-	static inline
-	int push(State* state, char val) {
-		if (val == 0)
-			return 0;
+			lua_pushlstring(state, &val, 1);
 
-		lua_pushlstring(state, &val, 1);
-
-		return 1;
-	}
-};
+			return 1;
+		}
+	};
+}
 
 static
 void read_chars(char a, char b) {
@@ -46,11 +46,11 @@ int main() {
 	luaL_openlibs(state);
 
 	// Build stack
-	push(state, 'H');
-	push(state, 'i');
+	luwra::push(state, 'H');
+	luwra::push(state, 'i');
 
 	// apply function to stack values
-	apply(state, read_chars);
+	luwra::apply(state, read_chars);
 
 	lua_close(state);
 	return 0;
