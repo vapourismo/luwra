@@ -35,7 +35,7 @@ namespace internal {
 	struct FunctionWrapper<R()> {
 		template <R(*FunctionPointer)()> static
 		int Invoke(State* state) {
-			return Value<R>::Push(state, FunctionPointer());
+			return Push(state, FunctionPointer());
 		}
 	};
 
@@ -52,7 +52,7 @@ namespace internal {
 	struct FunctionWrapper<R(A...)> {
 		template <R (*FunctionPointer)(A...)> static
 		int Invoke(State* state) {
-			return Value<R>::Push(
+			return Push(
 				state,
 				Apply(state, FunctionPointer)
 			);

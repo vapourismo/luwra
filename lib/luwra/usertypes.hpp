@@ -46,10 +46,7 @@ namespace internal {
 
 	template <typename T>
 	int UserTypeToString(State* state) {
-		return Value<std::string>::Push(
-			state,
-			internal::UserTypeName<T>
-		);
+		return Push(state, internal::UserTypeName<T>);
 	}
 
 	template <typename T, typename R, R T::* PropertyPointer>
@@ -60,7 +57,7 @@ namespace internal {
 			return 0;
 		} else {
 			// Getter
-			return Value<R>::Push(state, Value<T&>::Read(state, 1).*PropertyPointer);
+			return Push(state, Value<T&>::Read(state, 1).*PropertyPointer);
 		}
 	}
 

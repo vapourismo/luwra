@@ -144,7 +144,7 @@ namespace internal {
 
 		static inline
 		int Push(State* state, I value) {
-			NumericTransportValue<B>::Push(state, static_cast<B>(value));
+			Push(state, static_cast<B>(value));
 			return 1;
 		}
 	};
@@ -162,7 +162,7 @@ namespace internal {
 		int Push(State*, I) {
 			static_assert(
 				sizeof(I) == -1,
-				"You shold not use 'Value<I>::push' specializations which inherit from NumericTruncatingValueBase"
+				"You shold not use 'Value<I>::Push' specializations which inherit from NumericTruncatingValueBase"
 			);
 		}
 	};
@@ -250,7 +250,8 @@ namespace internal {
 	struct StackPusher<std::index_sequence<I>> {
 		template <typename T> static inline
 		int Push(State* state, const T& package) {
-			return Value<typename std::tuple_element<I, T>::type>::Push(state, std::get<I>(package));
+			// return Value<typename std::tuple_element<I, T>::type>::Push(state, std::get<I>(package));
+			return Push(state, std::get<I>(package));
 		}
 	};
 
@@ -258,10 +259,12 @@ namespace internal {
 	struct StackPusher<std::index_sequence<I, Is...>> {
 		template <typename T> static inline
 		int Push(State* state, const T& package) {
-			int r = Value<typename std::tuple_element<I, T>::type>::Push(
-				state,
-				std::get<I>(package)
-			);
+			// int r = Value<typename std::tuple_element<I, T>::type>::Push(
+			// 	state,
+			// 	std::get<I>(package)
+			// );
+
+			int r = Push(state, std::get<I>(package));
 
 			return std::max(0, r) + StackPusher<std::index_sequence<Is...>>::Push(state, package);
 		}
