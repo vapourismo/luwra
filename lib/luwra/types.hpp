@@ -152,7 +152,7 @@ namespace internal {
 
 		static inline
 		int Push(State* state, I value) {
-			Push(state, static_cast<B>(value));
+			NumericTransportValue<B>::Push(state, static_cast<B>(value));
 			return 1;
 		}
 	};
