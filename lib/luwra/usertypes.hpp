@@ -73,7 +73,7 @@ namespace internal {
 		using FunctionSignature = R (T&, A...);
 
 		template <MethodPointerType method_pointer> static inline
-		R delegate(T& parent, A... args) {
+		R call(T& parent, A... args) {
 			return (parent.*method_pointer)(std::forward<A>(args)...);
 		}
 	};
@@ -173,7 +173,7 @@ template <
 constexpr CFunction wrap_method =
 	wrap_function<
 		typename internal::MethodWrapper<T, S>::FunctionSignature,
-		internal::MethodWrapper<T, S>::template delegate<method_pointer>
+		internal::MethodWrapper<T, S>::template call<method_pointer>
 	>;
 
 /**
