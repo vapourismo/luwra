@@ -20,8 +20,8 @@
 LUWRA_NS_BEGIN
 
 namespace internal {
-	static
-	std::atomic_size_t user_type_counter;
+	template <size_t>
+	std::atomic_size_t user_type_counter(0);
 
 	template <typename T>
 	std::string user_type_name = "";
@@ -164,7 +164,7 @@ void register_user_type(
 ) {
 	// Setup an appropriate meta table name
 	if (internal::user_type_name<T>.empty())
-		internal::user_type_name<T> = "UD#" + std::to_string(internal::user_type_counter++);
+		internal::user_type_name<T> = "UD#" + std::to_string(internal::user_type_counter<0>++);
 
 	luaL_newmetatable(state, internal::user_type_name<T>.c_str());
 
