@@ -17,7 +17,7 @@
 LUWRA_NS_BEGIN
 
 namespace internal {
-	template <typename T, typename... A>
+	template <typename T, typename... A> inline
 	int construct_user_type(State* state) {
 		return internal::Layout<int(A...)>::direct(
 			state,
@@ -27,7 +27,7 @@ namespace internal {
 		);
 	}
 
-	template <typename T>
+	template <typename T> inline
 	int destruct_user_type(State* state) {
 		if (!lua_islightuserdata(state, 1))
 			Value<T&>::read(state, 1).~T();
@@ -47,7 +47,7 @@ namespace internal {
 			+ std::to_string(uintmax_t(val));
 	}
 
-	template <typename T, typename R, R T::* property_pointer>
+	template <typename T, typename R, R T::* property_pointer> inline
 	int access_user_type_property(State* state) {
 		if (lua_gettop(state) > 1) {
 			// Setter
@@ -72,7 +72,7 @@ namespace internal {
 		using MethodPointerType = R (T::*)(A...);
 		using FunctionSignature = R (T&, A...);
 
-		template <MethodPointerType method_pointer> static
+		template <MethodPointerType method_pointer> static inline
 		R delegate(T& parent, A... args) {
 			return (parent.*method_pointer)(std::forward<A>(args)...);
 		}
