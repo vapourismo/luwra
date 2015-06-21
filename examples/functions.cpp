@@ -6,7 +6,7 @@
 using namespace luwra;
 
 static
-void my_function_1(lua_Number num, const char* str) {
+void my_function_1(float num, const char* str) {
 	std::cout << "my_function_1(" << num << ", " << str << ")" << std::endl;
 }
 
@@ -16,7 +16,7 @@ std::string my_function_2() {
 }
 
 static
-lua_Integer my_function_3(lua_Integer a, lua_Integer b) {
+int my_function_3(int a, int b) {
 	return a + b;
 }
 
@@ -25,7 +25,7 @@ int main() {
 	luaL_openlibs(state);
 
 	// Register 'my_function_1'
-	auto wrapped_1 = WrapFunction<void(lua_Number, const char*), my_function_1>;
+	auto wrapped_1 = WrapFunction<void(float, const char*), my_function_1>;
 	lua_pushcfunction(state, wrapped_1);
 	lua_setglobal(state, "my_function_1");
 
@@ -35,7 +35,7 @@ int main() {
 	lua_setglobal(state, "my_function_2");
 
 	// Register 'my_function_3'
-	auto wrapped_3 = WrapFunction<lua_Integer(lua_Integer, lua_Integer), my_function_3>;
+	auto wrapped_3 = WrapFunction<int(int, int), my_function_3>;
 	lua_pushcfunction(state, wrapped_3);
 	lua_setglobal(state, "my_function_3");
 
