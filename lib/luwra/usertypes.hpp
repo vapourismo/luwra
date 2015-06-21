@@ -40,11 +40,11 @@ namespace internal {
 		"UD#" + std::to_string(uintmax_t(&destruct_user_type<T>));
 
 	template <typename T>
-	std::string stringify_user_type(T* val) {
+	std::string stringify_user_type(T& val) {
 		return
 			internal::user_type_identifier<T>
 			+ "@"
-			+ std::to_string(uintmax_t(val));
+			+ std::to_string(uintmax_t(&val));
 	}
 
 	template <typename T, typename R, R T::* property_pointer> inline
@@ -233,7 +233,7 @@ void register_user_type(
 	// Register string representation function
 	if (meta_methods.count("__tostring") == 0) {
 		push(state, "__tostring");
-		push(state, wrap_function<std::string(T*), &internal::stringify_user_type<T>>);
+		push(state, wrap_function<std::string(T&), &internal::stringify_user_type<T>>);
 		lua_rawset(state, -3);
 	}
 
