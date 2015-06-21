@@ -142,59 +142,6 @@ struct Value<T*> {
 };
 
 /**
- * Register the metatable for user type `T`. This function allows you to register methods
- * which are shared across all instances of this type. A garbage-collector hook is also inserted.
- * Meta-methods can be added and/or overwritten aswell.
- */
-template <typename T> static inline
-void register_user_type(
-	State* state,
-	const std::map<const char*, CFunction>& methods,
-	const std::map<const char*, CFunction>& meta_methods = {}
-) {
-	// Setup an appropriate meta table name
-	luaL_newmetatable(state, internal::user_type_identifier<T>.c_str());
-
-	// Register methods
-	if (methods.size() > 0 && meta_methods.count("__index") == 0) {
-		push(state, "__index");
-		lua_newtable(state);
-
-		for (auto& method: methods) {
-			push(state, method.first);
-			push(state, method.second);
-			lua_rawset(state, -3);
-		}
-
-		lua_rawset(state, -3);
-	}
-
-	// Register garbage-collection hook
-	if (meta_methods.count("__gc") == 0) {
-		push(state, "__gc");
-		push(state, &internal::destruct_user_type<T>);
-		lua_rawset(state, -3);
-	}
-
-	// Register string representation function
-	if (meta_methods.count("__tostring") == 0) {
-		push(state, "__tostring");
-		push(state, wrap_function<std::string(T*), &internal::stringify_user_type<T>>);
-		lua_rawset(state, -3);
-	}
-
-	// Insert meta methods
-	for (const auto& metamethod: meta_methods) {
-		push(state, metamethod.first);
-		push(state, metamethod.second);
-		lua_rawset(state, -3);
-	}
-
-	// Pop meta table off the stack
-	lua_pop(state, -1);
-}
-
-/**
  * Constructor function for a type `T`. Variadic arguments must be used to specify which parameters
  * to use during construction.
  */
@@ -247,6 +194,59 @@ template <
 >
 constexpr CFunction wrap_property =
 	&internal::access_user_type_property<T, R, property_pointer>;
+
+/**
+ * Register the metatable for user type `T`. This function allows you to register methods
+ * which are shared across all instances of this type. A garbage-collector hook is also inserted.
+ * Meta-methods can be added and/or overwritten aswell.
+ */
+template <typename T> static inline
+void register_user_type(
+	State* state,
+	const std::map<const char*, CFunction>& methods,
+	const std::map<const char*, CFunction>& meta_methods = {}
+) {
+	// Setup an appropriate meta table name
+	luaL_newmetatable(state, internal::user_type_identifier<T>.c_str());
+
+	// Register methods
+	if (methods.size() > 0 && meta_methods.count("__index") == 0) {
+		push(state, "__index");
+		lua_newtable(state);
+
+		for (auto& method: methods) {
+			push(state, method.first);
+			push(state, method.second);
+			lua_rawset(state, -3);
+		}
+
+		lua_rawset(state, -3);
+	}
+
+	// Register garbage-collection hook
+	if (meta_methods.count("__gc") == 0) {
+		push(state, "__gc");
+		push(state, &internal::destruct_user_type<T>);
+		lua_rawset(state, -3);
+	}
+
+	// Register string representation function
+	if (meta_methods.count("__tostring") == 0) {
+		push(state, "__tostring");
+		push(state, wrap_function<std::string(T*), &internal::stringify_user_type<T>>);
+		lua_rawset(state, -3);
+	}
+
+	// Insert meta methods
+	for (const auto& metamethod: meta_methods) {
+		push(state, metamethod.first);
+		push(state, metamethod.second);
+		lua_rawset(state, -3);
+	}
+
+	// Pop meta table off the stack
+	lua_pop(state, -1);
+}
 
 LUWRA_NS_END
 
