@@ -24,7 +24,7 @@ namespace internal {
 
 	template <>
 	struct FunctionWrapper<void()> {
-		template <void(*function_pointer)()> static
+		template <void(*function_pointer)()> static inline
 		int invoke(State*) {
 			function_pointer();
 			return 0;
@@ -33,7 +33,7 @@ namespace internal {
 
 	template <typename R>
 	struct FunctionWrapper<R()> {
-		template <R(*function_pointer)()> static
+		template <R(*function_pointer)()> static inline
 		int invoke(State* state) {
 			return push(state, function_pointer());
 		}
@@ -41,7 +41,7 @@ namespace internal {
 
 	template <typename... A>
 	struct FunctionWrapper<void(A...)> {
-		template <void (*function_pointer)(A...)> static
+		template <void (*function_pointer)(A...)> static inline
 		int invoke(State* state) {
 			apply(state, function_pointer);
 			return 0;
@@ -50,7 +50,7 @@ namespace internal {
 
 	template <typename R, typename... A>
 	struct FunctionWrapper<R(A...)> {
-		template <R (*function_pointer)(A...)> static
+		template <R (*function_pointer)(A...)> static inline
 		int invoke(State* state) {
 			return push(
 				state,
