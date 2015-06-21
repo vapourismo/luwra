@@ -26,7 +26,7 @@ int main() {
 
 	// ... which is a little cumbersome. Instead we might apply a fitting function to our stack.
 	std::cout << "(a + b) * c = "
-	          << Apply(state, sum3)
+	          << Apply(state, sum3) // Equivalent to Apply(state, 1, sum3) or Apply(state, -3, sum3)
 	          << std::endl;
 
 	lua_close(state);
