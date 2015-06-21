@@ -48,7 +48,7 @@ struct Value {
  */
 template <typename T> static inline
 int Push(State* state, T value) {
-	return Value<T>::push(state, value);
+	return Value<T>::Push(state, value);
 }
 
 /**
