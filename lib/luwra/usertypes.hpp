@@ -52,6 +52,18 @@ namespace internal {
 		);
 	}
 
+	template <typename T, typename R, R T::* PropertyPointer>
+	int UserTypeAccessor(State* state) {
+		if (lua_gettop(state) > 1) {
+			// Setter
+			(Value<T&>::Read(state, 1).*PropertyPointer) = Value<R>::Read(state, 2);
+			return 0;
+		} else {
+			// Getter
+			return Value<R>::Push(state, Value<T&>::Read(state, 1).*PropertyPointer);
+		}
+	}
+
 	template <typename T, typename S>
 	struct MethodWrapper {
 		static_assert(
@@ -232,6 +244,24 @@ constexpr CFunction WrapMethod =
 		typename internal::MethodWrapper<T, S>::FunctionSignature,
 		internal::MethodWrapper<T, S>::template Delegate<MethodPointer>
 	>;
+
+/**
+ * Property accessor method
+ *
+ *   struct T {
+ *     R my_property;
+ *   };
+ *
+ * The wrapped property accessor is also a function:
+ *
+ *   CFunction wrapped_property = WrapProperty<T, R, &T::my_property>;
+ */
+template <
+	typename T,
+	typename R,
+	R T::* PropertyPointer
+>
+constexpr CFunction WrapProperty = &internal::UserTypeAccessor<T, R, PropertyPointer>;
 
 LUWRA_NS_END
 
