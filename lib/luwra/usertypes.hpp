@@ -13,19 +13,10 @@
 #include "functions.hpp"
 
 #include <map>
-#include <utility>
-#include <atomic>
-#include <cassert>
 
 LUWRA_NS_BEGIN
 
 namespace internal {
-	template <size_t>
-	std::atomic_size_t user_type_counter(0);
-
-	template <typename T>
-	std::string user_type_name = "";
-
 	template <typename T, typename... A>
 	int construct_user_type(State* state) {
 		return internal::Layout<int(A...)>::direct(
@@ -45,8 +36,15 @@ namespace internal {
 	}
 
 	template <typename T>
-	int stringify_user_type(State* state) {
-		return push(state, internal::user_type_name<T>);
+	std::string user_type_identifier =
+		"UD#" + std::to_string(uintmax_t(&destruct_user_type<T>));
+
+	template <typename T>
+	std::string stringify_user_type(T* val) {
+		return
+			internal::user_type_identifier<T>
+			+ "@"
+			+ std::to_string(uintmax_t(val));
 	}
 
 	template <typename T, typename R, R T::* property_pointer>
@@ -91,17 +89,13 @@ template <typename T>
 struct Value<T&> {
 	static inline
 	T& read(State* state, int n) {
-		assert(!internal::user_type_name<T>.empty());
-
 		return *static_cast<T*>(
-			luaL_checkudata(state, n, internal::user_type_name<T>.c_str())
+			luaL_checkudata(state, n, internal::user_type_identifier<T>.c_str())
 		);
 	}
 
 	template <typename... A> static inline
 	int push(State* state, A&&... args) {
-		assert(!internal::user_type_name<T>.empty());
-
 		void* mem = lua_newuserdata(state, sizeof(T));
 
 		if (!mem) {
@@ -113,7 +107,7 @@ struct Value<T&> {
 		new (mem) T(std::forward<A>(args)...);
 
 		// Set metatable for this type
-		luaL_getmetatable(state, internal::user_type_name<T>.c_str());
+		luaL_getmetatable(state, internal::user_type_identifier<T>.c_str());
 		lua_setmetatable(state, -2);
 
 		return 1;
@@ -129,22 +123,18 @@ template <typename T>
 struct Value<T*> {
 	static inline
 	T* read(State* state, int n) {
-		assert(!internal::user_type_name<T>.empty());
-
 		return static_cast<T*>(
-			luaL_checkudata(state, n, internal::user_type_name<T>.c_str())
+			luaL_checkudata(state, n, internal::user_type_identifier<T>.c_str())
 		);
 	}
 
 	static inline
 	int push(State* state, T* instance) {
-		assert(!internal::user_type_name<T>.empty());
-
 		// push instance as light user data
 		lua_pushlightuserdata(state, instance);
 
 		// Set metatable for this type
-		luaL_getmetatable(state, internal::user_type_name<T>.c_str());
+		luaL_getmetatable(state, internal::user_type_identifier<T>.c_str());
 		lua_setmetatable(state, -2);
 
 		return 1;
@@ -163,19 +153,16 @@ void register_user_type(
 	const std::map<const char*, CFunction>& meta_methods = {}
 ) {
 	// Setup an appropriate meta table name
-	if (internal::user_type_name<T>.empty())
-		internal::user_type_name<T> = "UD#" + std::to_string(internal::user_type_counter<0>++);
-
-	luaL_newmetatable(state, internal::user_type_name<T>.c_str());
+	luaL_newmetatable(state, internal::user_type_identifier<T>.c_str());
 
 	// Register methods
 	if (methods.size() > 0 && meta_methods.count("__index") == 0) {
-		lua_pushstring(state, "__index");
+		push(state, "__index");
 		lua_newtable(state);
 
 		for (auto& method: methods) {
-			lua_pushstring(state, method.first);
-			lua_pushcfunction(state, method.second);
+			push(state, method.first);
+			push(state, method.second);
 			lua_rawset(state, -3);
 		}
 
@@ -184,22 +171,22 @@ void register_user_type(
 
 	// Register garbage-collection hook
 	if (meta_methods.count("__gc") == 0) {
-		lua_pushstring(state, "__gc");
-		lua_pushcfunction(state, &internal::destruct_user_type<T>);
+		push(state, "__gc");
+		push(state, &internal::destruct_user_type<T>);
 		lua_rawset(state, -3);
 	}
 
 	// Register string representation function
 	if (meta_methods.count("__tostring") == 0) {
-		lua_pushstring(state, "__tostring");
-		lua_pushcfunction(state, &internal::stringify_user_type<T>);
+		push(state, "__tostring");
+		push(state, wrap_function<std::string(T*), &internal::stringify_user_type<T>>);
 		lua_rawset(state, -3);
 	}
 
 	// Insert meta methods
 	for (const auto& metamethod: meta_methods) {
-		lua_pushstring(state, metamethod.first);
-		lua_pushcfunction(state, metamethod.second);
+		push(state, metamethod.first);
+		push(state, metamethod.second);
 		lua_rawset(state, -3);
 	}
 
@@ -258,7 +245,8 @@ template <
 	typename R,
 	R T::* property_pointer
 >
-constexpr CFunction wrap_property = &internal::access_user_type_property<T, R, property_pointer>;
+constexpr CFunction wrap_property =
+	&internal::access_user_type_property<T, R, property_pointer>;
 
 LUWRA_NS_END
 
