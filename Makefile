@@ -6,7 +6,7 @@ EXEC            := exec
 # Test artifacts
 TEST_DIR        := tests
 TEST_OUT        := $(TEST_DIR)/all
-TEST_SRCS       := all.cpp types.cpp stack.cpp functions.cpp
+TEST_SRCS       := all.cpp types.cpp stack.cpp functions.cpp usertypes.cpp
 TEST_DEPS       := $(TEST_SRCS:%.cpp=$(TEST_DIR)/%.d)
 TEST_OBJS       := $(TEST_SRCS:%.cpp=$(TEST_DIR)/%.o)
 
