@@ -19,8 +19,13 @@
 	#error Luwra has not been tested against your installed version of Lua
 #endif
 
+// Namespaces
 #define LUWRA_NS_BEGIN namespace luwra {
-
 #define LUWRA_NS_END }
+
+// Version MAJOR.MINOR.PATH
+#define LUWRA_VERSION_MAJOR 0
+#define LUWRA_VERSION_MINOR 0
+#define LUWRA_VERSION_PATCH 0
 
 #endif
