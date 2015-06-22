@@ -3,7 +3,9 @@
 #include <lua.hpp>
 #include <luwra.hpp>
 
-#include <iostream>
+
+#include <cstring>
+#include <string>
 #include <utility>
 #include <type_traits>
 
@@ -63,5 +65,45 @@ TEST_CASE("Test Value specialization for numeric C types", "types_numeric") {
 	SelectNumericTest<lua_Number, double>::test(state);
 	SelectNumericTest<lua_Number, long double>::test(state);
 
+	lua_close(state);
+}
+
+TEST_CASE("Test Value specialization for string types", "types_string") {
+	lua_State* state = luaL_newstate();
+
+	const char* test_cstr = "Luwra Test String";
+	std::string test_str(test_cstr);
+
+	// Safety first
+	REQUIRE(test_str == test_cstr);
+
+	// Push both strings
+	REQUIRE(luwra::Value<const char*>::push(state, test_cstr) == 1);
+	REQUIRE(luwra::Value<std::string>::push(state, test_str) == 1);
+
+	// They must be equal to Lua
+	REQUIRE(lua_compare(state, -1, -2, LUA_OPEQ));
+
+	// Extraction as C string must not change the string's value
+	const char* l_cstr1 = luwra::Value<const char*>::read(state, -1);
+	const char* l_cstr2 = luwra::Value<const char*>::read(state, -2);
+
+	REQUIRE(std::strcmp(test_cstr, l_cstr1) == 0);
+	REQUIRE(std::strcmp(test_cstr, l_cstr2) == 0);
+	REQUIRE(std::strcmp(test_str.c_str(), l_cstr1) == 0);
+	REQUIRE(std::strcmp(test_str.c_str(), l_cstr2) == 0);
+	REQUIRE(std::strcmp(l_cstr1, l_cstr2) == 0);
+
+	// Extraction as C++ string must not change the string's value
+	std::string l_str1 = luwra::Value<std::string>::read(state, -1);
+	std::string l_str2 = luwra::Value<std::string>::read(state, -2);
+
+	REQUIRE(l_str1 == test_cstr);
+	REQUIRE(l_str2 == test_cstr);
+	REQUIRE(test_str == l_str1);
+	REQUIRE(test_str == l_str2);
+	REQUIRE(l_str1 == l_str2);
+
+	lua_pop(state, 2);
 	lua_close(state);
 }
