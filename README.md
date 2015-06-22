@@ -4,7 +4,7 @@
 A header-only C++ library which provides a Lua wrapper with minimal overhead.
 
 ## Requirements
-You need will need a C++14 compliant compiler and Lua 5.3 (or higher) installed.
+You need will need a C++14 compliant compiler and Lua 5.2 (or higher) installed.
 
  Platform            | Lua 5.1  | Lua 5.2 <sup>**1)**</sup> | Lua 5.3
 ---------------------|----------|---------------------------|---------
