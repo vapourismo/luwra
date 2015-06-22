@@ -3,14 +3,17 @@
 #include <lua.hpp>
 #include <luwra.hpp>
 
+static
 int test_function_1(int a, int b) {
 	return a - b;
 }
 
+static
 int test_function_2(int a, int b, int c) {
 	return a + b * c;
 }
 
+static
 void test_function_3(int) {
 
 }
