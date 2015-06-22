@@ -121,3 +121,14 @@ TEST_CASE("Test Value specialization for tuples", "types_tuple") {
 
 	lua_close(state);
 }
+
+TEST_CASE("Test Value specialization for bool") {
+	lua_State* state = luaL_newstate();
+
+	bool value = true;
+
+	REQUIRE(luwra::Value<bool>::push(state, value) == 1);
+	REQUIRE(luwra::Value<bool>::read(state, -1) == value);
+
+	lua_close(state);
+}
