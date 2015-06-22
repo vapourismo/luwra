@@ -92,7 +92,7 @@ int push(State* state, T value) {
 	 * push a `std::string` as string onto the stack.
 	 */
 	#define luaL_pushstdstring(state, stdstring) \
-		(lua_pushstring(state, stdstring.c_str()))
+		(lua_pushstring(state, (stdstring).c_str()))
 #endif
 
 namespace internal {
