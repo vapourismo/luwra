@@ -267,22 +267,24 @@ struct Value<Arbitrary> {
 
 namespace internal {
 	template <typename>
-	struct Stackpusher;
+	struct StackPusher;
 
 	template <size_t I>
-	struct Stackpusher<std::index_sequence<I>> {
-		template <typename T> static inline
-		int push(State* state, const T& package) {
-			return push(state, std::get<I>(package));
+	struct StackPusher<std::index_sequence<I>> {
+		template <typename... T> static inline
+		int push(State* state, const std::tuple<T...>& package) {
+			using R = typename std::tuple_element<I, std::tuple<T...>>::type;
+			return std::max(0, Value<R>::push(state, std::get<I>(package)));
 		}
 	};
 
 	template <size_t I, size_t... Is>
-	struct Stackpusher<std::index_sequence<I, Is...>> {
-		template <typename T> static inline
-		int push(State* state, const T& package) {
-			int r = push(state, std::get<I>(package));
-			return std::max(0, r) + Stackpusher<std::index_sequence<Is...>>::push(state, package);
+	struct StackPusher<std::index_sequence<I, Is...>> {
+		template <typename... T> static inline
+		int push(State* state, const std::tuple<T...>& package) {
+			return
+				StackPusher<std::index_sequence<I>>::push(state, package)
+				+ StackPusher<std::index_sequence<Is...>>::push(state, package);
 		}
 	};
 }
@@ -294,7 +296,7 @@ template <typename... A>
 struct Value<std::tuple<A...>> {
 	static inline
 	int push(State* state, const std::tuple<A...>& value) {
-		return internal::Stackpusher<std::make_index_sequence<sizeof...(A)>>::push(state, value);
+		return internal::StackPusher<std::make_index_sequence<sizeof...(A)>>::push(state, value);
 	}
 };
 
