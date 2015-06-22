@@ -37,7 +37,6 @@ $(TEST_OUT): $(TEST_OBJS)
 	$(CXX) $(LDFLAGS) -o$@ $(TEST_OBJS) $(LDLIBS)
 
 $(TEST_DIR)/%.o: $(TEST_DIR)/%.cpp Makefile
-	echo Compile test
 	$(CXX) -c $(CXXFLAGS) -MMD -MF$(@:%.o=%.d) -MT$@ -o$@ $<
 
 # Examples
