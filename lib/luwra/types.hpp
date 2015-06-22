@@ -223,6 +223,9 @@ LUWRA_DEF_VALUE(std::string, luaL_checkstring,  luaL_pushstdstring);
 #undef LUWRA_DEF_VALUE
 #undef LUWRA_DEF_NUMERIC
 
+/**
+ * C Functions may be pushed aswell.
+ */
 template <>
 struct Value<CFunction> {
 	static inline
