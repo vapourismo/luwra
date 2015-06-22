@@ -135,6 +135,7 @@ namespace internal {
 	struct NumericContainedValueBase {
 		static constexpr
 		bool qualifies =
+			// TODO: Remove warning about comparsion between signed and unsigned integers
 			std::numeric_limits<I>::max() < std::numeric_limits<B>::max()
 			&& std::numeric_limits<I>::min() > std::numeric_limits<B>::min();
 
@@ -172,6 +173,8 @@ namespace internal {
 				sizeof(I) == -1,
 				"You shold not use 'Value<I>::push' specializations which inherit from NumericTruncatingValueBase"
 			);
+
+			return -1;
 		}
 	};
 
@@ -267,7 +270,6 @@ namespace internal {
 	struct Stackpusher<std::index_sequence<I>> {
 		template <typename T> static inline
 		int push(State* state, const T& package) {
-			// return Value<typename std::tuple_element<I, T>::type>::push(state, std::get<I>(package));
 			return push(state, std::get<I>(package));
 		}
 	};
@@ -276,13 +278,7 @@ namespace internal {
 	struct Stackpusher<std::index_sequence<I, Is...>> {
 		template <typename T> static inline
 		int push(State* state, const T& package) {
-			// int r = Value<typename std::tuple_element<I, T>::type>::push(
-			// 	state,
-			// 	std::get<I>(package)
-			// );
-
 			int r = push(state, std::get<I>(package));
-
 			return std::max(0, r) + Stackpusher<std::index_sequence<Is...>>::push(state, package);
 		}
 	};
@@ -293,11 +289,6 @@ namespace internal {
  */
 template <typename... A>
 struct Value<std::tuple<A...>> {
-	static inline
-	std::tuple<A...> read(State*, int) {
-		static_assert(sizeof(std::tuple<A...>) == -1, "std::tuples cannot be read from the stack");
-	}
-
 	static inline
 	int push(State* state, const std::tuple<A...>& value) {
 		return internal::Stackpusher<std::make_index_sequence<sizeof...(A)>>::push(state, value);
