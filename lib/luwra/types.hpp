@@ -171,7 +171,7 @@ namespace internal {
 		int push(State*, I) {
 			static_assert(
 				sizeof(I) == -1,
-				"You shold not use 'Value<I>::push' specializations which inherit from NumericTruncatingValueBase"
+				"You must not use 'Value<I>::push' specializations which inherit from NumericTruncatingValueBase"
 			);
 
 			return -1;
