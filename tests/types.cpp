@@ -43,7 +43,7 @@ using SelectNumericTest =
 		TautologyTest
 	>::type;
 
-TEST_CASE("Test Value specialization for numeric C types", "types_numeric") {
+TEST_CASE("types_numeric") {
 	lua_State* state = luaL_newstate();
 
 	// Integer-based types
@@ -64,7 +64,7 @@ TEST_CASE("Test Value specialization for numeric C types", "types_numeric") {
 	lua_close(state);
 }
 
-TEST_CASE("Test Value specialization for string types", "types_string") {
+TEST_CASE("types_string") {
 	lua_State* state = luaL_newstate();
 
 	const char* test_cstr = "Luwra Test String";
@@ -103,7 +103,7 @@ TEST_CASE("Test Value specialization for string types", "types_string") {
 	lua_close(state);
 }
 
-TEST_CASE("Test Value specialization for tuples", "types_tuple") {
+TEST_CASE("types_tuple") {
 	lua_State* state = luaL_newstate();
 
 	int a = 13;
@@ -121,7 +121,7 @@ TEST_CASE("Test Value specialization for tuples", "types_tuple") {
 	lua_close(state);
 }
 
-TEST_CASE("Test Value specialization for bool") {
+TEST_CASE("types_bool") {
 	lua_State* state = luaL_newstate();
 
 	bool value = true;

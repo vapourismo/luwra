@@ -15,7 +15,7 @@ void test_function_3(int) {
 
 }
 
-TEST_CASE("Stack interaction") {
+TEST_CASE("stack_interaction") {
 	lua_State* state = luaL_newstate();
 
 	luwra::push(state, 1);
