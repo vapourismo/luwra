@@ -137,13 +137,13 @@ namespace internal {
 		bool qualifies =
 			// TODO: Remove warning about comparsion between signed and unsigned integers
 			std::numeric_limits<I>::max() <= std::numeric_limits<B>::max()
-			&& std::numeric_limits<I>::min() >= std::numeric_limits<B>::min();
+			&& std::numeric_limits<I>::lowest() >= std::numeric_limits<B>::lowest();
 
 		static inline
 		I read(State* state, int index) {
 			return
 				std::max<B>(
-					std::numeric_limits<I>::min(),
+					std::numeric_limits<I>::lowest(),
 					std::min<B>(
 						std::numeric_limits<I>::max(),
 						NumericTransportValue<B>::read(state, index)
