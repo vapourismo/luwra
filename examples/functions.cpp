@@ -37,8 +37,23 @@ int main() {
 	luwra::push(state, wrapped_3);
 	lua_setglobal(state, "my_function_3");
 
+	// Load Lua code
+	luaL_loadstring(
+		state,
+		// Invoke 'my_function_1'
+		"my_function_1(1337, 'Hello')\n"
+
+		// Invoke 'my_function_2'
+		"local result2 = my_function_2()\n"
+		"print('my_function_2() = ' .. result2)\n"
+
+		// Invoke 'my_function_3'
+		"local result3 = my_function_3(13, 37)\n"
+		"print('my_function_3(13, 38) = ' .. result3)\n"
+	);
+
 	// Invoke the attached script
-	if (luaL_loadfile(state, "functions.lua") != 0 || lua_pcall(state, 0, LUA_MULTRET, 0) != 0) {
+	if (lua_pcall(state, 0, LUA_MULTRET, 0) != 0) {
 		const char* error_msg = lua_tostring(state, -1);
 		std::cerr << "An error occured: " << error_msg << std::endl;
 

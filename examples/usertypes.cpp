@@ -53,8 +53,28 @@ int main() {
 	luwra::push(state, luwra::wrap_constructor<Point, double, double>);
 	lua_setglobal(state, "Point");
 
+	// Load Lua code
+	luaL_loadstring(
+		state,
+		// Instantiate type
+		"local p = Point(13, 37)\n"
+		"print('p =', p)\n"
+
+		// Invoke 'scale' method
+		"p:scale(2)\n"
+		"print('p =', p)\n"
+
+		// Access 'x' and 'y' property
+		"print('p.x =', p:x())\n"
+		"print('p.y =', p:y())\n"
+
+		// Modify 'x' property
+		"p:x(10)\n"
+		"print('p.x =', p:x())\n"
+	);
+
 	// Invoke the attached script
-	if (luaL_loadfile(state, "usertypes.lua") != 0 || lua_pcall(state, 0, LUA_MULTRET, 0) != 0) {
+	if (lua_pcall(state, 0, LUA_MULTRET, 0) != 0) {
 		const char* error_msg = lua_tostring(state, -1);
 		std::cerr << "An error occured: " << error_msg << std::endl;
 
