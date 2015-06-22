@@ -142,13 +142,7 @@ namespace internal {
 		static inline
 		I read(State* state, int index) {
 			return
-				std::max<B>(
-					std::numeric_limits<I>::lowest(),
-					std::min<B>(
-						std::numeric_limits<I>::max(),
-						NumericTransportValue<B>::read(state, index)
-					)
-				);
+				static_cast<I>(NumericTransportValue<B>::read(state, index));
 		}
 
 		static inline
