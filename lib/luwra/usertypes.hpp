@@ -17,7 +17,75 @@
 LUWRA_NS_BEGIN
 
 namespace internal {
-	template <typename T, typename... A> inline
+	using UserTypeID = const void*;
+
+	/**
+	 * User type identifier
+	 */
+	template <typename T>
+	UserTypeID user_type_id = (void*) INTPTR_MAX;
+
+	/**
+	 * Registry name for a meta table which is associated with a user type
+	 */
+	template <typename T>
+	std::string user_type_reg_name =
+		"UD#" + std::to_string(uintptr_t(&user_type_id<T>));
+
+	/**
+	 * Register a new meta table for a user type T.
+	 */
+	template <typename T> static inline
+	void new_user_type_id(State* state) {
+		luaL_newmetatable(state, user_type_reg_name<T>.c_str());
+
+		// Use the address as user type identifier
+		user_type_id<T> = lua_topointer(state, -1);
+	}
+
+	/**
+	 * Get the identifier for a user type at the given index.
+	 */
+	static inline
+	UserTypeID get_user_type_id(State* state, int index) {
+		if (!lua_isuserdata(state, index))
+			return nullptr;
+
+		if (lua_getmetatable(state, index)) {
+			UserTypeID type_id = lua_topointer(state, -1);
+			lua_pop(state, 1);
+			return type_id;
+		} else {
+			return nullptr;
+		}
+	}
+
+	/**
+	 * Check if the value at the given index if a user type T.
+	 */
+	template <typename T> static inline
+	T* check_user_type(State* state, int index) {
+		UserTypeID uid = get_user_type_id(state, index);
+		if (uid == user_type_id<T>) {
+			return static_cast<T*>(lua_touserdata(state, index));
+		} else {
+			std::string error_msg =
+				"Expected user type " + std::to_string(uintptr_t(user_type_id<T>));
+			luaL_argerror(state, index, error_msg.c_str());
+			return nullptr;
+		}
+	}
+
+	template <typename T> static inline
+	void apply_user_type_meta_table(State* state) {
+		luaL_getmetatable(state, user_type_reg_name<T>.c_str());
+		lua_setmetatable(state, -2);
+	}
+
+	/**
+	 * Lua C function to construct a user type T with parameters A
+	 */
+	template <typename T, typename... A> static inline
 	int construct_user_type(State* state) {
 		return internal::Layout<int(A...)>::direct(
 			state,
@@ -27,7 +95,10 @@ namespace internal {
 		);
 	}
 
-	template <typename T> inline
+	/**
+	 * Lua C function to destruct a user type T
+	 */
+	template <typename T> static inline
 	int destruct_user_type(State* state) {
 		if (!lua_islightuserdata(state, 1))
 			Value<T&>::read(state, 1).~T();
@@ -35,19 +106,21 @@ namespace internal {
 		return 0;
 	}
 
-	template <typename T>
-	std::string user_type_identifier =
-		"UD#" + std::to_string(uintmax_t(&destruct_user_type<T>));
-
-	template <typename T>
+	/**
+	 * Create a string representation for user type T.
+	 */
+	template <typename T> static
 	std::string stringify_user_type(T& val) {
 		return
-			internal::user_type_identifier<T>
+			internal::user_type_reg_name<T>
 			+ "@"
-			+ std::to_string(uintmax_t(&val));
+			+ std::to_string(uintptr_t(&val));
 	}
 
-	template <typename T, typename R, R T::* property_pointer> inline
+	/**
+	 * Lua C function for a property accessor.
+	 */
+	template <typename T, typename R, R T::* property_pointer> static inline
 	int access_user_type_property(State* state) {
 		if (lua_gettop(state) > 1) {
 			// Setter
@@ -72,6 +145,9 @@ namespace internal {
 		using MethodPointerType = R (T::*)(A...);
 		using FunctionSignature = R (T&, A...);
 
+		/**
+		 * This function is a wrapped around the invocation of a given method.
+		 */
 		template <MethodPointerType method_pointer> static inline
 		R call(T& parent, A... args) {
 			return (parent.*method_pointer)(std::forward<A>(args)...);
@@ -89,9 +165,7 @@ template <typename T>
 struct Value<T&> {
 	static inline
 	T& read(State* state, int n) {
-		return *static_cast<T*>(
-			luaL_checkudata(state, n, internal::user_type_identifier<T>.c_str())
-		);
+		return *internal::check_user_type<T>(state, n);
 	}
 
 	template <typename... A> static inline
@@ -107,8 +181,7 @@ struct Value<T&> {
 		new (mem) T(std::forward<A>(args)...);
 
 		// Set metatable for this type
-		luaL_getmetatable(state, internal::user_type_identifier<T>.c_str());
-		lua_setmetatable(state, -2);
+		internal::apply_user_type_meta_table<T>(state);
 
 		return 1;
 	}
@@ -123,9 +196,7 @@ template <typename T>
 struct Value<T*> {
 	static inline
 	T* read(State* state, int n) {
-		return static_cast<T*>(
-			luaL_checkudata(state, n, internal::user_type_identifier<T>.c_str())
-		);
+		return internal::check_user_type<T>(state, n);
 	}
 
 	static inline
@@ -134,8 +205,7 @@ struct Value<T*> {
 		lua_pushlightuserdata(state, instance);
 
 		// Set metatable for this type
-		luaL_getmetatable(state, internal::user_type_identifier<T>.c_str());
-		lua_setmetatable(state, -2);
+		internal::apply_user_type_meta_table<T>(state);
 
 		return 1;
 	}
@@ -207,7 +277,8 @@ void register_user_type(
 	const std::map<const char*, CFunction>& meta_methods = {}
 ) {
 	// Setup an appropriate meta table name
-	luaL_newmetatable(state, internal::user_type_identifier<T>.c_str());
+	// luaL_newmetatable(state, internal::user_type_reg_name<T>.c_str());
+	internal::new_user_type_id<T>(state);
 
 	// Register methods
 	if (methods.size() > 0 && meta_methods.count("__index") == 0) {
