@@ -1,2 +1,5 @@
 examples/*.out
-examples/*.d
+tests/all
+
+*.d
+*.o
