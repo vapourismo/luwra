@@ -136,8 +136,8 @@ namespace internal {
 		static constexpr
 		bool qualifies =
 			// TODO: Remove warning about comparsion between signed and unsigned integers
-			std::numeric_limits<I>::max() < std::numeric_limits<B>::max()
-			&& std::numeric_limits<I>::min() > std::numeric_limits<B>::min();
+			std::numeric_limits<I>::max() <= std::numeric_limits<B>::max()
+			&& std::numeric_limits<I>::min() >= std::numeric_limits<B>::min();
 
 		static inline
 		I read(State* state, int index) {
