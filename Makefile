@@ -6,7 +6,7 @@ EXEC            := exec
 # Test artifacts
 TEST_DIR        := tests
 TEST_OUT        := $(TEST_DIR)/all
-TEST_SRCS       := all.cpp
+TEST_SRCS       := all.cpp types.cpp
 TEST_DEPS       := $(TEST_SRCS:%.cpp=$(TEST_DIR)/%.d)
 TEST_OBJS       := $(TEST_SRCS:%.cpp=$(TEST_DIR)/%.o)
 
@@ -31,10 +31,13 @@ clean:
 test: $(TEST_OUT)
 	./$(TEST_OUT)
 
+-include $(TEST_DEPS)
+
 $(TEST_OUT): $(TEST_OBJS)
 	$(CXX) $(LDFLAGS) -o$@ $(TEST_OBJS) $(LDLIBS)
 
 $(TEST_DIR)/%.o: $(TEST_DIR)/%.cpp Makefile
+	echo Compile test
 	$(CXX) -c $(CXXFLAGS) -MMD -MF$(@:%.o=%.d) -MT$@ -o$@ $<
 
 # Examples
