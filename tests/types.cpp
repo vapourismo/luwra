@@ -20,17 +20,14 @@ struct NumericTest {
 		// Largest value
 		REQUIRE(luwra::Value<I>::push(state, max_value) == 1);
 		REQUIRE(luwra::Value<I>::read(state, -1) == max_value);
-		lua_pop(state, 1);
 
 		// Lowest value
 		REQUIRE(luwra::Value<I>::push(state, min_value) == 1);
 		REQUIRE(luwra::Value<I>::read(state, -1) == min_value);
-		lua_pop(state, 1);
 
 		// Average value
 		REQUIRE(luwra::Value<I>::push(state, avg_value) == 1);
 		REQUIRE(luwra::Value<I>::read(state, -1) == avg_value);
-		lua_pop(state, 1);
 	}
 };
 
@@ -88,22 +85,39 @@ TEST_CASE("Test Value specialization for string types", "types_string") {
 	const char* l_cstr1 = luwra::Value<const char*>::read(state, -1);
 	const char* l_cstr2 = luwra::Value<const char*>::read(state, -2);
 
-	REQUIRE(std::strcmp(test_cstr, l_cstr1) == 0);
-	REQUIRE(std::strcmp(test_cstr, l_cstr2) == 0);
+	REQUIRE(std::strcmp(test_cstr,        l_cstr1) == 0);
+	REQUIRE(std::strcmp(test_cstr,        l_cstr2) == 0);
 	REQUIRE(std::strcmp(test_str.c_str(), l_cstr1) == 0);
 	REQUIRE(std::strcmp(test_str.c_str(), l_cstr2) == 0);
-	REQUIRE(std::strcmp(l_cstr1, l_cstr2) == 0);
+	REQUIRE(std::strcmp(l_cstr1,          l_cstr2) == 0);
 
 	// Extraction as C++ string must not change the string's value
 	std::string l_str1 = luwra::Value<std::string>::read(state, -1);
 	std::string l_str2 = luwra::Value<std::string>::read(state, -2);
 
-	REQUIRE(l_str1 == test_cstr);
-	REQUIRE(l_str2 == test_cstr);
+	REQUIRE(l_str1   == test_cstr);
+	REQUIRE(l_str2   == test_cstr);
 	REQUIRE(test_str == l_str1);
 	REQUIRE(test_str == l_str2);
-	REQUIRE(l_str1 == l_str2);
+	REQUIRE(l_str1   == l_str2);
 
-	lua_pop(state, 2);
+	lua_close(state);
+}
+
+TEST_CASE("Test Value specialization for tuples", "types_tuple") {
+	lua_State* state = luaL_newstate();
+
+	int a = 13;
+	std::string b("Hello");
+	float c = 0.37;
+
+	// Push normal tuple
+	auto tuple = std::make_tuple(a, b, c);
+	REQUIRE(luwra::Value<decltype(tuple)>::push(state, tuple) == 3);
+
+	// Push nested tuple
+	auto tuple_nested = std::make_tuple(a, b, c, tuple);
+	REQUIRE(luwra::Value<decltype(tuple_nested)>::push(state, tuple_nested) == 6);
+
 	lua_close(state);
 }
