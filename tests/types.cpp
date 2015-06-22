@@ -3,7 +3,6 @@
 #include <lua.hpp>
 #include <luwra.hpp>
 
-
 #include <cstring>
 #include <string>
 #include <utility>
