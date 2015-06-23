@@ -47,7 +47,7 @@ examples: $(EXAMPLE_OBJS)
 -include $(EXAMPLE_DEPS)
 
 $(EXAMPLE_DIR)/%.out: $(EXAMPLE_DIR)/%.cpp Makefile
-	$(CXX) $(CXXFLAGS) -MMD -MF$(<:%.cpp=%.d) -MT$@ -o$@ $< $(LDLIBS)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -MMD -MF$(<:%.cpp=%.d) -MT$@ -o$@ $< $(LDLIBS)
 
 # Phony
 .PHONY: all clean test examples
