@@ -274,7 +274,7 @@ template <typename T> static inline
 void register_user_type(
 	State* state,
 	const std::map<const char*, CFunction>& methods,
-	const std::map<const char*, CFunction>& meta_methods = {}
+	const std::map<const char*, CFunction>& meta_methods = std::map<const char*, CFunction>()
 ) {
 	// Setup an appropriate meta table name
 	// luaL_newmetatable(state, internal::user_type_reg_name<T>.c_str());
