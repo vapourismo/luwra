@@ -6,11 +6,13 @@ A header-only C++ library which provides a Lua wrapper with minimal overhead.
 ## Requirements
 You need will need a C++14 compliant compiler and Lua 5.2 (or higher) installed.
 
- Platform            | Lua 5.1  | Lua 5.2 <sup>**1)**</sup> | Lua 5.3
----------------------|----------|---------------------------|---------
- Linux (clang++ 3.6) | untested | works                     | works
- Linux (g++ 5.1)     | untested | works                     | works
- Everything else     | untested | untested                  | untested
+ Platform              | Lua 5.1  | Lua 5.2 <sup>**1)**</sup> | Lua 5.3
+-----------------------|----------|---------------------------|---------
+ Linux (clang++ 3.6)   | untested | works                     | works
+ Linux (g++ 5.1)       | untested | works                     | works
+ FreeBSD (clang++ 3.6) | untested | untested                  | untested
+ FreeBSD (g++ 5.1)     | untested | untested                  | untested
+ Everything else       | untested | untested                  | untested
 
 <sup>**1)**</sup> Inherits the integer quirks that come with Lua 5.2, that why the `types_numeric`
 test case fails.
