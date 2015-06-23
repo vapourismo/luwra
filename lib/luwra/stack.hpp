@@ -96,6 +96,18 @@ R apply(State* state, std::function<R(A...)> function_object) {
 	return apply(state, 1, function_object);
 }
 
+/**
+ * Check if two values are equal.
+ */
+static inline
+bool equal(State* state, int index1, int index2) {
+#if LUA_VERSION_NUM <= 501
+	return lua_equal(state, index1, index2);
+#else
+	return lua_compare(state, index1, index2, LUA_OPEQ);
+#endif
+}
+
 LUWRA_NS_END
 
 #endif

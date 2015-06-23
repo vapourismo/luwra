@@ -78,7 +78,7 @@ TEST_CASE("types_string") {
 	REQUIRE(luwra::Value<std::string>::push(state, test_str) == 1);
 
 	// They must be equal to Lua
-	REQUIRE(lua_compare(state, -1, -2, LUA_OPEQ));
+	REQUIRE(luwra::equal(state, -1, -2));
 
 	// Extraction as C string must not change the string's value
 	const char* l_cstr1 = luwra::Value<const char*>::read(state, -1);
