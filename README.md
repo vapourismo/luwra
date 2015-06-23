@@ -14,8 +14,7 @@ You need will need a C++14-compliant compiler and a compatible Lua version.
  FreeBSD <sup>2)</sup> (g++ 5.1)         | works                 | works                 | works
  Everything else                         | untested              | untested              | untested
 
-<sup>**1)**</sup> Inherits the integer quirks that come with Lua 5.1, that why the `types_numeric`
-test case fails.
+<sup>**1)**</sup> Has some integer quirks, that why the `types_numeric` test case fails.
 <sup>**2)**</sup> You need GNU make (devel/gmake) to use the attached Makefile.
 
 ## Usage
