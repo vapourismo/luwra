@@ -18,7 +18,8 @@ EXAMPLE_OBJS    := $(EXAMPLE_SRCS:%.cpp=$(EXAMPLE_DIR)/%.out)
 
 # Compiler
 CXX             ?= clang++
-CXXFLAGS        += -std=c++14 -O2 -g -DDEBUG -fmessage-length=0 -Wall -Wextra -pedantic -Ilib
+CXXFLAGS        += -std=c++14 -O2 -g -DDEBUG -fmessage-length=0 -Wall -Wextra -pedantic -Ilib \
+                   -D_GLIBCXX_USE_C99
 LDLIBS          += -llua
 
 # Default targets
