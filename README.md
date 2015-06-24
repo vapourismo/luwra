@@ -19,6 +19,7 @@ So far all tests have been run on recent versions of Arch Linux and FreeBSD, wit
 
  Compiler    | Lua 5.1             | Lua 5.2             | Lua 5.3
 -------------|---------------------|---------------------|---------
+ clang++ 3.5 | partial<sup>*</sup> | partial<sup>*</sup> | passes
  clang++ 3.6 | partial<sup>*</sup> | partial<sup>*</sup> | passes
  g++ 5.1     | partial<sup>*</sup> | partial<sup>*</sup> | passes
 
