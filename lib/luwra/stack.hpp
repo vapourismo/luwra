@@ -108,6 +108,15 @@ bool equal(State* state, int index1, int index2) {
 #endif
 }
 
+/**
+ * Register a value as a global.
+ */
+template <typename T> static inline
+void register_global(State* state, const char* name, T value) {
+	Value<T>::push(state, value);
+	lua_setglobal(state, name);
+}
+
 LUWRA_NS_END
 
 #endif
