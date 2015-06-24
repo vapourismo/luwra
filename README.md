@@ -4,18 +4,19 @@
 A header-only C++ library which provides a Lua wrapper with minimal overhead.
 
 ## Requirements
-You need will need a C++14-compliant compiler and a compatible Lua version.
+You need a C++14-compliant compiler and at least Lua 5.1 to get this library to work.
 
- Platform                                | Lua 5.1 <sup>1)</sup> | Lua 5.2 <sup>1)</sup> | Lua 5.3
------------------------------------------|-----------------------|-----------------------|---------
- Linux (clang++ 3.6)                     | works                 | works                 | works
- Linux (g++ 5.1)                         | works                 | works                 | works
- FreeBSD <sup>2)</sup> (clang++ 3.6)     | works                 | works                 | works
- FreeBSD <sup>2)</sup> (g++ 5.1)         | works                 | works                 | works
- Everything else                         | untested              | untested              | untested
+## Tests
+The attached `Makefile` allows you to run both examples and tests using `make examples` and
+`make test` respectively. You might need to adjust the `LUA_*` variables, so Luwra finds the
+Lua headers and library.
 
-<sup>**1)**</sup> Has some integer quirks, that why the `types_numeric` test case fails.
-<sup>**2)**</sup> You need GNU make (devel/gmake) to use the attached Makefile.
+So far all tests have been run on recent versions of Arch Linux and FreeBSD, with following results.
+
+ Compiler    | Lua 5.1  | Lua 5.2  | Lua 5.3
+-------------|----------|----------|----------
+ clang++ 3.6 | passes   | passes   | passes
+ g++ 5.1     | passes   | passes   | passes
 
 ## Usage
 Refer to the [wiki pages](https://github.com/vapourismo/luwra/wiki). In order to use the library
