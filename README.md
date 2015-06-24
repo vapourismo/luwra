@@ -3,6 +3,10 @@
 # Luwra
 A header-only C++ library which provides a Lua wrapper with minimal overhead.
 
+## Usage
+Refer to the [wiki pages](https://github.com/vapourismo/luwra/wiki). In order to use the library
+you must clone this repository and add its `lib/` folder to your include path.
+
 ## Requirements
 You need a C++14-compliant compiler and at least Lua 5.1 to get this library to work.
 
@@ -17,7 +21,3 @@ So far all tests have been run on recent versions of Arch Linux and FreeBSD, wit
 -------------|----------|----------|----------
  clang++ 3.6 | passes   | passes   | passes
  g++ 5.1     | passes   | passes   | passes
-
-## Usage
-Refer to the [wiki pages](https://github.com/vapourismo/luwra/wiki). In order to use the library
-you must clone this repository and add its `lib/` folder to your include path.
