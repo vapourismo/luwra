@@ -8,7 +8,8 @@ Refer to the [wiki pages](https://github.com/vapourismo/luwra/wiki). In order to
 you must clone this repository and add its `lib/` folder to your include path.
 
 ## Requirements
-You need a C++14-compliant compiler and at least Lua 5.1 to get this library to work.
+You need a C++14-compliant compiler and at least Lua 5.1 to get this library to work. I recommend
+using Lua 5.3 or later, to avoid the messy `lua_Integer` situation.
 
 ## Tests
 The attached GNU `Makefile` allows you to run both examples and tests using `make examples` and
