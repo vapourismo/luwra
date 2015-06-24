@@ -23,14 +23,6 @@ Assuming all headers are located in `/usr/include/lua5.3` and the shared object 
 make LUA_INCDIR=/usr/include/lua5.3 LUA_LIBNAME=lua5.3 test
 ```
 
-Results on recent versions of Arch Linux and FreeBSD:
-
- Compiler    | Lua 5.1<sup>*</sup> | Lua 5.2<sup>*</sup> | Lua 5.3
--------------|---------------------|---------------------|---------
- clang++ 3.5 | partial             | partial             | passes
- clang++ 3.6 | partial             | partial             | passes
- g++ 5.1     | partial             | partial             | passes
-
 <sup>*</sup> Assertions relying on `lua_Integer` will fail, due to integer quirks in Lua. This
 should only concern you if your application expects Lua integers to work like normal integers,
 because they don't.
