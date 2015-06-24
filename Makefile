@@ -1,7 +1,7 @@
 # Utilities
-RM              := rm -rf
-CHDIR           := cd
-EXEC            := exec
+RM              = rm -rf
+CHDIR           = cd
+EXEC            = exec
 
 # Test artifacts
 TEST_DIR        := tests
@@ -16,11 +16,17 @@ EXAMPLE_SRCS    := types.cpp stack.cpp functions.cpp usertypes.cpp
 EXAMPLE_DEPS    := $(EXAMPLE_SRCS:%.cpp=$(EXAMPLE_DIR)/%.d)
 EXAMPLE_OBJS    := $(EXAMPLE_SRCS:%.cpp=$(EXAMPLE_DIR)/%.out)
 
+# Lua-specific
+LUA_INCDIR      = /usr/include
+LUA_LIBDIR      = /usr/lib
+LUA_LIBNAME     = lua
+
 # Compiler
 CXX             ?= clang++
-CXXFLAGS        += -std=c++14 -O2 -g -DDEBUG -fmessage-length=0 -Wall -Wextra -pedantic -Ilib \
-                   -D_GLIBCXX_USE_C99
-LDLIBS          += -llua
+CXXFLAGS        += -std=c++14 -O2 -g -DDEBUG -fmessage-length=0 -Wall -Wextra -pedantic \
+                   -D_GLIBCXX_USE_C99 -Ilib -I$(LUA_INCDIR)
+LDFLAGS         += -L$(LUA_LIBDIR)
+LDLIBS          += -l$(LUA_LIBNAME)
 
 # Default targets
 all: test examples
