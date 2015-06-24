@@ -17,9 +17,9 @@ Lua headers and library.
 
 So far all tests have been run on recent versions of Arch Linux and FreeBSD, with following results.
 
- Compiler    | Lua 5.1 <sup>*</sup>  | Lua 5.2 <sup>*</sup> | Lua 5.3
--------------|-----------------------|----------------------|----------
- clang++ 3.6 | passes                | passes               | passes
- g++ 5.1     | passes                | passes               | passes
+ Compiler    | Lua 5.1             | Lua 5.2             | Lua 5.3
+-------------|---------------------|---------------------|---------
+ clang++ 3.6 | partial<sup>*</sup> | partial<sup>*</sup> | passes
+ g++ 5.1     | partial<sup>*</sup> | partial<sup>*</sup> | passes
 
-<sup>*</sup> Assertions relying on integers are ignored, due to integer quirks in Lua.
+<sup>*</sup> Assertions relying on integers will fail, due to integer quirks in Lua.
