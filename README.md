@@ -17,10 +17,10 @@ Lua headers and library.
 
 So far all tests have been run on recent versions of Arch Linux and FreeBSD, with following results.
 
- Compiler    | Lua 5.1             | Lua 5.2             | Lua 5.3
+ Compiler    | Lua 5.1<sup>*</sup> | Lua 5.2<sup>*</sup> | Lua 5.3
 -------------|---------------------|---------------------|---------
- clang++ 3.5 | partial<sup>*</sup> | partial<sup>*</sup> | passes
- clang++ 3.6 | partial<sup>*</sup> | partial<sup>*</sup> | passes
- g++ 5.1     | partial<sup>*</sup> | partial<sup>*</sup> | passes
+ clang++ 3.5 | partial             | partial             | passes
+ clang++ 3.6 | partial             | partial             | passes
+ g++ 5.1     | partial             | partial             | passes
 
 <sup>*</sup> Assertions relying on `lua_Integer` will fail, due to integer quirks in Lua.
