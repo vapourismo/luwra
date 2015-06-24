@@ -12,10 +12,17 @@ You need a C++14-compliant compiler and at least Lua 5.1 to get this library to 
 
 ## Tests
 The attached GNU `Makefile` allows you to run both examples and tests using `make examples` and
-`make test` respectively. You might need to adjust the `LUA_*` variables, so Luwra finds the
+`make test` respectively. You might need to adjust `LUA_*` variables, so Luwra finds the
 Lua headers and library.
 
-So far all tests have been run on recent versions of Arch Linux and FreeBSD, with following results.
+Assuming all headers are located in `/usr/include/lua5.3` and the shared object name is
+`liblua5.3.so`, you need to invoke this:
+
+```bash
+make LUA_INCDIR=/usr/include/lua5.3 LUA_LIBNAME=lua5.3 test
+```
+
+Results on recent versions of Arch Linux and FreeBSD:
 
  Compiler    | Lua 5.1<sup>*</sup> | Lua 5.2<sup>*</sup> | Lua 5.3
 -------------|---------------------|---------------------|---------
@@ -23,4 +30,6 @@ So far all tests have been run on recent versions of Arch Linux and FreeBSD, wit
  clang++ 3.6 | partial             | partial             | passes
  g++ 5.1     | partial             | partial             | passes
 
-<sup>*</sup> Assertions relying on `lua_Integer` will fail, due to integer quirks in Lua.
+<sup>*</sup> Assertions relying on `lua_Integer` will fail, due to integer quirks in Lua. This
+should only concern you if your application expects Lua integers to work like normal integers,
+because they don't.
