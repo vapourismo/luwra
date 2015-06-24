@@ -19,6 +19,10 @@ LUWRA_NS_BEGIN
 namespace internal {
 	using UserTypeID = const void*;
 
+	template <typename T>
+	using CleanUserType =
+			std::remove_pointer_t<std::remove_reference_t<std::remove_cv_t<T>>>;
+
 	/**
 	 * User type identifier
 	 */
@@ -30,17 +34,17 @@ namespace internal {
 	 */
 	template <typename T>
 	std::string user_type_reg_name =
-		"UD#" + std::to_string(uintptr_t(&user_type_id<T>));
-
+		"UD#" + std::to_string(uintptr_t(&user_type_id<CleanUserType<T>>));
 	/**
 	 * Register a new meta table for a user type T.
 	 */
 	template <typename T> static inline
 	void new_user_type_id(State* state) {
-		luaL_newmetatable(state, user_type_reg_name<T>.c_str());
+		luaL_newmetatable(state, user_type_reg_name<CleanUserType<T>>.c_str());
 
 		// Use the address as user type identifier
-		user_type_id<T> = lua_topointer(state, -1);
+		UserTypeID ut_id = lua_topointer(state, -1);
+		user_type_id<CleanUserType<T>> = ut_id;
 	}
 
 	/**
@@ -66,11 +70,11 @@ namespace internal {
 	template <typename T> static inline
 	T* check_user_type(State* state, int index) {
 		UserTypeID uid = get_user_type_id(state, index);
-		if (uid == user_type_id<T>) {
+		if (uid == user_type_id<CleanUserType<T>>) {
 			return static_cast<T*>(lua_touserdata(state, index));
 		} else {
 			std::string error_msg =
-				"Expected user type " + std::to_string(uintptr_t(user_type_id<T>));
+				"Expected user type " + std::to_string(uintptr_t(user_type_id<CleanUserType<T>>));
 			luaL_argerror(state, index, error_msg.c_str());
 			return nullptr;
 		}
@@ -78,7 +82,7 @@ namespace internal {
 
 	template <typename T> static inline
 	void apply_user_type_meta_table(State* state) {
-		luaL_getmetatable(state, user_type_reg_name<T>.c_str());
+		luaL_getmetatable(state, user_type_reg_name<CleanUserType<T>>.c_str());
 		lua_setmetatable(state, -2);
 	}
 
@@ -112,7 +116,7 @@ namespace internal {
 	template <typename T> static
 	std::string stringify_user_type(T& val) {
 		return
-			internal::user_type_reg_name<T>
+			internal::user_type_reg_name<CleanUserType<T>>
 			+ "@"
 			+ std::to_string(uintptr_t(&val));
 	}
@@ -277,7 +281,6 @@ void register_user_type(
 	const std::map<const char*, CFunction>& meta_methods = std::map<const char*, CFunction>()
 ) {
 	// Setup an appropriate meta table name
-	// luaL_newmetatable(state, internal::user_type_reg_name<T>.c_str());
 	internal::new_user_type_id<T>(state);
 
 	// Register methods
