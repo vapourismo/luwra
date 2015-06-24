@@ -205,6 +205,9 @@ struct Value<T*> {
 
 	static inline
 	int push(State* state, T* instance) {
+		if (instance == nullptr)
+			return 0;
+
 		// push instance as light user data
 		lua_pushlightuserdata(state, instance);
 
