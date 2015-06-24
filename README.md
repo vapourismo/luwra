@@ -11,7 +11,7 @@ you must clone this repository and add its `lib/` folder to your include path.
 You need a C++14-compliant compiler and at least Lua 5.1 to get this library to work.
 
 ## Tests
-The attached `Makefile` allows you to run both examples and tests using `make examples` and
+The attached GNU `Makefile` allows you to run both examples and tests using `make examples` and
 `make test` respectively. You might need to adjust the `LUA_*` variables, so Luwra finds the
 Lua headers and library.
 
