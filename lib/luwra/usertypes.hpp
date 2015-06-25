@@ -33,7 +33,7 @@ namespace internal {
 	 */
 	template <typename T>
 	std::string user_type_reg_name =
-		"UD#" + std::to_string(uintptr_t(&user_type_id<T>));
+		"UD#" + std::to_string(uintptr_t(&user_type_id<StripUserType<T>>));
 
 	/**
 	 * Register a new meta table for a user type T.
@@ -90,12 +90,12 @@ namespace internal {
 	/**
 	 * Lua C function to construct a user type T with parameters A
 	 */
-	template <typename T, typename... A> static inline
+	template <typename U, typename... A> static inline
 	int construct_user_type(State* state) {
 		return internal::Layout<int(A...)>::direct(
 			state,
 			1,
-			&Value<T&>::template push<A...>,
+			&Value<StripUserType<U>&>::template push<A...>,
 			state
 		);
 	}
@@ -103,8 +103,10 @@ namespace internal {
 	/**
 	 * Lua C function to destruct a user type T
 	 */
-	template <typename T> static inline
+	template <typename U> static inline
 	int destruct_user_type(State* state) {
+		using T = StripUserType<U>;
+
 		if (!lua_islightuserdata(state, 1))
 			Value<T&>::read(state, 1).~T();
 
@@ -116,22 +118,26 @@ namespace internal {
 	 */
 	template <typename U> static
 	int stringify_user_type(State* state) {
+		using T = StripUserType<U>;
+
 		return Value<std::string>::push(
 			state,
-			internal::user_type_reg_name<StripUserType<U>>
-			+ "@"
-			+ std::to_string(uintptr_t(Value<U*>::read(state, 1)))
+			internal::user_type_reg_name<T>
+				+ "@"
+				+ std::to_string(uintptr_t(Value<T*>::read(state, 1)))
 		);
 	}
 
 	/**
 	 * Lua C function for a property accessor.
 	 */
-	template <typename T, typename R, R T::* property_pointer> static inline
+	template <typename U, typename R, R U::* property_pointer> static inline
 	int access_user_type_property(State* state) {
+		using T = StripUserType<U>;
+
 		if (lua_gettop(state) > 1) {
 			// Setter
-			(Value<T*>::read(state, 1)->*property_pointer) = Value<R>::read(state, 2);
+			Value<T*>::read(state, 1)->*property_pointer = Value<R>::read(state, 2);
 			return 0;
 		} else {
 			// Getter
@@ -220,10 +226,10 @@ struct Value<U&> {
 			return -1;
 		}
 
-		// Call constructor on instance
+		// Construct
 		new (mem) T(std::forward<A>(args)...);
 
-		// Set metatable for this type
+		// Apply meta table for unqualified type T
 		internal::apply_user_type_meta_table<T>(state);
 
 		return 1;
@@ -240,7 +246,8 @@ struct Value<U*> {
 	using T = internal::StripUserType<U>;
 
 	static inline
-	T* read(State* state, int n) {
+	U* read(State* state, int n) {
+		// T is unqualified, therefore conversion from T* to U* is allowed
 		return internal::check_user_type<T>(state, n);
 	}
 
@@ -249,10 +256,10 @@ struct Value<U*> {
 		if (instance == nullptr)
 			return 0;
 
-		// push instance as light user data
+		// Push instance as light user data
 		lua_pushlightuserdata(state, instance);
 
-		// Set metatable for this type
+		// Apply meta table for unqualified type T
 		internal::apply_user_type_meta_table<T>(state);
 
 		return 1;
@@ -318,12 +325,14 @@ constexpr CFunction wrap_property =
  * which are shared across all instances of this type. A garbage-collector hook is also inserted.
  * Meta-methods can be added and/or overwritten aswell.
  */
-template <typename T> static inline
+template <typename U> static inline
 void register_user_type(
 	State* state,
 	const std::map<const char*, CFunction>& methods,
 	const std::map<const char*, CFunction>& meta_methods = std::map<const char*, CFunction>()
 ) {
+	using T = internal::StripUserType<U>;
+
 	// Setup an appropriate meta table name
 	internal::new_user_type_id<T>(state);
 
