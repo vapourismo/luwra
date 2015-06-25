@@ -214,6 +214,7 @@ struct Value<U&> {
 
 	static inline
 	T& read(State* state, int n) {
+		// T is unqualified, therefore conversion from T& to U& is allowed
 		return *internal::check_user_type<T>(state, n);
 	}
 

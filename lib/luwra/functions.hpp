@@ -18,7 +18,7 @@ namespace internal {
 	struct FunctionWrapper {
 		static_assert(
 			sizeof(T) == -1,
-			"The FunctionWrapper template expects a function signature as parameter"
+			"Parameter to FunctionWrapper is not a function signature"
 		);
 	};
 

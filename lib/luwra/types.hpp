@@ -28,19 +28,10 @@ using CFunction = lua_CFunction;
  */
 template <typename T>
 struct Value {
-	static_assert(sizeof(T) == -1, "You must not use an unspecialized version of Value");
-
-	/**
-	 * Retrieve the value at position `n`.
-	 */
-	static
-	T read(State*, int);
-
-	/**
-	 * push the value onto the stack.
-	 */
-	static
-	int push(State*, T);
+	static_assert(
+		sizeof(T) == -1,
+		"Parameter to Value is not supported"
+	);
 };
 
 /**
@@ -96,8 +87,13 @@ int push(State* state, T value) {
 #endif
 
 namespace internal {
-	template <typename>
-	struct NumericTransportValue;
+	template <typename T>
+	struct NumericTransportValue {
+		static_assert(
+			sizeof(T) == -1,
+			"Parameter to NumericTransportValue is not a numeric base type"
+		);
+	};
 
 	// Transport unit `Integer`
 	template <>

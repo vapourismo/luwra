@@ -16,8 +16,13 @@
 LUWRA_NS_BEGIN
 
 namespace internal {
-	template <typename>
-	struct Layout;
+	template <typename T>
+	struct Layout {
+		static_assert(
+			sizeof(T) == -1,
+			"Parameter to Layout is not a function signature"
+		);
+	};
 
 	template <typename R, typename T>
 	struct Layout<R(T)> {
