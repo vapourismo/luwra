@@ -21,7 +21,7 @@ struct Point {
 		y *= f;
 	}
 
-	std::string toString() {
+	std::string toString() const {
 		return "<Point(" + std::to_string(x) + ", " + std::to_string(y) + ")>";
 	}
 };
@@ -43,7 +43,7 @@ int main() {
 		},
 		// Meta methods may be registered aswell
 		{
-			{"__tostring", luwra::wrap_method<Point, std::string(), &Point::toString>}
+			{"__tostring", luwra::wrap_method<const Point, std::string(), &Point::toString>}
 		}
 	);
 
