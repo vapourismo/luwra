@@ -28,6 +28,7 @@ namespace internal {
 	template <typename T>
 	UserTypeID user_type_id = (void*) INTPTR_MAX;
 
+	// TODO: Figure out why qualifying `user_type_reg_name` with `static` or `const` causes trouble
 	/**
 	 * Registry name for a meta table which is associated with a user type
 	 */
