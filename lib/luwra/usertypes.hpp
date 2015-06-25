@@ -131,7 +131,7 @@ namespace internal {
 	/**
 	 * Lua C function for a property accessor.
 	 */
-	template <typename U, typename R, R U::* property_pointer> static inline
+	template <typename U, typename R, R StripUserType<U>::* property_pointer> static inline
 	int access_user_type_property(State* state) {
 		using T = StripUserType<U>;
 
