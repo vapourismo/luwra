@@ -89,7 +89,7 @@ R apply(State* state, R (*function_pointer)(A...)) {
  * Specialization of `apply` which works for `std::function`.
  */
 template <typename R, typename... A> static inline
-R apply(State* state, int pos, std::function<R(A...)> function_object) {
+R apply(State* state, int pos, const std::function<R(A...)>& function_object) {
 	return internal::Layout<R(A...)>::direct(state, pos, function_object);
 }
 
@@ -97,7 +97,7 @@ R apply(State* state, int pos, std::function<R(A...)> function_object) {
  * Same as `apply(state, 1, function_object)`.
  */
 template <typename R, typename... A> static inline
-R apply(State* state, std::function<R(A...)> function_object) {
+R apply(State* state, const std::function<R(A...)>& function_object) {
 	return apply(state, 1, function_object);
 }
 
