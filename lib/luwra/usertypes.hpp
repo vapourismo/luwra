@@ -325,14 +325,14 @@ constexpr CFunction wrap_method =
  *
  * The wrapped property accessor is also a function:
  *
- *   CFunction wrapped_property = wrap_property<T, R, &T::my_property>;
+ *   CFunction wrapped_property = wrap_field<T, R, &T::my_property>;
  */
 template <
 	typename T,
 	typename R,
 	R T::* property_pointer
 >
-constexpr CFunction wrap_property =
+constexpr CFunction wrap_field =
 	&internal::PropertyWrapper<T, R>::template invoke<property_pointer>;
 
 /**
