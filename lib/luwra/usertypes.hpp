@@ -20,8 +20,7 @@ namespace internal {
 	using UserTypeID = const void*;
 
 	template <typename T>
-	using CleanUserType =
-			std::remove_pointer_t<std::remove_reference_t<std::remove_cv_t<T>>>;
+	using StripUserType = std::remove_cv_t<T>;
 
 	/**
 	 * User type identifier
@@ -34,17 +33,18 @@ namespace internal {
 	 */
 	template <typename T>
 	std::string user_type_reg_name =
-		"UD#" + std::to_string(uintptr_t(&user_type_id<CleanUserType<T>>));
+		"UD#" + std::to_string(uintptr_t(&user_type_id<T>));
+
 	/**
 	 * Register a new meta table for a user type T.
 	 */
-	template <typename T> static inline
+	template <typename U> static inline
 	void new_user_type_id(State* state) {
-		luaL_newmetatable(state, user_type_reg_name<CleanUserType<T>>.c_str());
+		using T = StripUserType<U>;
 
 		// Use the address as user type identifier
-		UserTypeID ut_id = lua_topointer(state, -1);
-		user_type_id<CleanUserType<T>> = ut_id;
+		luaL_newmetatable(state, user_type_reg_name<T>.c_str());
+		user_type_id<T> = lua_topointer(state, -1);
 	}
 
 	/**
@@ -67,22 +67,23 @@ namespace internal {
 	/**
 	 * Check if the value at the given index if a user type T.
 	 */
-	template <typename T> static inline
-	T* check_user_type(State* state, int index) {
-		UserTypeID uid = get_user_type_id(state, index);
-		if (uid == user_type_id<CleanUserType<T>>) {
+	template <typename U> static inline
+	StripUserType<U>* check_user_type(State* state, int index) {
+		using T = StripUserType<U>;
+
+		if (get_user_type_id(state, index) == user_type_id<T>) {
 			return static_cast<T*>(lua_touserdata(state, index));
 		} else {
 			std::string error_msg =
-				"Expected user type " + std::to_string(uintptr_t(user_type_id<CleanUserType<T>>));
+				"Expected user type " + std::to_string(uintptr_t(user_type_id<T>));
 			luaL_argerror(state, index, error_msg.c_str());
 			return nullptr;
 		}
 	}
 
-	template <typename T> static inline
+	template <typename U> static inline
 	void apply_user_type_meta_table(State* state) {
-		luaL_getmetatable(state, user_type_reg_name<CleanUserType<T>>.c_str());
+		luaL_getmetatable(state, user_type_reg_name<StripUserType<U>>.c_str());
 		lua_setmetatable(state, -2);
 	}
 
@@ -113,12 +114,14 @@ namespace internal {
 	/**
 	 * Create a string representation for user type T.
 	 */
-	template <typename T> static
-	std::string stringify_user_type(T& val) {
-		return
-			internal::user_type_reg_name<CleanUserType<T>>
+	template <typename U> static
+	int stringify_user_type(State* state) {
+		return Value<std::string>::push(
+			state,
+			internal::user_type_reg_name<StripUserType<U>>
 			+ "@"
-			+ std::to_string(uintptr_t(&val));
+			+ std::to_string(uintptr_t(Value<U*>::read(state, 1)))
+		);
 	}
 
 	/**
@@ -128,11 +131,11 @@ namespace internal {
 	int access_user_type_property(State* state) {
 		if (lua_gettop(state) > 1) {
 			// Setter
-			(Value<T&>::read(state, 1).*property_pointer) = Value<R>::read(state, 2);
+			(Value<T*>::read(state, 1)->*property_pointer) = Value<R>::read(state, 2);
 			return 0;
 		} else {
 			// Getter
-			return push(state, Value<T&>::read(state, 1).*property_pointer);
+			return push(state, Value<T*>::read(state, 1)->*property_pointer);
 		}
 	}
 
@@ -147,14 +150,14 @@ namespace internal {
 	template <typename T, typename R, typename... A>
 	struct MethodWrapper<T, R(A...)> {
 		using MethodPointerType = R (T::*)(A...);
-		using FunctionSignature = R (T&, A...);
+		using FunctionSignature = R (T*, A...);
 
 		/**
 		 * This function is a wrapped around the invocation of a given method.
 		 */
 		template <MethodPointerType method_pointer> static inline
-		R call(T& parent, A... args) {
-			return (parent.*method_pointer)(std::forward<A>(args)...);
+		R call(T* parent, A... args) {
+			return (parent->*method_pointer)(std::forward<A>(args)...);
 		}
 	};
 }
@@ -165,8 +168,10 @@ namespace internal {
  * types in Lua. The default garbage-collecting hook will destruct the user type, once it has
  * been marked.
  */
-template <typename T>
-struct Value<T&> {
+template <typename U>
+struct Value<U&> {
+	using T = internal::StripUserType<U>;
+
 	static inline
 	T& read(State* state, int n) {
 		return *internal::check_user_type<T>(state, n);
@@ -196,8 +201,10 @@ struct Value<T&> {
  * Instances created using this specialization are allocated as light user data in Lua.
  * The default garbage-collector does not destruct light user data types.
  */
-template <typename T>
-struct Value<T*> {
+template <typename U>
+struct Value<U*> {
+	using T = internal::StripUserType<U>;
+
 	static inline
 	T* read(State* state, int n) {
 		return internal::check_user_type<T>(state, n);
@@ -310,7 +317,7 @@ void register_user_type(
 	// Register string representation function
 	if (meta_methods.count("__tostring") == 0) {
 		push(state, "__tostring");
-		push(state, wrap_function<std::string(T&), &internal::stringify_user_type<T>>);
+		push(state, &internal::stringify_user_type<T>);
 		lua_rawset(state, -3);
 	}
 
