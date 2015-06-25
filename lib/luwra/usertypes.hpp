@@ -143,18 +143,52 @@ namespace internal {
 	struct MethodWrapper {
 		static_assert(
 			sizeof(T) == -1,
-			"The MethodWrapper template expects a type name and a function signature as parameter"
+			"Undefined template MethodWrapper"
 		);
 	};
 
+	// 'const volatile'-qualified methods
+	template <typename T, typename R, typename... A>
+	struct MethodWrapper<const volatile T, R(A...)> {
+		using MethodPointerType = R (T::*)(A...) const volatile;
+		using FunctionSignature = R (const volatile T*, A...);
+
+		template <MethodPointerType method_pointer> static inline
+		R call(const volatile T* parent, A... args) {
+			return (parent->*method_pointer)(std::forward<A>(args)...);
+		}
+	};
+
+	// 'const'-qualified methods
+	template <typename T, typename R, typename... A>
+	struct MethodWrapper<const T, R(A...)> {
+		using MethodPointerType = R (T::*)(A...) const;
+		using FunctionSignature = R (const T*, A...);
+
+		template <MethodPointerType method_pointer> static inline
+		R call(const T* parent, A... args) {
+			return (parent->*method_pointer)(std::forward<A>(args)...);
+		}
+	};
+
+	// 'volatile'-qualified methods
+	template <typename T, typename R, typename... A>
+	struct MethodWrapper<volatile T, R(A...)> {
+		using MethodPointerType = R (T::*)(A...) volatile;
+		using FunctionSignature = R (volatile T*, A...);
+
+		template <MethodPointerType method_pointer> static inline
+		R call(volatile T* parent, A... args) {
+			return (parent->*method_pointer)(std::forward<A>(args)...);
+		}
+	};
+
+	// unqualified methods
 	template <typename T, typename R, typename... A>
 	struct MethodWrapper<T, R(A...)> {
 		using MethodPointerType = R (T::*)(A...);
 		using FunctionSignature = R (T*, A...);
 
-		/**
-		 * This function is a wrapped around the invocation of a given method.
-		 */
 		template <MethodPointerType method_pointer> static inline
 		R call(T* parent, A... args) {
 			return (parent->*method_pointer)(std::forward<A>(args)...);
