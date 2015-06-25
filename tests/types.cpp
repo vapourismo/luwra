@@ -17,16 +17,16 @@ struct NumericTest {
 		const I avg_value = (max_value + min_value) / 2;
 
 		// Largest value
-		CHECK(luwra::Value<I>::push(state, max_value) == 1);
-		CHECK(luwra::Value<I>::read(state, -1) == max_value);
+		CHECK(luwra::push(state, max_value) == 1);
+		CHECK(luwra::read<I>(state, -1) == max_value);
 
 		// Lowest value
-		CHECK(luwra::Value<I>::push(state, min_value) == 1);
-		CHECK(luwra::Value<I>::read(state, -1) == min_value);
+		CHECK(luwra::push(state, min_value) == 1);
+		CHECK(luwra::read<I>(state, -1) == min_value);
 
 		// Average value
-		CHECK(luwra::Value<I>::push(state, avg_value) == 1);
-		CHECK(luwra::Value<I>::read(state, -1) == avg_value);
+		CHECK(luwra::push(state, avg_value) == 1);
+		CHECK(luwra::read<I>(state, -1) == avg_value);
 	}
 };
 
@@ -74,15 +74,15 @@ TEST_CASE("types_string") {
 	REQUIRE(test_str == test_cstr);
 
 	// Push both strings
-	REQUIRE(luwra::Value<const char*>::push(state, test_cstr) == 1);
-	REQUIRE(luwra::Value<std::string>::push(state, test_str) == 1);
+	REQUIRE(luwra::push(state, test_cstr) == 1);
+	REQUIRE(luwra::push(state, test_str) == 1);
 
 	// They must be equal to Lua
 	REQUIRE(luwra::equal(state, -1, -2));
 
 	// Extraction as C string must not change the string's value
-	const char* l_cstr1 = luwra::Value<const char*>::read(state, -1);
-	const char* l_cstr2 = luwra::Value<const char*>::read(state, -2);
+	const char* l_cstr1 = luwra::read<const char*>(state, -1);
+	const char* l_cstr2 = luwra::read<const char*>(state, -2);
 
 	REQUIRE(std::strcmp(test_cstr,        l_cstr1) == 0);
 	REQUIRE(std::strcmp(test_cstr,        l_cstr2) == 0);
@@ -91,8 +91,8 @@ TEST_CASE("types_string") {
 	REQUIRE(std::strcmp(l_cstr1,          l_cstr2) == 0);
 
 	// Extraction as C++ string must not change the string's value
-	std::string l_str1 = luwra::Value<std::string>::read(state, -1);
-	std::string l_str2 = luwra::Value<std::string>::read(state, -2);
+	std::string l_str1 = luwra::read<std::string>(state, -1);
+	std::string l_str2 = luwra::read<std::string>(state, -2);
 
 	REQUIRE(l_str1   == test_cstr);
 	REQUIRE(l_str2   == test_cstr);
@@ -112,11 +112,11 @@ TEST_CASE("types_tuple") {
 
 	// Push normal tuple
 	auto tuple = std::make_tuple(a, b, c);
-	REQUIRE(luwra::Value<decltype(tuple)>::push(state, tuple) == 3);
+	REQUIRE(luwra::push(state, tuple) == 3);
 
 	// Push nested tuple
 	auto tuple_nested = std::make_tuple(a, b, c, tuple);
-	REQUIRE(luwra::Value<decltype(tuple_nested)>::push(state, tuple_nested) == 6);
+	REQUIRE(luwra::push(state, tuple_nested) == 6);
 
 	lua_close(state);
 }
@@ -126,8 +126,8 @@ TEST_CASE("types_bool") {
 
 	bool value = true;
 
-	REQUIRE(luwra::Value<bool>::push(state, value) == 1);
-	REQUIRE(luwra::Value<bool>::read(state, -1) == value);
+	REQUIRE(luwra::push(state, value) == 1);
+	REQUIRE(luwra::read<bool>(state, -1) == value);
 
 	lua_close(state);
 }
