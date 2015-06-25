@@ -129,22 +129,34 @@ namespace internal {
 		);
 	}
 
-	/**
-	 * Lua C function for a property accessor.
-	 */
-	template <typename U, typename R, R StripUserType<U>::* property_pointer> static inline
-	int access_user_type_property(State* state) {
+	// Normal property wrapper
+	template <typename U, typename R>
+	struct PropertyWrapper {
 		using T = StripUserType<U>;
 
-		if (lua_gettop(state) > 1) {
-			// Setter
-			Value<T*>::read(state, 1)->*property_pointer = Value<R>::read(state, 2);
-			return 0;
-		} else {
-			// Getter
+		template <R T::* property_pointer> static inline
+		int invoke(State* state) {
+			if (lua_gettop(state) > 1) {
+				// Setter
+				Value<T*>::read(state, 1)->*property_pointer = Value<R>::read(state, 2);
+				return 0;
+			} else {
+				// Getter
+				return push(state, Value<T*>::read(state, 1)->*property_pointer);
+			}
+		}
+	};
+
+	// Wrapper for constant properties
+	template <typename U, typename R>
+	struct PropertyWrapper<U, const R> {
+		using T = StripUserType<U>;
+
+		template <const R T::* property_pointer> static inline
+		int invoke(State* state) {
 			return push(state, Value<T*>::read(state, 1)->*property_pointer);
 		}
-	}
+	};
 
 	template <typename T, typename S>
 	struct MethodWrapper {
@@ -273,7 +285,8 @@ struct Value<U*> {
  * to use during construction.
  */
 template <typename T, typename... A>
-constexpr CFunction wrap_constructor = &internal::construct_user_type<T, A...>;
+constexpr CFunction wrap_constructor =
+	&internal::construct_user_type<internal::StripUserType<T>, A...>;
 
 /**
  * Works similiar to `wrap_function`. Given a class or struct declaration as follows:
@@ -320,7 +333,7 @@ template <
 	R T::* property_pointer
 >
 constexpr CFunction wrap_property =
-	&internal::access_user_type_property<T, R, property_pointer>;
+	&internal::PropertyWrapper<T, R>::template invoke<property_pointer>;
 
 /**
  * Register the metatable for user type `T`. This function allows you to register methods
