@@ -298,6 +298,18 @@ struct Value<std::tuple<A...>> {
 	}
 };
 
+/**
+ * Fix specialization for const types.
+ */
+template <typename T>
+struct Value<const T>: Value<T> {};
+
+/**
+ * Fix specialization for volatile types.
+ */
+template <typename T>
+struct Value<volatile T>: Value<T> {};
+
 LUWRA_NS_END
 
 #endif
