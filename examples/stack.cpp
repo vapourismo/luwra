@@ -18,9 +18,9 @@ int main() {
 	luwra::push(state, 42.2);
 
 	// Each value can be retrieved individually.
-	std::cout << "a = " << luwra::Value<int>::read(state, 1) << std::endl;
-	std::cout << "b = " << luwra::Value<int>::read(state, 2) << std::endl;
-	std::cout << "c = " << luwra::Value<double>::read(state, 3) << std::endl;
+	std::cout << "a = " << luwra::read<int>(state, 1) << std::endl;
+	std::cout << "b = " << luwra::read<int>(state, 2) << std::endl;
+	std::cout << "c = " << luwra::read<double>(state, 3) << std::endl;
 
 	// ... which is a little cumbersome. Instead we might apply a fitting function to our stack.
 	std::cout << "(a + b) * c = "

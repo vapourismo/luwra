@@ -43,6 +43,14 @@ int push(State* state, T value) {
 }
 
 /**
+ * Convenient wrapper for `Value<T>::read`.
+ */
+template <typename T> static inline
+T read(State* state, int index) {
+	return Value<T>::read(state, index);
+}
+
+/**
  * Define a template specialization of `Value` for `type` with a `retrf(State*, int)` which
  * extracts it from the stack and a `pushf(State*, type)` which pushes the value on the stack again.
  * This assumes that only one value will be pushed onto the stack.
