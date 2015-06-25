@@ -35,7 +35,7 @@ struct B {
 		return prop += x;
 	}
 
-	B* add(const B* other) {
+	B* add(const B* other) const {
 		return new B {prop + other->prop};
 	}
 };
@@ -49,7 +49,7 @@ TEST_CASE("usertypes_lua_usage") {
 			{"prop", luwra::wrap_property<B, int, &B::prop>}
 		},
 		{
-			{"__add", luwra::wrap_method<B, B*(const B*), &B::add>}
+			{"__add", luwra::wrap_method<const B, B*(const B*), &B::add>}
 		}
 	);
 
