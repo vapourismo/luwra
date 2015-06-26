@@ -30,14 +30,14 @@ namespace internal {
 
 	// TODO: Figure out why qualifying `user_type_reg_name` with `static` or `const` causes trouble
 	/**
-	 * Registry name for a meta table which is associated with a user type
+	 * Registry name for a metatable which is associated with a user type
 	 */
 	template <typename T>
 	std::string user_type_reg_name =
 		"UD#" + std::to_string(uintptr_t(&user_type_id<StripUserType<T>>));
 
 	/**
-	 * Register a new meta table for a user type T.
+	 * Register a new metatable for a user type T.
 	 */
 	template <typename U> static inline
 	void new_user_type_id(State* state) {
@@ -83,7 +83,7 @@ namespace internal {
 	}
 
 	/**
-	 * Apply U's meta table for the value at the top of the stack.
+	 * Apply U's metatable for the value at the top of the stack.
 	 */
 	template <typename U> static inline
 	void apply_user_type_meta_table(State* state) {
@@ -251,7 +251,7 @@ struct Value<U&> {
 		// Construct
 		new (mem) T(std::forward<A>(args)...);
 
-		// Apply meta table for unqualified type T
+		// Apply metatable for unqualified type T
 		internal::apply_user_type_meta_table<T>(state);
 
 		return 1;
@@ -281,7 +281,7 @@ struct Value<U*> {
 		// Push instance as light user data
 		lua_pushlightuserdata(state, instance);
 
-		// Apply meta table for unqualified type T
+		// Apply metatable for unqualified type T
 		internal::apply_user_type_meta_table<T>(state);
 
 		return 1;
@@ -356,7 +356,7 @@ void register_user_type(
 ) {
 	using T = internal::StripUserType<U>;
 
-	// Setup an appropriate meta table name
+	// Setup an appropriate metatable name
 	internal::new_user_type_id<T>(state);
 
 	// Register methods
@@ -394,7 +394,7 @@ void register_user_type(
 		lua_rawset(state, -3);
 	}
 
-	// Pop meta table off the stack
+	// Pop metatable off the stack
 	lua_pop(state, -1);
 }
 
