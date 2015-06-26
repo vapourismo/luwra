@@ -40,21 +40,9 @@ namespace internal {
 	 * Register a new metatable for a user type T.
 	 */
 	template <typename U> static inline
-	void new_user_type_id(State* state) {
+	void new_user_type_metatable(State* state) {
 		using T = StripUserType<U>;
-
-#if LUA_VERSION_NUM >= 502
-		lua_newtable(state);
-
-		UserTypeID utid = lua_topointer(state, -1);
-		user_type_id<T> = utid;
-
-		lua_pushvalue(state, -1);
-		lua_rawsetp(state, LUA_REGISTRYINDEX, utid);
-#else
 		luaL_newmetatable(state, user_type_reg_name<T>.c_str());
-		user_type_id<T> = lua_topointer(state, -1);
-#endif
 	}
 
 	/**
@@ -81,14 +69,7 @@ namespace internal {
 	StripUserType<U>* check_user_type(State* state, int index) {
 		using T = StripUserType<U>;
 
-		if (get_user_type_id(state, index) == user_type_id<T>) {
-			return static_cast<T*>(lua_touserdata(state, index));
-		} else {
-			std::string error_msg =
-				"Expected user type " + user_type_reg_name<T>;
-			luaL_argerror(state, index, error_msg.c_str());
-			return nullptr;
-		}
+		return static_cast<T*>(luaL_checkudata(state, index, user_type_reg_name<T>.c_str()));
 	}
 
 	/**
@@ -98,13 +79,8 @@ namespace internal {
 	void apply_user_type_meta_table(State* state) {
 		using T = StripUserType<U>;
 
-#if LUA_VERSION_NUM >= 502
-		lua_rawgetp(state, LUA_REGISTRYINDEX, user_type_id<T>);
-		lua_setmetatable(state, -2);
-#else
 		luaL_getmetatable(state, user_type_reg_name<T>.c_str());
 		lua_setmetatable(state, -2);
-#endif
 	}
 
 	/**
@@ -373,7 +349,7 @@ void register_user_type(
 	using T = internal::StripUserType<U>;
 
 	// Setup an appropriate metatable name
-	internal::new_user_type_id<T>(state);
+	internal::new_user_type_metatable<T>(state);
 
 	// Register methods
 	if (methods.size() > 0 && meta_methods.count("__index") == 0) {
