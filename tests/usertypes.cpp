@@ -8,7 +8,7 @@
 struct A {
 	int a;
 
-	A() {}
+	A(int x = 1338): a(x) {}
 };
 
 TEST_CASE("usertypes_registration") {
@@ -16,18 +16,39 @@ TEST_CASE("usertypes_registration") {
 
 	REQUIRE(luwra::internal::user_type_id<A> == (void*) INTPTR_MAX);
 
+	// Registration
 	luwra::register_user_type<A>(state, {});
 	REQUIRE(luwra::internal::user_type_id<A> != (void*) INTPTR_MAX);
 
+	// Reference
 	A* instance = new A;
 	luwra::Value<A*>::push(state, instance);
 
+	// Type checks
 	REQUIRE(luwra::internal::get_user_type_id(state, -1) == luwra::internal::user_type_id<A>);
 	REQUIRE(luwra::internal::check_user_type<A>(state, -1) == instance);
 	REQUIRE(luwra::Value<A*>::read(state, -1) == instance);
 
 	lua_close(state);
 	delete instance;
+}
+
+TEST_CASE("usertypes_ctor") {
+	lua_State* state = luaL_newstate();
+
+	// Registration
+	luwra::register_user_type<A>(state, {});
+	luwra::register_global(state, "A", luwra::wrap_constructor<A, int>);
+
+	// Construction
+	REQUIRE(luaL_dostring(state, "return A(73)") == 0);
+
+	// Check
+	A* instance = luwra::read<A*>(state, -1);
+	REQUIRE(instance != nullptr);
+	REQUIRE(instance->a == 73);
+
+	lua_close(state);
 }
 
 struct B {
@@ -47,6 +68,7 @@ struct B {
 TEST_CASE("usertypes_wrap_fields") {
 	lua_State* state = luaL_newstate();
 
+	// Registration
 	luwra::register_user_type<B>(
 		state,
 		{
@@ -57,6 +79,7 @@ TEST_CASE("usertypes_wrap_fields") {
 		}
 	);
 
+	// Instantiation
 	B value(1338);
 	luwra::register_global(state, "val", &value);
 
@@ -121,6 +144,8 @@ struct C {
 
 TEST_CASE("usertypes_wrap_methods") {
 	lua_State* state = luaL_newstate();
+
+	// Registration
 	luwra::register_user_type<C>(
 		state,
 		{
@@ -131,6 +156,7 @@ TEST_CASE("usertypes_wrap_methods") {
 		}
 	);
 
+	// Instantiation
 	C value(1337);
 	luwra::register_global(state, "value", &value);
 
@@ -159,8 +185,11 @@ TEST_CASE("usertypes_wrap_methods") {
 
 TEST_CASE("usertypes_gchook_tref") {
 	lua_State* state = luaL_newstate();
+
+	// Registration
 	luwra::register_user_type<std::shared_ptr<int>>(state, {});
 
+	// Instantiation
 	std::shared_ptr<int> shared_var = std::make_shared<int>(1337);
 	REQUIRE(shared_var.use_count() == 1);
 
@@ -175,8 +204,11 @@ TEST_CASE("usertypes_gchook_tref") {
 
 TEST_CASE("usertypes_gchook_tptr") {
 	lua_State* state = luaL_newstate();
+
+	// Registration
 	luwra::register_user_type<std::shared_ptr<int>>(state, {});
 
+	// Instantiation
 	std::shared_ptr<int> shared_var = std::make_shared<int>(1337);
 	REQUIRE(shared_var.use_count() == 1);
 
