@@ -82,6 +82,9 @@ namespace internal {
 		}
 	}
 
+	/**
+	 * Apply U's meta table for the value at the top of the stack.
+	 */
 	template <typename U> static inline
 	void apply_user_type_meta_table(State* state) {
 		luaL_getmetatable(state, user_type_reg_name<StripUserType<U>>.c_str());
@@ -129,35 +132,40 @@ namespace internal {
 		);
 	}
 
-	// Normal property wrapper
+	/**
+	 * Helper struct for wrapping user type fields
+	 */
 	template <typename U, typename R>
-	struct PropertyWrapper {
+	struct FieldWrapper {
 		using T = StripUserType<U>;
 
-		template <R T::* property_pointer> static inline
+		template <R T::* field_pointer> static inline
 		int invoke(State* state) {
 			if (lua_gettop(state) > 1) {
 				// Setter
-				Value<T*>::read(state, 1)->*property_pointer = Value<R>::read(state, 2);
+				Value<T*>::read(state, 1)->*field_pointer = Value<R>::read(state, 2);
 				return 0;
 			} else {
 				// Getter
-				return push(state, Value<T*>::read(state, 1)->*property_pointer);
+				return push(state, Value<T*>::read(state, 1)->*field_pointer);
 			}
 		}
 	};
 
-	// Wrapper for constant properties
+	// 'const'-qualified fields
 	template <typename U, typename R>
-	struct PropertyWrapper<U, const R> {
+	struct FieldWrapper<U, const R> {
 		using T = StripUserType<U>;
 
-		template <const R T::* property_pointer> static inline
+		template <const R T::* field_pointer> static inline
 		int invoke(State* state) {
-			return push(state, Value<T*>::read(state, 1)->*property_pointer);
+			return push(state, Value<T*>::read(state, 1)->*field_pointer);
 		}
 	};
 
+	/**
+	 * Helper struct for wrapping user type methods
+	 */
 	template <typename T, typename S>
 	struct MethodWrapper {
 		static_assert(
@@ -226,7 +234,7 @@ struct Value<U&> {
 	using T = internal::StripUserType<U>;
 
 	static inline
-	T& read(State* state, int n) {
+	U& read(State* state, int n) {
 		// T is unqualified, therefore conversion from T& to U& is allowed
 		return *internal::check_user_type<T>(state, n);
 	}
@@ -330,10 +338,10 @@ constexpr CFunction wrap_method =
 template <
 	typename T,
 	typename R,
-	R T::* property_pointer
+	R T::* field_pointer
 >
 constexpr CFunction wrap_field =
-	&internal::PropertyWrapper<T, R>::template invoke<property_pointer>;
+	&internal::FieldWrapper<T, R>::template invoke<field_pointer>;
 
 /**
  * Register the metatable for user type `T`. This function allows you to register methods
