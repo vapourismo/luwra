@@ -43,9 +43,18 @@ namespace internal {
 	void new_user_type_id(State* state) {
 		using T = StripUserType<U>;
 
-		// Use the address as user type identifier
+#if LUA_VERSION_NUM >= 502
+		lua_newtable(state);
+
+		UserTypeID utid = lua_topointer(state, -1);
+		user_type_id<T> = utid;
+
+		lua_pushvalue(state, -1);
+		lua_rawsetp(state, LUA_REGISTRYINDEX, utid);
+#else
 		luaL_newmetatable(state, user_type_reg_name<T>.c_str());
 		user_type_id<T> = lua_topointer(state, -1);
+#endif
 	}
 
 	/**
@@ -76,7 +85,7 @@ namespace internal {
 			return static_cast<T*>(lua_touserdata(state, index));
 		} else {
 			std::string error_msg =
-				"Expected user type " + std::to_string(uintptr_t(user_type_id<T>));
+				"Expected user type " + user_type_reg_name<T>;
 			luaL_argerror(state, index, error_msg.c_str());
 			return nullptr;
 		}
@@ -87,8 +96,15 @@ namespace internal {
 	 */
 	template <typename U> static inline
 	void apply_user_type_meta_table(State* state) {
-		luaL_getmetatable(state, user_type_reg_name<StripUserType<U>>.c_str());
+		using T = StripUserType<U>;
+
+#if LUA_VERSION_NUM >= 502
+		lua_rawgetp(state, LUA_REGISTRYINDEX, user_type_id<T>);
 		lua_setmetatable(state, -2);
+#else
+		luaL_getmetatable(state, user_type_reg_name<T>.c_str());
+		lua_setmetatable(state, -2);
+#endif
 	}
 
 	/**
