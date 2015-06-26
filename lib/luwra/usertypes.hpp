@@ -325,7 +325,7 @@ constexpr CFunction wrap_field =
 template <typename U> static inline
 void register_user_type(
 	State* state,
-	const std::map<const char*, CFunction>& methods,
+	const std::map<const char*, CFunction>& methods = std::map<const char*, CFunction>(),
 	const std::map<const char*, CFunction>& meta_methods = std::map<const char*, CFunction>()
 ) {
 	using T = internal::StripUserType<U>;
