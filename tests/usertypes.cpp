@@ -14,18 +14,14 @@ struct A {
 TEST_CASE("usertypes_registration") {
 	lua_State* state = luaL_newstate();
 
-	REQUIRE(luwra::internal::user_type_id<A> == (void*) INTPTR_MAX);
-
 	// Registration
 	luwra::register_user_type<A>(state, {});
-	REQUIRE(luwra::internal::user_type_id<A> != (void*) INTPTR_MAX);
 
 	// Reference
 	A* instance = new A;
 	luwra::Value<A*>::push(state, instance);
 
 	// Type checks
-	REQUIRE(luwra::internal::get_user_type_id(state, -1) == luwra::internal::user_type_id<A>);
 	REQUIRE(luwra::internal::check_user_type<A>(state, -1) == instance);
 	REQUIRE(luwra::Value<A*>::read(state, -1) == instance);
 

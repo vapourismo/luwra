@@ -46,23 +46,6 @@ namespace internal {
 	}
 
 	/**
-	 * Get the identifier for a user type at the given index.
-	 */
-	static inline
-	UserTypeID get_user_type_id(State* state, int index) {
-		if (!lua_isuserdata(state, index))
-			return nullptr;
-
-		if (lua_getmetatable(state, index)) {
-			UserTypeID type_id = lua_topointer(state, -1);
-			lua_pop(state, 1);
-			return type_id;
-		} else {
-			return nullptr;
-		}
-	}
-
-	/**
 	 * Check if the value at the given index if a user type T.
 	 */
 	template <typename U> static inline
