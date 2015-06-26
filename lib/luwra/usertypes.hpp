@@ -25,15 +25,14 @@ namespace internal {
 	/**
 	 * User type identifier
 	 */
-	template <typename T>
-	UserTypeID user_type_id = (void*) INTPTR_MAX;
+	template <typename T> extern
+	const UserTypeID user_type_id = (void*) INTPTR_MAX;
 
-	// TODO: Figure out why qualifying `user_type_reg_name` with `static` or `const` causes trouble
 	/**
 	 * Registry name for a metatable which is associated with a user type
 	 */
-	template <typename T>
-	std::string user_type_reg_name =
+	template <typename T> extern
+	const std::string user_type_reg_name =
 		"UD#" + std::to_string(uintptr_t(&user_type_id<StripUserType<T>>));
 
 	/**
