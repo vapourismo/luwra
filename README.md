@@ -9,7 +9,7 @@ you must clone this repository and add its `lib/` folder to your include path.
 
 ## Requirements
 You need a C++14-compliant compiler and at least Lua 5.1 to get this library to work. I recommend
-using Lua 5.3 or later, to avoid the messy `lua_Integer` situation. LuaJIT 2.0 seems work aswell.
+using Lua 5.3 or later, to avoid the messy `lua_Integer` situation. LuaJIT 2.0 seems to work aswell.
 
 ## Tests
 The attached GNU `Makefile` allows you to run both examples and tests using `make examples` and
