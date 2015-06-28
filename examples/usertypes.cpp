@@ -50,7 +50,7 @@ int main() {
 	// What's left, is registering a constructor for our type.
 	// We have to specify which parameters our constructor takes, because there might be more than
 	// one constructor to deal with.
-	luwra::register_global(state, "Point", luwra::wrap_constructor<Point, double, double>);
+	luwra::register_global(state, "Point", LUWRA_WRAP_CONSTRUCTOR(Point, double, double));
 
 	// Load Lua code
 	luaL_loadstring(

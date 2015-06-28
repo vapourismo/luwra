@@ -330,6 +330,12 @@ constexpr CFunction wrap_constructor =
 	&internal::construct_user_type<internal::StripUserType<T>, A...>;
 
 /**
+ * This macros has no additional use whatsoever, but I makes the style consistent.
+ */
+#define LUWRA_WRAP_CONSTRUCTOR(type, ...) \
+	(luwra::wrap_constructor<type, __VA_ARGS__>)
+
+/**
  * Works similiar to `wrap_function`. Given a class or struct declaration as follows:
  *
  *   struct T {

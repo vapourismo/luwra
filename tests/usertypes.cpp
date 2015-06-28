@@ -34,7 +34,7 @@ TEST_CASE("usertypes_ctor") {
 
 	// Registration
 	luwra::register_user_type<A>(state);
-	luwra::register_global(state, "A", luwra::wrap_constructor<A, int>);
+	luwra::register_global(state, "A", LUWRA_WRAP_CONSTRUCTOR(A, int));
 
 	// Construction
 	REQUIRE(luaL_dostring(state, "return A(73)") == 0);
