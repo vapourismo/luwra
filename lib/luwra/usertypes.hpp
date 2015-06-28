@@ -137,6 +137,17 @@ namespace internal {
 		}
 	};
 
+	template <typename T>
+	struct FieldWrapperHelper {
+		static_assert(
+			sizeof(T) == -1,
+			"Parameter to FieldWrapperHelper is not a function pointer"
+		);
+	};
+
+	template <typename T, typename R>
+	struct FieldWrapperHelper<R T::*>: FieldWrapper<T, R> {};
+
 	/**
 	 * Helper struct for wrapping user type methods
 	 */
@@ -158,6 +169,11 @@ namespace internal {
 		R call(const volatile T* parent, A... args) {
 			return (parent->*method_pointer)(std::forward<A>(args)...);
 		}
+
+		template <MethodPointerType method_pointer> static inline
+		int invoke(State* state) {
+			return FunctionWrapper<FunctionSignature>::template invoke<call<method_pointer>>(state);
+		}
 	};
 
 	// 'const'-qualified methods
@@ -169,6 +185,11 @@ namespace internal {
 		template <MethodPointerType method_pointer> static inline
 		R call(const T* parent, A... args) {
 			return (parent->*method_pointer)(std::forward<A>(args)...);
+		}
+
+		template <MethodPointerType method_pointer> static inline
+		int invoke(State* state) {
+			return FunctionWrapper<FunctionSignature>::template invoke<call<method_pointer>>(state);
 		}
 	};
 
@@ -182,6 +203,11 @@ namespace internal {
 		R call(volatile T* parent, A... args) {
 			return (parent->*method_pointer)(std::forward<A>(args)...);
 		}
+
+		template <MethodPointerType method_pointer> static inline
+		int invoke(State* state) {
+			return FunctionWrapper<FunctionSignature>::template invoke<call<method_pointer>>(state);
+		}
 	};
 
 	// unqualified methods
@@ -194,7 +220,40 @@ namespace internal {
 		R call(T* parent, A... args) {
 			return (parent->*method_pointer)(std::forward<A>(args)...);
 		}
+
+		template <MethodPointerType method_pointer> static inline
+		int invoke(State* state) {
+			return FunctionWrapper<FunctionSignature>::template invoke<call<method_pointer>>(state);
+		}
 	};
+
+	template <typename T>
+	struct MethodWrapperHelper {
+		static_assert(
+			sizeof(T) == -1,
+			"Parameter to MethodWrapperHelper is not a function pointer"
+		);
+	};
+
+	template <typename T, typename R, typename... A>
+	struct MethodWrapperHelper<R (T::*)(A...) const volatile>:
+		MethodWrapper<const volatile T, R(A...)>
+	{};
+
+	template <typename T, typename R, typename... A>
+	struct MethodWrapperHelper<R (T::*)(A...) const>:
+		MethodWrapper<const T, R(A...)>
+	{};
+
+	template <typename T, typename R, typename... A>
+	struct MethodWrapperHelper<R (T::*)(A...) volatile>:
+		MethodWrapper<volatile T, R(A...)>
+	{};
+
+	template <typename T, typename R, typename... A>
+	struct MethodWrapperHelper<R (T::*)(A...)>:
+		MethodWrapper<T, R(A...)>
+	{};
 }
 
 /**
@@ -299,6 +358,12 @@ constexpr CFunction wrap_method =
 	>;
 
 /**
+ * This macro allows you to wrap methods without supplying template parameters.
+ */
+#define LUWRA_WRAP_METHOD(meth) \
+	(&luwra::internal::MethodWrapperHelper<decltype(&meth)>::template invoke<&meth>)
+
+/**
  * Property accessor method
  *
  *   struct T {
@@ -316,6 +381,12 @@ template <
 >
 constexpr CFunction wrap_field =
 	&internal::FieldWrapper<T, R>::template invoke<field_pointer>;
+
+/**
+ * This macro allows you to wrap fields without supplying template parameters.
+ */
+#define LUWRA_WRAP_FIELD(field) \
+	(&luwra::internal::FieldWrapperHelper<decltype(&field)>::invoke<&field>)
 
 /**
  * Register the metatable for user type `T`. This function allows you to register methods

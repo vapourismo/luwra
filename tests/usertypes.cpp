@@ -68,10 +68,10 @@ TEST_CASE("usertypes_wrap_fields") {
 	luwra::register_user_type<B>(
 		state,
 		{
-			{"n", luwra::wrap_field<B, int, &B::n>},
-			{"cn", luwra::wrap_field<B, const int, &B::cn>},
-			{"vn", luwra::wrap_field<B, volatile int, &B::vn>},
-			{"cvn", luwra::wrap_field<B, const volatile int, &B::cvn>}
+			{"n", LUWRA_WRAP_FIELD(B::n)},
+			{"cn", LUWRA_WRAP_FIELD(B::cn)},
+			{"vn", LUWRA_WRAP_FIELD(B::vn)},
+			{"cvn", LUWRA_WRAP_FIELD(B::cvn)}
 		}
 	);
 
@@ -145,10 +145,10 @@ TEST_CASE("usertypes_wrap_methods") {
 	luwra::register_user_type<C>(
 		state,
 		{
-			{"foo1", luwra::wrap_method<C, int(int), &C::foo1>},
-			{"foo2", luwra::wrap_method<const C, int(int), &C::foo2>},
-			{"foo3", luwra::wrap_method<volatile C, int(int), &C::foo3>},
-			{"foo4", luwra::wrap_method<const volatile C, int(int), &C::foo4>}
+			{"foo1", LUWRA_WRAP_METHOD(C::foo1)},
+			{"foo2", LUWRA_WRAP_METHOD(C::foo2)},
+			{"foo3", LUWRA_WRAP_METHOD(C::foo3)},
+			{"foo4", LUWRA_WRAP_METHOD(C::foo4)}
 		}
 	);
 

@@ -37,13 +37,13 @@ int main() {
 		state,
 		// Methods which shall be availabe in the Lua user data, need to be declared here
 		{
-			{"scale", luwra::wrap_method<Point, void(double), &Point::scale>},
-			{"x",     luwra::wrap_field<Point, double, &Point::x>},
-			{"y",     luwra::wrap_field<Point, double, &Point::y>}
+			{"scale", LUWRA_WRAP_METHOD(Point::scale)},
+			{"x",     LUWRA_WRAP_FIELD(Point::x)},
+			{"y",     LUWRA_WRAP_FIELD(Point::y)}
 		},
 		// Meta methods may be registered aswell
 		{
-			{"__tostring", luwra::wrap_method<const Point, std::string(), &Point::toString>}
+			{"__tostring", LUWRA_WRAP_METHOD(Point::toString)}
 		}
 	);
 
