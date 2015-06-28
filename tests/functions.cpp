@@ -18,7 +18,8 @@ TEST_CASE("wrap_function_noret_noparams") {
 	noret_environment = 1337;
 
 	// Wrap function
-	lua_CFunction cfun = luwra::wrap_function<void(), test_function_noret_noparams>;
+	// lua_CFunction cfun = luwra::wrap_function<void(), test_function_noret_noparams>;
+	lua_CFunction cfun = LUWRA_WRAP_FUNCTION(test_function_noret_noparams);
 	REQUIRE(cfun != nullptr);
 
 	// Register function
@@ -45,7 +46,8 @@ TEST_CASE("wrap_function_noret") {
 	int req_environemt = noret_environment;
 
 	// Wrap function
-	lua_CFunction cfun = luwra::wrap_function<void(int, int), test_function_noret>;
+	// lua_CFunction cfun = luwra::wrap_function<void(int, int), test_function_noret>;
+	lua_CFunction cfun = LUWRA_WRAP_FUNCTION(test_function_noret);
 	REQUIRE(cfun != nullptr);
 
 	// Register function
@@ -68,7 +70,8 @@ TEST_CASE("wrap_function_noparams") {
 	lua_State* state = luaL_newstate();
 
 	// Wrap function
-	lua_CFunction cfun = luwra::wrap_function<int(), test_function_noparams>;
+	// lua_CFunction cfun = luwra::wrap_function<int(), test_function_noparams>;
+	lua_CFunction cfun = LUWRA_WRAP_FUNCTION(test_function_noparams);
 	REQUIRE(cfun != nullptr);
 
 	// Register function
@@ -91,7 +94,8 @@ TEST_CASE("wrap_function") {
 	lua_State* state = luaL_newstate();
 
 	// Wrap function
-	lua_CFunction cfun = luwra::wrap_function<int(int, int), test_function>;
+	// lua_CFunction cfun = luwra::wrap_function<int(int, int), test_function>;
+	lua_CFunction cfun = LUWRA_WRAP_FUNCTION(test_function);
 	REQUIRE(cfun != nullptr);
 
 	// Register function

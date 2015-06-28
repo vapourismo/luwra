@@ -23,15 +23,15 @@ int main() {
 	luaL_openlibs(state);
 
 	// Register 'my_function_1'
-	auto wrapped_1 = luwra::wrap_function<void(float, const char*), my_function_1>;
+	auto wrapped_1 = LUWRA_WRAP_FUNCTION(my_function_1);
 	luwra::register_global(state, "my_function_1", wrapped_1);
 
 	// Register 'my_function_2'
-	auto wrapped_2 = luwra::wrap_function<std::string(), my_function_2>;
+	auto wrapped_2 = LUWRA_WRAP_FUNCTION(my_function_2);
 	luwra::register_global(state, "my_function_2", wrapped_2);
 
 	// Register 'my_function_3'
-	auto wrapped_3 = luwra::wrap_function<int(int, int), my_function_3>;
+	auto wrapped_3 = LUWRA_WRAP_FUNCTION(my_function_3);
 	luwra::register_global(state, "my_function_3", wrapped_3);
 
 	// Load Lua code
