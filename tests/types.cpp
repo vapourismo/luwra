@@ -47,6 +47,8 @@ TEST_CASE("types_numeric") {
 	lua_State* state = luaL_newstate();
 
 	// Integer-based types
+	SelectNumericTest<lua_Integer, signed char>::test(state);
+	SelectNumericTest<lua_Integer, unsigned char>::test(state);
 	SelectNumericTest<lua_Integer, signed short>::test(state);
 	SelectNumericTest<lua_Integer, unsigned short>::test(state);
 	SelectNumericTest<lua_Integer, signed int>::test(state);
