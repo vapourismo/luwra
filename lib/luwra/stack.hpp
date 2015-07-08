@@ -151,6 +151,15 @@ void set_fields(State* state, int index, R&&... args) {
 	internal::EntryPusher<R...>::push(state, index, std::forward<R>(args)...);
 }
 
+/**
+ * Create a new table and set its fields.
+ */
+template <typename... R> static inline
+void new_table(State* state, R&&... args) {
+	lua_newtable(state);
+	set_fields(state, lua_gettop(state), std::forward<R>(args)...);
+}
+
 LUWRA_NS_END
 
 #endif
