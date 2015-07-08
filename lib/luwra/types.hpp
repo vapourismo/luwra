@@ -223,6 +223,14 @@ LUWRA_DEF_VALUE(std::string, luaL_checkstring,  luaL_pushstdstring);
 #undef LUWRA_DEF_VALUE
 #undef LUWRA_DEF_NUMERIC
 
+// Alias for string literals
+template <size_t n>
+struct Value<char[n]>: Value<const char*> {};
+
+// Alias for const string literals
+template <size_t n>
+struct Value<const char[n]>: Value<const char*> {};
+
 /**
  * C Functions may be pushed aswell.
  */
