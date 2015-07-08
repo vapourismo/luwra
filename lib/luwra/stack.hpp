@@ -138,7 +138,7 @@ bool equal(State* state, int index1, int index2) {
  */
 template <typename T> static inline
 void register_global(State* state, const char* name, T value) {
-	push(state, value);
+	assert(1 == push(state, value));
 	lua_setglobal(state, name);
 }
 
