@@ -10,6 +10,7 @@
 #include "common.hpp"
 #include "types.hpp"
 
+#include <cassert>
 #include <utility>
 #include <functional>
 
@@ -46,6 +47,25 @@ namespace internal {
 				std::forward<A>(args)...,
 				Value<T1>::read(state, n)
 			);
+		}
+	};
+
+	template <typename K, typename V, typename... R>
+	struct EntryPusher {
+		static inline
+		void push(State* state, int index, K&& key, V&& value, R&&... rest) {
+			EntryPusher<K, V>::push(state, index, std::forward<K>(key), std::forward<V>(value));
+			EntryPusher<R...>::push(state, index, std::forward<R>(rest)...);
+		}
+	};
+
+	template <typename K, typename V>
+	struct EntryPusher<K, V> {
+		static inline
+		void push(State* state, int index, K&& key, V&& value) {
+			assert(1 == luwra::push(state, key));
+			assert(1 == luwra::push(state, value));
+			lua_rawset(state, index < 0 ? index - 2 : index);
 		}
 	};
 }
@@ -118,8 +138,17 @@ bool equal(State* state, int index1, int index2) {
  */
 template <typename T> static inline
 void register_global(State* state, const char* name, T value) {
-	Value<T>::push(state, value);
+	push(state, value);
 	lua_setglobal(state, name);
+}
+
+/**
+ * Set multiple fields at once. Allows you to provide multiple key-value pairs.
+ */
+template <typename... R> static inline
+void set_fields(State* state, int index, R&&... args) {
+	static_assert(sizeof...(R) % 2 == 0, "Field parameters must appear in pairs");
+	internal::EntryPusher<R...>::push(state, index, std::forward<R>(args)...);
 }
 
 LUWRA_NS_END
