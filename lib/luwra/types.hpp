@@ -203,6 +203,8 @@ LUWRA_DEF_NUMERIC(Number, double)
 LUWRA_DEF_NUMERIC(Number, long double)
 
 // Integral types
+LUWRA_DEF_NUMERIC(Integer, signed   char)
+LUWRA_DEF_NUMERIC(Integer, unsigned char)
 LUWRA_DEF_NUMERIC(Integer, signed   short)
 LUWRA_DEF_NUMERIC(Integer, unsigned short)
 LUWRA_DEF_NUMERIC(Integer, signed   int)
