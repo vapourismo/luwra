@@ -282,7 +282,7 @@ struct Value<U&> {
 		}
 
 		// Construct
-		new (mem) T(std::forward<A>(args)...);
+		new (mem) T {std::forward<A>(args)...};
 
 		// Apply metatable for unqualified type T
 		internal::apply_user_type_meta_table<T>(state);
