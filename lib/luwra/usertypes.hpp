@@ -416,9 +416,7 @@ void register_user_type(
 		lua_newtable(state);
 
 		for (auto& method: methods) {
-			push(state, method.first);
-			push(state, method.second);
-			lua_rawset(state, -3);
+			set_fields(state, -1, method.first, method.second);
 		}
 
 		lua_rawset(state, -3);
@@ -426,23 +424,17 @@ void register_user_type(
 
 	// Register garbage-collection hook
 	if (meta_methods.count("__gc") == 0) {
-		push(state, "__gc");
-		push(state, &internal::destruct_user_type<T>);
-		lua_rawset(state, -3);
+		set_fields(state, -1, "__gc", &internal::destruct_user_type<T>);
 	}
 
 	// Register string representation function
 	if (meta_methods.count("__tostring") == 0) {
-		push(state, "__tostring");
-		push(state, &internal::stringify_user_type<T>);
-		lua_rawset(state, -3);
+		set_fields(state, -1, "__tostring", &internal::stringify_user_type<T>);
 	}
 
 	// Insert meta methods
 	for (const auto& metamethod: meta_methods) {
-		push(state, metamethod.first);
-		push(state, metamethod.second);
-		lua_rawset(state, -3);
+		set_fields(state, -1, metamethod.first, metamethod.second);
 	}
 
 	// Pop metatable off the stack
