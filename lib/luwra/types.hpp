@@ -34,6 +34,23 @@ struct Value {
 	);
 };
 
+
+// Nil
+template <>
+struct Value<std::nullptr_t> {
+	static inline
+	std::nullptr_t read(State* state, int n) {
+		luaL_checktype(state, n, LUA_TNIL);
+		return nullptr;
+	}
+
+	static inline
+	int push(State* state, std::nullptr_t) {
+		lua_pushnil(state);
+		return 1;
+	}
+};
+
 /**
  * Convenient wrapped for `Value<T>::push`.
  */
