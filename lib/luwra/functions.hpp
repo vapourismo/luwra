@@ -70,10 +70,6 @@ namespace internal {
 	template <typename R, typename... A>
 	struct FunctionWrapperHelper<R(*)(A...)> {
 		using Signature = R(A...);
-
-		template <R(*function_pointer)(A...)> static
-		constexpr CFunction wrapped =
-			&internal::FunctionWrapper<Signature>::template invoke<function_pointer>;
 	};
 }
 
@@ -101,7 +97,10 @@ constexpr CFunction wrap_function =
  * This macros allows you to wrap functions without providing a type signature.
  */
 #define LUWRA_WRAP_FUNCTION(fun) \
-	(luwra::internal::FunctionWrapperHelper<decltype(&fun)>::wrapped<&fun>)
+	(luwra::wrap_function< \
+	     typename luwra::internal::FunctionWrapperHelper<decltype(&fun)>::Signature, \
+	     &fun \
+	 >)
 
 LUWRA_NS_END
 
