@@ -10,7 +10,6 @@
 #include "common.hpp"
 #include "types.hpp"
 #include "stack.hpp"
-#include "functions.hpp"
 
 #include <map>
 
@@ -147,85 +146,6 @@ namespace internal {
 
 	template <typename T, typename R>
 	struct FieldWrapperHelper<R T::*>: FieldWrapper<T, R> {};
-
-	/**
-	 * Helper struct for wrapping user type methods
-	 */
-	template <typename T>
-	struct MethodWrapper {
-		static_assert(
-			sizeof(T) == -1,
-			"Undefined template MethodWrapper"
-		);
-	};
-
-	// 'const volatile'-qualified methods
-	template <typename T, typename R, typename... A>
-	struct MethodWrapper<R (T::*)(A...) const volatile> {
-		using MethodPointerType = R (T::*)(A...) const volatile;
-		using FunctionSignature = R (const volatile T*, A...);
-
-		template <MethodPointerType method_pointer> static inline
-		R call(const volatile T* parent, A... args) {
-			return (parent->*method_pointer)(std::forward<A>(args)...);
-		}
-
-		template <MethodPointerType method_pointer> static inline
-		int invoke(State* state) {
-			return FunctionWrapper<FunctionSignature>::template invoke<call<method_pointer>>(state);
-		}
-	};
-
-	// 'const'-qualified methods
-	template <typename T, typename R, typename... A>
-	struct MethodWrapper<R (T::*)(A...) const> {
-		using MethodPointerType = R (T::*)(A...) const;
-		using FunctionSignature = R (const T*, A...);
-
-		template <MethodPointerType method_pointer> static inline
-		R call(const T* parent, A... args) {
-			return (parent->*method_pointer)(std::forward<A>(args)...);
-		}
-
-		template <MethodPointerType method_pointer> static inline
-		int invoke(State* state) {
-			return FunctionWrapper<FunctionSignature>::template invoke<call<method_pointer>>(state);
-		}
-	};
-
-	// 'volatile'-qualified methods
-	template <typename T, typename R, typename... A>
-	struct MethodWrapper<R (T::*)(A...) volatile> {
-		using MethodPointerType = R (T::*)(A...) volatile;
-		using FunctionSignature = R (volatile T*, A...);
-
-		template <MethodPointerType method_pointer> static inline
-		R call(volatile T* parent, A... args) {
-			return (parent->*method_pointer)(std::forward<A>(args)...);
-		}
-
-		template <MethodPointerType method_pointer> static inline
-		int invoke(State* state) {
-			return FunctionWrapper<FunctionSignature>::template invoke<call<method_pointer>>(state);
-		}
-	};
-
-	// unqualified methods
-	template <typename T, typename R, typename... A>
-	struct MethodWrapper<R (T::*)(A...)> {
-		using MethodPointerType = R (T::*)(A...);
-		using FunctionSignature = R (T*, A...);
-
-		template <MethodPointerType method_pointer> static inline
-		R call(T* parent, A... args) {
-			return (parent->*method_pointer)(std::forward<A>(args)...);
-		}
-
-		template <MethodPointerType method_pointer> static inline
-		int invoke(State* state) {
-			return FunctionWrapper<FunctionSignature>::template invoke<call<method_pointer>>(state);
-		}
-	};
 }
 
 /**
@@ -375,14 +295,5 @@ LUWRA_NS_END
  */
 #define LUWRA_WRAP_CONSTRUCTOR(type, ...) \
 	(&luwra::internal::construct_user_type<luwra::internal::StripUserType<type>, __VA_ARGS__>)
-
-/**
- * Generate a `lua_CFunction` wrapper for a method.
- * \param fun Fully qualified method name (Do not supply a pointer)
- * \return Wrapped function as `lua_CFunction`
- */
-#define LUWRA_WRAP_METHOD(meth) \
-	(&luwra::internal::MethodWrapper<decltype(&meth)>::template invoke<&meth>)
-
 
 #endif
