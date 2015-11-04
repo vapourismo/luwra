@@ -24,15 +24,15 @@ int main() {
 
 	// Register 'my_function_1'
 	auto wrapped_1 = LUWRA_WRAP_FUNCTION(my_function_1);
-	luwra::register_global(state, "my_function_1", wrapped_1);
+	luwra::setGlobal(state, "my_function_1", wrapped_1);
 
 	// Register 'my_function_2'
 	auto wrapped_2 = LUWRA_WRAP_FUNCTION(my_function_2);
-	luwra::register_global(state, "my_function_2", wrapped_2);
+	luwra::setGlobal(state, "my_function_2", wrapped_2);
 
 	// Register 'my_function_3'
 	auto wrapped_3 = LUWRA_WRAP_FUNCTION(my_function_3);
-	luwra::register_global(state, "my_function_3", wrapped_3);
+	luwra::setGlobal(state, "my_function_3", wrapped_3);
 
 	// Load Lua code
 	luaL_loadstring(

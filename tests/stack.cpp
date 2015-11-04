@@ -42,10 +42,10 @@ TEST_CASE("stack_interaction") {
 	lua_close(state);
 }
 
-TEST_CASE("stack_register_global") {
+TEST_CASE("stack_setGlobal") {
 	lua_State* state = luaL_newstate();
 
-	luwra::register_global(state, "test", 1338);
+	luwra::setGlobal(state, "test", 1338);
 
 	REQUIRE(luaL_dostring(state, "return test") == LUA_OK);
 	REQUIRE(luwra::read<int>(state, -1) == 1338);
@@ -53,11 +53,11 @@ TEST_CASE("stack_register_global") {
 	lua_close(state);
 }
 
-TEST_CASE("stack_set_fields") {
+TEST_CASE("stack_setFields") {
 	lua_State* state = luaL_newstate();
 
 	lua_newtable(state);
-	luwra::set_fields(
+	luwra::setFields(
 		state, -1,
 		"test", 1338,
 		123, 456

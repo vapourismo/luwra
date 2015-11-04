@@ -23,7 +23,7 @@ TEST_CASE("wrap_function_noret_noparams") {
 	REQUIRE(cfun != nullptr);
 
 	// Register function
-	luwra::register_global(state, "test_function_noret_noparams", cfun);
+	luwra::setGlobal(state, "test_function_noret_noparams", cfun);
 
 	// Invoke function
 	REQUIRE(luaL_dostring(state, "test_function_noret_noparams()") == 0);
@@ -51,7 +51,7 @@ TEST_CASE("wrap_function_noret") {
 	REQUIRE(cfun != nullptr);
 
 	// Register function
-	luwra::register_global(state, "test_function_noret", cfun);
+	luwra::setGlobal(state, "test_function_noret", cfun);
 
 	// Invoke function
 	REQUIRE(luaL_dostring(state, "test_function_noret(13, 37)") == 0);
@@ -75,7 +75,7 @@ TEST_CASE("wrap_function_noparams") {
 	REQUIRE(cfun != nullptr);
 
 	// Register function
-	luwra::register_global(state, "test_function_noparams", cfun);
+	luwra::setGlobal(state, "test_function_noparams", cfun);
 
 	// Invoke function
 	REQUIRE(luaL_dostring(state, "return test_function_noparams()") == 0);
@@ -99,7 +99,7 @@ TEST_CASE("wrap_function") {
 	REQUIRE(cfun != nullptr);
 
 	// Register function
-	luwra::register_global(state, "test_function", cfun);
+	luwra::setGlobal(state, "test_function", cfun);
 
 	// Invoke function
 	REQUIRE(luaL_dostring(state, "return test_function(37, 13)") == 0);

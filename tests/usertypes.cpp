@@ -34,7 +34,7 @@ TEST_CASE("usertypes_ctor") {
 
 	// Registration
 	luwra::register_user_type<A>(state);
-	luwra::register_global(state, "A", LUWRA_WRAP_CONSTRUCTOR(A, int));
+	luwra::setGlobal(state, "A", LUWRA_WRAP_CONSTRUCTOR(A, int));
 
 	// Construction
 	REQUIRE(luaL_dostring(state, "return A(73)") == 0);
@@ -77,7 +77,7 @@ TEST_CASE("usertypes_wrap_fields") {
 
 	// Instantiation
 	B value(1338);
-	luwra::register_global(state, "val", &value);
+	luwra::setGlobal(state, "val", &value);
 
 	// Unqualified get
 	REQUIRE(luaL_dostring(state, "return val:n()") == 0);
@@ -154,7 +154,7 @@ TEST_CASE("usertypes_wrap_methods") {
 
 	// Instantiation
 	C value(1337);
-	luwra::register_global(state, "value", &value);
+	luwra::setGlobal(state, "value", &value);
 
 	// Unqualified method
 	REQUIRE(luaL_dostring(state, "return value:foo1(63)") == 0);

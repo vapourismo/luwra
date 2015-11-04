@@ -13,6 +13,7 @@
 #include <cassert>
 #include <utility>
 #include <functional>
+#include <string>
 
 LUWRA_NS_BEGIN
 
@@ -136,17 +137,30 @@ bool equal(State* state, int index1, int index2) {
 /**
  * Register a value as a global.
  */
-template <typename T> static inline
-void register_global(State* state, const char* name, T value) {
+template <typename V> static inline
+void setGlobal(State* state, const std::string& name, V value) {
 	assert(1 == push(state, value));
-	lua_setglobal(state, name);
+	lua_setglobal(state, name.c_str());
+}
+
+/**
+ * Retrieve a global value.
+ */
+template <typename V> static inline
+V getGlobal(State* state, const std::string& name) {
+	lua_getglobal(state, name.c_str());
+
+	V instance = read<V>(state, -1);
+	lua_pop(state, 1);
+
+	return instance;
 }
 
 /**
  * Set multiple fields at once. Allows you to provide multiple key-value pairs.
  */
 template <typename... R> static inline
-void set_fields(State* state, int index, R&&... args) {
+void setFields(State* state, int index, R&&... args) {
 	static_assert(sizeof...(R) % 2 == 0, "Field parameters must appear in pairs");
 	internal::EntryPusher<R...>::push(state, index, std::forward<R>(args)...);
 }
@@ -155,9 +169,9 @@ void set_fields(State* state, int index, R&&... args) {
  * Create a new table and set its fields.
  */
 template <typename... R> static inline
-void new_table(State* state, R&&... args) {
+void newTable(State* state, R&&... args) {
 	lua_newtable(state);
-	set_fields(state, lua_gettop(state), std::forward<R>(args)...);
+	setFields(state, lua_gettop(state), std::forward<R>(args)...);
 }
 
 LUWRA_NS_END

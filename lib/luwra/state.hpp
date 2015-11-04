@@ -30,8 +30,7 @@ struct GlobalAccessor {
 	 */
 	template <typename V> inline
 	GlobalAccessor& set(V value) {
-		assert(1 == push(state, value));
-		lua_setglobal(state, key.c_str());
+		setGlobal(state, key, value);
 		return *this;
 	}
 
@@ -48,12 +47,7 @@ struct GlobalAccessor {
 	 */
 	template <typename V> inline
 	V get() {
-		lua_getglobal(state, key.c_str());
-
-		V instance = read<V>(state, -1);
-		lua_pop(state, 1);
-
-		return instance;
+		return getGlobal<V>(state, key);
 	}
 
 	/**
@@ -105,12 +99,7 @@ struct StateWrapper {
 	 */
 	template <typename V> inline
 	V getGlobal(const std::string& key) const {
-		lua_getglobal(state, key.c_str());
-
-		V instance = read<V>(state, -1);
-		lua_pop(state, 1);
-
-		return instance;
+		return getGlobal<V>(state, key);
 	}
 
 	/**
@@ -118,8 +107,7 @@ struct StateWrapper {
 	 */
 	template <typename V> inline
 	void setGlobal(const std::string& key, V value) const {
-		assert(1 == push(state, value));
-		lua_setglobal(state, key.c_str());
+		setGlobal(state, key, value);
 	}
 
 	/**

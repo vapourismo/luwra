@@ -13,16 +13,13 @@ int main() {
 	state["foo"] = 1337;
 
 	int r = state.runString(
-		"foo = foo + 1"
+		"print(foo)"
 	);
 
 	if (r != LUA_OK) {
 		std::cerr << read<std::string>(state, -1) << std::endl;
 		return 1;
 	}
-
-	int value = state["foo"];
-	std::cout << value << std::endl;
 
 	return 0;
 }
