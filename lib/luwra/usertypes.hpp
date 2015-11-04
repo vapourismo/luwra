@@ -108,44 +108,34 @@ namespace internal {
 	/**
 	 * Helper struct for wrapping user type fields
 	 */
-	template <typename U, typename R>
-	struct FieldWrapper {
-		using T = StripUserType<U>;
-
-		template <R T::* field_pointer> static inline
-		int invoke(State* state) {
-			if (lua_gettop(state) > 1) {
-				// Setter
-				Value<T*>::read(state, 1)->*field_pointer = Value<R>::read(state, 2);
-				return 0;
-			} else {
-				// Getter
-				return push(state, Value<T*>::read(state, 1)->*field_pointer);
-			}
-		}
-	};
-
-	// 'const'-qualified fields
-	template <typename U, typename R>
-	struct FieldWrapper<U, const R> {
-		using T = StripUserType<U>;
-
-		template <const R T::* field_pointer> static inline
-		int invoke(State* state) {
-			return push(state, Value<T*>::read(state, 1)->*field_pointer);
-		}
-	};
-
 	template <typename T>
-	struct FieldWrapperHelper {
+	struct FieldWrapper {
 		static_assert(
 			sizeof(T) == -1,
-			"Parameter to FieldWrapperHelper is not a function pointer"
+			"Parameter to FieldWrapper is not a property signature"
 		);
 	};
 
 	template <typename T, typename R>
-	struct FieldWrapperHelper<R T::*>: FieldWrapper<T, R> {};
+	struct FieldWrapper<R T::*> {
+		template <R T::* field_pointer> static inline
+		int invoke(State* state) {
+			if (lua_gettop(state) > 1) {
+				read<T*>(state, 1)->*field_pointer = read<R>(state, 2);
+				return 0;
+			} else {
+				return push(state, read<T*>(state, 1)->*field_pointer);
+			}
+		}
+	};
+
+	template <typename T, typename R>
+	struct FieldWrapper<const R T::*> {
+		template <const R T::* field_pointer> static inline
+		int invoke(State* state) {
+			return push(state, read<T*>(state, 1)->*field_pointer);
+		}
+	};
 }
 
 /**
@@ -214,29 +204,10 @@ struct Value<U*> {
 };
 
 /**
- * Property accessor method
- *
- *   struct T {
- *     R my_property;
- *   };
- *
- * The wrapped property accessor is also a function:
- *
- *   CFunction wrapped_property = wrap_field<T, R, &T::my_property>;
- */
-template <
-	typename T,
-	typename R,
-	R T::* field_pointer
->
-constexpr CFunction wrap_field =
-	&internal::FieldWrapper<T, R>::template invoke<field_pointer>;
-
-/**
  * This macro allows you to wrap fields without supplying template parameters.
  */
 #define LUWRA_WRAP_FIELD(field) \
-	(&luwra::internal::FieldWrapperHelper<decltype(&field)>::invoke<&field>)
+	(&luwra::internal::FieldWrapper<decltype(&field)>::invoke<&field>)
 
 /**
  * Register the metatable for user type `T`. This function allows you to register methods
