@@ -104,38 +104,6 @@ namespace internal {
 				+ std::to_string(uintptr_t(Value<T*>::read(state, 1)))
 		);
 	}
-
-	/**
-	 * Helper struct for wrapping user type fields
-	 */
-	template <typename T>
-	struct FieldWrapper {
-		static_assert(
-			sizeof(T) == -1,
-			"Parameter to FieldWrapper is not a property signature"
-		);
-	};
-
-	template <typename T, typename R>
-	struct FieldWrapper<R T::*> {
-		template <R T::* field_pointer> static inline
-		int invoke(State* state) {
-			if (lua_gettop(state) > 1) {
-				read<T*>(state, 1)->*field_pointer = read<R>(state, 2);
-				return 0;
-			} else {
-				return push(state, read<T*>(state, 1)->*field_pointer);
-			}
-		}
-	};
-
-	template <typename T, typename R>
-	struct FieldWrapper<const R T::*> {
-		template <const R T::* field_pointer> static inline
-		int invoke(State* state) {
-			return push(state, read<T*>(state, 1)->*field_pointer);
-		}
-	};
 }
 
 /**
@@ -202,12 +170,6 @@ struct Value<U*> {
 		return 1;
 	}
 };
-
-/**
- * This macro allows you to wrap fields without supplying template parameters.
- */
-#define LUWRA_WRAP_FIELD(field) \
-	(&luwra::internal::FieldWrapper<decltype(&field)>::invoke<&field>)
 
 /**
  * Register the metatable for user type `T`. This function allows you to register methods
