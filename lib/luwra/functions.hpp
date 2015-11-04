@@ -42,33 +42,26 @@ namespace internal {
 		}
 	};
 
-	template <typename T>
-	struct FunctionWrapperHelper {
-		static_assert(
-			sizeof(T) == -1,
-			"Parameter to FunctionWrapperHelper is not a function pointer"
-		);
-	};
-
 	template <typename R, typename... A>
-	struct FunctionWrapperHelper<R(*)(A...)> {
-		using Signature = R(A...);
-	};
+	struct FunctionWrapper<R(*)(A...)>: FunctionWrapper<R(A...)> {};
 }
 
+/**
+ * \deprecated
+ */
 template <
 	typename S,
-	S* function_pointer
+	S function_pointer
 >
 constexpr CFunction wrap_function =
 	&internal::FunctionWrapper<S>::template invoke<function_pointer>;
 
-#define LUWRA_WRAP_FUNCTION(fun) \
-	(luwra::wrap_function< \
-	     typename luwra::internal::FunctionWrapperHelper<decltype(&fun)>::Signature, \
-	     &fun \
-	 >)
-
 LUWRA_NS_END
+
+/**
+ * Generate a `lua_CFunction` wrapper for a function.
+ */
+#define LUWRA_WRAP_FUNCTION(fun) \
+	(&luwra::internal::FunctionWrapper<decltype(&fun)>::template invoke<&fun>)
 
 #endif
