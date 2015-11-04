@@ -229,4 +229,8 @@ LUWRA_NS_END
 #define LUWRA_WRAP_CONSTRUCTOR(type, ...) \
 	(&luwra::internal::construct_user_type<luwra::internal::StripUserType<type>, __VA_ARGS__>)
 
+#define LUWRA_FIELD(type, name) {__STRING(name), LUWRA_WRAP_FIELD(type::name)}
+#define LUWRA_METHOD(type, name) {__STRING(name), LUWRA_WRAP_METHOD(type::name)}
+#define LUWRA_FUNCTION(type, name) {__STRING(name), LUWRA_WRAP_FUNCTION(type::name)}
+
 #endif

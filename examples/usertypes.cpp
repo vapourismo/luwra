@@ -21,7 +21,7 @@ struct Point {
 		y *= f;
 	}
 
-	std::string toString() const {
+	std::string __tostring() const {
 		return "<Point(" + std::to_string(x) + ", " + std::to_string(y) + ")>";
 	}
 };
@@ -37,13 +37,13 @@ int main() {
 		state,
 		// Methods which shall be availabe in the Lua user data, need to be declared here
 		{
-			{"scale", LUWRA_WRAP_METHOD(Point::scale)},
-			{"x",     LUWRA_WRAP_FIELD(Point::x)},
-			{"y",     LUWRA_WRAP_FIELD(Point::y)}
+			LUWRA_METHOD(Point, scale),
+			LUWRA_FIELD(Point, x),
+			LUWRA_FIELD(Point, y)
 		},
 		// Meta methods may be registered aswell
 		{
-			{"__tostring", LUWRA_WRAP_METHOD(Point::toString)}
+			LUWRA_METHOD(Point, __tostring)
 		}
 	);
 
