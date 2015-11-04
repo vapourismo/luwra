@@ -151,7 +151,7 @@ namespace internal {
 	/**
 	 * Helper struct for wrapping user type methods
 	 */
-	template <typename T, typename S>
+	template <typename T>
 	struct MethodWrapper {
 		static_assert(
 			sizeof(T) == -1,
@@ -161,7 +161,7 @@ namespace internal {
 
 	// 'const volatile'-qualified methods
 	template <typename T, typename R, typename... A>
-	struct MethodWrapper<const volatile T, R(A...)> {
+	struct MethodWrapper<R (T::*)(A...) const volatile> {
 		using MethodPointerType = R (T::*)(A...) const volatile;
 		using FunctionSignature = R (const volatile T*, A...);
 
@@ -178,7 +178,7 @@ namespace internal {
 
 	// 'const'-qualified methods
 	template <typename T, typename R, typename... A>
-	struct MethodWrapper<const T, R(A...)> {
+	struct MethodWrapper<R (T::*)(A...) const> {
 		using MethodPointerType = R (T::*)(A...) const;
 		using FunctionSignature = R (const T*, A...);
 
@@ -195,7 +195,7 @@ namespace internal {
 
 	// 'volatile'-qualified methods
 	template <typename T, typename R, typename... A>
-	struct MethodWrapper<volatile T, R(A...)> {
+	struct MethodWrapper<R (T::*)(A...) volatile> {
 		using MethodPointerType = R (T::*)(A...) volatile;
 		using FunctionSignature = R (volatile T*, A...);
 
@@ -212,7 +212,7 @@ namespace internal {
 
 	// unqualified methods
 	template <typename T, typename R, typename... A>
-	struct MethodWrapper<T, R(A...)> {
+	struct MethodWrapper<R (T::*)(A...)> {
 		using MethodPointerType = R (T::*)(A...);
 		using FunctionSignature = R (T*, A...);
 
@@ -226,34 +226,6 @@ namespace internal {
 			return FunctionWrapper<FunctionSignature>::template invoke<call<method_pointer>>(state);
 		}
 	};
-
-	template <typename T>
-	struct MethodWrapperHelper {
-		static_assert(
-			sizeof(T) == -1,
-			"Parameter to MethodWrapperHelper is not a function pointer"
-		);
-	};
-
-	template <typename T, typename R, typename... A>
-	struct MethodWrapperHelper<R (T::*)(A...) const volatile>:
-		MethodWrapper<const volatile T, R(A...)>
-	{};
-
-	template <typename T, typename R, typename... A>
-	struct MethodWrapperHelper<R (T::*)(A...) const>:
-		MethodWrapper<const T, R(A...)>
-	{};
-
-	template <typename T, typename R, typename... A>
-	struct MethodWrapperHelper<R (T::*)(A...) volatile>:
-		MethodWrapper<volatile T, R(A...)>
-	{};
-
-	template <typename T, typename R, typename... A>
-	struct MethodWrapperHelper<R (T::*)(A...)>:
-		MethodWrapper<T, R(A...)>
-	{};
 }
 
 /**
@@ -336,40 +308,6 @@ constexpr CFunction wrap_constructor =
 	(luwra::wrap_constructor<type, __VA_ARGS__>)
 
 /**
- * Works similiar to `wrap_function`. Given a class or struct declaration as follows:
- *
- *   struct T {
- *     R my_method(A0, A1 ... An);
- *   };
- *
- * You might wrap this method easily:
- *
- *   CFunction wrapped_meth = wrap_method<T, R(A0, A1 ... An), &T::my_method>;
- *
- * In Lua, assuming `instance` is a userdata instance of type `T`, x0, x1 ... xn are instances
- * of A0, A1 ... An, and the method has been bound as `my_method`; it is possible to invoke the
- * method like so:
- *
- *   instance:my_method(x0, x1 ... xn)
- */
-template <
-	typename T,
-	typename S,
-	typename internal::MethodWrapper<T, S>::MethodPointerType method_pointer
->
-constexpr CFunction wrap_method =
-	wrap_function<
-		typename internal::MethodWrapper<T, S>::FunctionSignature,
-		internal::MethodWrapper<T, S>::template call<method_pointer>
-	>;
-
-/**
- * This macro allows you to wrap methods without supplying template parameters.
- */
-#define LUWRA_WRAP_METHOD(meth) \
-	(&luwra::internal::MethodWrapperHelper<decltype(&meth)>::template invoke<&meth>)
-
-/**
  * Property accessor method
  *
  *   struct T {
@@ -442,5 +380,14 @@ void register_user_type(
 }
 
 LUWRA_NS_END
+
+/**
+ * Generate a `lua_CFunction` wrapper for a method.
+ * \param fun Fully qualified method name (Do not supply a pointer)
+ * \return Wrapped function as `lua_CFunction`
+ */
+#define LUWRA_WRAP_METHOD(meth) \
+	(&luwra::internal::MethodWrapper<decltype(&meth)>::template invoke<&meth>)
+
 
 #endif

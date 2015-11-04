@@ -23,8 +23,8 @@ namespace internal {
 	};
 
 	template <typename... A>
-	struct FunctionWrapper<void(A...)> {
-		template <void (*function_pointer)(A...)> static inline
+	struct FunctionWrapper<void (A...)> {
+		template <void (* function_pointer)(A...)> static inline
 		int invoke(State* state) {
 			apply(state, function_pointer);
 			return 0;
@@ -32,8 +32,8 @@ namespace internal {
 	};
 
 	template <typename R, typename... A>
-	struct FunctionWrapper<R(A...)> {
-		template <R (*function_pointer)(A...)> static inline
+	struct FunctionWrapper<R (A...)> {
+		template <R (* function_pointer)(A...)> static inline
 		int invoke(State* state) {
 			return push(
 				state,
@@ -42,24 +42,17 @@ namespace internal {
 		}
 	};
 
+	// We need an alias, because function pointers are weird
 	template <typename R, typename... A>
 	struct FunctionWrapper<R(*)(A...)>: FunctionWrapper<R(A...)> {};
 }
-
-/**
- * \deprecated
- */
-template <
-	typename S,
-	S function_pointer
->
-constexpr CFunction wrap_function =
-	&internal::FunctionWrapper<S>::template invoke<function_pointer>;
 
 LUWRA_NS_END
 
 /**
  * Generate a `lua_CFunction` wrapper for a function.
+ * \param fun Fully qualified function name (Do not supply a pointer)
+ * \return Wrapped function as `lua_CFunction`
  */
 #define LUWRA_WRAP_FUNCTION(fun) \
 	(&luwra::internal::FunctionWrapper<decltype(&fun)>::template invoke<&fun>)
