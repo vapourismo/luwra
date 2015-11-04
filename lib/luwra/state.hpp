@@ -8,7 +8,7 @@
 #define LUWRA_STATEWRAPPER_H_
 
 #include "common.hpp"
-#include "stack.hpp"
+#include "auxiliary.hpp"
 
 #include <string>
 #include <utility>

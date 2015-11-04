@@ -4,6 +4,7 @@
 #include "luwra/common.hpp"
 #include "luwra/types.hpp"
 #include "luwra/stack.hpp"
+#include "luwra/auxiliary.hpp"
 #include "luwra/functions.hpp"
 #include "luwra/methods.hpp"
 #include "luwra/fields.hpp"
