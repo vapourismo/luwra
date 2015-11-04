@@ -100,7 +100,7 @@ T read(State* state, int index) {
 	 * Check if the value at index `n` is a C function and retrieve it.
 	 */
 	#define luaL_checkcfunction(state, n) \
-		(luaL_checktype(state, n, LUA_TCFUNCTION), lua_toboolean(state, n))
+		(luaL_checktype(state, n, LUA_TCFUNCTION), lua_tocfunction(state, n))
 #endif
 
 #ifndef luaL_pushstdstring
