@@ -26,6 +26,16 @@ namespace internal {
 		);
 	};
 
+	template <typename R>
+	struct Layout<R()> {
+		template <typename F, typename... A> static inline
+		R direct(State*, int, F hook, A&&... args) {
+			return hook(
+				std::forward<A>(args)...
+			);
+		}
+	};
+
 	template <typename R, typename T>
 	struct Layout<R(T)> {
 		template <typename F, typename... A> static inline
