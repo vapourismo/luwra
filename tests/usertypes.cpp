@@ -1,4 +1,4 @@
-#include "catch.hpp"
+#include <catch.hpp>
 
 #include <lua.hpp>
 #include <luwra.hpp>
