@@ -23,8 +23,9 @@
 #define LUWRA_NS_BEGIN namespace luwra {
 #define LUWRA_NS_END }
 
-// Version MAJOR.MINOR.PATH
+// Version MAJOR.MINOR.PATCH
 #define LUWRA_VERSION_MAJOR 0
-#define LUWRA_VERSION_MINOR 1
+#define LUWRA_VERSION_MINOR 2
+#define LUWRA_VERSION_PATCH 0
 
 #endif
