@@ -177,7 +177,7 @@ struct Value<U*> {
  * Meta-methods can be added and/or overwritten aswell.
  */
 template <typename U> static inline
-void register_user_type(
+void registerUserType(
 	State* state,
 	const std::map<const char*, CFunction>& methods = std::map<const char*, CFunction>(),
 	const std::map<const char*, CFunction>& meta_methods = std::map<const char*, CFunction>()

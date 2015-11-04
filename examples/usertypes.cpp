@@ -33,7 +33,7 @@ int main() {
 	// Register our user type.
 	// This function also registers a garbage-collector hook and a string representation function.
 	// Both can be overwritten using the third parameter, which lets you add custom meta methods.
-	luwra::register_user_type<Point>(
+	luwra::registerUserType<Point>(
 		state,
 		// Methods which shall be availabe in the Lua user data, need to be declared here
 		{
