@@ -28,6 +28,8 @@ namespace internal {
 
 	template <typename R>
 	struct Layout<R()> {
+		using ReturnType = R;
+
 		template <typename F, typename... A> static inline
 		R direct(State*, int, F hook, A&&... args) {
 			return hook(
@@ -38,6 +40,8 @@ namespace internal {
 
 	template <typename R, typename T>
 	struct Layout<R(T)> {
+		using ReturnType = R;
+
 		template <typename F, typename... A> static inline
 		R direct(State* state, int n, F hook, A&&... args) {
 			return hook(
@@ -49,6 +53,8 @@ namespace internal {
 
 	template <typename R, typename T1, typename... TR>
 	struct Layout<R(T1, TR...)> {
+		using ReturnType = R;
+
 		template <typename F, typename... A> static inline
 		R direct(State* state, int n, F hook, A&&... args) {
 			return Layout<R(TR...)>::direct(
@@ -82,15 +88,30 @@ namespace internal {
 }
 
 /**
+ * \todo Document me
+ */
+template <typename S, typename F> static inline
+typename internal::Layout<S>::ReturnType direct(State* state, int pos, F hook) {
+	return internal::Layout<S>::direct(state, pos, hook);
+}
+
+/**
+ * Same as `direct(state, 1, hook)`.
+ */
+template <typename S, typename F> static inline
+typename internal::Layout<S>::ReturnType direct(State* state, F hook) {
+	return internal::Layout<S>::direct(state, 1, hook);
+}
+
+/**
  * Assuming a stack layout as follows (where A = A0, A1 ... An):
  *
- *   Position | Parameter
- * 	----------+-----------
- *   pos + n  | An xn
- *   ...      | ...
- *   pos + 1  | A1 x1
- *   pos + 0  | A0 x0
- *   ...      | ...
+ *   Position | Type | Identifier
+ * 	----------+------+------------
+ *   pos + 0  | A0   | x0
+ *   pos + 1  | A1   | x1
+ *   ...      | ...  | ...
+ *   pos + n  | An   | xn
  *
  * Given a function `R f(A0, A1, ... An)` you are able to map over
  * the values on the stack on the stack like so:
@@ -104,20 +125,20 @@ namespace internal {
  * where x0, x1, ... xn are the values on the stack.
  */
 template <typename R, typename... A> static inline
-R apply(State* state, int pos, R (*function_pointer)(A...)) {
-	return internal::Layout<R(A...)>::direct(state, pos, function_pointer);
+R apply(State* state, int pos, R (* function_pointer)(A...)) {
+	return direct<R(A...)>(state, pos, function_pointer);
 }
 
 /**
  * Same as `apply(state, 1, function_pointer)`.
  */
 template <typename R, typename... A> static inline
-R apply(State* state, R (*function_pointer)(A...)) {
+R apply(State* state, R (* function_pointer)(A...)) {
 	return apply(state, 1, function_pointer);
 }
 
 /**
- * Specialization of `apply` which works for `std::function`.
+ * Specialization of `apply` which works with `std::function`.
  */
 template <typename R, typename... A> static inline
 R apply(State* state, int pos, const std::function<R(A...)>& function_object) {
