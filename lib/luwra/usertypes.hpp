@@ -294,20 +294,6 @@ struct Value<U*> {
 };
 
 /**
- * Constructor function for a type `T`. Variadic arguments must be used to specify which parameters
- * to use during construction.
- */
-template <typename T, typename... A>
-constexpr CFunction wrap_constructor =
-	&internal::construct_user_type<internal::StripUserType<T>, A...>;
-
-/**
- * This macros has no additional use whatsoever, but I makes the style consistent.
- */
-#define LUWRA_WRAP_CONSTRUCTOR(type, ...) \
-	(luwra::wrap_constructor<type, __VA_ARGS__>)
-
-/**
  * Property accessor method
  *
  *   struct T {
@@ -380,6 +366,15 @@ void register_user_type(
 }
 
 LUWRA_NS_END
+
+/**
+ * Generate a `lua_CFunction` wrapper for a constructor.
+ * \param type Type to instantiate
+ * \param ...  Constructor parameter types
+ * \return Wrapped function as `lua_CFunction`
+ */
+#define LUWRA_WRAP_CONSTRUCTOR(type, ...) \
+	(&luwra::internal::construct_user_type<luwra::internal::StripUserType<type>, __VA_ARGS__>)
 
 /**
  * Generate a `lua_CFunction` wrapper for a method.
