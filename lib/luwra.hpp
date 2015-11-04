@@ -6,5 +6,6 @@
 #include "luwra/stack.hpp"
 #include "luwra/functions.hpp"
 #include "luwra/usertypes.hpp"
+#include "luwra/state.hpp"
 
 #endif

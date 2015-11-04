@@ -1,0 +1,152 @@
+/* Luwra
+ * Minimal-overhead Lua wrapper for C++
+ *
+ * Copyright (C) 2015, Ole Krüger <ole@vprsm.de>
+ */
+
+#ifndef LUWRA_STATEWRAPPER_H_
+#define LUWRA_STATEWRAPPER_H_
+
+#include "common.hpp"
+#include "stack.hpp"
+
+#include <string>
+#include <utility>
+
+LUWRA_NS_BEGIN
+
+/**
+ * Accessor for an entry in the global namespace
+ */
+struct GlobalAccessor {
+	State* state;
+	std::string key;
+
+	inline
+	GlobalAccessor(State* state, const std::string& key): state(state), key(key) {}
+
+	/**
+	 * Assign a new value.
+	 */
+	template <typename V> inline
+	GlobalAccessor& set(V value) {
+		assert(1 == push(state, value));
+		lua_setglobal(state, key.c_str());
+		return *this;
+	}
+
+	/**
+	 * Shortcut for `set()`
+	 */
+	template <typename V> inline
+	GlobalAccessor& operator =(V value) {
+		return set<V>(value);
+	}
+
+	/**
+	 * Retrieve the associated value.
+	 */
+	template <typename V> inline
+	V get() {
+		lua_getglobal(state, key.c_str());
+
+		V instance = read<V>(state, -1);
+		lua_pop(state, 1);
+
+		return instance;
+	}
+
+	/**
+	 * Shortcut for `get()`
+	 */
+	template <typename V> inline
+	operator V() {
+		return get<V>();
+	}
+};
+
+/**
+ * Wrapper for a Lua state
+ */
+struct StateWrapper {
+	State* state;
+	bool close_state;
+
+	/**
+	 * Operate on a foreign state instance.
+	 */
+	inline
+	StateWrapper(State* state): state(state), close_state(false) {}
+
+	/**
+	 * Create a new Lua state.
+	 */
+	inline
+	StateWrapper(): state(luaL_newstate()), close_state(true) {}
+
+	inline
+	~StateWrapper() {
+		if (close_state)
+			lua_close(state);
+	}
+
+	inline
+	operator State*() {
+		return state;
+	}
+
+	inline
+	void loadStandardLibrary() {
+		luaL_openlibs(state);
+	}
+
+	/**
+	 * Retrieve a global value.
+	 */
+	template <typename V> inline
+	V getGlobal(const std::string& key) const {
+		lua_getglobal(state, key.c_str());
+
+		V instance = read<V>(state, -1);
+		lua_pop(state, 1);
+
+		return instance;
+	}
+
+	/**
+	 * Assign a global value.
+	 */
+	template <typename V> inline
+	void setGlobal(const std::string& key, V value) const {
+		assert(1 == push(state, value));
+		lua_setglobal(state, key.c_str());
+	}
+
+	/**
+	 * Create an accessor to a global value.
+	 */
+	inline
+	GlobalAccessor operator [](const std::string& key) const {
+		return GlobalAccessor(state, key);
+	}
+
+	/**
+	 * Execute a piece of code.
+	 */
+	inline
+	int runString(const std::string& code) {
+		return luaL_dostring(state, code.c_str());
+	}
+
+	/**
+	 * Execute a file.
+	 */
+	inline
+	int runFile(const std::string& filepath) {
+		return luaL_dofile(state, filepath.c_str());
+	}
+};
+
+LUWRA_NS_END
+
+#endif
