@@ -124,8 +124,8 @@ struct StateWrapper {
 	template <typename T> inline
 	void registerUserType(
 		const std::string& ctor_name,
-		const std::map<const char*, CFunction>& methods = std::map<const char*, CFunction>(),
-		const std::map<const char*, CFunction>& meta_methods = std::map<const char*, CFunction>()
+		const MemberMap& methods = MemberMap(),
+		const MemberMap& meta_methods = MemberMap()
 	) {
 		registerUserType<T>(state, ctor_name, methods, meta_methods);
 	}

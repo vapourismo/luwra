@@ -171,6 +171,8 @@ struct Value<U*> {
 	}
 };
 
+using MemberMap = std::map<std::string, CFunction>;
+
 /**
  * Register the metatable for user type `T`. This function allows you to register methods
  * which are shared across all instances of this type.
@@ -187,8 +189,8 @@ struct Value<U*> {
 template <typename U> static inline
 void registerUserType(
 	State* state,
-	const std::map<const char*, CFunction>& methods = std::map<const char*, CFunction>(),
-	const std::map<const char*, CFunction>& meta_methods = std::map<const char*, CFunction>()
+	const MemberMap& methods = MemberMap(),
+	const MemberMap& meta_methods = MemberMap()
 ) {
 	using T = internal::StripUserType<U>;
 
@@ -254,8 +256,8 @@ template <typename T> static inline
 void registerUserType(
 	State* state,
 	const std::string& ctor_name,
-	const std::map<const char*, CFunction>& methods = std::map<const char*, CFunction>(),
-	const std::map<const char*, CFunction>& meta_methods = std::map<const char*, CFunction>()
+	const MemberMap& methods = MemberMap(),
+	const MemberMap& meta_methods = MemberMap()
 ) {
 	using U = typename internal::UserTypeSignature<T>::UserType;
 	registerUserType<U>(state, methods, meta_methods);
