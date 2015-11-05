@@ -143,17 +143,17 @@ R apply(State* state, const std::function<R(A...)>& fun) {
 
 namespace internal {
 	template <typename T>
-	struct LayoutCaller {
+	struct LayoutMapper {
 		static_assert(
 			sizeof(T) == -1,
-			"Parameter to LayoutCaller is not a valid signature"
+			"Parameter to LayoutMapper is not a valid signature"
 		);
 	};
 
 	template <typename... A>
-	struct LayoutCaller<void (A...)> {
+	struct LayoutMapper<void (A...)> {
 		template <typename F, typename... X> static inline
-		int call(State* state, int n, F&& hook, X&&... args) {
+		int map(State* state, int n, F&& hook, X&&... args) {
 			direct<void (A...)>(
 				state,
 				n,
@@ -165,9 +165,9 @@ namespace internal {
 	};
 
 	template <typename R, typename... A>
-	struct LayoutCaller<R (A...)> {
+	struct LayoutMapper<R (A...)> {
 		template <typename F, typename... X> static inline
-		int call(State* state, int n, F&& hook, X&&... args) {
+		int map(State* state, int n, F&& hook, X&&... args) {
 			return push(
 				state,
 				direct<R (A...)>(
@@ -186,8 +186,8 @@ namespace internal {
  * \returns Number of values pushed
  */
 template <typename S, typename F, typename... A> static inline
-int call(State* state, int pos, F&& hook, A&&... args) {
-	return internal::LayoutCaller<S>::call(
+int map(State* state, int pos, F&& hook, A&&... args) {
+	return internal::LayoutMapper<S>::map(
 		state,
 		pos,
 		std::forward<F>(hook),
@@ -196,11 +196,11 @@ int call(State* state, int pos, F&& hook, A&&... args) {
 }
 
 /**
- * Same as `call(state, 1, hook)`.
+ * Same as `map(state, 1, hook)`.
  */
 template <typename S, typename F, typename... A> static inline
-int call(State* state, F&& hook, A&&... args) {
-	return internal::LayoutCaller<S>::call(
+int map(State* state, F&& hook, A&&... args) {
+	return internal::LayoutMapper<S>::map(
 		state,
 		1,
 		std::forward<F>(hook),

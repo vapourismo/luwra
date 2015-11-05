@@ -26,7 +26,7 @@ namespace internal {
 	struct FunctionWrapper<R (A...)> {
 		template <R (* fun)(A...)> static inline
 		int invoke(State* state) {
-			return call<R (A...)>(state, fun);
+			return map<R (A...)>(state, fun);
 		}
 	};
 
