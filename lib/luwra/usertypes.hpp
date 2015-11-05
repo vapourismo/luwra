@@ -173,8 +173,16 @@ struct Value<U*> {
 
 /**
  * Register the metatable for user type `T`. This function allows you to register methods
- * which are shared across all instances of this type. A garbage-collector hook is also inserted.
- * Meta-methods can be added and/or overwritten aswell.
+ * which are shared across all instances of this type.
+ *
+ * By default a garbage-collector hook and string representation function are added as meta methods.
+ * Both can be overwritten.
+ *
+ * \tparam U User type struct or class
+ *
+ * \param state        Lua state
+ * \param methods      Map of methods
+ * \param meta_methods Map of meta methods
  */
 template <typename U> static inline
 void registerUserType(
@@ -239,7 +247,7 @@ namespace internal {
 }
 
 /**
- * Same as other `registerUserType` but registers the construtor as well. Also template parameter
+ * Same as the other `registerUserType` but registers the construtor as well. The template parameter
  * is a signature `U(A...)` where `U` is the user type and `A...` its constructor parameters.
  */
 template <typename T> static inline

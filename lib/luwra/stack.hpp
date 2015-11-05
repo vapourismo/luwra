@@ -73,22 +73,24 @@ namespace internal {
  *
  * \tparam S Signature in the form of `R(A...)` where `A` is a sequence of types, which shall be
  *           retrieved from the stack, and `R` the return type of `hook`
- * \tparam F An instance of `Callable` which accepts parameters `A...` and returns `R`
+ * \tparam F An instance of `Callable` which accepts parameters `X..., A...` and returns `R`
  *           (this parameter should be inferable and can be omitted)
+ * \tparam X Extra argument types
  *
  * \param state Lua state instance
  * \param pos   Index of the first value
  * \param hook  Callable value
+ * \param args  Extra arguments which shall be be passed to `hook` before the stack values
  *
  * \returns Result of calling `hook`
  */
-template <typename S, typename F, typename... A> static inline
-typename internal::Layout<S>::ReturnType direct(State* state, int pos, F&& hook, A&&... args) {
+template <typename S, typename F, typename... X> static inline
+typename internal::Layout<S>::ReturnType direct(State* state, int pos, F&& hook, X&&... args) {
 	return internal::Layout<S>::direct(
 		state,
 		pos,
 		std::forward<F>(hook),
-		std::forward<A>(args)...
+		std::forward<X>(args)...
 	);
 }
 
@@ -106,7 +108,7 @@ typename internal::Layout<S>::ReturnType direct(State* state, F&& hook, A&&... a
 }
 
 /**
- * Synonym for `direct` with a function pointer which lets you omit all template parameters.
+ * Synonym for [direct](@ref direct) with a function pointer which lets you omit all template parameters.
  * The stack layout will be inferred using the signature of the given function pointer.
  */
 template <typename R, typename... A> static inline
@@ -123,7 +125,7 @@ R apply(State* state, R (* fun)(A...)) {
 }
 
 /**
- * Synonym for `direct` with a function object which lets you omit all template parameters.
+ * Synonym for [direct](@ref direct) with a function object which lets you omit all template parameters.
  * The stack layout will be inferred using the template parameter to your `std::function` object.
  */
 template <typename R, typename... A> static inline
@@ -180,7 +182,7 @@ namespace internal {
 }
 
 /**
- * Similiar to `direct` but pushes the result of the given `Callable` onto the stack.
+ * Similiar to [direct](@ref direct) but pushes the result of the given `Callable` onto the stack.
  * \returns Number of values pushed
  */
 template <typename S, typename F, typename... A> static inline

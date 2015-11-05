@@ -53,9 +53,19 @@ namespace internal {
 
 LUWRA_NS_END
 
+/**
+ * Generate a `lua_CFunction` wrapper for a field, method or function.
+ * \returns Wrapped entity as `lua_CFunction`
+ */
 #define LUWRA_WRAP(entity) \
 	(&luwra::internal::GenericWrapper<decltype(&entity)>::template invoke<&entity>)
 
+/**
+ * Generate a user type member manifest (pair).
+ * \param type Qualified struct/class name
+ * \param name Member name
+ * \returns `std::pair<const char*, CFunction>` which can be used to register a user type member
+ */
 #define LUWRA_MEMBER(type, name) \
 	{__STRING(name), LUWRA_WRAP(type::name)}
 

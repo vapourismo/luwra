@@ -24,7 +24,11 @@ using State = lua_State;
 using CFunction = lua_CFunction;
 
 /**
- * A value on the stack
+ * Wrapper for a stack value
+ * \note This generic version should not be used since it does not implement anything.
+ *       It is not always obvious whether you have used this generic instance or not. Therefore this
+ *       class produces an error message when it is being used. Look for `Parameter to Value is not
+ *       supported` in your compiler output.
  */
 template <typename T>
 struct Value {
@@ -32,8 +36,24 @@ struct Value {
 		sizeof(T) == -1,
 		"Parameter to Value is not supported"
 	);
-};
 
+	/**
+	 * Retrieve a value from the stack.
+	 * \param state Lua state
+	 * \param index Position of the value
+	 */
+	static
+	T read(State* state, int index);
+
+	/**
+	 * Push a value onto the stack.
+	 * \param state Lua state
+	 * \param value The value you want to push
+	 * \returns Number of values pushed
+	 */
+	static
+	int push(State* state, T value);
+};
 
 // Nil
 template <>
@@ -52,7 +72,7 @@ struct Value<std::nullptr_t> {
 };
 
 /**
- * Convenient wrapped for `Value<T>::push`.
+ * Convenient wrapped for [Value<T>::push](@ref Value<T>::push).
  */
 template <typename T> static inline
 int push(State* state, T value) {
@@ -60,7 +80,7 @@ int push(State* state, T value) {
 }
 
 /**
- * Convenient wrapper for `Value<T>::read`.
+ * Convenient wrapper for [Value<T>::read](@ref Value<T>::read).
  */
 template <typename T> static inline
 T read(State* state, int index) {
