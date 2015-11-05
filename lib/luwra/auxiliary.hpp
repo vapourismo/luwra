@@ -12,6 +12,27 @@
 
 LUWRA_NS_BEGIN
 
+namespace internal {
+	template <typename K, typename V, typename... R>
+	struct EntryPusher {
+		static inline
+		void push(State* state, int index, K&& key, V&& value, R&&... rest) {
+			EntryPusher<K, V>::push(state, index, std::forward<K>(key), std::forward<V>(value));
+			EntryPusher<R...>::push(state, index, std::forward<R>(rest)...);
+		}
+	};
+
+	template <typename K, typename V>
+	struct EntryPusher<K, V> {
+		static inline
+		void push(State* state, int index, K&& key, V&& value) {
+			assert(1 == luwra::push(state, key));
+			assert(1 == luwra::push(state, value));
+			lua_rawset(state, index < 0 ? index - 2 : index);
+		}
+	};
+}
+
 /**
  * Check if two values are equal.
  */
