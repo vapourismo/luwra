@@ -1,6 +1,6 @@
 examples/*.out
 tests/all
-docs/
+docs/html/
 
 *.d
 *.o
