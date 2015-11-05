@@ -9,6 +9,7 @@
 #include "luwra/methods.hpp"
 #include "luwra/fields.hpp"
 #include "luwra/usertypes.hpp"
+#include "luwra/generic.hpp"
 #include "luwra/state.hpp"
 
 #endif

@@ -37,13 +37,13 @@ int main() {
 		state,
 		// Methods which shall be availabe in the Lua user data, need to be declared here
 		{
-			LUWRA_METHOD(Point, scale),
-			LUWRA_FIELD(Point, x),
-			LUWRA_FIELD(Point, y)
+			LUWRA_MEMBER(Point, scale),
+			LUWRA_MEMBER(Point, x),
+			LUWRA_MEMBER(Point, y)
 		},
 		// Meta methods may be registered aswell
 		{
-			LUWRA_METHOD(Point, __tostring)
+			LUWRA_MEMBER(Point, __tostring)
 		}
 	);
 

@@ -68,10 +68,10 @@ TEST_CASE("usertypes_wrap_fields") {
 	luwra::registerUserType<B>(
 		state,
 		{
-			{"n", LUWRA_WRAP_FIELD(B::n)},
-			{"cn", LUWRA_WRAP_FIELD(B::cn)},
-			{"vn", LUWRA_WRAP_FIELD(B::vn)},
-			{"cvn", LUWRA_WRAP_FIELD(B::cvn)}
+			LUWRA_MEMBER(B, n),
+			LUWRA_MEMBER(B, cn),
+			LUWRA_MEMBER(B, vn),
+			LUWRA_MEMBER(B, cvn)
 		}
 	);
 
@@ -145,10 +145,10 @@ TEST_CASE("usertypes_wrap_methods") {
 	luwra::registerUserType<C>(
 		state,
 		{
-			{"foo1", LUWRA_WRAP_METHOD(C::foo1)},
-			{"foo2", LUWRA_WRAP_METHOD(C::foo2)},
-			{"foo3", LUWRA_WRAP_METHOD(C::foo3)},
-			{"foo4", LUWRA_WRAP_METHOD(C::foo4)}
+			LUWRA_MEMBER(C, foo1),
+			LUWRA_MEMBER(C, foo2),
+			LUWRA_MEMBER(C, foo3),
+			LUWRA_MEMBER(C, foo4)
 		}
 	);
 
