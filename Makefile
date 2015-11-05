@@ -34,6 +34,9 @@ all: test examples
 clean:
 	$(RM) $(EXAMPLE_OBJS) $(EXAMPLE_DEPS) $(TEST_OUT) $(TEST_OBJS) $(TEST_DEPS)
 
+docs:
+	doxygen
+
 # Tests
 test: $(TEST_OUT)
 	./$(TEST_OUT)
