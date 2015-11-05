@@ -98,7 +98,7 @@ LUWRA_NS_END
 
 /**
  * Generate a `lua_CFunction` wrapper for a method.
- * \param fun Fully qualified method name (Do not supply a pointer)
+ * \param meth Fully qualified method name (Do not supply a pointer)
  * \return Wrapped function as `lua_CFunction`
  */
 #define LUWRA_WRAP_METHOD(meth) \
