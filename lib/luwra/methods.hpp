@@ -8,6 +8,7 @@
 #define LUWRA_METHODS_H_
 
 #include "common.hpp"
+#include "stack.hpp"
 #include "functions.hpp"
 
 LUWRA_NS_BEGIN
@@ -30,14 +31,14 @@ namespace internal {
 		using MethodPointerType = R (T::*)(A...) const volatile;
 		using FunctionSignature = R (const volatile T*, A...);
 
-		template <MethodPointerType method_pointer> static inline
-		R call(const volatile T* parent, A... args) {
-			return (parent->*method_pointer)(std::forward<A>(args)...);
+		template <MethodPointerType meth> static inline
+		R hook(const volatile T* parent, A&&... args) {
+			return (parent->*meth)(std::forward<A>(args)...);
 		}
 
-		template <MethodPointerType method_pointer> static inline
+		template <MethodPointerType meth> static inline
 		int invoke(State* state) {
-			return FunctionWrapper<FunctionSignature>::template invoke<call<method_pointer>>(state);
+			return call<FunctionSignature>(state, hook<meth>);
 		}
 	};
 
@@ -47,14 +48,14 @@ namespace internal {
 		using MethodPointerType = R (T::*)(A...) const;
 		using FunctionSignature = R (const T*, A...);
 
-		template <MethodPointerType method_pointer> static inline
-		R call(const T* parent, A... args) {
-			return (parent->*method_pointer)(std::forward<A>(args)...);
+		template <MethodPointerType meth> static inline
+		R hook(const T* parent, A... args) {
+			return (parent->*meth)(std::forward<A>(args)...);
 		}
 
-		template <MethodPointerType method_pointer> static inline
+		template <MethodPointerType meth> static inline
 		int invoke(State* state) {
-			return FunctionWrapper<FunctionSignature>::template invoke<call<method_pointer>>(state);
+			return call<FunctionSignature>(state, hook<meth>);
 		}
 	};
 
@@ -64,14 +65,14 @@ namespace internal {
 		using MethodPointerType = R (T::*)(A...) volatile;
 		using FunctionSignature = R (volatile T*, A...);
 
-		template <MethodPointerType method_pointer> static inline
-		R call(volatile T* parent, A... args) {
-			return (parent->*method_pointer)(std::forward<A>(args)...);
+		template <MethodPointerType meth> static inline
+		R hook(volatile T* parent, A... args) {
+			return (parent->*meth)(std::forward<A>(args)...);
 		}
 
-		template <MethodPointerType method_pointer> static inline
+		template <MethodPointerType meth> static inline
 		int invoke(State* state) {
-			return FunctionWrapper<FunctionSignature>::template invoke<call<method_pointer>>(state);
+			return call<FunctionSignature>(state, hook<meth>);
 		}
 	};
 
@@ -81,14 +82,14 @@ namespace internal {
 		using MethodPointerType = R (T::*)(A...);
 		using FunctionSignature = R (T*, A...);
 
-		template <MethodPointerType method_pointer> static inline
-		R call(T* parent, A... args) {
-			return (parent->*method_pointer)(std::forward<A>(args)...);
+		template <MethodPointerType meth> static inline
+		R hook(T* parent, A... args) {
+			return (parent->*meth)(std::forward<A>(args)...);
 		}
 
-		template <MethodPointerType method_pointer> static inline
+		template <MethodPointerType meth> static inline
 		int invoke(State* state) {
-			return FunctionWrapper<FunctionSignature>::template invoke<call<method_pointer>>(state);
+			return call<FunctionSignature>(state, hook<meth>);
 		}
 	};
 }

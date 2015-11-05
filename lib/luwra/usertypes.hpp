@@ -70,9 +70,8 @@ namespace internal {
 	 */
 	template <typename U, typename... A> static inline
 	int construct_user_type(State* state) {
-		return internal::Layout<int(A...)>::direct(
+		return direct<int(A...)>(
 			state,
-			1,
 			&Value<StripUserType<U>&>::template push<A...>,
 			state
 		);
@@ -86,7 +85,7 @@ namespace internal {
 		using T = StripUserType<U>;
 
 		if (!lua_islightuserdata(state, 1))
-			Value<T&>::read(state, 1).~T();
+			read<T&>(state, 1).~T();
 
 		return 0;
 	}
@@ -98,7 +97,7 @@ namespace internal {
 	int stringify_user_type(State* state) {
 		using T = StripUserType<U>;
 
-		return Value<std::string>::push(
+		return push(
 			state,
 			internal::user_type_reg_name<T>
 				+ "@"
