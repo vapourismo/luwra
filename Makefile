@@ -59,4 +59,4 @@ $(EXAMPLE_DIR)/%.out: $(EXAMPLE_DIR)/%.cpp Makefile
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -MMD -MF$(<:%.cpp=%.d) -MT$@ -o$@ $< $(LDLIBS)
 
 # Phony
-.PHONY: all clean test examples
+.PHONY: all clean docs test examples
