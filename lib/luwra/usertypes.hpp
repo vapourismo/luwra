@@ -12,6 +12,7 @@
 #include "stack.hpp"
 
 #include <map>
+#include <string>
 
 LUWRA_NS_BEGIN
 
@@ -216,6 +217,42 @@ void registerUserType(
 
 	// Pop metatable off the stack
 	lua_pop(state, -1);
+}
+
+namespace internal {
+	template <typename T>
+	struct UserTypeSignature {
+		static_assert(
+			sizeof(T) == -1,
+			"Parameter to UserTypeSignature is not a valid signature"
+		);
+	};
+
+	template <typename T, typename... A>
+	struct UserTypeSignature<T(A...)> {
+		using UserType = T;
+
+		static inline
+		void registerConstructor(State* state, const std::string& name) {
+			setGlobal(state, name, &construct_user_type<UserType, A...>);
+		}
+	};
+}
+
+/**
+ * Same as other `registerUserType` but registers the construtor as well. Also template parameter
+ * is a signature `U(A...)` where `U` is the user type and `A...` its constructor parameters.
+ */
+template <typename T> static inline
+void registerUserType(
+	State* state,
+	const std::string& ctor_name,
+	const std::map<const char*, CFunction>& methods = std::map<const char*, CFunction>(),
+	const std::map<const char*, CFunction>& meta_methods = std::map<const char*, CFunction>()
+) {
+	using U = typename internal::UserTypeSignature<T>::UserType;
+	registerUserType<U>(state, methods, meta_methods);
+	internal::UserTypeSignature<T>::registerConstructor(state, ctor_name);
 }
 
 LUWRA_NS_END

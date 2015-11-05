@@ -33,8 +33,10 @@ int main() {
 	// Register our user type.
 	// This function also registers a garbage-collector hook and a string representation function.
 	// Both can be overwritten using the third parameter, which lets you add custom meta methods.
-	luwra::registerUserType<Point>(
+	luwra::registerUserType<Point(double, double)>(
 		state,
+		// Constructor name
+		"Point",
 		// Methods which shall be availabe in the Lua user data, need to be declared here
 		{
 			LUWRA_MEMBER(Point, scale),
@@ -46,11 +48,6 @@ int main() {
 			LUWRA_MEMBER(Point, __tostring)
 		}
 	);
-
-	// What's left, is registering a constructor for our type.
-	// We have to specify which parameters our constructor takes, because there might be more than
-	// one constructor to deal with.
-	luwra::setGlobal(state, "Point", LUWRA_WRAP_CONSTRUCTOR(Point, double, double));
 
 	// Load Lua code
 	luaL_loadstring(
