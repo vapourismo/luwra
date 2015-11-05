@@ -82,17 +82,27 @@ namespace internal {
  *
  * \returns Result of calling `hook`
  */
-template <typename S, typename F> static inline
-typename internal::Layout<S>::ReturnType direct(State* state, int pos, F&& hook) {
-	return internal::Layout<S>::direct(state, pos, std::forward<F>(hook));
+template <typename S, typename F, typename... A> static inline
+typename internal::Layout<S>::ReturnType direct(State* state, int pos, F&& hook, A&&... args) {
+	return internal::Layout<S>::direct(
+		state,
+		pos,
+		std::forward<F>(hook),
+		std::forward<A>(args)...
+	);
 }
 
 /**
  * Same as `direct(state, 1, hook)`.
  */
-template <typename S, typename F> static inline
-typename internal::Layout<S>::ReturnType direct(State* state, F&& hook) {
-	return internal::Layout<S>::direct(state, 1, std::forward<F>(hook));
+template <typename S, typename F, typename... A> static inline
+typename internal::Layout<S>::ReturnType direct(State* state, F&& hook, A&&... args) {
+	return internal::Layout<S>::direct(
+		state,
+		1,
+		std::forward<F>(hook),
+		std::forward<A>(args)...
+	);
 }
 
 /**
@@ -170,19 +180,30 @@ namespace internal {
 }
 
 /**
- * \todo Document me
+ * Similiar to `direct` but pushes the result of the given `Callable` onto the stack.
+ * \returns Number of values pushed
  */
-template <typename S, typename F> static inline
-int call(State* state, int pos, F&& hook) {
-	return internal::LayoutCaller<S>::call(state, pos, std::forward<F>(hook));
+template <typename S, typename F, typename... A> static inline
+int call(State* state, int pos, F&& hook, A&&... args) {
+	return internal::LayoutCaller<S>::call(
+		state,
+		pos,
+		std::forward<F>(hook),
+		std::forward<A>(args)...
+	);
 }
 
 /**
- * \todo Document me
+ * Same as `call(state, 1, hook)`.
  */
-template <typename S, typename F> static inline
-int call(State* state, F&& hook) {
-	return call<S>(state, 1, std::forward<F>(hook));
+template <typename S, typename F, typename... A> static inline
+int call(State* state, F&& hook, A&&... args) {
+	return internal::LayoutCaller<S>::call(
+		state,
+		1,
+		std::forward<F>(hook),
+		std::forward<A>(args)...
+	);
 }
 
 LUWRA_NS_END
