@@ -69,69 +69,64 @@ namespace internal {
 }
 
 /**
- * \todo Document me
+ * Retrieve values from the stack and invoke a `Callable` with them.
+ *
+ * \tparam S Signature in the form of `R(A...)` where `A` is a sequence of types, which shall be
+ *           retrieved from the stack, and `R` the return type of `hook`
+ * \tparam F An instance of `Callable` which accepts parameters `A...` and returns `R`
+ *           (this parameter should be inferable and can be omitted)
+ *
+ * \param state Lua state instance
+ * \param pos   Index of the first value
+ * \param hook  Callable value
+ *
+ * \returns Result of calling `hook`
  */
 template <typename S, typename F> static inline
-typename internal::Layout<S>::ReturnType direct(State* state, int pos, F hook) {
-	return internal::Layout<S>::direct(state, pos, hook);
+typename internal::Layout<S>::ReturnType direct(State* state, int pos, F&& hook) {
+	return internal::Layout<S>::direct(state, pos, std::forward<F>(hook));
 }
 
 /**
  * Same as `direct(state, 1, hook)`.
  */
 template <typename S, typename F> static inline
-typename internal::Layout<S>::ReturnType direct(State* state, F hook) {
-	return internal::Layout<S>::direct(state, 1, hook);
+typename internal::Layout<S>::ReturnType direct(State* state, F&& hook) {
+	return internal::Layout<S>::direct(state, 1, std::forward<F>(hook));
 }
 
 /**
- * Assuming a stack layout as follows (where A = A0, A1 ... An):
- *
- *   Position | Type | Identifier
- * 	----------+------+------------
- *   pos + 0  | A0   | x0
- *   pos + 1  | A1   | x1
- *   ...      | ...  | ...
- *   pos + n  | An   | xn
- *
- * Given a function `R f(A0, A1, ... An)` you are able to map over
- * the values on the stack on the stack like so:
- *
- *   R my_result = apply(lua_state, pos, f);
- *
- * which is equivalent to
- *
- *   R my_result = f(x0, x1, ... xn);
- *
- * where x0, x1, ... xn are the values on the stack.
+ * Synonym for `direct` with a function pointer which lets you omit all template parameters.
+ * The stack layout will be inferred using the signature of the given function pointer.
  */
 template <typename R, typename... A> static inline
-R apply(State* state, int pos, R (* function_pointer)(A...)) {
-	return direct<R(A...)>(state, pos, function_pointer);
+R apply(State* state, int pos, R (* fun)(A...)) {
+	return direct<R(A...)>(state, pos, fun);
 }
 
 /**
- * Same as `apply(state, 1, function_pointer)`.
+ * Same as `apply(state, 1, fun)`.
  */
 template <typename R, typename... A> static inline
-R apply(State* state, R (* function_pointer)(A...)) {
-	return apply(state, 1, function_pointer);
+R apply(State* state, R (* fun)(A...)) {
+	return apply(state, 1, fun);
 }
 
 /**
- * Specialization of `apply` which works with `std::function`.
+ * Synonym for `direct` with a function object which lets you omit all template parameters.
+ * The stack layout will be inferred using the template parameter to your `std::function` object.
  */
 template <typename R, typename... A> static inline
-R apply(State* state, int pos, const std::function<R(A...)>& function_object) {
-	return internal::Layout<R(A...)>::direct(state, pos, function_object);
+R apply(State* state, int pos, const std::function<R(A...)>& fun) {
+	return internal::Layout<R(A...)>::direct(state, pos, fun);
 }
 
 /**
- * Same as `apply(state, 1, function_object)`.
+ * Same as `apply(state, 1, fun)`.
  */
 template <typename R, typename... A> static inline
-R apply(State* state, const std::function<R(A...)>& function_object) {
-	return apply(state, 1, function_object);
+R apply(State* state, const std::function<R(A...)>& fun) {
+	return apply(state, 1, fun);
 }
 
 LUWRA_NS_END
