@@ -129,6 +129,62 @@ R apply(State* state, const std::function<R(A...)>& fun) {
 	return apply(state, 1, fun);
 }
 
+namespace internal {
+	template <typename T>
+	struct LayoutCaller {
+		static_assert(
+			sizeof(T) == -1,
+			"Parameter to LayoutCaller is not a valid signature"
+		);
+	};
+
+	template <typename... A>
+	struct LayoutCaller<void (A...)> {
+		template <typename F, typename... X> static inline
+		int call(State* state, int n, F&& hook, X&&... args) {
+			direct<void (A...)>(
+				state,
+				n,
+				std::forward<F>(hook),
+						std::forward<X>(args)...
+			);
+			return 0;
+		}
+	};
+
+	template <typename R, typename... A>
+	struct LayoutCaller<R (A...)> {
+		template <typename F, typename... X> static inline
+		int call(State* state, int n, F&& hook, X&&... args) {
+			return push(
+				state,
+				direct<R (A...)>(
+					state,
+					n,
+					std::forward<F>(hook),
+					std::forward<X>(args)...
+				)
+			);
+		}
+	};
+}
+
+/**
+ * \todo Document me
+ */
+template <typename S, typename F> static inline
+int call(State* state, int pos, F&& hook) {
+	return internal::LayoutCaller<S>::call(state, pos, std::forward<F>(hook));
+}
+
+/**
+ * \todo Document me
+ */
+template <typename S, typename F> static inline
+int call(State* state, F&& hook) {
+	return call<S>(state, 1, std::forward<F>(hook));
+}
+
 LUWRA_NS_END
 
 #endif

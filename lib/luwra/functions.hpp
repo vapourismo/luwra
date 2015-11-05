@@ -18,27 +18,15 @@ namespace internal {
 	struct FunctionWrapper {
 		static_assert(
 			sizeof(T) == -1,
-			"Parameter to FunctionWrapper is not a function signature"
+			"Parameter to FunctionWrapper is not a valid signature"
 		);
-	};
-
-	template <typename... A>
-	struct FunctionWrapper<void (A...)> {
-		template <void (* fun)(A...)> static inline
-		int invoke(State* state) {
-			direct<void (A...)>(state, fun);
-			return 0;
-		}
 	};
 
 	template <typename R, typename... A>
 	struct FunctionWrapper<R (A...)> {
 		template <R (* fun)(A...)> static inline
 		int invoke(State* state) {
-			return push(
-				state,
-				direct<R (A...)>(state, fun)
-			);
+			return call<R (A...)>(state, fun);
 		}
 	};
 
