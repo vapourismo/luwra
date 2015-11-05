@@ -119,6 +119,18 @@ struct StateWrapper {
 	}
 
 	/**
+	 * \todo Document me
+	 */
+	template <typename T> inline
+	void registerUserType(
+		const std::string& ctor_name,
+		const std::map<const char*, CFunction>& methods = std::map<const char*, CFunction>(),
+		const std::map<const char*, CFunction>& meta_methods = std::map<const char*, CFunction>()
+	) {
+		registerUserType<T>(state, ctor_name, methods, meta_methods);
+	}
+
+	/**
 	 * Execute a piece of code.
 	 */
 	inline
