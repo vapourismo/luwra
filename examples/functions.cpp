@@ -46,7 +46,7 @@ int main() {
 
 		// Invoke 'my_function_3'
 		"local result3 = my_function_3(13, 37)\n"
-		"print('my_function_3(13, 38) = ' .. result3)\n"
+		"print('my_function_3(13, 37) = ' .. result3)\n"
 	);
 
 	// Invoke the attached script
