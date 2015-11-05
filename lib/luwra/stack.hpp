@@ -22,7 +22,7 @@ namespace internal {
 	struct Layout {
 		static_assert(
 			sizeof(T) == -1,
-			"Parameter to Layout is not a function signature"
+			"Parameter to Layout is not a valid signature"
 		);
 	};
 
@@ -31,7 +31,7 @@ namespace internal {
 		using ReturnType = R;
 
 		template <typename F, typename... A> static inline
-		R direct(State*, int, F hook, A&&... args) {
+		R direct(State*, int, F&& hook, A&&... args) {
 			return hook(
 				std::forward<A>(args)...
 			);
@@ -43,7 +43,7 @@ namespace internal {
 		using ReturnType = R;
 
 		template <typename F, typename... A> static inline
-		R direct(State* state, int n, F hook, A&&... args) {
+		R direct(State* state, int n, F&& hook, A&&... args) {
 			return hook(
 				std::forward<A>(args)...,
 				Value<T>::read(state, n)
@@ -56,33 +56,14 @@ namespace internal {
 		using ReturnType = R;
 
 		template <typename F, typename... A> static inline
-		R direct(State* state, int n, F hook, A&&... args) {
+		R direct(State* state, int n, F&& hook, A&&... args) {
 			return Layout<R(TR...)>::direct(
 				state,
 				n + 1,
-				hook,
+				std::forward<F>(hook),
 				std::forward<A>(args)...,
 				Value<T1>::read(state, n)
 			);
-		}
-	};
-
-	template <typename K, typename V, typename... R>
-	struct EntryPusher {
-		static inline
-		void push(State* state, int index, K&& key, V&& value, R&&... rest) {
-			EntryPusher<K, V>::push(state, index, std::forward<K>(key), std::forward<V>(value));
-			EntryPusher<R...>::push(state, index, std::forward<R>(rest)...);
-		}
-	};
-
-	template <typename K, typename V>
-	struct EntryPusher<K, V> {
-		static inline
-		void push(State* state, int index, K&& key, V&& value) {
-			assert(1 == luwra::push(state, key));
-			assert(1 == luwra::push(state, value));
-			lua_rawset(state, index < 0 ? index - 2 : index);
 		}
 	};
 }
