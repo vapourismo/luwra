@@ -51,6 +51,11 @@ int main() {
 
 	// apply function to stack values
 	luwra::apply(state, read_chars);
+	lua_pop(state, 2);
+
+	// Build stack again
+	luwra::push(state, 'Y', 'o');
+	luwra::apply(state, read_chars);
 
 	lua_close(state);
 	return 0;

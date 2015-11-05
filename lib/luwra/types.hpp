@@ -80,6 +80,26 @@ int push(State* state, T value) {
 }
 
 /**
+ * Allows you to push multiple values at once.
+ */
+template <typename T1, typename T2, typename... TR>
+int push(State* state, T1 value, T2&& head, TR&&... rest) {
+	int result = push(state, value);
+
+	if (result < 0)
+		return result;
+
+	int other = push(state, std::forward<T2>(head), std::forward<TR>(rest)...);
+
+	if (other < 0) {
+		lua_pop(state, result);
+		return other;
+	} else {
+		return result + other;
+	}
+}
+
+/**
  * Convenient wrapper for [Value<T>::read](@ref Value<T>::read).
  */
 template <typename T> static inline
