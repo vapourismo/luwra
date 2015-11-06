@@ -365,49 +365,51 @@ struct Value<const T>: Value<T> {};
 template <typename T>
 struct Value<volatile T>: Value<T> {};
 
+namespace internal {
+	/**
+	 *
+	 */
+	struct PushableI {
+		virtual
+		size_t push(State* state) const = 0;
+
+		virtual
+		PushableI* copy() const = 0;
+
+		virtual
+		~PushableI() {}
+	};
+
+	/**
+	 *
+	 */
+	template <typename T>
+	struct PushableT: virtual PushableI {
+		T value;
+
+		inline
+		PushableT(T value): value(value) {}
+
+		virtual
+		size_t push(State* state) const {
+			return Value<T>::push(state, value);
+		}
+
+		virtual
+		PushableI* copy() const {
+			return new PushableT<T>(value);
+		}
+	};
+}
+
 /**
  *
  */
-struct PushableI {
-	virtual
-	size_t push(State* state) const = 0;
-
-	virtual
-	PushableI* copy() const = 0;
-
-	virtual
-	~PushableI() {}
-};
-
-/**
- *
- */
-template <typename T>
-struct PushableT: virtual PushableI {
-	T value;
-
-	inline
-	PushableT(T value): value(value) {}
-
-	virtual
-	size_t push(State* state) const {
-		return Value<T>::push(state, value);
-	}
-
-	virtual
-	PushableI* copy() const {
-		return new PushableT<T>(value);
-	}
-};
-
-/**
- *
- */
-struct Pushable: virtual PushableI {
-	PushableI* interface;
+struct Pushable: virtual internal::PushableI {
+	internal::PushableI* interface;
 
 	template <typename T> inline
-	Pushable(T value): interface(new PushableT<T>(value)) {}
+	Pushable(T value): interface(new internal::PushableT<T>(value)) {}
 
 	inline
 	Pushable(Pushable&& other): interface(other.interface) {
@@ -422,7 +424,7 @@ struct Pushable: virtual PushableI {
 	}
 
 	virtual
-	PushableI* copy() const {
+	internal::PushableI* copy() const {
 		return new Pushable(*this);
 	}
 
