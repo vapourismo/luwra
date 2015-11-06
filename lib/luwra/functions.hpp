@@ -45,7 +45,7 @@ struct NativeFunction {
 
 /**
  * A callable native Lua function.
- * \note This value is only as long as it exists on the stack.
+ * \note This value is only available as long as it exists on the stack.
  */
 template <typename R, typename... A>
 struct NativeFunction<R(A...)> {
@@ -67,7 +67,7 @@ struct NativeFunction<R(A...)> {
 
 /**
  * A callable native Lua function.
- * \note This value is only as long as it exists on the stack.
+ * \note This value is only available as long as it exists on the stack.
  */
 template <typename... A>
 struct NativeFunction<void(A...)> {
