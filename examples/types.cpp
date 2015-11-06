@@ -25,7 +25,7 @@ namespace luwra {
 		 * push the value onto the stack.
 		 */
 		static inline
-		int push(lua_State* state, char val) {
+		size_t push(lua_State* state, char val) {
 			if (val == 0)
 				return 0;
 

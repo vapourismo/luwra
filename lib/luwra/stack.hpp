@@ -153,7 +153,7 @@ namespace internal {
 	template <typename... A>
 	struct LayoutMapper<void (A...)> {
 		template <typename F, typename... X> static inline
-		int map(State* state, int n, F&& hook, X&&... args) {
+		size_t map(State* state, int n, F&& hook, X&&... args) {
 			direct<void (A...)>(
 				state,
 				n,
@@ -167,7 +167,7 @@ namespace internal {
 	template <typename R, typename... A>
 	struct LayoutMapper<R (A...)> {
 		template <typename F, typename... X> static inline
-		int map(State* state, int n, F&& hook, X&&... args) {
+		size_t map(State* state, int n, F&& hook, X&&... args) {
 			return push(
 				state,
 				direct<R (A...)>(
@@ -186,7 +186,7 @@ namespace internal {
  * \returns Number of values pushed
  */
 template <typename S, typename F, typename... A> static inline
-int map(State* state, int pos, F&& hook, A&&... args) {
+size_t map(State* state, int pos, F&& hook, A&&... args) {
 	return internal::LayoutMapper<S>::map(
 		state,
 		pos,
@@ -199,7 +199,7 @@ int map(State* state, int pos, F&& hook, A&&... args) {
  * Same as `map(state, 1, hook)`.
  */
 template <typename S, typename F, typename... A> static inline
-int map(State* state, F&& hook, A&&... args) {
+size_t map(State* state, F&& hook, A&&... args) {
 	return internal::LayoutMapper<S>::map(
 		state,
 		1,

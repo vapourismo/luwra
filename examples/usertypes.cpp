@@ -33,7 +33,7 @@ int main() {
 	// Register our user type.
 	// This function also registers a garbage-collector hook and a string representation function.
 	// Both can be overwritten using the third parameter, which lets you add custom meta methods.
-	luwra::registerUserType<Point(double, double)>(
+	luwra::registerUserType<Point (double, double)>(
 		state,
 		// Constructor name
 		"Point",

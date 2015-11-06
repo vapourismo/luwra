@@ -52,7 +52,7 @@ struct Value {
 	 * \returns Number of values pushed
 	 */
 	static
-	int push(State* state, T value);
+	size_t push(State* state, T value);
 };
 
 // Nil
@@ -65,7 +65,7 @@ struct Value<std::nullptr_t> {
 	}
 
 	static inline
-	int push(State* state, std::nullptr_t) {
+	size_t push(State* state, std::nullptr_t) {
 		lua_pushnil(state);
 		return 1;
 	}
@@ -75,7 +75,7 @@ struct Value<std::nullptr_t> {
  * Convenient wrapped for [Value<T>::push](@ref Value<T>::push).
  */
 template <typename T> static inline
-int push(State* state, T value) {
+size_t push(State* state, T value) {
 	return Value<T>::push(state, value);
 }
 
@@ -83,20 +83,8 @@ int push(State* state, T value) {
  * Allows you to push multiple values at once.
  */
 template <typename T1, typename T2, typename... TR>
-int push(State* state, T1 value, T2&& head, TR&&... rest) {
-	int result = push(state, value);
-
-	if (result < 0)
-		return result;
-
-	int other = push(state, std::forward<T2>(head), std::forward<TR>(rest)...);
-
-	if (other < 0) {
-		lua_pop(state, result);
-		return other;
-	} else {
-		return result + other;
-	}
+size_t push(State* state, T1 value, T2&& head, TR&&... rest) {
+	return push(state, value) + push(state, std::forward<T2>(head), std::forward<TR>(rest)...);
 }
 
 /**
@@ -121,7 +109,7 @@ T read(State* state, int index) {
 		}                                                            \
                                                                      \
 		static inline                                                \
-		int push(State* state, type value) {                         \
+		size_t push(State* state, type value) {                      \
 			pushf(state, value);                                     \
 			return 1;                                                \
 		}                                                            \
@@ -169,7 +157,7 @@ namespace internal {
 		}
 
 		static inline
-		int push(State* state, Integer value) {
+		size_t push(State* state, Integer value) {
 			lua_pushinteger(state, value);
 			return 1;
 		}
@@ -184,7 +172,7 @@ namespace internal {
 		}
 
 		static inline
-		int push(State* state, Number value) {
+		size_t push(State* state, Number value) {
 			lua_pushnumber(state, value);
 			return 1;
 		}
@@ -207,7 +195,7 @@ namespace internal {
 		}
 
 		static inline
-		int push(State* state, I value) {
+		size_t push(State* state, I value) {
 			NumericTransportValue<B>::push(state, static_cast<B>(value));
 			return 1;
 		}
@@ -223,7 +211,7 @@ namespace internal {
 		}
 
 		static inline
-		int push(State*, I) {
+		size_t push(State*, I) {
 			static_assert(
 				sizeof(I) == -1,
 				"You must not use 'Value<I>::push' specializations which inherit from NumericTruncatingValueBase"
@@ -294,7 +282,7 @@ struct Value<const char[n]>: Value<const char*> {};
 template <>
 struct Value<CFunction> {
 	static inline
-	int push(State* state, CFunction fun) {
+	size_t push(State* state, CFunction fun) {
 		lua_pushcfunction(state, fun);
 		return 1;
 	}
@@ -320,7 +308,7 @@ struct Value<Arbitrary> {
 	}
 
 	static inline
-	int push(State* state, const Arbitrary& value) {
+	size_t push(State* state, const Arbitrary& value) {
 		lua_pushvalue(value.state, value.index);
 
 		if (value.state != state)
@@ -337,16 +325,16 @@ namespace internal {
 	template <size_t I>
 	struct StackPusher<std::index_sequence<I>> {
 		template <typename... T> static inline
-		int push(State* state, const std::tuple<T...>& package) {
+		size_t push(State* state, const std::tuple<T...>& package) {
 			using R = typename std::tuple_element<I, std::tuple<T...>>::type;
-			return std::max(0, Value<R>::push(state, std::get<I>(package)));
+			return Value<R>::push(state, std::get<I>(package));
 		}
 	};
 
 	template <size_t I, size_t... Is>
 	struct StackPusher<std::index_sequence<I, Is...>> {
 		template <typename... T> static inline
-		int push(State* state, const std::tuple<T...>& package) {
+		size_t push(State* state, const std::tuple<T...>& package) {
 			return
 				StackPusher<std::index_sequence<I>>::push(state, package)
 				+ StackPusher<std::index_sequence<Is...>>::push(state, package);
@@ -360,7 +348,7 @@ namespace internal {
 template <typename... A>
 struct Value<std::tuple<A...>> {
 	static inline
-	int push(State* state, const std::tuple<A...>& value) {
+	size_t push(State* state, const std::tuple<A...>& value) {
 		return internal::StackPusher<std::make_index_sequence<sizeof...(A)>>::push(state, value);
 	}
 };

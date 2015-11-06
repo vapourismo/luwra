@@ -50,7 +50,6 @@ namespace internal {
 	template <typename U> static inline
 	StripUserType<U>* check_user_type(State* state, int index) {
 		using T = StripUserType<U>;
-
 		return static_cast<T*>(luaL_checkudata(state, index, user_type_reg_name<T>.c_str()));
 	}
 
@@ -70,7 +69,7 @@ namespace internal {
 	 */
 	template <typename U, typename... A> static inline
 	int construct_user_type(State* state) {
-		return direct<int(A...)>(
+		return direct<size_t (A...)>(
 			state,
 			&Value<StripUserType<U>&>::template push<A...>,
 			state
@@ -123,7 +122,7 @@ struct Value<U&> {
 	}
 
 	template <typename... A> static inline
-	int push(State* state, A&&... args) {
+	size_t push(State* state, A&&... args) {
 		void* mem = lua_newuserdata(state, sizeof(T));
 
 		if (!mem) {
@@ -157,7 +156,7 @@ struct Value<U*> {
 	}
 
 	static inline
-	int push(State* state, T* instance) {
+	size_t push(State* state, T* instance) {
 		if (instance == nullptr)
 			return 0;
 
@@ -238,7 +237,7 @@ namespace internal {
 	};
 
 	template <typename T, typename... A>
-	struct UserTypeSignature<T(A...)> {
+	struct UserTypeSignature<T (A...)> {
 		using UserType = T;
 
 		static inline
