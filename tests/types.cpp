@@ -17,16 +17,16 @@ struct NumericTest {
 		const I avg_value = (max_value + min_value) / 2;
 
 		// Largest value
-		CHECK(luwra::push(state, max_value) == 1);
-		CHECK(luwra::read<I>(state, -1) == max_value);
+		CHECK((luwra::push(state, max_value) == 1));
+		CHECK((luwra::read<I>(state, -1) == max_value));
 
 		// Lowest value
-		CHECK(luwra::push(state, min_value) == 1);
-		CHECK(luwra::read<I>(state, -1) == min_value);
+		CHECK((luwra::push(state, min_value) == 1));
+		CHECK((luwra::read<I>(state, -1) == min_value));
 
 		// Average value
-		CHECK(luwra::push(state, avg_value) == 1);
-		CHECK(luwra::read<I>(state, -1) == avg_value);
+		CHECK((luwra::push(state, avg_value) == 1));
+		CHECK((luwra::read<I>(state, -1) == avg_value));
 	}
 };
 
