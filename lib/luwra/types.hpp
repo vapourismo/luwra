@@ -72,6 +72,14 @@ struct Value<std::nullptr_t> {
 };
 
 /**
+ * This does nothing.
+ */
+static inline
+size_t push(State*) {
+	return 0;
+}
+
+/**
  * Convenient wrapped for [Value<T>::push](@ref Value<T>::push).
  */
 template <typename T> static inline

@@ -109,4 +109,23 @@ TEST_CASE("wrap_function") {
 	lua_close(state);
 }
 
-// TODO: Test whether type-checking works properly
+TEST_CASE("NativeFunction") {
+	luwra::StateWrapper state;
+
+	SECTION("with return value") {
+		REQUIRE(luaL_dostring(state, "return function (x, y) return x + y end") == LUA_OK);
+
+		auto fun = luwra::read<luwra::NativeFunction<int(int, int)>>(state, -1);
+		REQUIRE(fun(13, 37) == 50);
+	}
+
+	SECTION("without return value") {
+		REQUIRE(luaL_dostring(state, "return function (x, y) returnValue = x + y end") == LUA_OK);
+
+		auto fun = luwra::read<luwra::NativeFunction<void(int, int)>>(state, -1);
+		fun(13, 37);
+
+		int returnValue = state["returnValue"];
+		REQUIRE(returnValue == 50);
+	}
+}
