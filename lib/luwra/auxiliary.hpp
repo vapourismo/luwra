@@ -10,6 +10,9 @@
 #include "common.hpp"
 #include "types.hpp"
 
+#include <vector>
+#include <utility>
+
 LUWRA_NS_BEGIN
 
 /**
@@ -77,6 +80,36 @@ void setFields(State* state, int index, R&&... args) {
 }
 
 /**
+ *
+ */
+using FieldVector = std::vector<std::pair<Pushable, Pushable>>;
+
+/**
+ *
+ */
+static inline
+void setFields(State* state, int index, const FieldVector& fields) {
+	if (index < 0)
+		index = lua_gettop(state) + (index + 1);
+
+	for (const auto& pair: fields) {
+		pair.first.push(state);
+		pair.second.push(state);
+		lua_rawset(state, index);
+	}
+}
+
+template <>
+struct Value<FieldVector> {
+	static inline
+	size_t push(State* state, const FieldVector& fields) {
+		lua_newtable(state);
+		setFields(state, -1, fields);
+		return 1;
+	}
+};
+
+/**
  * Retrieve a field from a table.
  */
 template <typename V, typename K> static inline
@@ -91,15 +124,6 @@ V getField(State* state, int index, K key) {
 	lua_pop(state, 1);
 
 	return value;
-}
-
-/**
- * Create a new table and set its fields.
- */
-template <typename... R> static inline
-void newTable(State* state, R&&... args) {
-	lua_newtable(state);
-	setFields(state, lua_gettop(state), std::forward<R>(args)...);
 }
 
 LUWRA_NS_END

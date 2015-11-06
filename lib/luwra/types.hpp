@@ -365,6 +365,82 @@ struct Value<const T>: Value<T> {};
 template <typename T>
 struct Value<volatile T>: Value<T> {};
 
+/**
+ *
+ */
+struct PushableI {
+	virtual
+	size_t push(State* state) const = 0;
+
+	virtual
+	PushableI* copy() const = 0;
+
+	virtual
+	~PushableI() {}
+};
+
+/**
+ *
+ */
+template <typename T>
+struct PushableT: virtual PushableI {
+	T value;
+
+	inline
+	PushableT(T value): value(value) {}
+
+	virtual
+	size_t push(State* state) const {
+		return Value<T>::push(state, value);
+	}
+
+	virtual
+	PushableI* copy() const {
+		return new PushableT<T>(value);
+	}
+};
+
+/**
+ *
+ */
+struct Pushable: virtual PushableI {
+	PushableI* interface;
+
+	template <typename T> inline
+	Pushable(T value): interface(new PushableT<T>(value)) {}
+
+	inline
+	Pushable(Pushable&& other): interface(other.interface) {
+		other.interface = nullptr;
+	}
+
+	Pushable(const Pushable& other): interface(other.interface->copy()) {}
+
+	virtual
+	size_t push(State* state) const {
+		return interface->push(state);
+	}
+
+	virtual
+	PushableI* copy() const {
+		return new Pushable(*this);
+	}
+
+	virtual
+	~Pushable() {
+		if (interface)
+			delete interface;
+	}
+};
+
+template <>
+struct Value<Pushable> {
+	static inline
+	size_t push(State* state, const Pushable& value) {
+		return value.push(state);
+	}
+};
+
 LUWRA_NS_END
 
 #endif
