@@ -52,3 +52,9 @@ TEST_CASE("setFields") {
 	REQUIRE(luwra::read<int>(state, -1) == 456);
 }
 
+TEST_CASE("getField") {
+	luwra::StateWrapper state;
+
+	REQUIRE(luaL_dostring(state, "return {hello = 123}") == LUA_OK);
+	REQUIRE(luwra::getField<int>(state, -1, "hello") == 123);
+}
