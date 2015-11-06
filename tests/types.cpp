@@ -43,7 +43,7 @@ using SelectNumericTest =
 		TautologyTest
 	>::type;
 
-TEST_CASE("types_numeric") {
+TEST_CASE("numeric") {
 	lua_State* state = luaL_newstate();
 
 	// Integer-based types
@@ -66,7 +66,7 @@ TEST_CASE("types_numeric") {
 	lua_close(state);
 }
 
-TEST_CASE("types_string") {
+TEST_CASE("string") {
 	lua_State* state = luaL_newstate();
 
 	const char* test_cstr = "Luwra Test String";
@@ -105,7 +105,7 @@ TEST_CASE("types_string") {
 	lua_close(state);
 }
 
-TEST_CASE("types_tuple") {
+TEST_CASE("tuples") {
 	lua_State* state = luaL_newstate();
 
 	int a = 13;
@@ -123,7 +123,7 @@ TEST_CASE("types_tuple") {
 	lua_close(state);
 }
 
-TEST_CASE("types_bool") {
+TEST_CASE("boolean") {
 	lua_State* state = luaL_newstate();
 
 	bool value = true;

@@ -76,3 +76,18 @@ TEST_CASE("getField") {
 	REQUIRE(luaL_dostring(state, "return {hello = 123}") == LUA_OK);
 	REQUIRE(luwra::getField<int>(state, -1, "hello") == 123);
 }
+
+TEST_CASE("FieldVector") {
+	luwra::StateWrapper state;
+
+	luwra::push<luwra::FieldVector>(state, {
+		{"test", 7331},
+		{7331,   123}
+	});
+
+	lua_setglobal(state, "test");
+
+	REQUIRE(luaL_dostring(state, "return test.test, test[test.test]") == LUA_OK);
+	REQUIRE(luwra::read<int>(state, -2) == 7331);
+	REQUIRE(luwra::read<int>(state, -1) == 123);
+}
