@@ -6,6 +6,8 @@
 #include <utility>
 #include <type_traits>
 
+#if LUA_VERSION_NUM >= 503
+
 template <typename I>
 struct NumericTest {
 	static
@@ -41,8 +43,8 @@ using SelectNumericTest =
 		TautologyTest
 	>::type;
 
-TEST_CASE("numeric") {
-	lua_State* state = luaL_newstate();
+TEST_CASE("NumberLimits") {
+	luwra::StateWrapper state;
 
 	// Integer-based types
 	SelectNumericTest<lua_Integer, signed char>::test(state);
@@ -60,12 +62,22 @@ TEST_CASE("numeric") {
 	SelectNumericTest<lua_Number, float>::test(state);
 	SelectNumericTest<lua_Number, double>::test(state);
 	SelectNumericTest<lua_Number, long double>::test(state);
-
-	lua_close(state);
 }
 
-TEST_CASE("string") {
-	lua_State* state = luaL_newstate();
+#endif /* LUA_VERSION_NUM >= 503 */
+
+TEST_CASE("Numbers") {
+	luwra::StateWrapper state;
+
+	REQUIRE(luwra::push(state, 1337) == 1);
+	REQUIRE(luwra::push(state, 13.37) == 1);
+
+	REQUIRE(luwra::read<int>(state, -2) == 1337);
+	REQUIRE(luwra::read<float>(state, -1) == 13.37f);
+}
+
+TEST_CASE("Strings") {
+	luwra::StateWrapper state;
 
 	const char* test_cstr = "Luwra Test String";
 	std::string test_str(test_cstr);
@@ -99,12 +111,10 @@ TEST_CASE("string") {
 	REQUIRE(test_str == l_str1);
 	REQUIRE(test_str == l_str2);
 	REQUIRE(l_str1   == l_str2);
-
-	lua_close(state);
 }
 
-TEST_CASE("tuples") {
-	lua_State* state = luaL_newstate();
+TEST_CASE("Tuples") {
+	luwra::StateWrapper state;
 
 	int a = 13;
 	std::string b("Hello");
@@ -117,17 +127,13 @@ TEST_CASE("tuples") {
 	// Push nested tuple
 	auto tuple_nested = std::make_tuple(a, b, c, tuple);
 	REQUIRE(luwra::push(state, tuple_nested) == 6);
-
-	lua_close(state);
 }
 
-TEST_CASE("boolean") {
-	lua_State* state = luaL_newstate();
+TEST_CASE("Boolean") {
+	luwra::StateWrapper state;
 
 	bool value = true;
 
 	REQUIRE(luwra::push(state, value) == 1);
 	REQUIRE(luwra::read<bool>(state, -1) == value);
-
-	lua_close(state);
 }

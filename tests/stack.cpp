@@ -16,8 +16,8 @@ void test_function_3(int) {
 
 }
 
-TEST_CASE("stack_interaction") {
-	lua_State* state = luaL_newstate();
+TEST_CASE("StackInteraction") {
+	luwra::StateWrapper state;
 
 	luwra::push(state, 1);
 	luwra::push(state, 2);
@@ -36,6 +36,4 @@ TEST_CASE("stack_interaction") {
 	REQUIRE(luwra::apply(state, -2, test_function_1) == -2);
 	REQUIRE(luwra::apply(state, -3, test_function_1) == -1);
 	REQUIRE(luwra::apply(state, -3, test_function_2) == 9);
-
-	lua_close(state);
 }

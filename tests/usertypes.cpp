@@ -9,40 +9,33 @@ struct A {
 	A(int x = 1338): a(x) {}
 };
 
-TEST_CASE("usertypes_registration") {
-	lua_State* state = luaL_newstate();
-
-	// Registration
+TEST_CASE("UserTypes") {
+	luwra::StateWrapper state;
 	luwra::registerUserType<A>(state);
 
-	// Reference
-	A* instance = new A;
-	luwra::Value<A*>::push(state, instance);
+	SECTION("registration") {
+		// Reference
+		A* instance = new A;
+		luwra::Value<A*>::push(state, instance);
 
-	// Type checks
-	REQUIRE(luwra::internal::check_user_type<A>(state, -1) == instance);
-	REQUIRE(luwra::Value<A*>::read(state, -1) == instance);
+		// Type checks
+		REQUIRE(luwra::internal::check_user_type<A>(state, -1) == instance);
+		REQUIRE(luwra::Value<A*>::read(state, -1) == instance);
 
-	lua_close(state);
-	delete instance;
-}
+		delete instance;
+	}
 
-TEST_CASE("usertypes_ctor") {
-	lua_State* state = luaL_newstate();
+	SECTION("constructor") {
+		luwra::setGlobal(state, "A", LUWRA_WRAP_CONSTRUCTOR(A, int));
 
-	// Registration
-	luwra::registerUserType<A>(state);
-	luwra::setGlobal(state, "A", LUWRA_WRAP_CONSTRUCTOR(A, int));
+		// Construction
+		REQUIRE(luaL_dostring(state, "return A(73)") == 0);
 
-	// Construction
-	REQUIRE(luaL_dostring(state, "return A(73)") == 0);
-
-	// Check
-	A* instance = luwra::read<A*>(state, -1);
-	REQUIRE(instance != nullptr);
-	REQUIRE(instance->a == 73);
-
-	lua_close(state);
+		// Check
+		A* instance = luwra::read<A*>(state, -1);
+		REQUIRE(instance != nullptr);
+		REQUIRE(instance->a == 73);
+	}
 }
 
 struct B {
@@ -59,8 +52,8 @@ struct B {
 	{}
 };
 
-TEST_CASE("usertypes_wrap_fields") {
-	lua_State* state = luaL_newstate();
+TEST_CASE("UserTypeFields") {
+	luwra::StateWrapper state;
 
 	// Registration
 	luwra::registerUserType<B>(
@@ -108,8 +101,6 @@ TEST_CASE("usertypes_wrap_fields") {
 	// 'const volatile'-qualified set
 	REQUIRE(luaL_dostring(state, "val:cvn(42)") == 0);
 	REQUIRE(value.cvn == 1338);
-
-	lua_close(state);
 }
 
 struct C {
@@ -136,8 +127,8 @@ struct C {
 	}
 };
 
-TEST_CASE("usertypes_wrap_methods") {
-	lua_State* state = luaL_newstate();
+TEST_CASE("UserTypeMethods") {
+	luwra::StateWrapper state;
 
 	// Registration
 	luwra::registerUserType<C>(
@@ -173,11 +164,9 @@ TEST_CASE("usertypes_wrap_methods") {
 	REQUIRE(luaL_dostring(state, "return value:foo4(334)") == 0);
 	REQUIRE(value.prop == 1000);
 	REQUIRE(luwra::read<int>(state, -1) == 666);
-
-	lua_close(state);
 }
 
-TEST_CASE("usertypes_gchook_tref") {
+TEST_CASE("UserTypeGarbageCollectionRef") {
 	lua_State* state = luaL_newstate();
 
 	// Registration
@@ -196,7 +185,7 @@ TEST_CASE("usertypes_gchook_tref") {
 	REQUIRE(shared_var.use_count() == 1);
 }
 
-TEST_CASE("usertypes_gchook_tptr") {
+TEST_CASE("UserTypeGarbageCollectionPtr") {
 	lua_State* state = luaL_newstate();
 
 	// Registration
