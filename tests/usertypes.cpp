@@ -9,33 +9,34 @@ struct A {
 	A(int x = 1338): a(x) {}
 };
 
-TEST_CASE("UserTypes") {
+TEST_CASE("UserTypeRegistration") {
 	luwra::StateWrapper state;
 	luwra::registerUserType<A>(state);
 
-	SECTION("registration") {
-		// Reference
-		A* instance = new A;
-		luwra::Value<A*>::push(state, instance);
+	// Reference
+	A* instance = new A;
+	luwra::Value<A*>::push(state, instance);
 
-		// Type checks
-		REQUIRE(luwra::internal::check_user_type<A>(state, -1) == instance);
-		REQUIRE(luwra::Value<A*>::read(state, -1) == instance);
+	// Type checks
+	REQUIRE(luwra::internal::check_user_type<A>(state, -1) == instance);
+	REQUIRE(luwra::Value<A*>::read(state, -1) == instance);
 
-		delete instance;
-	}
+	delete instance;
+}
 
-	SECTION("constructor") {
-		luwra::setGlobal(state, "A", LUWRA_WRAP_CONSTRUCTOR(A, int));
+TEST_CASE("UserTypeConstruction") {
+	luwra::StateWrapper state;
+	luwra::registerUserType<A>(state);
 
-		// Construction
-		REQUIRE(luaL_dostring(state, "return A(73)") == 0);
+	luwra::setGlobal(state, "A", LUWRA_WRAP_CONSTRUCTOR(A, int));
 
-		// Check
-		A* instance = luwra::read<A*>(state, -1);
-		REQUIRE(instance != nullptr);
-		REQUIRE(instance->a == 73);
-	}
+	// Construction
+	REQUIRE(luaL_dostring(state, "return A(73)") == 0);
+
+	// Check
+	A* instance = luwra::read<A*>(state, -1);
+	REQUIRE(instance != nullptr);
+	REQUIRE(instance->a == 73);
 }
 
 struct B {
