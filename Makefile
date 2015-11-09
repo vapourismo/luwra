@@ -23,10 +23,10 @@ LUA_LIBNAME     = lua
 
 # Compiler
 CXX             ?= clang++
-CXXFLAGS        += -std=c++14 -O2 -g -DDEBUG -fmessage-length=0 -Wall -Wextra -pedantic \
-                   -D_GLIBCXX_USE_C99 -Ilib -I$(LUA_INCDIR) -Ideps/catch/include
-LDFLAGS         += -L$(LUA_LIBDIR)
-LDLIBS          += -l$(LUA_LIBNAME)
+USECXXFLAGS     += $(CXXFLAGS) -std=c++14 -O2 -g -DDEBUG -fmessage-length=0 -Wall -Wextra \
+                   -pedantic -D_GLIBCXX_USE_C99 -Ilib -I$(LUA_INCDIR) -Ideps/catch/include
+USELDFLAGS      += $(LDFLAGS) -L$(LUA_LIBDIR)
+USELDLIBS       += $(LDLIBS) -lm -l$(LUA_LIBNAME) -ldl
 
 # Default targets
 all: test examples
@@ -44,10 +44,10 @@ test: $(TEST_OUT)
 -include $(TEST_DEPS)
 
 $(TEST_OUT): $(TEST_OBJS)
-	$(CXX) $(LDFLAGS) -o$@ $(TEST_OBJS) $(LDLIBS)
+	$(CXX) $(USELDFLAGS) -o$@ $(TEST_OBJS) $(USELDLIBS)
 
 $(TEST_DIR)/%.o: $(TEST_DIR)/%.cpp Makefile
-	$(CXX) -c $(CXXFLAGS) -MMD -MF$(@:%.o=%.d) -MT$@ -o$@ $<
+	$(CXX) -c $(USECXXFLAGS) -MMD -MF$(@:%.o=%.d) -MT$@ -o$@ $<
 
 # Examples
 examples: $(EXAMPLE_OBJS)
@@ -56,7 +56,7 @@ examples: $(EXAMPLE_OBJS)
 -include $(EXAMPLE_DEPS)
 
 $(EXAMPLE_DIR)/%.out: $(EXAMPLE_DIR)/%.cpp Makefile
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -MMD -MF$(<:%.cpp=%.d) -MT$@ -o$@ $< $(LDLIBS)
+	$(CXX) $(USECXXFLAGS) $(USELDFLAGS) -MMD -MF$(<:%.cpp=%.d) -MT$@ -o$@ $< $(USELDLIBS)
 
 # Phony
 .PHONY: all clean docs test examples

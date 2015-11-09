@@ -1,0 +1,26 @@
+language: cpp
+compiler:
+  - clang
+  - gcc
+install:
+  - if [[ "$CXX" = "g++" ]]; then export CXX="g++-5"; fi
+  - if [[ "$CXX" = "clang++" ]]; then export CXX="clang++-3.7"; fi
+  - wget http://www.lua.org/ftp/lua-5.3.1.tar.gz
+  - tar xvfz lua-5.3.1.tar.gz
+  - pushd lua-5.3.1
+  - make linux
+  - sudo make INSTALL_TOP=/usr install
+  - popd
+script:
+  - make examples
+  - make test
+addons:
+  apt:
+    sources:
+      - llvm-toolchain-precise-3.7
+      - ubuntu-toolchain-r-test
+    packages:
+      - clang-3.7
+      - g++-5
+      - make
+      - wget
