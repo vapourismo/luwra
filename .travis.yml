@@ -2,18 +2,47 @@ language: cpp
 compiler:
   - clang
   - gcc
+
 install:
   - if [[ "$CXX" = "g++" ]]; then export CXX="g++-5"; fi
   - if [[ "$CXX" = "clang++" ]]; then export CXX="clang++-3.7"; fi
+
+  # Build Lua 5.3
   - wget http://www.lua.org/ftp/lua-5.3.1.tar.gz
   - tar xvfz lua-5.3.1.tar.gz
-  - pushd lua-5.3.1
-  - make linux
-  - sudo make INSTALL_TOP=/usr install
+  - pushd lua-5.3.1/src
+  - make LUA_A=liblua53.a linux
+  - export LUA53_PATH=$(pwd)
   - popd
+
+  # Build Lua 5.2
+  - wget http://www.lua.org/ftp/lua-5.2.4.tar.gz
+  - tar xvfz lua-5.2.4.tar.gz
+  - pushd lua-5.2.4/src
+  - make LUA_A=liblua52.a linux
+  - export LUA52_PATH=$(pwd)
+  - popd
+
+  # Build Lua 5.1
+  - wget http://www.lua.org/ftp/lua-5.1.5.tar.gz
+  - tar xvfz lua-5.1.5.tar.gz
+  - pushd lua-5.1.5/src
+  - make LUA_A=liblua51.a linux
+  - export LUA51_PATH=$(pwd)
+  - popd
+
 script:
-  - make examples
-  - make test
+  # Test against Lua 5.3
+  - make "LUA_LIBDIR=$LUA53_PATH" "LUA_INCDIR=$LUA53_PATH" LUA_LIBNAME=lua53 all
+  - make clean
+
+  # Test against Lua 5.2
+  - make "LUA_LIBDIR=$LUA52_PATH" "LUA_INCDIR=$LUA52_PATH" LUA_LIBNAME=lua52 all
+  - make clean
+
+  # Test against Lua 5.1
+  - make "LUA_LIBDIR=$LUA51_PATH" "LUA_INCDIR=$LUA51_PATH" LUA_LIBNAME=lua51 all
+
 addons:
   apt:
     sources:
