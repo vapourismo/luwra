@@ -12,11 +12,20 @@
 	#error You need a C++14 compliant compiler
 #endif
 
-#include <lua.hpp>
+extern "C" {
+	#include <lua.h>
+	#include <lualib.h>
+	#include <lauxlib.h>
+}
 
 // Check for proper Lua version
 #if !defined(LUA_VERSION_NUM) || LUA_VERSION_NUM < 501 || LUA_VERSION_NUM >= 600
 	#error Luwra has not been tested against your installed version of Lua
+#endif
+
+// LUA_OK does not exist in Lua 5.1 and earlier
+#ifndef LUA_OK
+	#define LUA_OK 0
 #endif
 
 // Namespaces

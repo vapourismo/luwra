@@ -1,4 +1,3 @@
-#include <lua.hpp>
 #include <luwra.hpp>
 
 #include <string>

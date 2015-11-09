@@ -1,6 +1,4 @@
 #include <catch.hpp>
-
-#include <lua.hpp>
 #include <luwra.hpp>
 
 TEST_CASE("equal") {
