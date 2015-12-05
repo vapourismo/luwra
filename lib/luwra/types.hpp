@@ -301,10 +301,20 @@ struct Value<CFunction> {
  * Note: this value is only available as long as it exists on its originating stack.
  */
 struct Arbitrary {
+	/**
+	 * Originating Lua state
+	 */
 	State* state;
+
+	/**
+	 * Stack index
+	 */
 	int index;
 };
 
+/**
+ * See [Arbitrary](@ref Arbitrary).
+ */
 template <>
 struct Value<Arbitrary> {
 	static inline
@@ -374,9 +384,6 @@ template <typename T>
 struct Value<volatile T>: Value<T> {};
 
 namespace internal {
-	/**
-	 *
-	 */
 	struct PushableI {
 		virtual
 		size_t push(State* state) const = 0;
@@ -388,9 +395,6 @@ namespace internal {
 		~PushableI() {}
 	};
 
-	/**
-	 *
-	 */
 	template <typename T>
 	struct PushableT: virtual PushableI {
 		T value;
@@ -411,7 +415,7 @@ namespace internal {
 }
 
 /**
- *
+ * A value which may be pushed onto the stack.
  */
 struct Pushable: virtual internal::PushableI {
 	internal::PushableI* interface;

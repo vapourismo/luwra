@@ -17,6 +17,9 @@ LUWRA_NS_BEGIN
 
 /**
  * Check if two values are equal.
+ * \param state  Lua state
+ * \param index1 Index of left-hand side value
+ * \param index2 Index of right-hand side value
  */
 static inline
 bool equal(State* state, int index1, int index2) {
@@ -29,6 +32,9 @@ bool equal(State* state, int index1, int index2) {
 
 /**
  * Register a value as a global.
+ * \param state Lua state
+ * \param name  Global name
+ * \param value Global value
  */
 template <typename V> static inline
 void setGlobal(State* state, const std::string& name, V value) {
@@ -38,6 +44,9 @@ void setGlobal(State* state, const std::string& name, V value) {
 
 /**
  * Retrieve a global value.
+ * \param state Lua state
+ * \param name  Global name
+ * \returns Value associated with the given name
  */
 template <typename V> static inline
 V getGlobal(State* state, const std::string& name) {
@@ -72,6 +81,9 @@ namespace internal {
 
 /**
  * Set multiple fields at once. Allows you to provide multiple key-value pairs.
+ * \param state Lua state
+ * \param index Table index
+ * \param args  Key-value pairs
  */
 template <typename... R> static inline
 void setFields(State* state, int index, R&&... args) {
@@ -80,12 +92,15 @@ void setFields(State* state, int index, R&&... args) {
 }
 
 /**
- *
+ * A collection of key-value pairs.
  */
 using FieldVector = std::vector<std::pair<Pushable, Pushable>>;
 
 /**
- *
+ * Apply key-value pairs to a table.
+ * \param state  Lua state
+ * \param index  Table index
+ * \param fields Table fields
  */
 static inline
 void setFields(State* state, int index, const FieldVector& fields) {
@@ -101,6 +116,9 @@ void setFields(State* state, int index, const FieldVector& fields) {
 
 template <>
 struct Value<FieldVector> {
+	/**
+	 * Pushing a FieldVector will create a new table with the given fields.
+	 */
 	static inline
 	size_t push(State* state, const FieldVector& fields) {
 		lua_newtable(state);

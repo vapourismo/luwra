@@ -119,7 +119,7 @@ struct StateWrapper {
 	}
 
 	/**
-	 * \todo Document me
+	 * See [luwra::registerUserType](@ref luwra::registerUserType).
 	 */
 	template <typename T> inline
 	void registerUserType(
