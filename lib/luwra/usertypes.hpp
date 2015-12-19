@@ -25,17 +25,20 @@ namespace internal {
 	/**
 	 * User type identifier
 	 */
+	// In C++14 a template variable can be used instead of following.
 	template <typename T>
-	UserTypeID user_type_id() {
-		return (void*) INTPTR_MAX;
-	}
+	struct UserTypeIDWrapper {
+		static constexpr UserTypeID value = (void*) INTPTR_MAX;
+	};
+	template <typename T>
+	constexpr UserTypeID UserTypeIDWrapper<T>::value;
 
 	/**
 	 * Registry name for a metatable which is associated with a user type
 	 */
 	template <typename T>
 	std::string user_type_reg_name() {
-		return "UD#" + std::to_string(uintptr_t(user_type_id<StripUserType<T>>()));
+		return "UD#" + std::to_string(uintptr_t(&UserTypeIDWrapper<StripUserType<T>>::value));
 	}
 
 	/**

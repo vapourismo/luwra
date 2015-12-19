@@ -337,6 +337,7 @@ struct Value<Arbitrary> {
 };
 
 namespace internal {
+	// C++11 implementation of C++14's `index_sequence` and `make_index_sequence`.
 	template<size_t... Is>
 	struct index_sequence {};
 
