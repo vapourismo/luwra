@@ -23,7 +23,7 @@ LUA_LIBNAME     = lua
 
 # Compiler
 CXX             ?= clang++
-USECXXFLAGS     += $(CXXFLAGS) -std=c++14 -O0 -g -DDEBUG -fmessage-length=0 -Wall -Wextra \
+USECXXFLAGS     += $(CXXFLAGS) -std=c++11 -O0 -g -DDEBUG -fmessage-length=0 -Wall -Wextra \
                    -pedantic -D_GLIBCXX_USE_C99 -Ilib -I$(LUA_INCDIR) -Ideps/catch/include
 USELDFLAGS      += $(LDFLAGS) -L$(LUA_LIBDIR)
 USELDLIBS       += $(LDLIBS) -lm -l$(LUA_LIBNAME) -ldl

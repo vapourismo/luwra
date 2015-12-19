@@ -337,11 +337,28 @@ struct Value<Arbitrary> {
 };
 
 namespace internal {
+	// C++11 implementation of C++14's `index_sequence` and `make_index_sequence`.
+	template<size_t... Is>
+	struct index_sequence {};
+
+	template<size_t I, size_t... Is>
+	struct make_index_sequence_impl {
+		typedef typename make_index_sequence_impl<I - 1, I - 1, Is...>::type type;
+	};
+
+	template<size_t... Is>
+	struct make_index_sequence_impl<0, Is...> {
+		typedef index_sequence<Is...> type;
+	};
+
+	template<size_t I>
+	using make_index_sequence = typename make_index_sequence_impl<I>::type;
+
 	template <typename>
 	struct StackPusher;
 
 	template <size_t I>
-	struct StackPusher<std::index_sequence<I>> {
+	struct StackPusher<index_sequence<I>> {
 		template <typename... T> static inline
 		size_t push(State* state, const std::tuple<T...>& package) {
 			using R = typename std::tuple_element<I, std::tuple<T...>>::type;
@@ -350,12 +367,12 @@ namespace internal {
 	};
 
 	template <size_t I, size_t... Is>
-	struct StackPusher<std::index_sequence<I, Is...>> {
+	struct StackPusher<index_sequence<I, Is...>> {
 		template <typename... T> static inline
 		size_t push(State* state, const std::tuple<T...>& package) {
 			return
-				StackPusher<std::index_sequence<I>>::push(state, package)
-				+ StackPusher<std::index_sequence<Is...>>::push(state, package);
+				StackPusher<index_sequence<I>>::push(state, package)
+				+ StackPusher<index_sequence<Is...>>::push(state, package);
 		}
 	};
 }
@@ -367,7 +384,7 @@ template <typename... A>
 struct Value<std::tuple<A...>> {
 	static inline
 	size_t push(State* state, const std::tuple<A...>& value) {
-		return internal::StackPusher<std::make_index_sequence<sizeof...(A)>>::push(state, value);
+		return internal::StackPusher<internal::make_index_sequence<sizeof...(A)>>::push(state, value);
 	}
 };
 
