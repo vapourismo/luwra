@@ -17,7 +17,7 @@
 LUWRA_NS_BEGIN
 
 namespace internal {
-	using UserTypeID = const void*;
+	using UserTypeID = int;
 
 	template <typename T>
 	using StripUserType = typename std::remove_cv<T>::type;
@@ -28,7 +28,7 @@ namespace internal {
 	// In C++14 a template variable can be used instead of following.
 	template <typename T>
 	struct UserTypeIDWrapper {
-		static constexpr UserTypeID value = (void*) INTPTR_MAX;
+		static constexpr UserTypeID value = INT_MAX;
 	};
 	template <typename T>
 	constexpr UserTypeID UserTypeIDWrapper<T>::value;
