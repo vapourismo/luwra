@@ -17,23 +17,29 @@
 LUWRA_NS_BEGIN
 
 namespace internal {
-	using UserTypeID = const void*;
+	using UserTypeID = int;
 
 	template <typename T>
-	using StripUserType = std::remove_cv_t<T>;
+	using StripUserType = typename std::remove_cv<T>::type;
 
 	/**
 	 * User type identifier
 	 */
-	template <typename T> extern
-	const UserTypeID user_type_id = (void*) INTPTR_MAX;
+	// In C++14 a template variable can be used instead of following.
+	template <typename T>
+	struct UserTypeIDWrapper {
+		static constexpr UserTypeID value = INT_MAX;
+	};
+	template <typename T>
+	constexpr UserTypeID UserTypeIDWrapper<T>::value;
 
 	/**
 	 * Registry name for a metatable which is associated with a user type
 	 */
-	template <typename T> extern
-	const std::string user_type_reg_name =
-		"UD#" + std::to_string(uintptr_t(&user_type_id<StripUserType<T>>));
+	template <typename T>
+	std::string user_type_reg_name() {
+		return "UD#" + std::to_string(uintptr_t(&UserTypeIDWrapper<StripUserType<T>>::value));
+	}
 
 	/**
 	 * Register a new metatable for a user type T.
@@ -41,7 +47,7 @@ namespace internal {
 	template <typename U> static inline
 	void new_user_type_metatable(State* state) {
 		using T = StripUserType<U>;
-		luaL_newmetatable(state, user_type_reg_name<T>.c_str());
+		luaL_newmetatable(state, user_type_reg_name<T>().c_str());
 	}
 
 	/**
@@ -50,7 +56,7 @@ namespace internal {
 	template <typename U> static inline
 	StripUserType<U>* check_user_type(State* state, int index) {
 		using T = StripUserType<U>;
-		return static_cast<T*>(luaL_checkudata(state, index, user_type_reg_name<T>.c_str()));
+		return static_cast<T*>(luaL_checkudata(state, index, user_type_reg_name<T>().c_str()));
 	}
 
 	/**
@@ -60,7 +66,7 @@ namespace internal {
 	void apply_user_type_meta_table(State* state) {
 		using T = StripUserType<U>;
 
-		luaL_getmetatable(state, user_type_reg_name<T>.c_str());
+		luaL_getmetatable(state, user_type_reg_name<T>().c_str());
 		lua_setmetatable(state, -2);
 	}
 
@@ -98,7 +104,7 @@ namespace internal {
 
 		return push(
 			state,
-			internal::user_type_reg_name<T>
+			internal::user_type_reg_name<T>()
 				+ "@"
 				+ std::to_string(uintptr_t(Value<T*>::read(state, 1)))
 		);

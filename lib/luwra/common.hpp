@@ -8,8 +8,8 @@
 #define LUWRA_COMMON_H_
 
 // Check C++ version
-#if !defined(__cplusplus) || __cplusplus < 201402L
-	#error You need a C++14 compliant compiler
+#if !defined(__cplusplus) || __cplusplus < 201103L
+	#error You need a C++11 compliant compiler
 #endif
 
 extern "C" {

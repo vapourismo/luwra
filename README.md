@@ -140,7 +140,7 @@ point:x(4.2)
 ```
 
 ## Requirements
-You need a C++14-compliant compiler and at least Lua 5.1 to get this library to work. I recommend
+You need a C++11-compliant compiler and at least Lua 5.1 to get this library to work. I recommend
 using Lua 5.3 or later, to avoid the messy `lua_Integer` situation. LuaJIT 2.0 seems to work, apart
 from user types, which fail for yet unknown reasons.
 
