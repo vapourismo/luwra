@@ -17,29 +17,32 @@
 LUWRA_NS_BEGIN
 
 namespace internal {
-	using UserTypeID = int;
-
 	template <typename T>
 	using StripUserType = typename std::remove_cv<T>::type;
 
 	/**
-	 * User type identifier
+	 * User type registry identifiers
 	 */
-	// In C++14 a template variable can be used instead of following.
 	template <typename T>
-	struct UserTypeIDWrapper {
-		static constexpr UserTypeID value = INT_MAX;
-	};
-	template <typename T>
-	constexpr UserTypeID UserTypeIDWrapper<T>::value;
+	struct UserTypeReg {
+		/**
+		 * Dummy field which is used because it has a seperate address for each instance of T
+		 */
+		static
+		const int id;
 
-	/**
-	 * Registry name for a metatable which is associated with a user type
-	 */
+		/**
+		 * Registry name for a metatable which is associated with a user type
+		 */
+		static
+		const std::string name;
+	};
+
 	template <typename T>
-	std::string user_type_reg_name() {
-		return "UD#" + std::to_string(uintptr_t(&UserTypeIDWrapper<StripUserType<T>>::value));
-	}
+	const int UserTypeReg<T>::id = INT_MAX;
+
+	template <typename T>
+	const std::string UserTypeReg<T>::name = "UD#" + std::to_string(uintptr_t(&id));
 
 	/**
 	 * Register a new metatable for a user type T.
@@ -47,7 +50,7 @@ namespace internal {
 	template <typename U> static inline
 	void new_user_type_metatable(State* state) {
 		using T = StripUserType<U>;
-		luaL_newmetatable(state, user_type_reg_name<T>().c_str());
+		luaL_newmetatable(state, UserTypeReg<T>::name.c_str());
 	}
 
 	/**
@@ -56,7 +59,7 @@ namespace internal {
 	template <typename U> static inline
 	StripUserType<U>* check_user_type(State* state, int index) {
 		using T = StripUserType<U>;
-		return static_cast<T*>(luaL_checkudata(state, index, user_type_reg_name<T>().c_str()));
+		return static_cast<T*>(luaL_checkudata(state, index, UserTypeReg<T>::name.c_str()));
 	}
 
 	/**
@@ -66,7 +69,7 @@ namespace internal {
 	void apply_user_type_meta_table(State* state) {
 		using T = StripUserType<U>;
 
-		luaL_getmetatable(state, user_type_reg_name<T>().c_str());
+		luaL_getmetatable(state, UserTypeReg<T>::name.c_str());
 		lua_setmetatable(state, -2);
 	}
 
@@ -104,7 +107,7 @@ namespace internal {
 
 		return push(
 			state,
-			internal::user_type_reg_name<T>()
+			internal::UserTypeReg<T>::name
 				+ "@"
 				+ std::to_string(uintptr_t(Value<T*>::read(state, 1)))
 		);
