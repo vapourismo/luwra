@@ -31,6 +31,21 @@ bool equal(State* state, int index1, int index2) {
 }
 
 /**
+ * A registered metatable for the value on top of the stack.
+ * \param state Lua state
+ * \param name  Metatable name
+ */
+static inline
+void setMetatable(State* state, const char* name) {
+#if LUA_VERSION_NUM <= 501
+	luaL_getmetatable(state, name);
+	lua_setmetatable(state, -2);
+#else
+	luaL_setmetatable(state, name);
+#endif
+}
+
+/**
  * Register a value as a global.
  * \param state Lua state
  * \param name  Global name

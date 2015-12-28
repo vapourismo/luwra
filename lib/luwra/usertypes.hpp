@@ -67,7 +67,7 @@ namespace internal {
 	 */
 	template <typename U> static inline
 	void apply_user_type_meta_table(State* state) {
-		luaL_setmetatable(state, UserTypeReg<StripUserType<U>>::name.c_str());
+		setMetatable(state, UserTypeReg<StripUserType<U>>::name.c_str());
 	}
 
 	/**
