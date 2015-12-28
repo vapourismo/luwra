@@ -151,8 +151,6 @@ struct Value<U&> {
 
 /**
  * User type T.
- * Instances created using this specialization are allocated as light user data in Lua.
- * The default garbage-collector does not destruct light user data types.
  */
 template <typename U>
 struct Value<U*> {
@@ -164,18 +162,9 @@ struct Value<U*> {
 		return internal::check_user_type<T>(state, n);
 	}
 
-	static inline
-	size_t push(State* state, T* instance) {
-		if (instance == nullptr)
-			return 0;
-
-		// Push instance as light user data
-		lua_pushlightuserdata(state, instance);
-
-		// Apply metatable for unqualified type T
-		internal::apply_user_type_meta_table<T>(state);
-
-		return 1;
+	static
+	size_t push(State* state, const T* ptr) {
+		return Value<T&>::push(state, *ptr);
 	}
 };
 

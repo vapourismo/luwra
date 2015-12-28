@@ -26,25 +26,20 @@ using CFunction = lua_CFunction;
 
 /**
  * Wrapper for a stack value
- * \note This generic version should not be used since it does not implement anything.
- *       It is not always obvious whether you have used this generic instance or not. Therefore this
- *       class produces an error message when it is being used. Look for `Parameter to Value is not
- *       supported` in your compiler output.
+ * \note This generic version behaves like its specialization for `T&`, except that it will
+ *       always copy from and to the stack (instead of referencing).
  */
 template <typename T>
 struct Value {
-	static_assert(
-		sizeof(T) == -1,
-		"Parameter to Value is not supported"
-	);
-
 	/**
 	 * Retrieve a value from the stack.
 	 * \param state Lua state
 	 * \param index Position of the value
 	 */
 	static
-	T read(State* state, int index);
+	T read(State* state, int index) {
+		return Value<T&>::read(state, index);
+	}
 
 	/**
 	 * Push a value onto the stack.
@@ -53,7 +48,9 @@ struct Value {
 	 * \returns Number of values pushed
 	 */
 	static
-	size_t push(State* state, T value);
+	size_t push(State* state, const T& value) {
+		return Value<T&>::push(state, value);
+	}
 };
 
 // Nil
