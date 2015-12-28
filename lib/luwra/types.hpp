@@ -25,14 +25,12 @@ using State = lua_State;
 using CFunction = lua_CFunction;
 
 /**
- * Wrapper for a stack value
- * \note This generic version behaves like its specialization for `T&`, except that it will
- *       always copy from and to the stack (instead of referencing).
+ * User type
  */
 template <typename T>
 struct Value {
 	/**
-	 * Retrieve a value from the stack.
+	 * Copy a user type value from the stack.
 	 * \param state Lua state
 	 * \param index Position of the value
 	 */
@@ -42,9 +40,9 @@ struct Value {
 	}
 
 	/**
-	 * Push a value onto the stack.
+	 * Copy a user type value onto the stack.
 	 * \param state Lua state
-	 * \param value The value you want to push
+	 * \param value Value you want to push
 	 * \returns Number of values pushed
 	 */
 	static

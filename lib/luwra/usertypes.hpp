@@ -115,21 +115,33 @@ namespace internal {
 }
 
 /**
- * User type T.
- * Instances created using this specialization are allocated and constructed as full user data
- * types in Lua. The default garbage-collecting hook will destruct the user type, once it has
- * been marked.
+ * User type
  */
 template <typename U>
 struct Value<U&> {
 	using T = internal::StripUserType<U>;
 
+	/**
+	 * Reference a user type value on the stack.
+	 * \param state Lua state
+	 * \param n     Stack index
+	 * \returns Reference to the user type value
+	 */
 	static inline
 	U& read(State* state, int n) {
 		// T is unqualified, therefore conversion from T& to U& is allowed
 		return *internal::check_user_type<T>(state, n);
 	}
 
+	/**
+	 * Construct a user type value on the stack.
+	 * \note Instances created using this specialization are allocated and constructed as full user
+	 *       data types in Lua. The default garbage-collecting hook will destruct the user type,
+	 *       once it has been marked.
+	 * \param state Lua state
+	 * \param args  Constructor arguments
+	 * \returns Number of values that have been pushed onto the stack
+	 */
 	template <typename... A> static inline
 	size_t push(State* state, A&&... args) {
 		void* mem = lua_newuserdata(state, sizeof(T));
@@ -150,18 +162,31 @@ struct Value<U&> {
 };
 
 /**
- * User type T.
+ * User type
  */
 template <typename U>
 struct Value<U*> {
 	using T = internal::StripUserType<U>;
 
+	/**
+	 * Reference a user type value on the stack.
+	 * \param state Lua state
+	 * \param n     Stack index
+	 * \returns Pointer to the user type value.
+	 */
 	static inline
 	U* read(State* state, int n) {
 		// T is unqualified, therefore conversion from T* to U* is allowed
 		return internal::check_user_type<T>(state, n);
 	}
 
+	/**
+	 * Copy a value onto the stack. This function behaves exactly as if you would call
+	 * `Value<U&>::push(state, *ptr)`.
+	 * \param state Lua state
+	 * \param ptr   Pointer to the user type value
+	 * \returns Number of values that have been pushed
+	 */
 	static
 	size_t push(State* state, const T* ptr) {
 		return Value<T&>::push(state, *ptr);
