@@ -89,9 +89,7 @@ namespace internal {
 	int destruct_user_type(State* state) {
 		using T = StripUserType<U>;
 
-		if (!lua_islightuserdata(state, 1))
-			read<T&>(state, 1).~T();
-
+		read<T&>(state, 1).~T();
 		return 0;
 	}
 
