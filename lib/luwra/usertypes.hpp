@@ -256,7 +256,7 @@ namespace internal {
 
 	template <typename T, typename... A>
 	struct UserTypeSignature<T (A...)> {
-		using UserType = T;
+		using UserType = StripUserType<T>;
 
 		static inline
 		void registerConstructor(State* state, const std::string& name) {
