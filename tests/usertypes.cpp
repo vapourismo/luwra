@@ -16,9 +16,7 @@ TEST_CASE("UserTypeRegistration") {
 
 TEST_CASE("UserTypeConstruction") {
 	luwra::StateWrapper state;
-	luwra::registerUserType<A>(state);
-
-	luwra::setGlobal(state, "A", LUWRA_WRAP_CONSTRUCTOR(A, int));
+	luwra::registerUserType<A(int)>(state, "A");
 
 	// Construction
 	REQUIRE(luaL_dostring(state, "return A(73)") == 0);
