@@ -31,7 +31,7 @@ bool equal(State* state, int index1, int index2) {
 }
 
 /**
- * A registered metatable for the value on top of the stack.
+ * Set a registered metatable for the value on top of the stack.
  * \param state Lua state
  * \param name  Metatable name
  */
