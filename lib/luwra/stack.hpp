@@ -158,7 +158,7 @@ namespace internal {
 				state,
 				n,
 				std::forward<F>(hook),
-						std::forward<X>(args)...
+				std::forward<X>(args)...
 			);
 			return 0;
 		}
