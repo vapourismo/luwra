@@ -66,15 +66,6 @@ struct Value<std::nullptr_t> {
 		return 1;
 	}
 };
-
-/**
- * This does nothing.
- */
-static inline
-size_t push(State*) {
-	return 0;
-}
-
 /**
  * Convenient wrapped for [Value<T>::push](@ref Value<T>::push).
  */
