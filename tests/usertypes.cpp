@@ -56,10 +56,8 @@ TEST_CASE("UserTypeFields") {
 	);
 
 	// Instantiation
-	luwra::Value<B&>::push(state, 1338);
+	B& value = luwra::construct<B>(state, 1338);
 	lua_setglobal(state, "value");
-
-	B& value = luwra::getGlobal<B&>(state, "value");
 
 	// Unqualified get
 	REQUIRE(luaL_dostring(state, "return value:n()") == 0);
@@ -134,10 +132,8 @@ TEST_CASE("UserTypeMethods") {
 	);
 
 	// Instantiation
-	luwra::Value<C&>::push(state, 1337);
+	C& value = luwra::construct<C>(state, 1337);
 	lua_setglobal(state, "value");
-
-	C& value = luwra::getGlobal<C&>(state, "value");
 
 	// Unqualified method
 	REQUIRE(luaL_dostring(state, "return value:foo1(63)") == 0);
@@ -171,7 +167,7 @@ TEST_CASE("UserTypeGarbageCollectionRef") {
 	REQUIRE(shared_var.use_count() == 1);
 
 	// Copy construction
-	luwra::push<std::shared_ptr<int>&>(state, shared_var);
+	luwra::push(state, shared_var);
 	REQUIRE(shared_var.use_count() == 2);
 
 	// Garbage collection

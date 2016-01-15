@@ -157,6 +157,35 @@ struct Value<U&> {
 };
 
 /**
+ * Construct a user type value on the stack.
+ * \note Instances created using this specialization are allocated and constructed as full user
+ *       data types in Lua. The default garbage-collecting hook will destruct the user type,
+ *       once it has been marked.
+ * \param state Lua state
+ * \param args  Constructor arguments
+ * \returns Reference to the constructed value
+ */
+template <typename U, typename... A> static inline
+internal::StripUserType<U>& construct(State* state, A&&... args) {
+	using T = internal::StripUserType<U>;
+
+	void* mem = lua_newuserdata(state, sizeof(T));
+
+	if (!mem) {
+		luaL_error(state, "Failed to allocate user type");
+		// 'luaL_error' will not return
+	}
+
+	// Construct
+	T* value = new (mem) T {std::forward<A>(args)...};
+
+	// Apply metatable for unqualified type T
+	internal::apply_user_type_meta_table<T>(state);
+
+	return *value;
+}
+
+/**
  * User type
  */
 template <typename U>
@@ -182,7 +211,7 @@ struct Value<U*> {
 	 * \param ptr   Pointer to the user type value
 	 * \returns Number of values that have been pushed
 	 */
-	static
+	static inline
 	size_t push(State* state, const T* ptr) {
 		return Value<T&>::push(state, *ptr);
 	}
