@@ -39,6 +39,11 @@ docs:
 	mkdocs build --clean
 	doxygen
 
+push-gh-pages: docs
+	git add docs/output
+	git commit -m "docs: Automated update $$(date)"
+	git subtree push --prefix docs/output origin gh-pages
+
 # Tests
 test: $(TEST_OUT)
 	./$(TEST_OUT)
