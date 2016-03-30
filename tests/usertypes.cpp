@@ -61,7 +61,6 @@ TEST_CASE("UserTypeFields") {
 
 	// Unqualified get
 	REQUIRE(luaL_dostring(state, "return value:n()") == 0);
-	puts(lua_tostring(state, -1));
 	REQUIRE(luwra::read<int>(state, -1) == value.n);
 
 	// Unqualified set
