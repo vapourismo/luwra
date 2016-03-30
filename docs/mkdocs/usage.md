@@ -1,3 +1,3 @@
-# Usage
+# Reference Manual
 
-Hello World
+A reference manual exists [here](/reference/).
