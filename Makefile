@@ -36,7 +36,7 @@ clean:
 
 # Documentation
 docs:
-	mkdocs build
+	mkdocs build --clean
 	doxygen
 
 # Tests
