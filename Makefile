@@ -28,13 +28,18 @@ USECXXFLAGS     += $(CXXFLAGS) -std=c++11 -O0 -g -DDEBUG -fmessage-length=0 -Wal
 USELDFLAGS      += $(LDFLAGS) -L$(LUA_LIBDIR)
 USELDLIBS       += $(LDLIBS) -lm -l$(LUA_LIBNAME) -ldl
 
+# Miscellaneous
+DOCS_OUT        := docs/output
+
 # Default targets
 all: test examples
 
 clean:
-	$(RM) $(EXAMPLE_OBJS) $(EXAMPLE_DEPS) $(TEST_OUT) $(TEST_OBJS) $(TEST_DEPS)
+	$(RM) $(EXAMPLE_OBJS) $(EXAMPLE_DEPS) $(TEST_OUT) $(TEST_OBJS) $(TEST_DEPS) $(DOCS_OUT)
 
+# Documentation
 docs:
+	mkdocs build
 	doxygen
 
 # Tests
