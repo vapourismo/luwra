@@ -3,45 +3,27 @@ compiler:
   - clang
   - gcc
 
+env:
+  # Lua versions to test against
+  - LUA_VERSION=5.3.2
+  - LUA_VERSION=5.2.4
+  - LUA_VERSION=5.1.5
+
 install:
+  # Select compiler
   - if [[ "$CXX" = "g++" ]]; then export CXX="g++-5"; fi
   - if [[ "$CXX" = "clang++" ]]; then export CXX="clang++-3.7"; fi
 
-  # Build Lua 5.3
-  - wget http://www.lua.org/ftp/lua-5.3.1.tar.gz
-  - tar xvfz lua-5.3.1.tar.gz
-  - pushd lua-5.3.1/src
-  - make LUA_A=liblua53.a linux
-  - export LUA53_PATH=$(pwd)
-  - popd
-
-  # Build Lua 5.2
-  - wget http://www.lua.org/ftp/lua-5.2.4.tar.gz
-  - tar xvfz lua-5.2.4.tar.gz
-  - pushd lua-5.2.4/src
-  - make LUA_A=liblua52.a linux
-  - export LUA52_PATH=$(pwd)
-  - popd
-
-  # Build Lua 5.1
-  - wget http://www.lua.org/ftp/lua-5.1.5.tar.gz
-  - tar xvfz lua-5.1.5.tar.gz
-  - pushd lua-5.1.5/src
-  - make LUA_A=liblua51.a linux
-  - export LUA51_PATH=$(pwd)
+  # Build Lua
+  - wget "http://www.lua.org/ftp/lua-$LUA_VERSION.tar.gz"
+  - tar xvfz "lua-$LUA_VERSION.tar.gz"
+  - pushd "lua-$LUA_VERSION/src"
+  - make LUA_A=liblua-custom.a linux
+  - export "LUA_SOURCE_PATH=$(pwd)"
   - popd
 
 script:
-  # Test against Lua 5.3
-  - make "LUA_LIBDIR=$LUA53_PATH" "LUA_INCDIR=$LUA53_PATH" LUA_LIBNAME=lua53 all
-  - make clean
-
-  # Test against Lua 5.2
-  - make "LUA_LIBDIR=$LUA52_PATH" "LUA_INCDIR=$LUA52_PATH" LUA_LIBNAME=lua52 all
-  - make clean
-
-  # Test against Lua 5.1
-  - make "LUA_LIBDIR=$LUA51_PATH" "LUA_INCDIR=$LUA51_PATH" LUA_LIBNAME=lua51 all
+  - make "LUA_LIBDIR=$LUA_SOURCE_PATH" "LUA_INCDIR=$LUA_SOURCE_PATH" LUA_LIBNAME=lua-custom all
 
 addons:
   apt:
