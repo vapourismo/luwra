@@ -60,7 +60,7 @@
         
             <ul>
             
-                <li class="toctree-l3"><a href="#luwra">Luwra</a></li>
+                <li class="toctree-l3"><a href="#installation">Installation</a></li>
                 
             
             </ul>
@@ -111,8 +111,15 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="luwra">Luwra</h1>
-<p>Hello World</p>
+                <h1 id="installation">Installation</h1>
+<p>Luwra is a header-only library, which means that nothing has to be compiled in order to use it.
+Simply clone the <a href="https://github.com/vapourismo/luwra">repository</a> or
+<a href="https://github.com/vapourismo/luwra/archive/master.zip">download</a> and extract it to a directory of
+your preference.</p>
+<p>For your application to be able to reach the <code>lib/luwra.hpp</code> header file, you must add
+<code>/path/to/luwra/lib</code> to the list of include paths. With Clang and GCC that is done using the
+<code>-I/path/to/luwra/lib</code> command-line parameter.</p>
+<p>Now you can simply <code>#include &lt;luwra.hpp&gt;</code> in your C++ files and start using Luwra.</p>
               
             </div>
           </div>
@@ -160,5 +167,5 @@
 
 <!--
 MkDocs version : 0.15.3
-Build Date UTC : 2016-03-30 15:40:50.085547
+Build Date UTC : 2016-03-30 16:00:58.248155
 -->
