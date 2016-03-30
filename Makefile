@@ -40,8 +40,6 @@ docs:
 	doxygen
 
 push-gh-pages: docs
-	git add docs/output
-	git commit -m "docs: Automated update $$(date)"
 	git subtree push --prefix docs/output origin gh-pages
 
 # Tests
