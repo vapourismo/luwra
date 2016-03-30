@@ -2,7 +2,7 @@
     "docs": [
         {
             "location": "/",
-            "text": "Installation\n\n\nLuwra is a header-only library, which means that nothing has to be compiled in order to use it.\nSimply clone the \nrepository\n or\n\ndownload\n and extract it to a directory of\nyour preference.\n\n\nFor your application to be able to reach the \nlib/luwra.hpp\n header file, you must add\n\n/path/to/luwra/lib\n to the list of include paths. With Clang and GCC that is done using the\n\n-I/path/to/luwra/lib\n command-line parameter.\n\n\nNow you can simply \n#include <luwra.hpp>\n in your C++ files and start using Luwra.",
+            "text": "Installation\n\n\nLuwra is a header-only library, which means that nothing has to be compiled in order to use it.\nSimply clone the \nrepository\n or\n\ndownload\n and extract it to a directory of\nyour preference.\n\n\nFor your application to be able to reach the \nlib/luwra.hpp\n header file, you must add\n\n/path/to/luwra/lib\n to the list of include paths. With Clang and GCC that is done using the\n\n-I/path/to/luwra/lib\n command-line parameter.\n\n\nNow you can simply \n#include <luwra.hpp>\n in your C++ files and start using Luwra.\n\n\nReference Manual\n\n\nA reference manual exists \nhere\n.",
             "title": "Home"
         },
         {
@@ -11,12 +11,7 @@
             "title": "Installation"
         },
         {
-            "location": "/usage/",
-            "text": "Reference Manual\n\n\nA reference manual exists \nhere\n.",
-            "title": "Usage"
-        },
-        {
-            "location": "/usage/#reference-manual",
+            "location": "/#reference-manual",
             "text": "A reference manual exists  here .",
             "title": "Reference Manual"
         }
