@@ -39,7 +39,7 @@ docs:
 	mkdocs build --clean
 	doxygen
 
-push-gh-pages: docs
+push-gh-pages:
 	git subtree push --prefix docs/output origin gh-pages
 
 # Tests
