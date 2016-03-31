@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <title>Usage - Luwra</title>
+  
+
+  <link rel="shortcut icon" href="../img/favicon.ico">
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Usage";
+    var mkdocs_page_input_path = "usage.md";
+    var mkdocs_page_url = "/usage/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script src="../js/theme.js"></script> 
+
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Luwra</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        <ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="..">Home</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Usage</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#integration">Integration</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#stack-interaction">Stack Interaction</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#from-c-to-lua">From C++ to Lua</a></li>
+                
+            
+            </ul>
+        
+    </li>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Luwra</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Usage</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        
+          <a href="https://github.com/vapourismo/luwra" class="icon icon-github"> Edit on GitHub</a>
+        
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="integration">Integration</h1>
+<p>Luwra does not provide a standalone version of Lua nor does it capsule its features. This means that
+all functions and classes operate on
+<a href="http://www.lua.org/manual/5.3/manual.html#lua_State">lua_State</a> (or the alias
+<a href="../reference/namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a>). Doing this allows you to
+integrate Luwra however you like.</p>
+<h1 id="stack-interaction">Stack Interaction</h1>
+<p>Although Luwra provides a variety of features, its main concern is efficient and safe interaction
+with the Lua stack.</p>
+<p>A fundamental aspect of this is the abstract template <a href="../reference/structluwra_1_1Value.html">Value</a>.
+Every type which can be pushed onto or read from the stack has a specialization of it.
+Useful implementations are provides out of the box:</p>
+<table>
+<thead>
+<tr>
+<th>C++ type</th>
+<th>Pushable</th>
+<th>Readable</th>
+<th>Lua type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bool</td>
+<td>yes</td>
+<td>yes</td>
+<td>boolean</td>
+</tr>
+<tr>
+<td>signed char</td>
+<td>yes</td>
+<td>yes</td>
+<td>number (integer since 5.3)</td>
+</tr>
+<tr>
+<td>signed short</td>
+<td>yes</td>
+<td>yes</td>
+<td>number (integer since 5.3)</td>
+</tr>
+<tr>
+<td>signed int</td>
+<td>yes</td>
+<td>yes</td>
+<td>number (integer since 5.3)</td>
+</tr>
+<tr>
+<td>signed long int</td>
+<td>yes</td>
+<td>yes</td>
+<td>number (integer since 5.3)</td>
+</tr>
+<tr>
+<td>signed long long int</td>
+<td>yes</td>
+<td>yes</td>
+<td>number (integer since 5.3)</td>
+</tr>
+<tr>
+<td>unsigned char</td>
+<td>yes</td>
+<td>yes</td>
+<td>number (integer since 5.3)</td>
+</tr>
+<tr>
+<td>unsigned short</td>
+<td>yes</td>
+<td>yes</td>
+<td>number (integer since 5.3)</td>
+</tr>
+<tr>
+<td>unsigned int</td>
+<td>yes</td>
+<td>yes</td>
+<td>number (integer since 5.3)</td>
+</tr>
+<tr>
+<td>unsigned long int</td>
+<td>yes</td>
+<td>yes</td>
+<td>number (integer since 5.3)</td>
+</tr>
+<tr>
+<td>unsigned long long int</td>
+<td>yes</td>
+<td>yes</td>
+<td>number (integer since 5.3)</td>
+</tr>
+<tr>
+<td>float</td>
+<td>yes</td>
+<td>yes</td>
+<td>number</td>
+</tr>
+<tr>
+<td>double</td>
+<td>yes</td>
+<td>yes</td>
+<td>number</td>
+</tr>
+<tr>
+<td>long double</td>
+<td>yes</td>
+<td>yes</td>
+<td>number</td>
+</tr>
+<tr>
+<td>const char*</td>
+<td>yes</td>
+<td>yes</td>
+<td>string</td>
+</tr>
+<tr>
+<td>std::string</td>
+<td>yes</td>
+<td>yes</td>
+<td>string</td>
+</tr>
+<tr>
+<td>std::nullptr_t</td>
+<td>yes</td>
+<td>yes</td>
+<td>nil</td>
+</tr>
+<tr>
+<td>std::tuple&lt;T&gt;</td>
+<td>yes</td>
+<td>no</td>
+<td><em>depends on the tuple contents</em></td>
+</tr>
+<tr>
+<td><a href="http://www.lua.org/manual/5.3/manual.html#lua_CFunction">lua_CFunction</a></td>
+<td>yes</td>
+<td>no</td>
+<td>function</td>
+</tr>
+<tr>
+<td><a href="../reference/structluwra_1_1Value_3_01NativeFunction_3_01R_07A_8_8_8_08_4_01_4.html">NativeFunction&lt;R(A...)&gt;</a></td>
+<td>no</td>
+<td>yes</td>
+<td>function</td>
+</tr>
+<tr>
+<td><a href="../reference/structluwra_1_1Value_3_01FieldVector_01_4.html">FieldVector</a></td>
+<td>yes</td>
+<td>no</td>
+<td>table</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong> Some numeric types have a different size than their matching Lua type - they will be
+truncated during push or read operations.</p>
+<h1 id="from-c-to-lua">From C++ to Lua</h1>
+<p>When pushing values onto the stack you can either use
+<a href="../reference/structluwra_1_1Value.html#aa376d68285606c206562b822e8187384">Value&lt;T&gt;::push</a> or the more
+convenient <a href="../reference/namespaceluwra.html#ae8e7eab11fc2cf3f258ffd81571066fa">push</a>.
+See these examples:</p>
+<pre><code class="c++">// Push an integer
+luwra::push(lua, 1338);
+
+// Push a number
+luwra::push(lua, 13.37);
+
+// Push a boolean
+luwra::push(lua, false);
+
+// Push a string
+luwra::push(lua, &quot;Hello World&quot;);
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href=".." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+<div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/vapourismo/luwra" class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+    </span>
+</div>
+
+</body>
+</html>
