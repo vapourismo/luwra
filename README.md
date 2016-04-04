@@ -7,8 +7,6 @@ A header-only C++ library which provides a Lua wrapper with minimal overhead.
 Refer to the [documentation](http://luwra.vprsm.de/). In order to use the library you must clone
 this repository and include `lib/luwra.hpp`.
 
-For further information checkout the [documentation](http://luwra.vprsm.de/).
-
 Have a question? Simply [ask](https://gitter.im/vapourismo/luwra) or open an issue.
 
 ## Examples
