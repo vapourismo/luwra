@@ -34,8 +34,8 @@ std::string            | yes      | yes      | string
 std::nullptr_t         | yes      | yes      | nil
 std::tuple&lt;T&gt;    | yes      | no       | *depends on the tuple contents*
 [lua_CFunction](http://www.lua.org/manual/5.3/manual.html#lua_CFunction) | yes | no | function
-[NativeFunction&lt;R(A...)&gt;](/reference/structluwra_1_1Value_3_01NativeFunction_3_01R_07A_8_8_8_08_4_01_4.html) | no | yes | function
-[FieldVector](/reference/structluwra_1_1Value_3_01FieldVector_01_4.html) | yes | no | table
+[NativeFunction&lt;R(A...)&gt;](/reference/structluwra_1_1NativeFunction_3_01R_07A_8_8_8_08_4.html) | no | yes | function
+[FieldVector](/reference/namespaceluwra.html#ac090722c6d5d6b88b31895aad64788c2) | yes | no | table
 
 **Note:** Some numeric types have a different size than their matching Lua type - they will be
 truncated during push or read operations.
