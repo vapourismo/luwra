@@ -13,7 +13,7 @@ Consider the following:
 string result = foo(luwra::read<string>(lua, n), luwra::read<int>(lua, n + 1));
 ```
 
-This could be rewritting like this:
+It could be rewritting like this:
 
 ```c++
 string result = luwra::direct<string(string, int)>(lua, n, foo);
