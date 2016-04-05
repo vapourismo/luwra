@@ -40,7 +40,7 @@ std::tuple&lt;T&gt;    | yes      | no       | *depends on the tuple contents*
 **Note:** Some numeric types have a different size than their matching Lua type - they will be
 truncated during push or read operations.
 
-# Pushing C++ values
+## Pushing C++ values
 When pushing values onto the stack you can either use
 [Value&lt;T&gt;::push](/reference/structluwra_1_1Value.html#aa376d68285606c206562b822e8187384) or the more
 convenient [push](/reference/namespaceluwra.html#ae8e7eab11fc2cf3f258ffd81571066fa).
@@ -71,7 +71,7 @@ Absolute Position | Relative Position | Value
 It is possible to provide a template parameter to `push` to enforce pushing a specific type.
 In most cases you are probably better off by letting the compiler infer the template parameter.
 
-# Reading Lua values
+## Reading Lua values
 Simple retrieval of Lua values is done using
 [read&lt;T&gt;](/reference/namespaceluwra.html#a4fe4e574680cf54a0f8d958740eb90ab). Consider the
 stack layout from the previous example. This is how you would retrieve a value from the stack.
@@ -84,7 +84,7 @@ int value = luwra::read<int>(lua, 1);
 int value = luwra::read<int>(lua, -4);
 ```
 
-# Read and type errors
+## Read and type errors
 What happens when a value which you are trying to read mismatches the expected type or cannot be
 converted to it? Most `Value<T>` specializations use Lua's `luaL_check*` functions to retrieve
 the values from the stack. This means that no exceptions will be thrown - instead the error handling

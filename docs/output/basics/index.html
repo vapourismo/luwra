@@ -72,14 +72,11 @@
             
                 <li class="toctree-l3"><a href="#stack-interaction">Stack Interaction</a></li>
                 
-            
-                <li class="toctree-l3"><a href="#pushing-c-values">Pushing C++ values</a></li>
+                    <li><a class="toctree-l4" href="#pushing-c-values">Pushing C++ values</a></li>
                 
-            
-                <li class="toctree-l3"><a href="#reading-lua-values">Reading Lua values</a></li>
+                    <li><a class="toctree-l4" href="#reading-lua-values">Reading Lua values</a></li>
                 
-            
-                <li class="toctree-l3"><a href="#read-and-type-errors">Read and type errors</a></li>
+                    <li><a class="toctree-l4" href="#read-and-type-errors">Read and type errors</a></li>
                 
             
             </ul>
@@ -289,7 +286,7 @@ Useful implementations are provides out of the box:</p>
 </table>
 <p><strong>Note:</strong> Some numeric types have a different size than their matching Lua type - they will be
 truncated during push or read operations.</p>
-<h1 id="pushing-c-values">Pushing C++ values</h1>
+<h2 id="pushing-c-values">Pushing C++ values</h2>
 <p>When pushing values onto the stack you can either use
 <a href="../reference/structluwra_1_1Value.html#aa376d68285606c206562b822e8187384">Value&lt;T&gt;::push</a> or the more
 convenient <a href="../reference/namespaceluwra.html#ae8e7eab11fc2cf3f258ffd81571066fa">push</a>.</p>
@@ -340,7 +337,7 @@ luwra::push(lua, &quot;Hello World&quot;);
 </table>
 <p>It is possible to provide a template parameter to <code>push</code> to enforce pushing a specific type.
 In most cases you are probably better off by letting the compiler infer the template parameter.</p>
-<h1 id="reading-lua-values">Reading Lua values</h1>
+<h2 id="reading-lua-values">Reading Lua values</h2>
 <p>Simple retrieval of Lua values is done using
 <a href="../reference/namespaceluwra.html#a4fe4e574680cf54a0f8d958740eb90ab">read&lt;T&gt;</a>. Consider the
 stack layout from the previous example. This is how you would retrieve a value from the stack.</p>
@@ -351,7 +348,7 @@ int value = luwra::read&lt;int&gt;(lua, 1);
 int value = luwra::read&lt;int&gt;(lua, -4);
 </code></pre>
 
-<h1 id="read-and-type-errors">Read and type errors</h1>
+<h2 id="read-and-type-errors">Read and type errors</h2>
 <p>What happens when a value which you are trying to read mismatches the expected type or cannot be
 converted to it? Most <code>Value&lt;T&gt;</code> specializations use Lua's <code>luaL_check*</code> functions to retrieve
 the values from the stack. This means that no exceptions will be thrown - instead the error handling

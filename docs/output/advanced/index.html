@@ -140,7 +140,7 @@ them.</p>
 <pre><code class="c++">string result = foo(luwra::read&lt;string&gt;(lua, n), luwra::read&lt;int&gt;(lua, n + 1));
 </code></pre>
 
-<p>This could be rewritting like this:</p>
+<p>It could be rewritting like this:</p>
 <pre><code class="c++">string result = luwra::direct&lt;string(string, int)&gt;(lua, n, foo);
 </code></pre>
 
