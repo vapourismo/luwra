@@ -74,6 +74,13 @@
         
             <ul>
             
+                <li class="toctree-l3"><a href="#operating-on-lua-values-with-c-functions">Operating on Lua values with C++ functions</a></li>
+                
+                    <li><a class="toctree-l4" href="#invoke-a-callable-with-lua-values">Invoke a Callable with Lua values</a></li>
+                
+                    <li><a class="toctree-l4" href="#invoke-a-function-with-lua-values">Invoke a function with Lua values</a></li>
+                
+            
             </ul>
         
     </li>
@@ -122,7 +129,39 @@
           <div role="main">
             <div class="section">
               
-                
+                <h1 id="operating-on-lua-values-with-c-functions">Operating on Lua values with C++ functions</h1>
+<p>Instead of extracting every Lua value seperately and pushing the result of your C++ function back
+onto the stack again, you can use one of the following functions to make this process easier for you.</p>
+<h2 id="invoke-a-callable-with-lua-values">Invoke a Callable with Lua values</h2>
+<p>The function <a href="../reference/namespaceluwra.html#aa20e363f38b3ae5a168cf40365f5646a">direct</a>
+lets you specify a <em>stack signature</em> in order to extract the values and invoke a <code>Callable</code> with
+them.</p>
+<p>Consider the following:</p>
+<pre><code class="c++">string result = foo(luwra::read&lt;string&gt;(lua, n), luwra::read&lt;int&gt;(lua, n + 1));
+</code></pre>
+
+<p>This could be rewritting like this:</p>
+<pre><code class="c++">string result = luwra::direct&lt;string(string, int)&gt;(lua, n, foo);
+</code></pre>
+
+<p><strong>Note:</strong> The result of <code>foo</code> is not pushed onto the stack. Besides the extraction of Lua values
+everything happens on the C++ side.</p>
+<h2 id="invoke-a-function-with-lua-values">Invoke a function with Lua values</h2>
+<p><a href="../reference/namespaceluwra.html#a839077ddd9c3d0565a40c574bc8e9555">apply</a> is similiar to
+<a href="../reference/namespaceluwra.html#aa20e363f38b3ae5a168cf40365f5646a">direct</a>. The function <code>apply</code>
+provides specific overloads for function pointers and function objects. Although <code>direct</code> works
+with function pointers and function objects, it is often more convenient to use <code>apply</code> since it
+allows the compiler to infer the <em>stack signature</em> without providing a template parameter.</p>
+<p>Provided a function <code>foo</code> which has been declared as used in the example above:</p>
+<pre><code class="c++">string foo(string bar, int baz);
+
+// ... or with a function object
+std::function&lt;string(string, int)&gt; foo = /* magic */;
+</code></pre>
+
+<p>One would use <code>foo</code> like this:</p>
+<pre><code class="c++">string result = luwra::apply(lua, n, foo);
+</code></pre>
               
             </div>
           </div>
