@@ -1,5 +1,5 @@
 # Integration
-Luwra does not provide a standalone version of Lua nor does it capsule its features. This means that
+Luwra does not provide a standalone version of Lua nor does it isolate its features. This means that
 all functions and classes operate on
 [lua_State](http://www.lua.org/manual/5.3/manual.html#lua_State) (or the alias
 [State](/reference/namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d)). Doing this allows you to
