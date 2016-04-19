@@ -62,7 +62,7 @@ luwra::registerUserType<Point(double, double)>(
 );
 ```
 
-Parameter 2 and 3 are instances of
+Parameter 3 and 4 are instances of
 [MemberMap](/reference/namespaceluwra.html#a3fbba1f4a5025647470d5942ededa5aa). The `LUWRA_MEMBER`
 macro generates a `std::pair<std::string, Pushable>` expression.
 
