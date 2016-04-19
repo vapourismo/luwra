@@ -67,7 +67,7 @@
         },
         {
             "location": "/wrapping/",
-            "text": "General\n\n\nLuwra provides an easy way to turn any C or C++ function into a\n\nlua_CFunction\n which can be used by the\nLua VM. Note, all parameter types must be readable from the stack (\nValue<T>::read\n exists for all)\nand the return type must be pushable (\nValue<T>::push\n exists).\n\n\nWrap C/C++ functions\n\n\nAssuming you have a function similiar to this:\n\n\nint my_function(const char* a, int b) {\n    return /* magic */;\n}\n\n\n\n\nYou can easily wrap it using the \nLUWRA_WRAP\n macro:\n\n\n// Convert to lua_CFunction\nlua_CFunction cfun = LUWRA_WRAP(my_function);\n\n// Do something with it, for example set it as a Lua global function\nluwra::setGlobal(lua, \"my_function\", cfun);\n\n\n\n\nNote:\n Do not provide the address of your function (e.g. \n&my_function\n) to any wrapping macro.\nThe macros will take care of this themselves. You must provide only the name of the function.\n\n\nCalling the function from Lua is fairly straightforward:\n\n\nlocal my_result = my_function(\"Hello World\", 1337)\nprint(my_result)",
+            "text": "General\n\n\nLuwra provides an easy way to turn any C or C++ function into a\n\nlua_CFunction\n which can be used by the\nLua VM. Note, all parameter types must be readable from the stack (\nValue<T>::read\n exists for all)\nand the return type must be pushable (\nValue<T>::push\n exists).\n\n\nWrap functions\n\n\nAssuming you have a function similiar to this:\n\n\nint my_function(const char* a, int b) {\n    return /* magic */;\n}\n\n\n\n\nYou can easily wrap it using the \nLUWRA_WRAP\n macro:\n\n\n// Convert to lua_CFunction\nlua_CFunction cfun = LUWRA_WRAP(my_function);\n\n// Do something with it, for example set it as a Lua global function\nluwra::setGlobal(lua, \"my_function\", cfun);\n\n\n\n\nNote:\n Do not provide the address of your function (e.g. \n&my_function\n) to any wrapping macro.\nThe macros will take care of this themselves. You must provide only the name of the function.\n\n\nCalling the function from Lua is fairly straightforward:\n\n\nlocal my_result = my_function(\"Hello World\", 1337)\nprint(my_result)\n\n\n\n\nWrap methods and fields\n\n\nIt is also possible to turn C++ field accessors and methods into \nlua_CFunction\ns. It is a little\ntrickier than wrapping normal functions. The resulting Lua functions expect the first (or \nself\n)\nparameter to be a user type instance of the type which the wrapped field or method belongs to.\n\n\nNote:\n Before you wrap fields and methods manually, you might want to take a look at the\n\nUser Types\n section.\n\n\nThe next examples will operate on the following structure:\n\n\nstruct Point {\n    double x, y;\n\n    // ...\n\n    void scale(double f) {\n        x *= f;\n        y *= f;\n    }\n};\n\n\n\n\nIn order to wrap \nx\n, \ny\n and \nscale\n we utilize the \nLUWRA_WRAP\n macro again:\n\n\nlua_CFunction cfun_x     = LUWRA_WRAP(Point::x),\n              cfun_y     = LUWRA_WRAP(Point::y),\n              cfun_scale = LUWRA_WRAP(Point::scale);\n\n// Register as globals\nluwra::setGlobal(lua, \"x\", cfun_x);\nluwra::setGlobal(lua, \"y\", cfun_y);\nluwra::setGlobal(lua, \"scale\", cfun_scale);\n\n\n\n\nUsage looks like this:\n\n\nlocal my_point = -- Magic\n\n-- Access 'x' and 'y' field\nprint(x(my_point), y(my_point))\n\n-- Set 'x' and 'y' field\nx(my_point, 13.37)\ny(my_point, 73.31)\n\n-- Invoke 'scale' method\nscale(my_point, 2)",
             "title": "Function Wrapping"
         },
         {
@@ -76,9 +76,24 @@
             "title": "General"
         },
         {
-            "location": "/wrapping/#wrap-cc-functions",
+            "location": "/wrapping/#wrap-functions",
             "text": "Assuming you have a function similiar to this:  int my_function(const char* a, int b) {\n    return /* magic */;\n}  You can easily wrap it using the  LUWRA_WRAP  macro:  // Convert to lua_CFunction\nlua_CFunction cfun = LUWRA_WRAP(my_function);\n\n// Do something with it, for example set it as a Lua global function\nluwra::setGlobal(lua, \"my_function\", cfun);  Note:  Do not provide the address of your function (e.g.  &my_function ) to any wrapping macro.\nThe macros will take care of this themselves. You must provide only the name of the function.  Calling the function from Lua is fairly straightforward:  local my_result = my_function(\"Hello World\", 1337)\nprint(my_result)",
-            "title": "Wrap C/C++ functions"
+            "title": "Wrap functions"
+        },
+        {
+            "location": "/wrapping/#wrap-methods-and-fields",
+            "text": "It is also possible to turn C++ field accessors and methods into  lua_CFunction s. It is a little\ntrickier than wrapping normal functions. The resulting Lua functions expect the first (or  self )\nparameter to be a user type instance of the type which the wrapped field or method belongs to.  Note:  Before you wrap fields and methods manually, you might want to take a look at the User Types  section.  The next examples will operate on the following structure:  struct Point {\n    double x, y;\n\n    // ...\n\n    void scale(double f) {\n        x *= f;\n        y *= f;\n    }\n};  In order to wrap  x ,  y  and  scale  we utilize the  LUWRA_WRAP  macro again:  lua_CFunction cfun_x     = LUWRA_WRAP(Point::x),\n              cfun_y     = LUWRA_WRAP(Point::y),\n              cfun_scale = LUWRA_WRAP(Point::scale);\n\n// Register as globals\nluwra::setGlobal(lua, \"x\", cfun_x);\nluwra::setGlobal(lua, \"y\", cfun_y);\nluwra::setGlobal(lua, \"scale\", cfun_scale);  Usage looks like this:  local my_point = -- Magic\n\n-- Access 'x' and 'y' field\nprint(x(my_point), y(my_point))\n\n-- Set 'x' and 'y' field\nx(my_point, 13.37)\ny(my_point, 73.31)\n\n-- Invoke 'scale' method\nscale(my_point, 2)",
+            "title": "Wrap methods and fields"
+        },
+        {
+            "location": "/user-types/",
+            "text": "User Types",
+            "title": "User Types"
+        },
+        {
+            "location": "/user-types/#user-types",
+            "text": "",
+            "title": "User Types"
         }
     ]
 }

@@ -83,10 +83,19 @@
             
                 <li class="toctree-l3"><a href="#general">General</a></li>
                 
-                    <li><a class="toctree-l4" href="#wrap-cc-functions">Wrap C/C++ functions</a></li>
+                    <li><a class="toctree-l4" href="#wrap-functions">Wrap functions</a></li>
+                
+                    <li><a class="toctree-l4" href="#wrap-methods-and-fields">Wrap methods and fields</a></li>
                 
             
             </ul>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../user-types/">User Types</a>
         
     </li>
 <li>
@@ -132,7 +141,7 @@
 <a href="http://www.lua.org/manual/5.3/manual.html#lua_CFunction">lua_CFunction</a> which can be used by the
 Lua VM. Note, all parameter types must be readable from the stack (<code>Value&lt;T&gt;::read</code> exists for all)
 and the return type must be pushable (<code>Value&lt;T&gt;::push</code> exists).</p>
-<h2 id="wrap-cc-functions">Wrap C/C++ functions</h2>
+<h2 id="wrap-functions">Wrap functions</h2>
 <p>Assuming you have a function similiar to this:</p>
 <pre><code class="c++">int my_function(const char* a, int b) {
     return /* magic */;
@@ -153,12 +162,58 @@ The macros will take care of this themselves. You must provide only the name of 
 <pre><code class="lua">local my_result = my_function(&quot;Hello World&quot;, 1337)
 print(my_result)
 </code></pre>
+
+<h2 id="wrap-methods-and-fields">Wrap methods and fields</h2>
+<p>It is also possible to turn C++ field accessors and methods into <code>lua_CFunction</code>s. It is a little
+trickier than wrapping normal functions. The resulting Lua functions expect the first (or <code>self</code>)
+parameter to be a user type instance of the type which the wrapped field or method belongs to.</p>
+<p><strong>Note:</strong> Before you wrap fields and methods manually, you might want to take a look at the
+<a href="../user-types/">User Types</a> section.</p>
+<p>The next examples will operate on the following structure:</p>
+<pre><code class="c++">struct Point {
+    double x, y;
+
+    // ...
+
+    void scale(double f) {
+        x *= f;
+        y *= f;
+    }
+};
+</code></pre>
+
+<p>In order to wrap <code>x</code>, <code>y</code> and <code>scale</code> we utilize the <code>LUWRA_WRAP</code> macro again:</p>
+<pre><code class="c++">lua_CFunction cfun_x     = LUWRA_WRAP(Point::x),
+              cfun_y     = LUWRA_WRAP(Point::y),
+              cfun_scale = LUWRA_WRAP(Point::scale);
+
+// Register as globals
+luwra::setGlobal(lua, &quot;x&quot;, cfun_x);
+luwra::setGlobal(lua, &quot;y&quot;, cfun_y);
+luwra::setGlobal(lua, &quot;scale&quot;, cfun_scale);
+</code></pre>
+
+<p>Usage looks like this:</p>
+<pre><code class="lua">local my_point = -- Magic
+
+-- Access 'x' and 'y' field
+print(x(my_point), y(my_point))
+
+-- Set 'x' and 'y' field
+x(my_point, 13.37)
+y(my_point, 73.31)
+
+-- Invoke 'scale' method
+scale(my_point, 2)
+</code></pre>
               
             </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../user-types/" class="btn btn-neutral float-right" title="User Types">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
         <a href="../advanced/" class="btn btn-neutral" title="Advanced Stack Interaction"><span class="icon icon-circle-arrow-left"></span> Previous</a>
@@ -191,6 +246,8 @@ print(my_result)
       
         <span><a href="../advanced/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
+      
+        <span style="margin-left: 15px"><a href="../user-types/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
