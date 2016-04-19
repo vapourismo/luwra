@@ -11,4 +11,4 @@ For your application to be able to reach the `lib/luwra.hpp` header file, you mu
 Now you can simply `#include <luwra.hpp>` in your C++ files and start using Luwra.
 
 # Reference Manual
-A reference manual exists [here](/reference/).
+A reference manual exists [here](/reference/namespaceluwra.html).
