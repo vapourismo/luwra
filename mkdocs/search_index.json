@@ -64,6 +64,21 @@
             "location": "/advanced/#invoke-a-function-with-lua-values",
             "text": "apply  is similiar to direct . The function  apply \nprovides specific overloads for function pointers and function objects. Although  direct  works\nwith function pointers and function objects, it is often more convenient to use  apply  since it\nallows the compiler to infer the  stack signature  without providing a template parameter.  Provided a function  foo  which has been declared as used in the example above:  string foo(string bar, int baz);\n\n// ... or with a function object\nfunction<string(string, int)> foo = /* magic */;  One would use  foo  like this:  string result = luwra::apply(lua, n, foo);",
             "title": "Invoke a function with Lua values"
+        },
+        {
+            "location": "/wrapping/",
+            "text": "General\n\n\nLuwra provides an easy way to turn any C or C++ function into a\n\nlua_CFunction\n which can be used by the\nLua VM. Note, all parameter types must be readable from the stack (\nValue<T>::read\n exists for all)\nand the return type must be pushable (\nValue<T>::push\n exists).\n\n\nWrap C/C++ functions\n\n\nAssuming you have a function similiar to this:\n\n\nint my_function(const char* a, int b) {\n    return /* magic */;\n}\n\n\n\n\nYou can easily wrap it using the \nLUWRA_WRAP\n macro:\n\n\n// Convert to lua_CFunction\nlua_CFunction cfun = LUWRA_WRAP(my_function);\n\n// Do something with it, for example set it as a Lua global function\nluwra::setGlobal(lua, \"my_function\", cfun);\n\n\n\n\nNote:\n Do not provide the address of your function (e.g. \n&my_function\n) to any wrapping macro.\nThe macros will take care of this themselves. You must provide only the name of the function.\n\n\nCalling the function from Lua is fairly straightforward:\n\n\nlocal my_result = my_function(\"Hello World\", 1337)\nprint(my_result)",
+            "title": "Function Wrapping"
+        },
+        {
+            "location": "/wrapping/#general",
+            "text": "Luwra provides an easy way to turn any C or C++ function into a lua_CFunction  which can be used by the\nLua VM. Note, all parameter types must be readable from the stack ( Value<T>::read  exists for all)\nand the return type must be pushable ( Value<T>::push  exists).",
+            "title": "General"
+        },
+        {
+            "location": "/wrapping/#wrap-cc-functions",
+            "text": "Assuming you have a function similiar to this:  int my_function(const char* a, int b) {\n    return /* magic */;\n}  You can easily wrap it using the  LUWRA_WRAP  macro:  // Convert to lua_CFunction\nlua_CFunction cfun = LUWRA_WRAP(my_function);\n\n// Do something with it, for example set it as a Lua global function\nluwra::setGlobal(lua, \"my_function\", cfun);  Note:  Do not provide the address of your function (e.g.  &my_function ) to any wrapping macro.\nThe macros will take care of this themselves. You must provide only the name of the function.  Calling the function from Lua is fairly straightforward:  local my_result = my_function(\"Hello World\", 1337)\nprint(my_result)",
+            "title": "Wrap C/C++ functions"
         }
     ]
 }
