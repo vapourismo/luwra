@@ -90,6 +90,14 @@
             
                 <li class="toctree-l3"><a href="#user-types">User Types</a></li>
                 
+                    <li><a class="toctree-l4" href="#register-user-type-with-constructor">Register user type with constructor</a></li>
+                
+                    <li><a class="toctree-l4" href="#register-user-type-without-constructor">Register user type without constructor</a></li>
+                
+                    <li><a class="toctree-l4" href="#usage-in-lua">Usage in Lua</a></li>
+                
+                    <li><a class="toctree-l4" href="#manually-constructing-a-user-type">Manually constructing a user type</a></li>
+                
             
             </ul>
         
@@ -133,6 +141,146 @@
             <div class="section">
               
                 <h1 id="user-types">User Types</h1>
+<p>A user type is a collection of class members bundled into a metatable. Before user types can be used
+in Lua, you must register such metatable in Lua's registry.</p>
+<p>The following examples work on this class:</p>
+<pre><code class="c++">struct Point {
+    double x, y;
+
+    Point(double x, double y):
+        x(x), y(y)
+    {
+        std::cout &lt;&lt; &quot;Construct Point(&quot; &lt;&lt; x &lt;&lt; &quot;, &quot; &lt;&lt; y &lt;&lt; &quot;)&quot; &lt;&lt; std::endl;
+    }
+
+    ~Point() {
+        std::cout &lt;&lt; &quot;Destruct Point(&quot; &lt;&lt; x &lt;&lt; &quot;, &quot; &lt;&lt; y &lt;&lt; &quot;)&quot; &lt;&lt; std::endl;
+    }
+
+    void scale(double f) {
+        x *= f;
+        y *= f;
+    }
+
+    std::string __tostring() {
+        return &quot;&lt;Point(&quot; + std::to_string(x) + &quot;, &quot; + std::to_string(y) + &quot;)&gt;&quot;;
+    }
+};
+</code></pre>
+
+<h2 id="register-user-type-with-constructor">Register user type with constructor</h2>
+<p><a href="../reference/namespaceluwra.html#aae6f45ae03c3bd91321ea19f794cae18">registerUserType&lt;S&gt;</a> allows
+you to register a metatable and constructor in the global namespace. The template parameter to
+<code>registerUserType</code> is a signature in the form of <code>U(A...)</code> where <code>U</code> is your user type and <code>A...</code>
+the parameter types to the constructor which you want to register.</p>
+<p>By default, the function generates a garbage-collector hook and a string representation function.
+If you add a <code>__gc</code> or <code>__tostring</code> meta method to your type, these auto-generated functions will be
+overridden.</p>
+<p>See this example:</p>
+<pre><code class="c++">luwra::registerUserType&lt;Point(double, double)&gt;(
+    lua,
+
+    // Constructor name
+    &quot;Point&quot;,
+
+    // Methods need to be declared here
+    {
+        LUWRA_MEMBER(Point, scale),
+        LUWRA_MEMBER(Point, x),
+        LUWRA_MEMBER(Point, y)
+    },
+
+    // Meta methods may be registered aswell
+    {
+        LUWRA_MEMBER(Point, __tostring)
+    }
+);
+</code></pre>
+
+<p>Parameter 2 and 3 are instances of
+<a href="../reference/namespaceluwra.html#a6dc0acb148bf26f49b0b27d6cad9bfe1">MemberMap</a>. The <code>LUWRA_MEMBER</code>
+macro generates a <code>std::pair&lt;std::string, Pushable&gt;</code> expression.</p>
+<pre><code class="c++">LUWRA_MEMBER(Point, scale) === {&quot;scale&quot;, LUWRA_WRAP(Point::scale)}
+</code></pre>
+
+<p><code>Pushable</code> has an implicit constructor, which makes it convenient to add other types of fields:</p>
+<pre><code class="c++">luwra::registerUserType&lt;Point(double, double)&gt;(
+    lua,
+
+    // Constructor name
+    &quot;Point&quot;,
+
+    // Methods need to be declared here
+    {
+        {&quot;scale&quot;,       LUWRA_WRAP(Point::scale)},
+        {&quot;x&quot;,           LUWRA_WRAP(Point::x)},
+        {&quot;y&quot;,           LUWRA_WRAP(Point::y)},
+        {&quot;magicNumber&quot;, 1337},
+        {&quot;magicString&quot;, &quot;Hello World&quot;}
+    },
+
+    // Meta methods may be registered aswell
+    {
+        LUWRA_MEMBER(Point, __tostring)
+    }
+);
+</code></pre>
+
+<h2 id="register-user-type-without-constructor">Register user type without constructor</h2>
+<p>To register only the metatable associated with a user type, simply omit the constructor parameters
+and name from the call to <code>registerUserType</code>.</p>
+<pre><code class="c++">luwra::registerUserType&lt;Point&gt;(
+    lua,
+
+    // Methods need to be declared here
+    {
+        LUWRA_MEMBER(Point, scale),
+        LUWRA_MEMBER(Point, x),
+        LUWRA_MEMBER(Point, y),
+        {&quot;magicNumber&quot;, 1337}
+    },
+
+    // Meta methods may be registered aswell
+    {
+        LUWRA_MEMBER(Point, __tostring)
+    }
+);
+</code></pre>
+
+<p>It is still possible to provide a constructor using the <code>LUWRA_WRAP_CONSTRUCTOR</code> macro:</p>
+<pre><code class="c++">lua_CFunction ctor = LUWRA_WRAP_CONSTRUCTOR(Point, double, double);
+luwra::setGlobal(lua, &quot;Point&quot;, ctor);
+</code></pre>
+
+<h2 id="usage-in-lua">Usage in Lua</h2>
+<p>After you have registered your user type using one of the given methods, you can start using it in
+Lua:</p>
+<pre><code class="lua">-- Instantiate 'Point'
+local point = Point(13, 37)
+
+-- Invoke 'scale' method
+point:scale(1.5)
+
+-- Convert to string via '__tostring' meta method
+print(point)
+
+-- Read properties 'x' and 'y'
+print(point:x(), point:y())
+
+-- Set property 'x'
+point:x(point.magicNumber)
+</code></pre>
+
+<h2 id="manually-constructing-a-user-type">Manually constructing a user type</h2>
+<p>Provided you already registered your user type, one can create it from the C++ side aswell.
+<a href="../reference/namespaceluwra.html#af079dcca8e67d88e5cfdc7e8872cf5d7">construct&lt;U&gt;</a> provides this
+functionality. Given the user type and constructor parameters, it will construct the user type on
+top of the stack:</p>
+<pre><code class="c++">Point&amp; my_point = luwra::construct&lt;Point&gt;(lua, 13.37, 73.31);
+
+// Changes on C++ side will be visible in Lua
+my_point.scale(2);
+</code></pre>
               
             </div>
           </div>
