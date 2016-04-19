@@ -40,7 +40,8 @@ int main() {
 		{
 			LUWRA_MEMBER(Point, scale),
 			LUWRA_MEMBER(Point, x),
-			LUWRA_MEMBER(Point, y)
+			LUWRA_MEMBER(Point, y),
+			{"test", 1337}
 		},
 		// Meta methods may be registered aswell
 		{
@@ -66,6 +67,8 @@ int main() {
 		// Modify 'x' property
 		"p:x(10)\n"
 		"print('p.x =', p:x())\n"
+
+		"print('test', p.test)"
 	);
 
 	// Invoke the attached script

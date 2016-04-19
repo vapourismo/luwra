@@ -217,7 +217,7 @@ struct Value<U*> {
 	}
 };
 
-using MemberMap = std::map<std::string, CFunction>;
+using MemberMap = std::map<std::string, Pushable>;
 
 /**
  * Register the metatable for user type `T`. This function allows you to register methods
