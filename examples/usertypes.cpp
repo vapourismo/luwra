@@ -41,7 +41,8 @@ int main() {
 			LUWRA_MEMBER(Point, scale),
 			LUWRA_MEMBER(Point, x),
 			LUWRA_MEMBER(Point, y),
-			{"test", 1337}
+			{"magicNumber", 1337},
+			{"magicString", "Hello World"}
 		},
 		// Meta methods may be registered aswell
 		{
@@ -68,7 +69,8 @@ int main() {
 		"p:x(10)\n"
 		"print('p.x =', p:x())\n"
 
-		"print('test', p.test)"
+		"print('magicNumber', p.magicNumber)\n"
+		"print('magicString', p.magicString)"
 	);
 
 	// Invoke the attached script
