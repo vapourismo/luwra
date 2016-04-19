@@ -137,3 +137,12 @@ TEST_CASE("Boolean") {
 	REQUIRE(luwra::push(state, value) == 1);
 	REQUIRE(luwra::read<bool>(state, -1) == value);
 }
+
+TEST_CASE("Pushable") {
+	luwra::StateWrapper state;
+
+	luwra::Pushable pushable(1337);
+	REQUIRE(luwra::push(state, pushable) == 1);
+
+	REQUIRE(luwra::read<int>(state, -1) == 1337);
+}
