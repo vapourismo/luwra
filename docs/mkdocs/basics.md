@@ -11,7 +11,7 @@ with the Lua stack.
 
 A fundamental aspect of this is the abstract template [Value](/reference/structluwra_1_1Value.html).
 Every type which can be pushed onto or read from the stack has a specialization of it.
-Useful implementations are provides out of the box:
+Useful implementations are provided out of the box:
 
 C++ type               | Pushable | Readable | Lua type
 -----------------------|----------|----------|----------------------------
