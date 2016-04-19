@@ -5,6 +5,7 @@ pages:
   - 'Home': index.md
   - 'Basic Stack Interaction': basics.md
   - 'Advanced Stack Interaction': advanced.md
+  - 'Function Wrapping': wrapping.md
 theme: readthedocs
 docs_dir: docs/mkdocs
 site_dir: docs/output
