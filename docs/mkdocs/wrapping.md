@@ -4,7 +4,7 @@ Luwra provides an easy way to turn any C or C++ function into a
 Lua VM. Note, all parameter types must be readable from the stack (`Value<T>::read` exists for all)
 and the return type must be pushable (`Value<T>::push` exists).
 
-## Wrap C/C++ functions
+## Wrap functions
 Assuming you have a function similiar to this:
 
 ```c++
@@ -31,4 +31,55 @@ Calling the function from Lua is fairly straightforward:
 ```lua
 local my_result = my_function("Hello World", 1337)
 print(my_result)
+```
+## Wrap methods and fields
+It is also possible to turn C++ field accessors and methods into `lua_CFunction`s. It is a little
+trickier than wrapping normal functions. The resulting Lua functions expect the first (or `self`)
+parameter to be a user type instance of the type which the wrapped field or method belongs to.
+
+**Note:** Before you wrap fields and methods manually, you might want to take a look at the
+[User Types](/user-types/) section.
+
+The next examples will operate on the following structure:
+
+```c++
+struct Point {
+    double x, y;
+
+    // ...
+
+    void scale(double f) {
+        x *= f;
+        y *= f;
+    }
+};
+```
+
+In order to wrap `x`, `y` and `scale` we utilize the `LUWRA_WRAP` macro again:
+
+```c++
+lua_CFunction cfun_x     = LUWRA_WRAP(Point::x),
+              cfun_y     = LUWRA_WRAP(Point::y),
+              cfun_scale = LUWRA_WRAP(Point::scale);
+
+// Register as globals
+luwra::setGlobal(lua, "x", cfun_x);
+luwra::setGlobal(lua, "y", cfun_y);
+luwra::setGlobal(lua, "scale", cfun_scale);
+```
+
+Usage looks like this:
+
+```lua
+local my_point = -- Magic
+
+-- Access 'x' and 'y' field
+print(x(my_point), y(my_point))
+
+-- Set 'x' and 'y' field
+x(my_point, 13.37)
+y(my_point, 73.31)
+
+-- Invoke 'scale' method
+scale(my_point, 2)
 ```

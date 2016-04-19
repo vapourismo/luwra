@@ -8,7 +8,7 @@
   
   
   
-  <title>Advanced Stack Interaction - Luwra</title>
+  <title>User Types - Luwra</title>
   
 
   <link rel="shortcut icon" href="../img/favicon.ico">
@@ -23,9 +23,9 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Advanced Stack Interaction";
-    var mkdocs_page_input_path = "advanced.md";
-    var mkdocs_page_url = "/advanced/";
+    var mkdocs_page_name = "User Types";
+    var mkdocs_page_input_path = "user-types.md";
+    var mkdocs_page_url = "/user-types/";
   </script>
   
   <script src="../js/jquery-2.1.1.min.js"></script>
@@ -69,19 +69,8 @@
 <li>
           
             <li>
-    <li class="toctree-l1 current">
-        <a class="current" href="./">Advanced Stack Interaction</a>
-        
-            <ul>
-            
-                <li class="toctree-l3"><a href="#operating-on-lua-values-with-c-functions">Operating on Lua values with C++ functions</a></li>
-                
-                    <li><a class="toctree-l4" href="#invoke-a-callable-with-lua-values">Invoke a Callable with Lua values</a></li>
-                
-                    <li><a class="toctree-l4" href="#invoke-a-function-with-lua-values">Invoke a function with Lua values</a></li>
-                
-            
-            </ul>
+    <li class="toctree-l1 ">
+        <a class="" href="../advanced/">Advanced Stack Interaction</a>
         
     </li>
 <li>
@@ -94,8 +83,15 @@
 <li>
           
             <li>
-    <li class="toctree-l1 ">
-        <a class="" href="../user-types/">User Types</a>
+    <li class="toctree-l1 current">
+        <a class="current" href="./">User Types</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#user-types">User Types</a></li>
+                
+            
+            </ul>
         
     </li>
 <li>
@@ -122,7 +118,7 @@
     
       
     
-    <li>Advanced Stack Interaction</li>
+    <li>User Types</li>
     <li class="wy-breadcrumbs-aside">
       
         
@@ -136,39 +132,7 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="operating-on-lua-values-with-c-functions">Operating on Lua values with C++ functions</h1>
-<p>Instead of extracting every Lua value seperately and pushing the result of your C++ function back
-onto the stack again, you can use one of the following functions to make this process easier for you.</p>
-<h2 id="invoke-a-callable-with-lua-values">Invoke a Callable with Lua values</h2>
-<p>The function <a href="../reference/namespaceluwra.html#aa20e363f38b3ae5a168cf40365f5646a">direct&lt;S&gt;</a>
-lets you specify a <em>stack signature</em> in order to extract the values and invoke a <code>Callable</code> with
-them.</p>
-<p>Consider the following:</p>
-<pre><code class="c++">string result = foo(luwra::read&lt;string&gt;(lua, n), luwra::read&lt;int&gt;(lua, n + 1));
-</code></pre>
-
-<p>It could be rewritting like this:</p>
-<pre><code class="c++">string result = luwra::direct&lt;string(string, int)&gt;(lua, n, foo);
-</code></pre>
-
-<p><strong>Note:</strong> The result of <code>foo</code> is not pushed onto the stack. Except for the extraction of Lua values,
-everything happens on the C++ side.</p>
-<h2 id="invoke-a-function-with-lua-values">Invoke a function with Lua values</h2>
-<p><a href="../reference/namespaceluwra.html#a839077ddd9c3d0565a40c574bc8e9555">apply</a> is similiar to
-<a href="../reference/namespaceluwra.html#aa20e363f38b3ae5a168cf40365f5646a">direct</a>. The function <code>apply</code>
-provides specific overloads for function pointers and function objects. Although <code>direct</code> works
-with function pointers and function objects, it is often more convenient to use <code>apply</code> since it
-allows the compiler to infer the <em>stack signature</em> without providing a template parameter.</p>
-<p>Provided a function <code>foo</code> which has been declared as used in the example above:</p>
-<pre><code class="c++">string foo(string bar, int baz);
-
-// ... or with a function object
-function&lt;string(string, int)&gt; foo = /* magic */;
-</code></pre>
-
-<p>One would use <code>foo</code> like this:</p>
-<pre><code class="c++">string result = luwra::apply(lua, n, foo);
-</code></pre>
+                <h1 id="user-types">User Types</h1>
               
             </div>
           </div>
@@ -176,10 +140,8 @@ function&lt;string(string, int)&gt; foo = /* magic */;
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../wrapping/" class="btn btn-neutral float-right" title="Function Wrapping">Next <span class="icon icon-circle-arrow-right"></span></a>
       
-      
-        <a href="../basics/" class="btn btn-neutral" title="Basic Stack Interaction"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../wrapping/" class="btn btn-neutral" title="Function Wrapping"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -207,10 +169,8 @@ function&lt;string(string, int)&gt; foo = /* magic */;
           <a href="https://github.com/vapourismo/luwra" class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../basics/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../wrapping/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
-      
-        <span style="margin-left: 15px"><a href="../wrapping/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
