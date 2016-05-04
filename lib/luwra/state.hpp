@@ -99,7 +99,7 @@ struct StateWrapper {
 	 */
 	template <typename V> inline
 	V getGlobal(const std::string& key) const {
-		return getGlobal<V>(state, key);
+		return ::luwra::getGlobal<V>(state, key);
 	}
 
 	/**
@@ -107,7 +107,7 @@ struct StateWrapper {
 	 */
 	template <typename V> inline
 	void setGlobal(const std::string& key, V value) const {
-		setGlobal(state, key, value);
+		::luwra::setGlobal(state, key, value);
 	}
 
 	/**
@@ -127,7 +127,7 @@ struct StateWrapper {
 		const MemberMap& methods = MemberMap(),
 		const MemberMap& meta_methods = MemberMap()
 	) {
-		registerUserType<T>(state, ctor_name, methods, meta_methods);
+		::luwra::registerUserType<T>(state, ctor_name, methods, meta_methods);
 	}
 
 	/**
