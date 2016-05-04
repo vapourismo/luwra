@@ -6,7 +6,7 @@
 #include <utility>
 #include <type_traits>
 
-#if LUA_VERSION_NUM >= 503
+#if false
 
 template <typename I>
 struct NumericTest {
@@ -51,7 +51,7 @@ TEST_CASE("NumberLimits") {
 	NumericTest<long double>::test(state);
 }
 
-#endif /* LUA_VERSION_NUM >= 503 */
+#endif /* false */
 
 TEST_CASE("Numbers") {
 	luwra::StateWrapper state;
