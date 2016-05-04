@@ -173,20 +173,12 @@ namespace internal {
 		}
 	};
 
-	// Base for `Value<I>` specializations which uses `B` as transport unit, where `I` is smaller
-	// than `B`.
+	// Base for `Value<I>` specializations which uses `B` as transport unit
 	template <typename I, typename B>
-	struct NumericContainedValueBase {
-		static constexpr
-		bool qualifies =
-			// TODO: Remove warning about comparsion between signed and unsigned integers
-			std::numeric_limits<I>::max() <= std::numeric_limits<B>::max()
-			&& std::numeric_limits<I>::lowest() >= std::numeric_limits<B>::lowest();
-
+	struct NumericValueBase {
 		static inline
 		I read(State* state, int index) {
-			return
-				static_cast<I>(NumericTransportValue<B>::read(state, index));
+			return static_cast<I>(NumericTransportValue<B>::read(state, index));
 		}
 
 		static inline
@@ -195,39 +187,6 @@ namespace internal {
 			return 1;
 		}
 	};
-
-	// Base for `Value<I>` specializations which uses `B` as transport unit, where `I` is bigger
-	// than `B`.
-	template <typename I, typename B>
-	struct NumericTruncatingValueBase {
-		static inline
-		I read(State* state, int index) {
-			return static_cast<I>(NumericTransportValue<B>::read(state, index));
-		}
-
-		static inline
-		size_t push(State*, I) {
-			static_assert(
-				sizeof(I) == -1,
-				"You must not use 'Value<I>::push' specializations which inherit from NumericTruncatingValueBase"
-			);
-
-			return -1;
-		}
-	};
-
-	// Base for `Value<I>` specializations which uses `B` as transport unit
-	template <typename I, typename B>
-	using NumericValueBase =
-		typename std::conditional<
-			std::is_same<I, B>::value,
-			NumericTransportValue<B>,
-			typename std::conditional<
-				NumericContainedValueBase<I, B>::qualifies,
-				NumericContainedValueBase<I, B>,
-				NumericTruncatingValueBase<I, B>
-			>::type
-		>::type;
 }
 
 /**

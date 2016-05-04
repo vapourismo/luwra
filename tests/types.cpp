@@ -30,38 +30,25 @@ struct NumericTest {
 	}
 };
 
-struct TautologyTest {
-	static
-	void test(lua_State*) {}
-};
-
-template <typename B, typename I>
-using SelectNumericTest =
-	typename std::conditional<
-		luwra::internal::NumericContainedValueBase<I, B>::qualifies,
-		NumericTest<I>,
-		TautologyTest
-	>::type;
-
 TEST_CASE("NumberLimits") {
 	luwra::StateWrapper state;
 
 	// Integer-based types
-	SelectNumericTest<lua_Integer, signed char>::test(state);
-	SelectNumericTest<lua_Integer, unsigned char>::test(state);
-	SelectNumericTest<lua_Integer, signed short>::test(state);
-	SelectNumericTest<lua_Integer, unsigned short>::test(state);
-	SelectNumericTest<lua_Integer, signed int>::test(state);
-	SelectNumericTest<lua_Integer, unsigned int>::test(state);
-	SelectNumericTest<lua_Integer, signed long int>::test(state);
-	SelectNumericTest<lua_Integer, unsigned long int>::test(state);
-	SelectNumericTest<lua_Integer, signed long long int>::test(state);
-	SelectNumericTest<lua_Integer, unsigned long long int>::test(state);
+	NumericTest<signed char>::test(state);
+	NumericTest<unsigned char>::test(state);
+	NumericTest<signed short>::test(state);
+	NumericTest<unsigned short>::test(state);
+	NumericTest<signed int>::test(state);
+	NumericTest<unsigned int>::test(state);
+	NumericTest<signed long int>::test(state);
+	NumericTest<unsigned long int>::test(state);
+	NumericTest<signed long long int>::test(state);
+	NumericTest<unsigned long long int>::test(state);
 
 	// Number-based types
-	SelectNumericTest<lua_Number, float>::test(state);
-	SelectNumericTest<lua_Number, double>::test(state);
-	SelectNumericTest<lua_Number, long double>::test(state);
+	NumericTest<float>::test(state);
+	NumericTest<double>::test(state);
+	NumericTest<long double>::test(state);
 }
 
 #endif /* LUA_VERSION_NUM >= 503 */
