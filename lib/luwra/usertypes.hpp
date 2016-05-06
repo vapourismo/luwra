@@ -10,6 +10,7 @@
 #include "common.hpp"
 #include "types.hpp"
 #include "stack.hpp"
+#include "auxiliary.hpp"
 
 #include <map>
 #include <string>
@@ -221,8 +222,6 @@ struct Value<U*> {
 	}
 };
 
-using MemberMap = std::map<std::string, Pushable>;
-
 /**
  * Register the metatable for user type `T`. This function allows you to register methods
  * which are shared across all instances of this type.
@@ -239,40 +238,23 @@ using MemberMap = std::map<std::string, Pushable>;
 template <typename U> static inline
 void registerUserType(
 	State* state,
-	const MemberMap& methods = MemberMap(),
-	const MemberMap& meta_methods = MemberMap()
+	const FieldVector& methods = FieldVector(),
+	const FieldVector& meta_methods = FieldVector()
 ) {
 	using T = internal::StripUserType<U>;
 
 	// Setup an appropriate metatable name
 	internal::new_user_type_metatable<T>(state);
 
-	// Register methods
-	if (methods.size() > 0 && meta_methods.count("__index") == 0) {
-		push(state, "__index");
-		lua_newtable(state);
-
-		for (auto& method: methods) {
-			setFields(state, -1, method.first, method.second);
-		}
-
-		lua_rawset(state, -3);
-	}
-
-	// Register garbage-collection hook
-	if (meta_methods.count("__gc") == 0) {
-		setFields(state, -1, "__gc", &internal::destruct_user_type<T>);
-	}
-
-	// Register string representation function
-	if (meta_methods.count("__tostring") == 0) {
-		setFields(state, -1, "__tostring", &internal::stringify_user_type<T>);
-	}
+	// Insert methods
+	setFields(state, -1, {
+		{"__index",    methods},
+		{"__gc",       &internal::destruct_user_type<T>},
+		{"__tostring", &internal::stringify_user_type<T>}
+	});
 
 	// Insert meta methods
-	for (const auto& metamethod: meta_methods) {
-		setFields(state, -1, metamethod.first, metamethod.second);
-	}
+	setFields(state, -1, meta_methods);
 
 	// Pop metatable off the stack
 	lua_pop(state, -1);
@@ -306,8 +288,8 @@ template <typename T> static inline
 void registerUserType(
 	State* state,
 	const std::string& ctor_name,
-	const MemberMap& methods = MemberMap(),
-	const MemberMap& meta_methods = MemberMap()
+	const FieldVector& methods = FieldVector(),
+	const FieldVector& meta_methods = FieldVector()
 ) {
 	using U = typename internal::UserTypeSignature<T>::UserType;
 	registerUserType<U>(state, methods, meta_methods);
