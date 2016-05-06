@@ -331,8 +331,12 @@ LUWRA_NS_END
  * \param regname Registry name
  */
 #define LUWRA_DEF_REGISTRY_NAME(type, regname) \
-	template <> struct luwra::internal::UserTypeReg<type> { static const std::string name; }; \
-	const std::string luwra::internal::UserTypeReg<type>::name = (regname);
+	LUWRA_NS_BEGIN \
+	namespace internal { \
+		template <> struct UserTypeReg<type> { static const std::string name; }; \
+		const std::string UserTypeReg<type>::name = (regname); \
+	} \
+	LUWRA_NS_END
 
 #define LUWRA_FIELD(type, name) {__STRING(name), LUWRA_WRAP_FIELD(type::name)}
 #define LUWRA_METHOD(type, name) {__STRING(name), LUWRA_WRAP_METHOD(type::name)}
