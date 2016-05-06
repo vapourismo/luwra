@@ -30,7 +30,7 @@ struct Point {
 ```
 
 ## Register user type with constructor
-[registerUserType&lt;S&gt;](/reference/namespaceluwra.html#aae6f45ae03c3bd91321ea19f794cae18) allows
+[registerUserType&lt;S&gt;](/reference/namespaceluwra.html#a683f6075862f8fc5cad0d76445f2f607) allows
 you to register a metatable and constructor in the global namespace. The template parameter to
 `registerUserType` is a signature in the form of `U(A...)` where `U` is your user type and `A...`
 the parameter types to the constructor which you want to register.
@@ -63,7 +63,7 @@ luwra::registerUserType<Point(double, double)>(
 ```
 
 Parameter 3 and 4 are instances of
-[FieldVector](/namespaceluwra.html#ac090722c6d5d6b88b31895aad64788c2). The `LUWRA_MEMBER` macro
+[FieldVector](/reference/namespaceluwra.html#ac090722c6d5d6b88b31895aad64788c2). The `LUWRA_MEMBER` macro
 generates a `std::pair<Pushable, Pushable>` expression.
 
 ```c++

@@ -171,7 +171,7 @@ in Lua, you must register such metatable in Lua's registry.</p>
 </code></pre>
 
 <h2 id="register-user-type-with-constructor">Register user type with constructor</h2>
-<p><a href="../reference/namespaceluwra.html#aae6f45ae03c3bd91321ea19f794cae18">registerUserType&lt;S&gt;</a> allows
+<p><a href="../reference/namespaceluwra.html#a683f6075862f8fc5cad0d76445f2f607">registerUserType&lt;S&gt;</a> allows
 you to register a metatable and constructor in the global namespace. The template parameter to
 <code>registerUserType</code> is a signature in the form of <code>U(A...)</code> where <code>U</code> is your user type and <code>A...</code>
 the parameter types to the constructor which you want to register.</p>
@@ -200,7 +200,7 @@ overridden.</p>
 </code></pre>
 
 <p>Parameter 3 and 4 are instances of
-<a href="../namespaceluwra.html#ac090722c6d5d6b88b31895aad64788c2">FieldVector</a>. The <code>LUWRA_MEMBER</code> macro
+<a href="../reference/namespaceluwra.html#ac090722c6d5d6b88b31895aad64788c2">FieldVector</a>. The <code>LUWRA_MEMBER</code> macro
 generates a <code>std::pair&lt;Pushable, Pushable&gt;</code> expression.</p>
 <pre><code class="c++">LUWRA_MEMBER(Point, scale) === {&quot;scale&quot;, LUWRA_WRAP(Point::scale)}
 </code></pre>
