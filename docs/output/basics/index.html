@@ -79,6 +79,9 @@
                     <li><a class="toctree-l4" href="#read-and-type-errors">Read and type errors</a></li>
                 
             
+                <li class="toctree-l3"><a href="#globals">Globals</a></li>
+                
+            
             </ul>
         
     </li>
@@ -375,6 +378,16 @@ converted to it? Most <code>Value&lt;T&gt;</code> specializations use Lua's <cod
 the values from the stack. This means that no exceptions will be thrown - instead the error handling
 is delegated to the Lua VM. Have a look at the
 <a href="http://www.lua.org/manual/5.3/manual.html#4.6">error handling documentation</a> for more information.</p>
+<h1 id="globals">Globals</h1>
+<p>In order to convenient register values in the global namespace, Luwra provides
+<a href="../reference/namespaceluwra.html#afed27900ff117638937ad92e0217258d">setGlobal</a> and
+<a href="../reference/namespaceluwra.html#af0a7dbbbdb339227c6ecaaa46422e05b">getGlobal</a>.</p>
+<pre><code class="c++">// Register in the global namespace
+luwra::setGlobal(lua, &quot;almostPi&quot;, 3.14);
+
+// Retrieve from globals
+double almostPi = luwra::getGlobal&lt;double&gt;(lua, &quot;almostPi&quot;);
+</code></pre>
               
             </div>
           </div>

@@ -100,3 +100,17 @@ converted to it? Most `Value<T>` specializations use Lua's `luaL_check*` functio
 the values from the stack. This means that no exceptions will be thrown - instead the error handling
 is delegated to the Lua VM. Have a look at the
 [error handling documentation](http://www.lua.org/manual/5.3/manual.html#4.6) for more information.
+
+# Globals
+In order to convenient register values in the global namespace, Luwra provides
+[setGlobal](/reference/namespaceluwra.html#afed27900ff117638937ad92e0217258d) and
+[getGlobal](/reference/namespaceluwra.html#af0a7dbbbdb339227c6ecaaa46422e05b).
+
+
+```c++
+// Register in the global namespace
+luwra::setGlobal(lua, "almostPi", 3.14);
+
+// Retrieve from globals
+double almostPi = luwra::getGlobal<double>(lua, "almostPi");
+```
