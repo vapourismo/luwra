@@ -63,8 +63,8 @@ luwra::registerUserType<Point(double, double)>(
 ```
 
 Parameter 3 and 4 are instances of
-[MemberMap](/reference/namespaceluwra.html#a3fbba1f4a5025647470d5942ededa5aa). The `LUWRA_MEMBER`
-macro generates a `std::pair<std::string, Pushable>` expression.
+[FieldVector](/namespaceluwra.html#ac090722c6d5d6b88b31895aad64788c2). The `LUWRA_MEMBER` macro
+generates a `std::pair<Pushable, Pushable>` expression.
 
 ```c++
 LUWRA_MEMBER(Point, scale) === {"scale", LUWRA_WRAP(Point::scale)}
