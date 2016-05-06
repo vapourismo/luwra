@@ -98,6 +98,8 @@
                 
                     <li><a class="toctree-l4" href="#manually-constructing-a-user-type">Manually constructing a user type</a></li>
                 
+                    <li><a class="toctree-l4" href="#registry-names">Registry names</a></li>
+                
             
             </ul>
         
@@ -281,6 +283,27 @@ top of the stack:</p>
 // Changes on C++ side will be visible in Lua
 my_point.scale(2);
 </code></pre>
+
+<h2 id="registry-names">Registry names</h2>
+<p>When registering the metatable for a user type, an automatically generated name will be used to
+store it in the registry. When Luwra is used in a single executable or shared library, name
+collisions should not happen. If your application consists of multiple seperate compiled units, it
+is highly recommended to prevent name collisions by defining the <code>LUWRA_REGISTRY_PREFIX</code> macro
+before including the Luwra headers. This macro changes the prefix for auto-generated registry names.</p>
+<pre><code class="c++">#define LUWRA_REGISTRY_PREFIX &quot;MyProject#&quot;
+#include &lt;luwra.hpp&gt;
+</code></pre>
+
+<p>Another way to prevent collisons is to give each user type its individual registry name. This can be
+done using the <code>LUWRA_DEF_REGISTRY_NAME</code> macro.</p>
+<pre><code class="c++">struct MyUserType {
+    // ...
+};
+
+LUWRA_DEF_REGISTRY_NAME(MyUserType, &quot;MyUserType&quot;)
+</code></pre>
+
+<p>Choosing this method will not prefix the registry name with the value of <code>LUWRA_REGISTRY_PREFIX</code>.</p>
               
             </div>
           </div>

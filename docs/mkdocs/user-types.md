@@ -158,3 +158,28 @@ Point& my_point = luwra::construct<Point>(lua, 13.37, 73.31);
 // Changes on C++ side will be visible in Lua
 my_point.scale(2);
 ```
+
+## Registry names
+When registering the metatable for a user type, an automatically generated name will be used to
+store it in the registry. When Luwra is used in a single executable or shared library, name
+collisions should not happen. If your application consists of multiple seperate compiled units, it
+is highly recommended to prevent name collisions by defining the `LUWRA_REGISTRY_PREFIX` macro
+before including the Luwra headers. This macro changes the prefix for auto-generated registry names.
+
+```c++
+#define LUWRA_REGISTRY_PREFIX "MyProject#"
+#include <luwra.hpp>
+```
+
+Another way to prevent collisons is to give each user type its individual registry name. This can be
+done using the `LUWRA_DEF_REGISTRY_NAME` macro.
+
+```c++
+struct MyUserType {
+    // ...
+};
+
+LUWRA_DEF_REGISTRY_NAME(MyUserType, "MyUserType")
+```
+
+Choosing this method will not prefix the registry name with the value of `LUWRA_REGISTRY_PREFIX`.
