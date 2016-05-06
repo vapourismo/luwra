@@ -308,6 +308,15 @@ luwra::push(lua, false);
 
 // Push a string
 luwra::push(lua, &quot;Hello World&quot;);
+
+// Push a table
+luwra::push(lua, luwra::FieldVector {
+    {&quot;one&quot;, 1},
+    {1, &quot;one&quot;},
+    {&quot;nested&quot;, luwra::FieldVector {
+        {&quot;more&quot;, &quot;fields&quot;}
+    }}
+});
 </code></pre>
 
 <p>This produces the following stack layout:</p>
@@ -322,23 +331,28 @@ luwra::push(lua, &quot;Hello World&quot;);
 <tbody>
 <tr>
 <td>1</td>
-<td>-4</td>
+<td>-5</td>
 <td><code>1338</code></td>
 </tr>
 <tr>
 <td>2</td>
-<td>-3</td>
+<td>-4</td>
 <td><code>13.37</code></td>
 </tr>
 <tr>
 <td>3</td>
-<td>-2</td>
+<td>-3</td>
 <td><code>false</code></td>
 </tr>
 <tr>
 <td>4</td>
-<td>-1</td>
+<td>-2</td>
 <td><code>"Hello World"</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td>-1</td>
+<td><code>{one = 1, [1] = "one", nested = {more = "fields"}}</code></td>
 </tr>
 </tbody>
 </table>
@@ -352,7 +366,7 @@ stack layout from the previous example. This is how you would retrieve a value f
 int value = luwra::read&lt;int&gt;(lua, 1);
 
 // Similiar with a relative index
-int value = luwra::read&lt;int&gt;(lua, -4);
+int value = luwra::read&lt;int&gt;(lua, -5);
 </code></pre>
 
 <h2 id="read-and-type-errors">Read and type errors</h2>

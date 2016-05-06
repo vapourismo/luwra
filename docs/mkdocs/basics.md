@@ -57,16 +57,26 @@ luwra::push(lua, false);
 
 // Push a string
 luwra::push(lua, "Hello World");
+
+// Push a table
+luwra::push(lua, luwra::FieldVector {
+	{"one", 1},
+	{1, "one"},
+	{"nested", luwra::FieldVector {
+		{"more", "fields"}
+	}}
+});
 ```
 
 This produces the following stack layout:
 
 Absolute Position | Relative Position | Value
 ------------------|-------------------|------
-1                 | -4                | `1338`
-2                 | -3                | `13.37`
-3                 | -2                | `false`
-4                 | -1                | `"Hello World"`
+1                 | -5                | `1338`
+2                 | -4                | `13.37`
+3                 | -3                | `false`
+4                 | -2                | `"Hello World"`
+5                 | -1                | `{one = 1, [1] = "one", nested = {more = "fields"}}`
 
 It is possible to provide a template parameter to `push` to enforce pushing a specific type.
 In most cases you are probably better off by letting the compiler infer the template parameter.
@@ -81,7 +91,7 @@ stack layout from the previous example. This is how you would retrieve a value f
 int value = luwra::read<int>(lua, 1);
 
 // Similiar with a relative index
-int value = luwra::read<int>(lua, -4);
+int value = luwra::read<int>(lua, -5);
 ```
 
 ## Read and type errors
