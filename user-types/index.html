@@ -214,16 +214,18 @@ generates a <code>std::pair&lt;Pushable, Pushable&gt;</code> expression.</p>
 
     // Methods need to be declared here
     {
-        {&quot;scale&quot;,       LUWRA_WRAP(Point::scale)},
-        {&quot;x&quot;,           LUWRA_WRAP(Point::x)},
-        {&quot;y&quot;,           LUWRA_WRAP(Point::y)},
-        {&quot;magicNumber&quot;, 1337},
-        {&quot;magicString&quot;, &quot;Hello World&quot;}
+        {&quot;scale&quot;, LUWRA_WRAP(Point::scale)},
+        {&quot;x&quot;,     LUWRA_WRAP(Point::x)},
+        {&quot;y&quot;,     LUWRA_WRAP(Point::y)},
+        {&quot;magic&quot;, luwra::FieldVector {
+            {&quot;number&quot;, 1337},
+            {&quot;string&quot;, &quot;Hello World&quot;}
+        }}
     },
 
     // Meta methods may be registered aswell
     {
-        LUWRA_MEMBER(Point, __tostring)
+        {&quot;__tostring&quot;, LUWRA_WRAP(Point::__tostring)}
     }
 );
 </code></pre>
@@ -236,15 +238,18 @@ and name from the call to <code>registerUserType</code>.</p>
 
     // Methods need to be declared here
     {
-        LUWRA_MEMBER(Point, scale),
-        LUWRA_MEMBER(Point, x),
-        LUWRA_MEMBER(Point, y),
-        {&quot;magicNumber&quot;, 1337}
+        {&quot;scale&quot;, LUWRA_WRAP(Point::scale)},
+        {&quot;x&quot;,     LUWRA_WRAP(Point::x)},
+        {&quot;y&quot;,     LUWRA_WRAP(Point::y)},
+        {&quot;magic&quot;, luwra::FieldVector {
+            {&quot;number&quot;, 1337},
+            {&quot;string&quot;, &quot;Hello World&quot;}
+        }}
     },
 
     // Meta methods may be registered aswell
     {
-        LUWRA_MEMBER(Point, __tostring)
+        {&quot;__tostring&quot;, LUWRA_WRAP(Point::__tostring)}
     }
 );
 </code></pre>
@@ -270,7 +275,7 @@ print(point)
 print(point:x(), point:y())
 
 -- Set property 'x'
-point:x(point.magicNumber)
+point:x(point.magic.number)
 </code></pre>
 
 <h2 id="manually-constructing-a-user-type">Manually constructing a user type</h2>
