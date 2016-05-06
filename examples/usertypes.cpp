@@ -43,8 +43,10 @@ int main() {
 			LUWRA_MEMBER(Point, scale),
 			LUWRA_MEMBER(Point, x),
 			LUWRA_MEMBER(Point, y),
-			{"magicNumber", 1337},
-			{"magicString", "Hello World"}
+			{"magic", luwra::FieldVector {
+				{"number", 1337},
+				{"string", "Hello World"}
+			}}
 		},
 		// Meta methods may be registered aswell
 		{
@@ -71,8 +73,8 @@ int main() {
 		"p:x(10)\n"
 		"print('p.x =', p:x())\n"
 
-		"print('magicNumber', p.magicNumber)\n"
-		"print('magicString', p.magicString)"
+		"print('magicNumber', p.magic.number)\n"
+		"print('magicString', p.magic.string)"
 	);
 
 	// Invoke the attached script

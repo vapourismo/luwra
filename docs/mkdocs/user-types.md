@@ -81,16 +81,18 @@ luwra::registerUserType<Point(double, double)>(
 
     // Methods need to be declared here
     {
-        {"scale",       LUWRA_WRAP(Point::scale)},
-        {"x",           LUWRA_WRAP(Point::x)},
-        {"y",           LUWRA_WRAP(Point::y)},
-        {"magicNumber", 1337},
-        {"magicString", "Hello World"}
+        {"scale", LUWRA_WRAP(Point::scale)},
+        {"x",     LUWRA_WRAP(Point::x)},
+        {"y",     LUWRA_WRAP(Point::y)},
+        {"magic", luwra::FieldVector {
+            {"number", 1337},
+            {"string", "Hello World"}
+        }}
     },
 
     // Meta methods may be registered aswell
     {
-        LUWRA_MEMBER(Point, __tostring)
+        {"__tostring", LUWRA_WRAP(Point::__tostring)}
     }
 );
 ```
@@ -105,15 +107,18 @@ luwra::registerUserType<Point>(
 
     // Methods need to be declared here
     {
-        LUWRA_MEMBER(Point, scale),
-        LUWRA_MEMBER(Point, x),
-        LUWRA_MEMBER(Point, y),
-        {"magicNumber", 1337}
+        {"scale", LUWRA_WRAP(Point::scale)},
+        {"x",     LUWRA_WRAP(Point::x)},
+        {"y",     LUWRA_WRAP(Point::y)},
+        {"magic", luwra::FieldVector {
+            {"number", 1337},
+            {"string", "Hello World"}
+        }}
     },
 
     // Meta methods may be registered aswell
     {
-        LUWRA_MEMBER(Point, __tostring)
+        {"__tostring", LUWRA_WRAP(Point::__tostring)}
     }
 );
 ```
@@ -143,7 +148,7 @@ print(point)
 print(point:x(), point:y())
 
 -- Set property 'x'
-point:x(point.magicNumber)
+point:x(point.magic.number)
 ```
 
 ## Manually constructing a user type
