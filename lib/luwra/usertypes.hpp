@@ -41,8 +41,12 @@ namespace internal {
 	template <typename T>
 	const int UserTypeReg<T>::id = INT_MAX;
 
+	#ifndef LUWRA_REGISTRY_PREFIX
+		#define LUWRA_REGISTRY_PREFIX "Luwra#"
+	#endif
+
 	template <typename T>
-	const std::string UserTypeReg<T>::name = "UD#" + std::to_string(uintptr_t(&id));
+	const std::string UserTypeReg<T>::name = LUWRA_REGISTRY_PREFIX + std::to_string(uintptr_t(&id));
 
 	/**
 	 * Register a new metatable for a user type T.
