@@ -8,8 +8,8 @@ double sum3(int a, int b, double c) {
 }
 
 int main() {
-	lua_State* state = luaL_newstate();
-	luaL_openlibs(state);
+	luwra::StateWrapper state;
+	state.loadStandardLibrary();
 
 	// Build stack
 	luwra::push(state, 13);
@@ -26,6 +26,5 @@ int main() {
 	          << luwra::apply(state, sum3)
 	          << std::endl;
 
-	lua_close(state);
 	return 0;
 }

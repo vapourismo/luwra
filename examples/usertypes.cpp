@@ -28,8 +28,8 @@ struct Point {
 LUWRA_DEF_REGISTRY_NAME(Point, "Point")
 
 int main() {
-	lua_State* state = luaL_newstate();
-	luaL_openlibs(state);
+	luwra::StateWrapper state;
+	state.loadStandardLibrary();
 
 	// Register our user type.
 	// This function also registers a garbage-collector hook and a string representation function.
@@ -79,11 +79,8 @@ int main() {
 	if (lua_pcall(state, 0, LUA_MULTRET, 0) != 0) {
 		const char* error_msg = lua_tostring(state, -1);
 		std::cerr << "An error occured: " << error_msg << std::endl;
-
-		lua_close(state);
 		return 1;
 	} else {
-		lua_close(state);
 		return 0;
 	}
 }

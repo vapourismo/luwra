@@ -41,8 +41,8 @@ void read_chars(char a, char b) {
 }
 
 int main() {
-	lua_State* state = luaL_newstate();
-	luaL_openlibs(state);
+	luwra::StateWrapper state;
+	state.loadStandardLibrary();
 
 	// Build stack
 	luwra::push(state, 'H');
@@ -56,6 +56,5 @@ int main() {
 	luwra::push(state, 'Y', 'o');
 	luwra::apply(state, read_chars);
 
-	lua_close(state);
 	return 0;
 }
