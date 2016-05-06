@@ -321,6 +321,15 @@ LUWRA_NS_END
 #define LUWRA_WRAP_CONSTRUCTOR(type, ...) \
 	(&luwra::internal::construct_user_type<luwra::internal::StripUserType<type>, __VA_ARGS__>)
 
+/**
+ * Define the registry name for a user type.
+ * \param type    User type
+ * \param regname Registry name
+ */
+#define LUWRA_DEF_REGISTRY_NAME(type, regname) \
+	template <> struct luwra::internal::UserTypeReg<type> { static const std::string name; }; \
+	const std::string luwra::internal::UserTypeReg<type>::name = (regname);
+
 #define LUWRA_FIELD(type, name) {__STRING(name), LUWRA_WRAP_FIELD(type::name)}
 #define LUWRA_METHOD(type, name) {__STRING(name), LUWRA_WRAP_METHOD(type::name)}
 #define LUWRA_FUNCTION(type, name) {__STRING(name), LUWRA_WRAP_FUNCTION(type::name)}

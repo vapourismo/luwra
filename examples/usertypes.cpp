@@ -25,6 +25,8 @@ struct Point {
 	}
 };
 
+LUWRA_DEF_REGISTRY_NAME(Point, "Point")
+
 int main() {
 	lua_State* state = luaL_newstate();
 	luaL_openlibs(state);
