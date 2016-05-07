@@ -57,6 +57,16 @@ struct GlobalAccessor {
 	operator V() {
 		return get<V>();
 	}
+
+	/**
+	 * Update the fields of an existing table.
+	 */
+	inline
+	void updateFields(const luwra::FieldVector& fields) {
+		lua_getglobal(state, key.c_str());
+		luwra::setFields(state, -1, fields);
+		lua_pop(state, 1);
+	}
 };
 
 /**
