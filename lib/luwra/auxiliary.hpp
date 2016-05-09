@@ -53,7 +53,7 @@ void setMetatable(State* state, const char* name) {
  */
 template <typename V> static inline
 void setGlobal(State* state, const std::string& name, V value) {
-	assert(1 == push(state, value));
+	push(state, value);
 	lua_setglobal(state, name.c_str());
 }
 
@@ -87,8 +87,8 @@ namespace internal {
 	struct EntryPusher<K, V> {
 		static inline
 		void push(State* state, int index, K&& key, V&& value) {
-			assert(1 == luwra::push(state, key));
-			assert(1 == luwra::push(state, value));
+			luwra::push(state, key);
+			luwra::push(state, value);
 			lua_rawset(state, index < 0 ? index - 2 : index);
 		}
 	};
@@ -150,7 +150,7 @@ V getField(State* state, int index, K key) {
 	if (index < 0)
 		index = lua_gettop(state) + (index + 1);
 
-	assert(push<K>(state, key) == 1);
+	push<K>(state, key);
 	lua_rawget(state, index);
 
 	V value = read<V>(state, -1);
