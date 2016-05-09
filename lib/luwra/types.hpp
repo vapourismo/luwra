@@ -256,6 +256,10 @@ struct Arbitrary {
 	 * Stack index
 	 */
 	int index;
+
+	Arbitrary(State* state, int index):
+		state(state), index(index < 0 ? lua_gettop(state) + (index + 1) : index)
+	{}
 };
 
 /**
