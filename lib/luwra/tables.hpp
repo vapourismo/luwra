@@ -153,7 +153,7 @@ struct Value<Table> {
 static inline
 Table getGlobalsTable(State* state) {
 #if LUA_VERSION_NUM <= 501
-	return {state, LUA_GLOBALSINDEX};
+	return {{state, internal::referenceValue(state, LUA_GLOBALSINDEX), false}};
 #else
 	return {{state, LUA_RIDX_GLOBALS, false}};
 #endif
