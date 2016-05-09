@@ -242,47 +242,122 @@ struct Value<CFunction> {
 	}
 };
 
+namespace internal {
+	// Create reference the value pointed to by `index`. Does not remove the referenced value.
+	static inline
+	int referenceValue(State* state, int index) {
+		lua_pushvalue(state, index);
+		return luaL_ref(state, LUA_REGISTRYINDEX);
+	}
+
+	// Implementation of a reference which takes care of the lifetime of a Lua reference
+	struct ReferenceImpl {
+		State* const state;
+		int const ref;
+
+		// Reference a value at an index.
+		inline
+		ReferenceImpl(State* state, int index):
+			state(state),
+			ref(referenceValue(state, index))
+		{}
+
+		// Reference the value on top of stack.
+		inline
+		ReferenceImpl(State* state):
+			state(state),
+			ref(luaL_ref(state, LUA_REGISTRYINDEX))
+		{}
+
+		// A (smart) pointer to an instance may be copied and moved, but the instance itself must
+		// not be copied or moved. This allows us to have only one instance of `ReferenceImpl` per
+		// Lua reference.
+		ReferenceImpl(const ReferenceImpl& other) = delete;
+		ReferenceImpl(ReferenceImpl&& other) = delete;
+
+		inline
+		~ReferenceImpl() {
+			if (ref >= 0) luaL_unref(state, LUA_REGISTRYINDEX, ref);
+		}
+
+		// Small shortcut to make the `push`-implementations for `Table` and `Reference` consistent,
+		// since both use this struct internally.
+		inline
+		size_t push(State* targetState) {
+			lua_rawgeti(state, LUA_REGISTRYINDEX, ref);
+
+			if (state != targetState)
+				lua_xmove(state, targetState, 1);
+
+			return 1;
+		}
+
+		inline
+		size_t push() {
+			lua_rawgeti(state, LUA_REGISTRYINDEX, ref);
+			return 1;
+		}
+	};
+
+	using SharedReferenceImpl = std::shared_ptr<internal::ReferenceImpl>;
+}
+
 /**
- * An arbitrary value on an execution stack.
- * Note: this value is only available as long as it exists on its originating stack.
+ * Reference to an arbitrary value.
  */
-struct Arbitrary {
-	/**
-	 * Originating Lua state
-	 */
-	State* state;
+struct Reference {
+	const internal::SharedReferenceImpl impl;
 
 	/**
-	 * Stack index
+	 * Create a reference to the value at the given index.
 	 */
-	int index;
-
-	Arbitrary(State* state, int index):
-		state(state), index(index < 0 ? lua_gettop(state) + (index + 1) : index)
+	inline
+	Reference(State* state, int index):
+		impl(std::make_shared<internal::ReferenceImpl>(state, index))
 	{}
+
+	/**
+	 * Create a reference to the value at the top of the stack.
+	 */
+	inline
+	Reference(State* state):
+		impl(std::make_shared<internal::ReferenceImpl>(state))
+	{}
+
+	/**
+	 * Read the referenced value.
+	 */
+	template <typename T> inline
+	T read() {
+		size_t pushed = impl->push();
+		T ret = Value<T>::read(impl->state, -1);
+
+		lua_pop(impl->state, pushed);
+		return ret;
+	}
+
+	/**
+	 * Shortcut for `read<T>()`.
+	 */
+	template <typename T> inline
+	operator T() {
+		return read<T>();
+	}
 };
 
 /**
- * See [Arbitrary](@ref Arbitrary).
+ * See [Reference](@ref Reference).
  */
 template <>
-struct Value<Arbitrary> {
+struct Value<Reference> {
 	static inline
-	Arbitrary read(State* state, int index) {
-		if (index < 0)
-			index = lua_gettop(state) + (index + 1);
-
-		return Arbitrary {state, index};
+	Reference read(State* state, int index) {
+		return {state, index};
 	}
 
 	static inline
-	size_t push(State* state, const Arbitrary& value) {
-		lua_pushvalue(value.state, value.index);
-
-		if (value.state != state)
-			lua_xmove(value.state, state, 1);
-
-		return 1;
+	size_t push(State* state, const Reference& value) {
+		return value.impl->push(state);
 	}
 };
 

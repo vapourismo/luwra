@@ -40,20 +40,20 @@ namespace internal {
  * \note This value is only available as long as it exists on the stack.
  */
 template <typename R>
-struct NativeFunction: Arbitrary {
+struct NativeFunction: Reference {
 	NativeFunction(State* state, int index):
-		Arbitrary(state, index)
+		Reference(state, index)
 	{}
 
 	template <typename... A> inline
 	R operator ()(A&&... args) {
-		push<Arbitrary>(state, *this);
-		size_t numArgs = push(state, std::forward<A>(args)...);
+		impl->push();
+		size_t numArgs = push(impl->state, std::forward<A>(args)...);
 
-		lua_call(state, numArgs, 1);
-		R returnValue = read<R>(state, -1);
+		lua_call(impl->state, numArgs, 1);
+		R returnValue = Value<R>::read(impl->state, -1);
 
-		lua_pop(state, 1);
+		lua_pop(impl->state, 1);
 		return returnValue;
 	}
 };
@@ -63,17 +63,17 @@ struct NativeFunction: Arbitrary {
  * \note This value is only available as long as it exists on the stack.
  */
 template <>
-struct NativeFunction<void>: Arbitrary {
+struct NativeFunction<void>: Reference {
 	NativeFunction(State* state, int index):
-		Arbitrary(state, index)
+		Reference(state, index)
 	{}
 
 	template <typename... A> inline
 	void operator ()(A&&... args) {
-		push<Arbitrary>(state, *this);
-		size_t numArgs = push(state, std::forward<A>(args)...);
+		impl->push();
+		size_t numArgs = push(impl->state, std::forward<A>(args)...);
 
-		lua_call(state, numArgs, 0);
+		lua_call(impl->state, numArgs, 0);
 	}
 };
 
