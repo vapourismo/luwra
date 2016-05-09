@@ -28,7 +28,7 @@ struct StateWrapper: Table {
 	 */
 	inline
 	StateWrapper(State* state):
-		Table({state, LUA_RIDX_GLOBALS, false}),
+		Table(getGlobalsTable(state)),
 		state(state),
 		close_state(false)
 	{}
@@ -38,7 +38,7 @@ struct StateWrapper: Table {
 	 */
 	inline
 	StateWrapper():
-		Table({luaL_newstate(), LUA_RIDX_GLOBALS, false}),
+		Table(getGlobalsTable(luaL_newstate())),
 		state(ref.impl->state),
 		close_state(true)
 	{}

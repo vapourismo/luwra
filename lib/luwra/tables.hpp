@@ -145,6 +145,20 @@ struct Value<Table> {
 	}
 };
 
+/**
+ * Retrieve the table containing all global values.
+ * \param state Lua state
+ * \returns Reference to the globals table.
+ */
+static inline
+Table getGlobalsTable(State* state) {
+#if LUA_VERSION_NUM <= 501
+	return {state, LUA_GLOBALSINDEX};
+#else
+	return {{state, LUA_RIDX_GLOBALS, false}};
+#endif
+}
+
 LUWRA_NS_END
 
 #endif
