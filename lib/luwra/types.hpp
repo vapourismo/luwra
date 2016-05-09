@@ -254,13 +254,15 @@ namespace internal {
 	// Implementation of a reference which takes care of the lifetime of a Lua reference
 	struct ReferenceImpl {
 		State* const state;
-		int const ref;
+		const int ref;
+		bool autoUnref = true;
 
 		// Reference a value at an index.
 		inline
-		ReferenceImpl(State* state, int index):
+		ReferenceImpl(State* state, int indexOrRef, bool isIndex = true):
 			state(state),
-			ref(referenceValue(state, index))
+			ref(isIndex ? referenceValue(state, indexOrRef) : indexOrRef),
+			autoUnref(isIndex)
 		{}
 
 		// Reference the value on top of stack.
@@ -278,7 +280,7 @@ namespace internal {
 
 		inline
 		~ReferenceImpl() {
-			if (ref >= 0) luaL_unref(state, LUA_REGISTRYINDEX, ref);
+			if (ref >= 0 && autoUnref) luaL_unref(state, LUA_REGISTRYINDEX, ref);
 		}
 
 		// Small shortcut to make the `push`-implementations for `Table` and `Reference` consistent,
@@ -313,8 +315,8 @@ struct Reference {
 	 * Create a reference to the value at the given index.
 	 */
 	inline
-	Reference(State* state, int index):
-		impl(std::make_shared<internal::ReferenceImpl>(state, index))
+	Reference(State* state, int indexOrRef, bool isIndex = true):
+		impl(std::make_shared<internal::ReferenceImpl>(state, indexOrRef, isIndex))
 	{}
 
 	/**
@@ -353,7 +355,7 @@ template <>
 struct Value<Reference> {
 	static inline
 	Reference read(State* state, int index) {
-		return {state, index};
+		return {state, index, true};
 	}
 
 	static inline
