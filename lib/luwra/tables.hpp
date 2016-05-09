@@ -11,8 +11,6 @@
 #include "types.hpp"
 #include "auxiliary.hpp"
 
-#include <iostream>
-
 LUWRA_NS_BEGIN
 
 namespace internal {
@@ -69,15 +67,17 @@ struct Table {
 	template <typename V, typename K> inline
 	V get(K&& key) {
 		State* state = ref.impl->state;
+
 		push(state, ref);
 
 		size_t pushedKeys = push(state, key);
 		if (pushedKeys > 1) lua_pop(state, pushedKeys - 1);
 
 		lua_rawget(state, -2);
-		lua_remove(state, -2);
+		V ret = read<V>(state, -1);
 
-		return read<V>(state, -1);
+		lua_pop(state, 2);
+		return ret;
 	}
 };
 
