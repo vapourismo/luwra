@@ -35,26 +35,19 @@ namespace internal {
 	struct FunctionWrapper<R(*)(A...)>: FunctionWrapper<R(A...)> {};
 }
 
-template <typename S>
-struct NativeFunction {
-	static_assert(
-		sizeof(S) == -1,
-		"Parameter to NativeFunction is not a valid signature"
-	);
-};
-
 /**
  * A callable native Lua function.
  * \note This value is only available as long as it exists on the stack.
  */
-template <typename R, typename... A>
-struct NativeFunction<R(A...)> {
-	State* state;
-	int index;
+template <typename R>
+struct NativeFunction: Arbitrary {
+	NativeFunction(State* state, int index):
+		Arbitrary(state, index)
+	{}
 
-	inline
+	template <typename... A> inline
 	R operator ()(A&&... args) {
-		lua_pushvalue(state, index);
+		push<Arbitrary>(state, *this);
 		size_t numArgs = push(state, std::forward<A>(args)...);
 
 		lua_call(state, numArgs, 1);
@@ -69,26 +62,27 @@ struct NativeFunction<R(A...)> {
  * A callable native Lua function.
  * \note This value is only available as long as it exists on the stack.
  */
-template <typename... A>
-struct NativeFunction<void(A...)> {
-	State* state;
-	int index;
+template <>
+struct NativeFunction<void>: Arbitrary {
+	NativeFunction(State* state, int index):
+		Arbitrary(state, index)
+	{}
 
-	inline
+	template <typename... A> inline
 	void operator ()(A&&... args) {
-		lua_pushvalue(state, index);
+		push<Arbitrary>(state, *this);
 		size_t numArgs = push(state, std::forward<A>(args)...);
 
 		lua_call(state, numArgs, 0);
 	}
 };
 
-template <typename R, typename... A>
-struct Value<NativeFunction<R(A...)>> {
+template <typename R>
+struct Value<NativeFunction<R>> {
 	static inline
-	NativeFunction<R(A...)> read(State* state, int index) {
+	NativeFunction<R> read(State* state, int index) {
 		luaL_checktype(state, index, LUA_TFUNCTION);
-		return {state, index};
+		return NativeFunction<R>(state, index);
 	}
 };
 
