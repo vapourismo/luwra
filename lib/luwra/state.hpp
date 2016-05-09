@@ -46,16 +46,16 @@ struct GlobalAccessor {
 	 * Retrieve the associated value.
 	 */
 	template <typename V> inline
-	V get() {
+	V read() {
 		return getGlobal<V>(state, key);
 	}
 
 	/**
-	 * Shortcut for `get()`
+	 * Shortcut for `read()`
 	 */
 	template <typename V> inline
 	operator V() {
-		return get<V>();
+		return read<V>();
 	}
 
 	/**
