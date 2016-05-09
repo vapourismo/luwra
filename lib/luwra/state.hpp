@@ -9,6 +9,7 @@
 
 #include "common.hpp"
 #include "auxiliary.hpp"
+#include "tables.hpp"
 
 #include <string>
 #include <utility>
@@ -16,63 +17,9 @@
 LUWRA_NS_BEGIN
 
 /**
- * Accessor for an entry in the global namespace
- */
-struct GlobalAccessor {
-	State* state;
-	std::string key;
-
-	inline
-	GlobalAccessor(State* state, const std::string& key): state(state), key(key) {}
-
-	/**
-	 * Assign a new value.
-	 */
-	template <typename V> inline
-	GlobalAccessor& set(V value) {
-		setGlobal(state, key, value);
-		return *this;
-	}
-
-	/**
-	 * Shortcut for `set()`
-	 */
-	template <typename V> inline
-	GlobalAccessor& operator =(V value) {
-		return set<V>(value);
-	}
-
-	/**
-	 * Retrieve the associated value.
-	 */
-	template <typename V> inline
-	V read() {
-		return getGlobal<V>(state, key);
-	}
-
-	/**
-	 * Shortcut for `read()`
-	 */
-	template <typename V> inline
-	operator V() {
-		return read<V>();
-	}
-
-	/**
-	 * Update the fields of an existing table.
-	 */
-	inline
-	void updateFields(const luwra::FieldVector& fields) {
-		lua_getglobal(state, key.c_str());
-		luwra::setFields(state, -1, fields);
-		lua_pop(state, 1);
-	}
-};
-
-/**
  * Wrapper for a Lua state
  */
-struct StateWrapper {
+struct StateWrapper: Table {
 	State* state;
 	bool close_state;
 
@@ -80,13 +27,21 @@ struct StateWrapper {
 	 * Operate on a foreign state instance.
 	 */
 	inline
-	StateWrapper(State* state): state(state), close_state(false) {}
+	StateWrapper(State* state):
+		Table({state, LUA_RIDX_GLOBALS, false}),
+		state(state),
+		close_state(false)
+	{}
 
 	/**
 	 * Create a new Lua state.
 	 */
 	inline
-	StateWrapper(): state(luaL_newstate()), close_state(true) {}
+	StateWrapper():
+		Table({luaL_newstate(), LUA_RIDX_GLOBALS, false}),
+		state(ref.impl->state),
+		close_state(true)
+	{}
 
 	inline
 	~StateWrapper() {
@@ -102,30 +57,6 @@ struct StateWrapper {
 	inline
 	void loadStandardLibrary() {
 		luaL_openlibs(state);
-	}
-
-	/**
-	 * Retrieve a global value.
-	 */
-	template <typename V> inline
-	V getGlobal(const std::string& key) const {
-		return ::luwra::getGlobal<V>(state, key);
-	}
-
-	/**
-	 * Assign a global value.
-	 */
-	template <typename V> inline
-	void setGlobal(const std::string& key, V value) const {
-		::luwra::setGlobal(state, key, value);
-	}
-
-	/**
-	 * Create an accessor to a global value.
-	 */
-	inline
-	GlobalAccessor operator [](const std::string& key) const {
-		return GlobalAccessor(state, key);
 	}
 
 	/**

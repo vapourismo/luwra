@@ -3,6 +3,7 @@
 
 #include "luwra/common.hpp"
 #include "luwra/types.hpp"
+#include "luwra/tables.hpp"
 #include "luwra/stack.hpp"
 #include "luwra/auxiliary.hpp"
 #include "luwra/functions.hpp"
