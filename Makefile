@@ -12,7 +12,7 @@ TEST_OBJS       := $(TEST_SRCS:%.cpp=$(TEST_DIR)/%.o)
 
 # Example artifacts
 EXAMPLE_DIR     := examples
-EXAMPLE_SRCS    := types.cpp stack.cpp functions.cpp usertypes.cpp state.cpp
+EXAMPLE_SRCS    := types.cpp stack.cpp functions.cpp usertypes.cpp state.cpp tables.cpp
 EXAMPLE_DEPS    := $(EXAMPLE_SRCS:%.cpp=$(EXAMPLE_DIR)/%.d)
 EXAMPLE_OBJS    := $(EXAMPLE_SRCS:%.cpp=$(EXAMPLE_DIR)/%.out)
 
