@@ -119,8 +119,7 @@ namespace internal {
  */
 template <typename U>
 struct Value<U&> {
-	using X = internal::StripUserType<U>;
-	using T = typename std::conditional<std::is_function<U>::value && !std::is_pointer<U>::value, U*, U>::type;
+	using T = internal::StripUserType<U>;
 	
 	/**
 	 * Reference a user type value on the stack.
@@ -218,7 +217,7 @@ struct Value<U*> {
 	 * \returns Number of values that have been pushed
 	 */
 	static inline
-	size_t push(State* state, T* ptr) {
+	size_t push(State* state, const T* ptr) {
 		return Value<T&>::push(state, *ptr);
 	}
 };
@@ -321,8 +320,8 @@ LUWRA_NS_END
 	} \
 	LUWRA_NS_END
 
-#define LUWRA_FIELD(type, name) {__STRING(name), LUWRA_WRAP_FIELD(type::name)}
-#define LUWRA_METHOD(type, name) {__STRING(name), LUWRA_WRAP_METHOD(type::name)}
-#define LUWRA_FUNCTION(type, name) {__STRING(name), LUWRA_WRAP_FUNCTION(type::name)}
+#define LUWRA_FIELD(type, name) {#name), LUWRA_WRAP_FIELD(type::##name)}
+#define LUWRA_METHOD(type, name) {#name), LUWRA_WRAP_METHOD(type::##name)}
+#define LUWRA_FUNCTION(type, name) {#name), LUWRA_WRAP_FUNCTION(type::##name)}
 
 #endif
