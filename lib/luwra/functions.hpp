@@ -50,7 +50,7 @@ struct NativeFunction: Reference {
 		impl->push();
 		size_t numArgs = push(impl->state, std::forward<A>(args)...);
 
-		lua_call(impl->state, numArgs, 1);
+		lua_call(impl->state, static_cast<int>(numArgs), 1);
 		R returnValue = Value<R>::read(impl->state, -1);
 
 		lua_pop(impl->state, 1);
@@ -73,7 +73,7 @@ struct NativeFunction<void>: Reference {
 		impl->push();
 		size_t numArgs = push(impl->state, std::forward<A>(args)...);
 
-		lua_call(impl->state, numArgs, 0);
+		lua_call(impl->state, static_cast<int>(numArgs), 0);
 	}
 };
 

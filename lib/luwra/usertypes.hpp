@@ -327,8 +327,8 @@ LUWRA_NS_END
 	} \
 	LUWRA_NS_END
 
-#define LUWRA_FIELD(type, name) {__STRING(name), LUWRA_WRAP_FIELD(type::name)}
-#define LUWRA_METHOD(type, name) {__STRING(name), LUWRA_WRAP_METHOD(type::name)}
-#define LUWRA_FUNCTION(type, name) {__STRING(name), LUWRA_WRAP_FUNCTION(type::name)}
+#define LUWRA_FIELD(type, name) {#name), LUWRA_WRAP_FIELD(type::##name)}
+#define LUWRA_METHOD(type, name) {#name), LUWRA_WRAP_METHOD(type::##name)}
+#define LUWRA_FUNCTION(type, name) {#name), LUWRA_WRAP_FUNCTION(type::##name)}
 
 #endif

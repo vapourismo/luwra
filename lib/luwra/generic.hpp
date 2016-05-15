@@ -60,12 +60,8 @@ LUWRA_NS_END
 #define LUWRA_WRAP(entity) \
 	(&luwra::internal::GenericWrapper<decltype(&entity)>::template invoke<&entity>)
 
-#ifdef _MSC_VER // Because VS C++
-	#define LUWRA_MEMBER(type, name) \
-		{#name, LUWRA_WRAP(##type::##name)}
-#else
-	#define LUWRA_MEMBER(type, name) \
-		{__STRING(name), LUWRA_WRAP(type::name)}
-#endif
+// This verions is standard and works with every compiler
+#define LUWRA_MEMBER(type, name) \
+	{#name, LUWRA_WRAP(type::##name)}
 
 #endif
