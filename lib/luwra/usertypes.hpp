@@ -47,7 +47,8 @@ namespace internal {
 	#endif
 
 	template <typename T>
-	const std::string UserTypeReg<T>::name = LUWRA_REGISTRY_PREFIX + std::to_string(uintptr_t(&id));
+	const std::string UserTypeReg<T>::name =
+		LUWRA_REGISTRY_PREFIX + std::to_string(uintptr_t(&id));
 
 	/**
 	 * Register a new metatable for a user type T.
@@ -64,7 +65,9 @@ namespace internal {
 	template <typename U> static inline
 	StripUserType<U>* check_user_type(State* state, int index) {
 		using T = StripUserType<U>;
-		return static_cast<T*>(luaL_checkudata(state, index, UserTypeReg<T>::name.c_str()));
+		return static_cast<T*>(
+			luaL_checkudata(state, index, UserTypeReg<T>::name.c_str())
+		);
 	}
 
 	/**
@@ -80,11 +83,13 @@ namespace internal {
 	 */
 	template <typename U, typename... A> static inline
 	int construct_user_type(State* state) {
-		return static_cast<int>(direct<size_t (A...)>(
-			state,
-			&Value<StripUserType<U>&>::template push<A...>,
-			state
-		));
+		return static_cast<int>(
+			direct<size_t (A...)>(
+				state,
+				&Value<StripUserType<U>&>::template push<A...>,
+				state
+			)
+		);
 	}
 
 	/**
@@ -105,12 +110,14 @@ namespace internal {
 	int stringify_user_type(State* state) {
 		using T = StripUserType<U>;
 
-		return static_cast<int>(push(
-			state,
-			internal::UserTypeReg<T>::name
-				+ "@"
-				+ std::to_string(uintptr_t(Value<T*>::read(state, 1)))
-		));
+		return static_cast<int>(
+			push(
+				state,
+				internal::UserTypeReg<T>::name
+					+ "@"
+					+ std::to_string(uintptr_t(Value<T*>::read(state, 1)))
+			)
+		);
 	}
 }
 
@@ -119,9 +126,8 @@ namespace internal {
  */
 template <typename U>
 struct Value<U&> {
-	using X = internal::StripUserType<U>;
-	using T = typename std::conditional<std::is_function<U>::value && !std::is_pointer<U>::value, U*, U>::type;
-	
+	using T = internal::StripUserType<U>;
+
 	/**
 	 * Reference a user type value on the stack.
 	 * \param state Lua state
@@ -218,7 +224,7 @@ struct Value<U*> {
 	 * \returns Number of values that have been pushed
 	 */
 	static inline
-	size_t push(State* state, T* ptr) {
+	size_t push(State* state, const T* ptr) {
 		return Value<T&>::push(state, *ptr);
 	}
 };

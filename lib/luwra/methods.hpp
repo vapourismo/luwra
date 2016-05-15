@@ -38,7 +38,9 @@ namespace internal {
 
 		template <MethodPointerType meth> static inline
 		int invoke(State* state) {
-			return static_cast<int>(map<FunctionSignature>(state, hook<meth>));
+			return static_cast<int>(
+				map<FunctionSignature>(state, hook<meth>)
+			);
 		}
 	};
 
@@ -55,7 +57,9 @@ namespace internal {
 
 		template <MethodPointerType meth> static inline
 		int invoke(State* state) {
-			return static_cast<int>(map<FunctionSignature>(state, hook<meth>));
+			return static_cast<int>(
+				map<FunctionSignature>(state, hook<meth>)
+			);
 		}
 	};
 
@@ -72,7 +76,9 @@ namespace internal {
 
 		template <MethodPointerType meth> static inline
 		int invoke(State* state) {
-			return map<FunctionSignature>(state, hook<meth>);
+			return static_cast<int>(
+				map<FunctionSignature>(state, hook<meth>)
+			);
 		}
 	};
 
@@ -89,7 +95,9 @@ namespace internal {
 
 		template <MethodPointerType meth> static inline
 		int invoke(State* state) {
-			return static_cast<int>(map<FunctionSignature>(state, hook<meth>));
+			return static_cast<int>(
+				map<FunctionSignature>(state, hook<meth>)
+			);
 		}
 	};
 }

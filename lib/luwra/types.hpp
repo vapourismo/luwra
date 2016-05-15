@@ -96,34 +96,34 @@ T read(State* state, int index) {
  * extracts it from the stack and a `pushf(State*, type)` which pushes the value on the stack again.
  * This assumes that only one value will be pushed onto the stack.
  */
-#define LUWRA_DEF_VALUE(type, retrf, pushf)                            \
-	template <>                                                       \
-	struct Value<type> {                                              \
-		static inline                                                \
-		type read(State* state, int n) {                             \
-			return static_cast<type>(retrf(state, n));              \
-		}                                                            \
-                                                                       \
-		static inline                                                \
-		size_t push(State* state, type value) {                      \
-			pushf(state, value);                                    \
-			return 1;                                               \
-		}                                                            \
+#define LUWRA_DEF_VALUE(type, retrf, pushf)             \
+	template <>                                         \
+	struct Value<type> {                                \
+		static inline                                   \
+		type read(State* state, int n) {                \
+			return static_cast<type>(retrf(state, n));  \
+		}                                               \
+		                                                \
+		static inline                                   \
+		size_t push(State* state, type value) {         \
+			pushf(state, value);                        \
+			return 1;                                   \
+		}                                               \
 	}
 
-#define LUWRA_DEF_VALUE_BOOL(type, retrf, pushf)                       \
-	template <>                                                       \
-	struct Value<type> {                                              \
-		static inline                                                \
-		type read(State* state, int n) {                             \
-			return retrf(state, n) == 1;              \
-		}                                                            \
-                                                                       \
-		static inline                                                \
-		size_t push(State* state, type value) {                      \
-			pushf(state, value);                                    \
-			return 1;                                               \
-		}                                                            \
+#define LUWRA_DEF_VALUE_BOOL(type, retrf, pushf)        \
+	template <>                                         \
+	struct Value<type> {                                \
+		static inline                                   \
+		type read(State* state, int n) {                \
+			return retrf(state, n) == 1;                \
+		}                                               \
+		                                                \
+		static inline                                   \
+		size_t push(State* state, type value) {         \
+			pushf(state, value);                        \
+			return 1;                                   \
+		}                                               \
 	}
 
 #ifndef luaL_checkboolean
