@@ -60,8 +60,7 @@ LUWRA_NS_END
 #define LUWRA_WRAP(entity) \
 	(&luwra::internal::GenericWrapper<decltype(&entity)>::template invoke<&entity>)
 
-// This verions is standard and works with every compiler
 #define LUWRA_MEMBER(type, name) \
-	{#name, LUWRA_WRAP(type::##name)}
+	{#name, LUWRA_WRAP(__LUWRA_NS_RESOLVE(type, name))}
 
 #endif

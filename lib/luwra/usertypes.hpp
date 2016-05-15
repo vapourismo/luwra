@@ -327,8 +327,13 @@ LUWRA_NS_END
 	} \
 	LUWRA_NS_END
 
-#define LUWRA_FIELD(type, name) {#name), LUWRA_WRAP_FIELD(type::##name)}
-#define LUWRA_METHOD(type, name) {#name), LUWRA_WRAP_METHOD(type::##name)}
-#define LUWRA_FUNCTION(type, name) {#name), LUWRA_WRAP_FUNCTION(type::##name)}
+#define LUWRA_FIELD(type, name) \
+	{#name, LUWRA_WRAP_FIELD(__LUWRA_NS_RESOLVE(type, name))}
+
+#define LUWRA_METHOD(type, name) \
+	{#name, LUWRA_WRAP_METHOD(__LUWRA_NS_RESOLVE(type, name))}
+
+#define LUWRA_FUNCTION(type, name) \
+	{#name, LUWRA_WRAP_FUNCTION(__LUWRA_NS_RESOLVE(type, name))}
 
 #endif

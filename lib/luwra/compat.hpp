@@ -31,4 +31,10 @@ namespace internal {
 
 LUWRA_NS_END
 
+#ifdef _MSC_VER // Because VS C++
+	#define __LUWRA_NS_RESOLVE(a, b) a::##b
+#else
+	#define __LUWRA_NS_RESOLVE(a, b) a::b
+#endif
+
 #endif
