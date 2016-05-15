@@ -64,13 +64,12 @@ LUWRA_NS_END
 #define LUWRA_WRAP(entity) \
 	(&luwra::internal::GenericWrapper<decltype(&entity)>::template invoke<&entity>)
 
-/**
- * Generate a user type member manifest (pair).
- * \param type Qualified struct/class name
- * \param name Member name
- * \returns `std::pair<const char*, CFunction>` which can be used to register a user type member
- */
-#define LUWRA_MEMBER(type, name) \
-	{__STRING(name), LUWRA_WRAP(##type::##name)}
+#ifdef _MSC_VER // Because VS C++
+	#define LUWRA_MEMBER(type, name) \
+		{#name, LUWRA_WRAP(##type::##name)}
+#else
+	#define LUWRA_MEMBER(type, name) \
+		{__STRING(name), LUWRA_WRAP(type::name)}
+#endif
 
 #endif
