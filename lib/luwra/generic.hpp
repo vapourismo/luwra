@@ -53,10 +53,6 @@ namespace internal {
 
 LUWRA_NS_END
 
-#ifdef _MSC_VER
-#define __STRING( x ) #x
-#endif // VC++ doesn't have __STRING
-
 /**
  * Generate a `lua_CFunction` wrapper for a field, method or function.
  * \returns Wrapped entity as `lua_CFunction`
