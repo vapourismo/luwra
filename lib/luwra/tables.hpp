@@ -49,6 +49,22 @@ struct Table {
 		lua_pop(state, 1);
 	}
 
+	template <typename K> inline
+	bool has(K&& key) {
+		State* state = ref.impl->state;
+
+		push(state, ref);
+
+		size_t pushedKeys = push(state, key);
+		if (pushedKeys > 1) lua_pop(state, pushedKeys - 1);
+
+		lua_rawget(state, -2);
+		bool isNil = lua_isnil(state, -1);
+
+		lua_pop(state, 2);
+		return !isNil;
+	}
+
 	template <typename V, typename K> inline
 	void set(K&& key, V&& value) {
 		State* state = ref.impl->state;
