@@ -24,9 +24,9 @@ LUWRA_NS_BEGIN
 static inline
 bool equal(State* state, int index1, int index2) {
 #if LUA_VERSION_NUM <= 501
-	return lua_equal(state, index1, index2);
+	return lua_equal(state, index1, index2) == 1;
 #else
-	return lua_compare(state, index1, index2, LUA_OPEQ);
+	return lua_compare(state, index1, index2, LUA_OPEQ) == 1;
 #endif
 }
 

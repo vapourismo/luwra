@@ -7,11 +7,6 @@
 #ifndef LUWRA_COMMON_H_
 #define LUWRA_COMMON_H_
 
-// Check C++ version
-#if !defined(__cplusplus) || __cplusplus < 201103L
-	#error You need a C++11 compliant compiler
-#endif
-
 extern "C" {
 	#include <lua.h>
 	#include <lualib.h>

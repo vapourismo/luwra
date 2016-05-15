@@ -71,10 +71,10 @@ struct Table {
 		push(state, ref);
 
 		size_t pushedKeys = push(state, key);
-		if (pushedKeys > 1) lua_pop(state, pushedKeys - 1);
+		if (pushedKeys > 1) lua_pop(state, static_cast<int>(pushedKeys - 1));
 
 		size_t pushedValues = push(state, value);
-		if (pushedValues > 1) lua_pop(state, pushedValues - 1);
+		if (pushedValues > 1) lua_pop(state, static_cast<int>(pushedValues - 1));
 
 		lua_rawset(state, -3);
 		lua_pop(state, 1);
@@ -87,7 +87,7 @@ struct Table {
 		push(state, ref);
 
 		size_t pushedKeys = push(state, key);
-		if (pushedKeys > 1) lua_pop(state, pushedKeys - 1);
+		if (pushedKeys > 1) lua_pop(state, static_cast<int>(pushedKeys - 1));
 
 		lua_rawget(state, -2);
 		V ret = read<V>(state, -1);

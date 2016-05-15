@@ -96,18 +96,33 @@ T read(State* state, int index) {
  * extracts it from the stack and a `pushf(State*, type)` which pushes the value on the stack again.
  * This assumes that only one value will be pushed onto the stack.
  */
-#define LUWRA_DEF_VALUE(type, retrf, pushf)                          \
-	template <>                                                      \
-	struct Value<type> {                                             \
+#define LUWRA_DEF_VALUE(type, retrf, pushf)                            \
+	template <>                                                       \
+	struct Value<type> {                                              \
 		static inline                                                \
 		type read(State* state, int n) {                             \
-			return retrf(state, n);                                  \
+			return static_cast<type>(retrf(state, n));              \
 		}                                                            \
-                                                                     \
+                                                                       \
 		static inline                                                \
 		size_t push(State* state, type value) {                      \
-			pushf(state, value);                                     \
-			return 1;                                                \
+			pushf(state, value);                                    \
+			return 1;                                               \
+		}                                                            \
+	}
+
+#define LUWRA_DEF_VALUE_BOOL(type, retrf, pushf)                       \
+	template <>                                                       \
+	struct Value<type> {                                              \
+		static inline                                                \
+		type read(State* state, int n) {                             \
+			return retrf(state, n) == 1;              \
+		}                                                            \
+                                                                       \
+		static inline                                                \
+		size_t push(State* state, type value) {                      \
+			pushf(state, value);                                    \
+			return 1;                                               \
 		}                                                            \
 	}
 
@@ -215,7 +230,7 @@ LUWRA_DEF_NUMERIC(Integer, signed   long long int)
 LUWRA_DEF_NUMERIC(Integer, unsigned long long int)
 
 // C/C++ types
-LUWRA_DEF_VALUE(bool,        luaL_checkboolean, lua_pushboolean);
+LUWRA_DEF_VALUE_BOOL(bool,   luaL_checkboolean, lua_pushboolean);
 LUWRA_DEF_VALUE(const char*, luaL_checkstring,  lua_pushstring);
 LUWRA_DEF_VALUE(std::string, luaL_checkstring,  luaL_pushstdstring);
 
