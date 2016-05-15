@@ -80,11 +80,11 @@ namespace internal {
 	 */
 	template <typename U, typename... A> static inline
 	int construct_user_type(State* state) {
-		return direct<size_t (A...)>(
+		return static_cast<int>(direct<size_t (A...)>(
 			state,
 			&Value<StripUserType<U>&>::template push<A...>,
 			state
-		);
+		));
 	}
 
 	/**
@@ -105,12 +105,12 @@ namespace internal {
 	int stringify_user_type(State* state) {
 		using T = StripUserType<U>;
 
-		return push(
+		return static_cast<int>(push(
 			state,
 			internal::UserTypeReg<T>::name
 				+ "@"
 				+ std::to_string(uintptr_t(Value<T*>::read(state, 1)))
-		);
+		));
 	}
 }
 
@@ -119,8 +119,9 @@ namespace internal {
  */
 template <typename U>
 struct Value<U&> {
-	using T = internal::StripUserType<U>;
-
+	using X = internal::StripUserType<U>;
+	using T = typename std::conditional<std::is_function<U>::value && !std::is_pointer<U>::value, U*, U>::type;
+	
 	/**
 	 * Reference a user type value on the stack.
 	 * \param state Lua state
@@ -217,7 +218,7 @@ struct Value<U*> {
 	 * \returns Number of values that have been pushed
 	 */
 	static inline
-	size_t push(State* state, const T* ptr) {
+	size_t push(State* state, T* ptr) {
 		return Value<T&>::push(state, *ptr);
 	}
 };
@@ -281,7 +282,7 @@ namespace internal {
 }
 
 /**
- * Same as the other `registerUserType` but registers the construtor as well. The template parameter
+ * Same as the other `registerUserType` but registers the constructor as well. The template parameter
  * is a signature `U(A...)` where `U` is the user type and `A...` its constructor parameters.
  */
 template <typename T> static inline
