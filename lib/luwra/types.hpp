@@ -111,21 +111,6 @@ T read(State* state, int index) {
 		}                                               \
 	}
 
-#define LUWRA_DEF_VALUE_BOOL(type, retrf, pushf)        \
-	template <>                                         \
-	struct Value<type> {                                \
-		static inline                                   \
-		type read(State* state, int n) {                \
-			return retrf(state, n) == 1;                \
-		}                                               \
-		                                                \
-		static inline                                   \
-		size_t push(State* state, type value) {         \
-			pushf(state, value);                        \
-			return 1;                                   \
-		}                                               \
-	}
-
 #ifndef luaL_checkboolean
 	/**
 	 * Check if the value at index `n` is a boolean and retrieve its value.
@@ -230,13 +215,26 @@ LUWRA_DEF_NUMERIC(Integer, signed   long long int)
 LUWRA_DEF_NUMERIC(Integer, unsigned long long int)
 
 // C/C++ types
-LUWRA_DEF_VALUE_BOOL(bool,   luaL_checkboolean, lua_pushboolean);
 LUWRA_DEF_VALUE(const char*, luaL_checkstring,  lua_pushstring);
 LUWRA_DEF_VALUE(std::string, luaL_checkstring,  luaL_pushstdstring);
 
 // Do not export these macros
 #undef LUWRA_DEF_VALUE
 #undef LUWRA_DEF_NUMERIC
+
+template <>
+struct Value<bool> {
+	static inline
+	bool read(State* state, int n) {
+		return luaL_checkboolean(state, n) == 1;
+	}
+
+	static inline
+	size_t push(State* state, bool value) {
+		lua_pushboolean(state, static_cast<int>(value));
+		return 1;
+	}
+};
 
 // Alias for string literals
 template <size_t n>
