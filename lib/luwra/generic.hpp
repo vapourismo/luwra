@@ -60,6 +60,10 @@ LUWRA_NS_END
 #define LUWRA_WRAP(entity) \
 	(&luwra::internal::GenericWrapper<decltype(&entity)>::template invoke<&entity>)
 
+/**
+ * Generate a user type member manifest. This is basically a type which can be constructed using a
+ * string and whatever `LUWRA_WRAP` produces. For example `std::pair<Pushable, Pushable>`.
+ */
 #define LUWRA_MEMBER(type, name) \
 	{#name, LUWRA_WRAP(__LUWRA_NS_RESOLVE(type, name))}
 
