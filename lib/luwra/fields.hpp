@@ -32,7 +32,7 @@ namespace internal {
 				read<T*>(state, 1)->*field_pointer = read<R>(state, 2);
 				return 0;
 			} else {
-				return push(state, read<T*>(state, 1)->*field_pointer);
+				return static_cast<int>(push(state, read<T*>(state, 1)->*field_pointer));
 			}
 		}
 	};
@@ -41,7 +41,7 @@ namespace internal {
 	struct FieldWrapper<const R T::*> {
 		template <const R T::* field_pointer> static inline
 		int invoke(State* state) {
-			return push(state, read<T*>(state, 1)->*field_pointer);
+			return static_cast<int>(push(state, read<T*>(state, 1)->*field_pointer));
 		}
 	};
 }

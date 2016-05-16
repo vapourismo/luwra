@@ -26,13 +26,15 @@ namespace internal {
 	struct FunctionWrapper<R(A...)> {
 		template <R (* fun)(A...)> static inline
 		int invoke(State* state) {
-			return static_cast<int>(map<R(A...)>(state, fun));
+			return static_cast<int>(
+				map<R(A...)>(state, fun)
+			);
 		}
 	};
 
 	// We need an alias, because function pointers are weird
 	template <typename R, typename... A>
-	struct FunctionWrapper<R(*)(A...)>: FunctionWrapper<R(A...)> {};
+	struct FunctionWrapper<R (*)(A...)>: FunctionWrapper<R (A...)> {};
 }
 
 /**
