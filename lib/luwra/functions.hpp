@@ -39,7 +39,6 @@ namespace internal {
 
 /**
  * A callable native Lua function.
- * \note This value is only available as long as it exists on the stack.
  */
 template <typename R>
 struct NativeFunction: Reference {
@@ -73,7 +72,6 @@ struct NativeFunction: Reference {
 
 /**
  * A callable native Lua function.
- * \note This value is only available as long as it exists on the stack.
  */
 template <>
 struct NativeFunction<void>: Reference {
