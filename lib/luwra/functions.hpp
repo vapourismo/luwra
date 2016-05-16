@@ -47,6 +47,17 @@ struct NativeFunction: Reference {
 		Reference(state, index)
 	{}
 
+	inline
+	R operator ()() {
+		impl->push();
+
+		lua_call(impl->state, 0, 1);
+		R returnValue = Value<R>::read(impl->state, -1);
+
+		lua_pop(impl->state, 1);
+		return returnValue;
+	}
+
 	template <typename... A> inline
 	R operator ()(A&&... args) {
 		impl->push();
@@ -69,6 +80,12 @@ struct NativeFunction<void>: Reference {
 	NativeFunction(State* state, int index):
 		Reference(state, index)
 	{}
+
+	inline
+	void operator ()() {
+		impl->push();
+		lua_call(impl->state, 0, 0);
+	}
 
 	template <typename... A> inline
 	void operator ()(A&&... args) {
