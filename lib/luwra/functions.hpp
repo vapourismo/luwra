@@ -99,7 +99,7 @@ struct Value<NativeFunction<R>> {
 	static inline
 	NativeFunction<R> read(State* state, int index) {
 		luaL_checktype(state, index, LUA_TFUNCTION);
-		return NativeFunction<R>(state, index);
+		return {state, index};
 	}
 };
 

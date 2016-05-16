@@ -18,8 +18,8 @@ int my_function_3(int a, int b) {
 }
 
 int main() {
-	lua_State* state = luaL_newstate();
-	luaL_openlibs(state);
+	luwra::StateWrapper state;
+	state.loadStandardLibrary();
 
 	// Register 'my_function_1'
 	auto wrapped_1 = LUWRA_WRAP(my_function_1);
@@ -34,8 +34,7 @@ int main() {
 	luwra::setGlobal(state, "my_function_3", wrapped_3);
 
 	// Load Lua code
-	luaL_loadstring(
-		state,
+	int ret = state.runString(
 		// Invoke 'my_function_1'
 		"my_function_1(1337, 'Hello')\n"
 
@@ -49,14 +48,10 @@ int main() {
 	);
 
 	// Invoke the attached script
-	if (lua_pcall(state, 0, LUA_MULTRET, 0) != 0) {
-		const char* error_msg = lua_tostring(state, -1);
-		std::cerr << "An error occured: " << error_msg << std::endl;
-
-		lua_close(state);
+	if (ret != LUA_OK) {
+		std::cerr << "An error occured: " << lua_tostring(state, -1) << std::endl;
 		return 1;
-	} else {
-		lua_close(state);
-		return 0;
 	}
+
+	return 0;
 }
