@@ -7,10 +7,8 @@
 #include "luwra/stack.hpp"
 #include "luwra/auxiliary.hpp"
 #include "luwra/functions.hpp"
-#include "luwra/methods.hpp"
-#include "luwra/fields.hpp"
 #include "luwra/usertypes.hpp"
-#include "luwra/generic.hpp"
 #include "luwra/state.hpp"
+#include "luwra/wrappers.hpp"
 
 #endif

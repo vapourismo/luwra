@@ -32,7 +32,7 @@ TEST_CASE("FunctionWrapper") {
 		noret_environment = 1337;
 
 		// Wrap function
-		lua_CFunction cfun = LUWRA_WRAP_FUNCTION(test_function_noret_noparams);
+		lua_CFunction cfun = LUWRA_WRAP(test_function_noret_noparams);
 		REQUIRE(cfun != nullptr);
 
 		// Register function
@@ -50,7 +50,7 @@ TEST_CASE("FunctionWrapper") {
 		int req_environemt = noret_environment;
 
 		// Wrap function
-		lua_CFunction cfun = LUWRA_WRAP_FUNCTION(test_function_noret);
+		lua_CFunction cfun = LUWRA_WRAP(test_function_noret);
 		REQUIRE(cfun != nullptr);
 
 		// Register function
@@ -64,7 +64,7 @@ TEST_CASE("FunctionWrapper") {
 
 	SECTION("with return value, without parameters") {
 		// Wrap function
-		lua_CFunction cfun = LUWRA_WRAP_FUNCTION(test_function_noparams);
+		lua_CFunction cfun = LUWRA_WRAP(test_function_noparams);
 		REQUIRE(cfun != nullptr);
 
 		// Register function
@@ -78,7 +78,7 @@ TEST_CASE("FunctionWrapper") {
 
 	SECTION("with return value, with parameters") {
 		// Wrap function
-		lua_CFunction cfun = LUWRA_WRAP_FUNCTION(test_function);
+		lua_CFunction cfun = LUWRA_WRAP(test_function);
 		REQUIRE(cfun != nullptr);
 
 		// Register function
