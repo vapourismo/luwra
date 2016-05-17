@@ -48,6 +48,7 @@ TEST_CASE("FunctionWrapper") {
 		// Test function beforehand
 		test_function_noret(13, 37);
 		int req_environemt = noret_environment;
+		noret_environment = 0;
 
 		// Wrap function
 		lua_CFunction cfun = LUWRA_WRAP(test_function_noret);
