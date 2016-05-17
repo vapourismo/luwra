@@ -18,11 +18,6 @@ extern "C" {
 	#error Luwra has not been tested against your installed version of Lua
 #endif
 
-// LUA_OK does not exist in Lua 5.1 and earlier
-#ifndef LUA_OK
-	#define LUA_OK 0
-#endif
-
 // Namespaces
 #define LUWRA_NS_BEGIN namespace luwra {
 #define LUWRA_NS_END }

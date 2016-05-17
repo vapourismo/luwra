@@ -31,7 +31,13 @@ namespace internal {
 
 LUWRA_NS_END
 
-#ifdef _MSC_VER // Because VS C++
+// LUA_OK does not exist in Lua 5.1 and earlier
+#ifndef LUA_OK
+	#define LUA_OK 0
+#endif
+
+// Because VS C++
+#ifdef _MSC_VER
 	#define __LUWRA_NS_RESOLVE(a, b) a::##b
 #else
 	#define __LUWRA_NS_RESOLVE(a, b) a::b
