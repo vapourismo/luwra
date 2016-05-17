@@ -151,10 +151,10 @@ namespace internal {
 	};
 
 	template <typename... A>
-	struct LayoutMapper<void (A...)> {
+	struct LayoutMapper<void(A...)> {
 		template <typename F, typename... X> static inline
 		size_t map(State* state, int n, F&& hook, X&&... args) {
-			direct<void (A...)>(
+			direct<void(A...)>(
 				state,
 				n,
 				std::forward<F>(hook),
@@ -165,12 +165,12 @@ namespace internal {
 	};
 
 	template <typename R, typename... A>
-	struct LayoutMapper<R (A...)> {
+	struct LayoutMapper<R(A...)> {
 		template <typename F, typename... X> static inline
 		size_t map(State* state, int n, F&& hook, X&&... args) {
 			return push(
 				state,
-				direct<R (A...)>(
+				direct<R(A...)>(
 					state,
 					n,
 					std::forward<F>(hook),
