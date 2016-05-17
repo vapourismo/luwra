@@ -9,16 +9,19 @@ env:
   - LUA_VERSION=5.2.4
   - LUA_VERSION=5.1.5
 
+cache:
+  directories:
+    - lua-$LUA_VERSION
+
 install:
   # Select compiler
   - if [[ "$CXX" = "g++" ]]; then export CXX="g++-5"; fi
   - if [[ "$CXX" = "clang++" ]]; then export CXX="clang++-3.7"; fi
 
   # Build Lua
-  - wget "http://www.lua.org/ftp/lua-$LUA_VERSION.tar.gz"
-  - tar xvfz "lua-$LUA_VERSION.tar.gz"
+  - test -e "lua-$LUA_VERSION/src" || (wget "http://www.lua.org/ftp/lua-$LUA_VERSION.tar.gz" && tar xvfz "lua-$LUA_VERSION.tar.gz")
   - pushd "lua-$LUA_VERSION/src"
-  - make LUA_A=liblua-custom.a linux
+  - test -e liblua-custom.a || make LUA_A=liblua-custom.a linux
   - export "LUA_SOURCE_PATH=$(pwd)"
   - popd
 
