@@ -29,28 +29,7 @@ using CFunction = lua_CFunction;
  * User type
  */
 template <typename T>
-struct Value {
-	/**
-	 * Copy a user type value from the stack.
-	 * \param state Lua state
-	 * \param index Position of the value
-	 */
-	static
-	T read(State* state, int index) {
-		return Value<T&>::read(state, index);
-	}
-
-	/**
-	 * Copy a user type value onto the stack.
-	 * \param state Lua state
-	 * \param value Value you want to push
-	 * \returns Number of values pushed
-	 */
-	static
-	size_t push(State* state, const T& value) {
-		return Value<T&>::push(state, value);
-	}
-};
+struct Value: Value<T&> {};
 
 // Nil
 template <>
@@ -71,16 +50,19 @@ struct Value<std::nullptr_t> {
  * Convenient wrapped for [Value<T>::push](@ref Value<T>::push).
  */
 template <typename T> static inline
-size_t push(State* state, T value) {
-	return Value<T>::push(state, value);
+size_t push(State* state, T&& value) {
+	using U = typename std::remove_cv<typename std::remove_reference<T>::type>::type;
+	return Value<U>::push(state, std::forward<T>(value));
 }
 
 /**
  * Allows you to push multiple values at once.
  */
 template <typename T1, typename T2, typename... TR>
-size_t push(State* state, T1 value, T2&& head, TR&&... rest) {
-	return push(state, value) + push(state, std::forward<T2>(head), std::forward<TR>(rest)...);
+size_t push(State* state, T1&& value, T2&& head, TR&&... rest) {
+	return
+		push(state, std::forward<T1>(value)) +
+		push(state, std::forward<T2>(head), std::forward<TR>(rest)...);
 }
 
 /**
@@ -385,8 +367,7 @@ namespace internal {
 	struct StackPusher<IndexSequence<I>> {
 		template <typename... T> static inline
 		size_t push(State* state, const std::tuple<T...>& package) {
-			using R = typename std::tuple_element<I, std::tuple<T...>>::type;
-			return Value<R>::push(state, std::get<I>(package));
+			return luwra::push(state, std::get<I>(package));
 		}
 	};
 
@@ -395,8 +376,8 @@ namespace internal {
 		template <typename... T> static inline
 		size_t push(State* state, const std::tuple<T...>& package) {
 			return
-				StackPusher<IndexSequence<I>>::push(state, package)
-				+ StackPusher<IndexSequence<Is...>>::push(state, package);
+				StackPusher<IndexSequence<I>>::push(state, package) +
+				StackPusher<IndexSequence<Is...>>::push(state, package);
 		}
 	};
 }
@@ -446,7 +427,7 @@ namespace internal {
 
 		virtual
 		size_t push(State* state) const {
-			return Value<T>::push(state, value);
+			return luwra::push(state, value);
 		}
 
 		virtual

@@ -55,7 +55,7 @@ struct Table {
 
 		push(state, ref);
 
-		size_t pushedKeys = push(state, key);
+		size_t pushedKeys = push(state, std::forward<K>(key));
 		if (pushedKeys > 1)
 			lua_pop(state, static_cast<int>(pushedKeys - 1));
 
@@ -71,11 +71,11 @@ struct Table {
 		State* state = ref.impl->state;
 		push(state, ref);
 
-		size_t pushedKeys = push(state, key);
+		size_t pushedKeys = push(state, std::forward<K>(key));
 		if (pushedKeys > 1)
 			lua_pop(state, static_cast<int>(pushedKeys - 1));
 
-		size_t pushedValues = push(state, value);
+		size_t pushedValues = push(state, std::forward<V>(value));
 		if (pushedValues > 1)
 			lua_pop(state, static_cast<int>(pushedValues - 1));
 
@@ -89,7 +89,7 @@ struct Table {
 
 		push(state, ref);
 
-		size_t pushedKeys = push(state, key);
+		size_t pushedKeys = push(state, std::forward<K>(key));
 		if (pushedKeys > 1)
 			lua_pop(state, static_cast<int>(pushedKeys - 1));
 
@@ -131,12 +131,12 @@ namespace internal {
 
 		template <typename T> inline
 		TableAccessor<T> access(T&& subkey) {
-			return {read<Table>(), subkey};
+			return {read<Table>(), std::forward<T>(subkey)};
 		}
 
 		template <typename T> inline
 		TableAccessor<T> operator [](T&& subkey) {
-			return {read<Table>(), subkey};
+			return {read<Table>(), std::forward<T>(subkey)};
 		}
 	};
 }
@@ -146,7 +146,7 @@ namespace internal {
  */
 template <typename K> inline
 internal::TableAccessor<K> Table::access(K&& key) {
-	return {*this, key};
+	return {*this, std::forward<K>(key)};
 }
 
 /**
