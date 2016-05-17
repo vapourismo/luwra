@@ -16,6 +16,11 @@ EXAMPLE_SRCS    := types.cpp stack.cpp functions.cpp usertypes.cpp state.cpp tab
 EXAMPLE_DEPS    := $(EXAMPLE_SRCS:%.cpp=$(EXAMPLE_DIR)/%.d)
 EXAMPLE_OBJS    := $(EXAMPLE_SRCS:%.cpp=$(EXAMPLE_DIR)/%.out)
 
+# Playground artifacts
+PLAYGROUND_SRC  := playground.cpp
+PLAYGROUND_DEP  := $(PLAYGROUND_SRC:%.cpp=$(EXAMPLE_DIR)/%.d)
+PLAYGROUND_OBJ  := $(PLAYGROUND_SRC:%.cpp=$(EXAMPLE_DIR)/%.out)
+
 # Lua-specific
 LUA_INCDIR      = /usr/include
 LUA_LIBDIR      = /usr/lib
@@ -63,5 +68,9 @@ examples: $(EXAMPLE_OBJS)
 $(EXAMPLE_DIR)/%.out: $(EXAMPLE_DIR)/%.cpp Makefile
 	$(CXX) $(USECXXFLAGS) $(USELDFLAGS) -MMD -MF$(<:%.cpp=%.d) -MT$@ -o$@ $< $(USELDLIBS)
 
+# Playground
+playground: $(PLAYGROUND_OBJ)
+	./$(PLAYGROUND_OBJ)
+
 # Phony
-.PHONY: all clean docs test examples
+.PHONY: all clean docs test examples playground
