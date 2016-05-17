@@ -22,14 +22,14 @@ TEST_CASE("setGlobal") {
 
 	luwra::setGlobal(state, "test", 1338);
 
-	REQUIRE(luaL_dostring(state, "return test") == LUA_OK);
+	REQUIRE(state.runString("return test") == LUA_OK);
 	REQUIRE(luwra::read<int>(state, -1) == 1338);
 }
 
 TEST_CASE("getGlobal") {
 	luwra::StateWrapper state;
 
-	REQUIRE(luaL_dostring(state, "test = 1337") == LUA_OK);
+	REQUIRE(state.runString("test = 1337") == LUA_OK);
 	REQUIRE(luwra::getGlobal<int>(state, "test") == 1337);
 }
 
@@ -46,7 +46,7 @@ TEST_CASE("setFields") {
 
 		lua_setglobal(state, "test");
 
-		REQUIRE(luaL_dostring(state, "return test.test, test[123]") == LUA_OK);
+		REQUIRE(state.runString("return test.test, test[123]") == LUA_OK);
 		REQUIRE(luwra::read<int>(state, -2) == 1338);
 		REQUIRE(luwra::read<int>(state, -1) == 456);
 	}
@@ -62,7 +62,7 @@ TEST_CASE("setFields") {
 
 		lua_setglobal(state, "test");
 
-		REQUIRE(luaL_dostring(state, "return test.test, test[123]") == LUA_OK);
+		REQUIRE(state.runString("return test.test, test[123]") == LUA_OK);
 		REQUIRE(luwra::read<int>(state, -2) == 1338);
 		REQUIRE(luwra::read<int>(state, -1) == 456);
 	}
@@ -71,7 +71,7 @@ TEST_CASE("setFields") {
 TEST_CASE("getField") {
 	luwra::StateWrapper state;
 
-	REQUIRE(luaL_dostring(state, "return {hello = 123}") == LUA_OK);
+	REQUIRE(state.runString("return {hello = 123}") == LUA_OK);
 	REQUIRE(luwra::getField<int>(state, -1, "hello") == 123);
 }
 
@@ -85,7 +85,7 @@ TEST_CASE("FieldVector") {
 
 	lua_setglobal(state, "test");
 
-	REQUIRE(luaL_dostring(state, "return test.test, test[test.test]") == LUA_OK);
+	REQUIRE(state.runString("return test.test, test[test.test]") == LUA_OK);
 	REQUIRE(luwra::read<int>(state, -2) == 7331);
 	REQUIRE(luwra::read<int>(state, -1) == 123);
 }

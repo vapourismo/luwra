@@ -19,7 +19,7 @@ TEST_CASE("UserTypeConstruction") {
 	luwra::registerUserType<A(int)>(state, "A");
 
 	// Construction
-	REQUIRE(luaL_dostring(state, "return A(73)") == 0);
+	REQUIRE(state.runString("return A(73)") == 0);
 
 	// Check
 	A* instance = luwra::read<A*>(state, -1);
@@ -60,35 +60,35 @@ TEST_CASE("UserTypeFields") {
 	lua_setglobal(state, "value");
 
 	// Unqualified get
-	REQUIRE(luaL_dostring(state, "return value:n()") == 0);
+	REQUIRE(state.runString("return value:n()") == 0);
 	REQUIRE(luwra::read<int>(state, -1) == value.n);
 
 	// Unqualified set
-	REQUIRE(luaL_dostring(state, "value:n(42)") == 0);
+	REQUIRE(state.runString("value:n(42)") == 0);
 	REQUIRE(value.n == 42);
 
 	// 'const'-qualified get
-	REQUIRE(luaL_dostring(state, "return value:cn()") == 0);
+	REQUIRE(state.runString("return value:cn()") == 0);
 	REQUIRE(luwra::read<int>(state, -1) == value.cn);
 
 	// 'const'-qualified set
-	REQUIRE(luaL_dostring(state, "value:cn(42)") == 0);
+	REQUIRE(state.runString("value:cn(42)") == 0);
 	REQUIRE(value.cn == 1338);
 
 	// 'volatile' get
-	REQUIRE(luaL_dostring(state, "return value:vn()") == 0);
+	REQUIRE(state.runString("return value:vn()") == 0);
 	REQUIRE(luwra::read<int>(state, -1) == value.vn);
 
 	// 'volatile' set
-	REQUIRE(luaL_dostring(state, "value:vn(42)") == 0);
+	REQUIRE(state.runString("value:vn(42)") == 0);
 	REQUIRE(value.vn == 42);
 
 	// 'const volatile'-qualified get
-	REQUIRE(luaL_dostring(state, "return value:cvn()") == 0);
+	REQUIRE(state.runString("return value:cvn()") == 0);
 	REQUIRE(luwra::read<int>(state, -1) == value.cvn);
 
 	// 'const volatile'-qualified set
-	REQUIRE(luaL_dostring(state, "value:cvn(42)") == 0);
+	REQUIRE(state.runString("value:cvn(42)") == 0);
 	REQUIRE(value.cvn == 1338);
 }
 
@@ -135,22 +135,22 @@ TEST_CASE("UserTypeMethods") {
 	lua_setglobal(state, "value");
 
 	// Unqualified method
-	REQUIRE(luaL_dostring(state, "return value:foo1(63)") == 0);
+	REQUIRE(state.runString("return value:foo1(63)") == 0);
 	REQUIRE(value.prop == 1400);
 	REQUIRE(luwra::read<int>(state, -1) == value.prop);
 
 	// 'const'-qualified method
-	REQUIRE(luaL_dostring(state, "return value:foo2(44)") == 0);
+	REQUIRE(state.runString("return value:foo2(44)") == 0);
 	REQUIRE(value.prop == 1400);
 	REQUIRE(luwra::read<int>(state, -1) == 1444);
 
 	// 'volatile'-qualified method
-	REQUIRE(luaL_dostring(state, "return value:foo3(400)") == 0);
+	REQUIRE(state.runString("return value:foo3(400)") == 0);
 	REQUIRE(value.prop == 1000);
 	REQUIRE(luwra::read<int>(state, -1) == value.prop);
 
 	// 'const volatile'-qualified method
-	REQUIRE(luaL_dostring(state, "return value:foo4(334)") == 0);
+	REQUIRE(state.runString("return value:foo4(334)") == 0);
 	REQUIRE(value.prop == 1000);
 	REQUIRE(luwra::read<int>(state, -1) == 666);
 }

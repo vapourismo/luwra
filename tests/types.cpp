@@ -6,52 +6,51 @@
 #include <utility>
 #include <type_traits>
 
-#if false
+// Numbers are royally fucked. They might or might not be stored in a floating-point number, which
+// makes testing for integer limits pointless.
+//
+// template <typename I>
+// struct NumericTest {
+// 	static
+// 	void test(lua_State* state) {
+// 		const I max_value = std::numeric_limits<I>::max();
+// 		const I min_value = std::numeric_limits<I>::lowest();
+// 		const I avg_value = (max_value + min_value) / 2;
 
-template <typename I>
-struct NumericTest {
-	static
-	void test(lua_State* state) {
-		const I max_value = std::numeric_limits<I>::max();
-		const I min_value = std::numeric_limits<I>::lowest();
-		const I avg_value = (max_value + min_value) / 2;
+// 		// Largest value
+// 		CHECK((luwra::push(state, max_value) == 1));
+// 		CHECK((luwra::read<I>(state, -1) == max_value));
 
-		// Largest value
-		CHECK((luwra::push(state, max_value) == 1));
-		CHECK((luwra::read<I>(state, -1) == max_value));
+// 		// Lowest value
+// 		CHECK((luwra::push(state, min_value) == 1));
+// 		CHECK((luwra::read<I>(state, -1) == min_value));
 
-		// Lowest value
-		CHECK((luwra::push(state, min_value) == 1));
-		CHECK((luwra::read<I>(state, -1) == min_value));
+// 		// Average value
+// 		CHECK((luwra::push(state, avg_value) == 1));
+// 		CHECK((luwra::read<I>(state, -1) == avg_value));
+// 	}
+// };
 
-		// Average value
-		CHECK((luwra::push(state, avg_value) == 1));
-		CHECK((luwra::read<I>(state, -1) == avg_value));
-	}
-};
+// TEST_CASE("NumberLimits") {
+// 	luwra::StateWrapper state;
 
-TEST_CASE("NumberLimits") {
-	luwra::StateWrapper state;
+// 	// Integer-based types
+// 	NumericTest<signed char>::test(state);
+// 	NumericTest<unsigned char>::test(state);
+// 	NumericTest<signed short>::test(state);
+// 	NumericTest<unsigned short>::test(state);
+// 	NumericTest<signed int>::test(state);
+// 	NumericTest<unsigned int>::test(state);
+// 	NumericTest<signed long int>::test(state);
+// 	NumericTest<unsigned long int>::test(state);
+// 	NumericTest<signed long long int>::test(state);
+// 	NumericTest<unsigned long long int>::test(state);
 
-	// Integer-based types
-	NumericTest<signed char>::test(state);
-	NumericTest<unsigned char>::test(state);
-	NumericTest<signed short>::test(state);
-	NumericTest<unsigned short>::test(state);
-	NumericTest<signed int>::test(state);
-	NumericTest<unsigned int>::test(state);
-	NumericTest<signed long int>::test(state);
-	NumericTest<unsigned long int>::test(state);
-	NumericTest<signed long long int>::test(state);
-	NumericTest<unsigned long long int>::test(state);
-
-	// Number-based types
-	NumericTest<float>::test(state);
-	NumericTest<double>::test(state);
-	NumericTest<long double>::test(state);
-}
-
-#endif /* false */
+// 	// Number-based types
+// 	NumericTest<float>::test(state);
+// 	NumericTest<double>::test(state);
+// 	NumericTest<long double>::test(state);
+// }
 
 TEST_CASE("Numbers") {
 	luwra::StateWrapper state;
@@ -111,18 +110,31 @@ TEST_CASE("Tuples") {
 	auto tuple = std::make_tuple(a, b, c);
 	REQUIRE(luwra::push(state, tuple) == 3);
 
+	REQUIRE(luwra::read<int>(state, -3) == a);
+	REQUIRE(luwra::read<std::string>(state, -2) == b);
+	REQUIRE(luwra::read<float>(state, -1) == c);
+
 	// Push nested tuple
 	auto tuple_nested = std::make_tuple(a, b, c, tuple);
 	REQUIRE(luwra::push(state, tuple_nested) == 6);
+
+	REQUIRE(luwra::read<int>(state, -6) == a);
+	REQUIRE(luwra::read<std::string>(state, -5) == b);
+	REQUIRE(luwra::read<float>(state, -4) == c);
+	REQUIRE(luwra::read<int>(state, -3) == a);
+	REQUIRE(luwra::read<std::string>(state, -2) == b);
+	REQUIRE(luwra::read<float>(state, -1) == c);
+
 }
 
 TEST_CASE("Boolean") {
 	luwra::StateWrapper state;
 
-	bool value = true;
+	REQUIRE(luwra::push(state, true) == 1);
+	REQUIRE(luwra::read<bool>(state, -1) == true);
 
-	REQUIRE(luwra::push(state, value) == 1);
-	REQUIRE(luwra::read<bool>(state, -1) == value);
+	REQUIRE(luwra::push(state, false) == 1);
+	REQUIRE(luwra::read<bool>(state, -1) == false);
 }
 
 TEST_CASE("Pushable") {

@@ -36,10 +36,10 @@ TEST_CASE("FunctionWrapper") {
 		REQUIRE(cfun != nullptr);
 
 		// Register function
-		luwra::setGlobal(state, "test_function_noret_noparams", cfun);
+		state.set("test_function_noret_noparams", cfun);
 
 		// Invoke function
-		REQUIRE(luaL_dostring(state, "test_function_noret_noparams()") == 0);
+		REQUIRE(state.runString("test_function_noret_noparams()") == LUA_OK);
 		REQUIRE(lua_gettop(state) == 0);
 		REQUIRE(noret_environment == 1338);
 	}
@@ -54,10 +54,10 @@ TEST_CASE("FunctionWrapper") {
 		REQUIRE(cfun != nullptr);
 
 		// Register function
-		luwra::setGlobal(state, "test_function_noret", cfun);
+		state.set("test_function_noret", cfun);
 
 		// Invoke function
-		REQUIRE(luaL_dostring(state, "test_function_noret(13, 37)") == 0);
+		REQUIRE(state.runString("test_function_noret(13, 37)") == LUA_OK);
 		REQUIRE(lua_gettop(state) == 0);
 		REQUIRE(noret_environment == req_environemt);
 	}
@@ -68,12 +68,12 @@ TEST_CASE("FunctionWrapper") {
 		REQUIRE(cfun != nullptr);
 
 		// Register function
-		luwra::setGlobal(state, "test_function_noparams", cfun);
+		state.set("test_function_noparams", cfun);
 
 		// Invoke function
-		REQUIRE(luaL_dostring(state, "return test_function_noparams()") == 0);
+		REQUIRE(state.runString("return test_function_noparams()") == LUA_OK);
 		REQUIRE(lua_gettop(state) == 1);
-		REQUIRE(luwra::Value<int>::read(state, -1) == test_function_noparams());
+		REQUIRE(luwra::read<int>(state, -1) == test_function_noparams());
 	}
 
 	SECTION("with return value, with parameters") {
@@ -82,12 +82,12 @@ TEST_CASE("FunctionWrapper") {
 		REQUIRE(cfun != nullptr);
 
 		// Register function
-		luwra::setGlobal(state, "test_function", cfun);
+		state.set("test_function", cfun);
 
 		// Invoke function
-		REQUIRE(luaL_dostring(state, "return test_function(37, 13)") == 0);
+		REQUIRE(state.runString("return test_function(37, 13)") == LUA_OK);
 		REQUIRE(lua_gettop(state) == 1);
-		REQUIRE(luwra::Value<int>::read(state, -1) == test_function(37, 13));
+		REQUIRE(luwra::read<int>(state, -1) == test_function(37, 13));
 	}
 }
 
@@ -95,19 +95,19 @@ TEST_CASE("NativeFunction") {
 	luwra::StateWrapper state;
 
 	SECTION("with return value") {
-		REQUIRE(luaL_dostring(state, "return function (x, y) return x + y end") == LUA_OK);
+		REQUIRE(state.runString("return function (x, y) return x + y end") == LUA_OK);
 
 		auto fun = luwra::read<luwra::NativeFunction<int>>(state, -1);
 		REQUIRE(fun(13, 37) == 50);
 	}
 
 	SECTION("without return value") {
-		REQUIRE(luaL_dostring(state, "return function (x, y) returnValue = x + y end") == LUA_OK);
+		REQUIRE(state.runString("return function (x, y) returnValue = x + y end") == LUA_OK);
 
 		auto fun = luwra::read<luwra::NativeFunction<void>>(state, -1);
 		fun(13, 37);
 
-		int returnValue = state["returnValue"];
+		int returnValue = state.get<int>("returnValue");
 		REQUIRE(returnValue == 50);
 	}
 }
