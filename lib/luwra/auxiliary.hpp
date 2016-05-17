@@ -37,12 +37,8 @@ bool equal(State* state, int index1, int index2) {
  */
 static inline
 void setMetatable(State* state, const char* name) {
-#if LUA_VERSION_NUM <= 501
-	luaL_getmetatable(state, name);
+	luaL_newmetatable(state, name);
 	lua_setmetatable(state, -2);
-#else
-	luaL_setmetatable(state, name);
-#endif
 }
 
 /**
