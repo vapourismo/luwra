@@ -112,7 +112,6 @@ namespace internal {
 			}
 		}
 	};
-
 }
 
 LUWRA_NS_END
