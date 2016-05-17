@@ -21,20 +21,14 @@ namespace internal {
 	template <typename T>
 	using StripUserType = typename std::remove_cv<T>::type;
 
-	/**
-	 * User type registry identifiers
-	 */
+	// User type registry identifiers
 	template <typename T>
 	struct UserTypeReg {
-		/**
-		 * Dummy field which is used because it has a seperate address for each instance of T
-		 */
+		// Dummy field which is used because it has a seperate address for each instance of T
 		static
 		const int id;
 
-		/**
-		 * Registry name for a metatable which is associated with a user type
-		 */
+		// Registry name for a metatable which is associated with a user type
 		static
 		const std::string name;
 	};
@@ -50,18 +44,14 @@ namespace internal {
 	const std::string UserTypeReg<T>::name =
 		LUWRA_REGISTRY_PREFIX + std::to_string(uintptr_t(&id));
 
-	/**
-	 * Register a new metatable for a user type T.
-	 */
+	// Register a new metatable for a user type T.
 	template <typename U> static inline
 	void new_user_type_metatable(State* state) {
 		using T = StripUserType<U>;
 		luaL_newmetatable(state, UserTypeReg<T>::name.c_str());
 	}
 
-	/**
-	 * Check if the value at the given index if a user type T.
-	 */
+	// Check if the value at the given index if a user type T.
 	template <typename U> static inline
 	StripUserType<U>* check_user_type(State* state, int index) {
 		using T = StripUserType<U>;
@@ -70,17 +60,13 @@ namespace internal {
 		);
 	}
 
-	/**
-	 * Apply U's metatable for the value at the top of the stack.
-	 */
+	// Apply U's metatable for the value at the top of the stack.
 	template <typename U> static inline
 	void apply_user_type_meta_table(State* state) {
 		setMetatable(state, UserTypeReg<StripUserType<U>>::name.c_str());
 	}
 
-	/**
-	 * Lua C function to construct a user type T with parameters A
-	 */
+	// Lua C function to construct a user type T with parameters A
 	template <typename U, typename... A> static inline
 	int construct_user_type(State* state) {
 		return static_cast<int>(
@@ -92,9 +78,7 @@ namespace internal {
 		);
 	}
 
-	/**
-	 * Lua C function to destruct a user type T
-	 */
+	// Lua C function to destruct a user type T
 	template <typename U> static inline
 	int destruct_user_type(State* state) {
 		using T = StripUserType<U>;
@@ -103,9 +87,7 @@ namespace internal {
 		return 0;
 	}
 
-	/**
-	 * Create a string representation for user type T.
-	 */
+	// Create a string representation for user type T.
 	template <typename U> static
 	int stringify_user_type(State* state) {
 		using T = StripUserType<U>;
