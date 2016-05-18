@@ -4,3 +4,6 @@ docs/html/
 
 *.d
 *.o
+
+cpuprofile.pdf
+cpuprofile.prof

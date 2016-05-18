@@ -69,9 +69,14 @@ examples: $(EXAMPLE_OBJS)
 $(EXAMPLE_DIR)/%.out: $(EXAMPLE_DIR)/%.cpp Makefile
 	$(CXX) $(USECXXFLAGS) $(USELDFLAGS) -MMD -MF$(<:%.cpp=%.d) -MT$@ -o$@ $< $(USELDLIBS)
 
+$(PLAYGROUND_OBJ): $(EXAMPLE_DIR)/$(PLAYGROUND_SRC) Makefile
+	$(CXX) $(USECXXFLAGS) $(USELDFLAGS) -MMD -MF$(<:%.cpp=%.d) -MT$@ -o$@ $< $(USELDLIBS) -lprofiler
+
 # Playground
 playground: $(PLAYGROUND_OBJ)
-	./$(PLAYGROUND_OBJ)
+	CPUPROFILE=./cpuprofile.prof ./$(PLAYGROUND_OBJ)
+	pprof --pdf ./$(PLAYGROUND_OBJ) ./cpuprofile.prof > cpuprofile.pdf
+	xdg-open cpuprofile.pdf
 
 # Phony
 .PHONY: all clean docs test examples playground
