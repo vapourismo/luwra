@@ -16,7 +16,7 @@ LUWRA_NS_BEGIN
 namespace internal {
 	// This represents a "path" which will be resolved lazily. It is useful for chained table
 	// access. An access like 'table.field1.field2' would be represented similiar to
-	// {{table, field1}, field}.
+	// `Path<Path<Table, std::string>, std::string> table {{table, "field1"}, "field"}`.
 	template <typename P, typename K>
 	struct Path {
 		P parent;
@@ -24,7 +24,7 @@ namespace internal {
 
 		// Read the value to which this path points to.
 		template <typename V> inline
-		V read(State* state) {
+		V read(State* state) const {
 			luwra::push(state, *this);
 
 			V value = luwra::read<V>(state, -1);
@@ -35,7 +35,7 @@ namespace internal {
 
 		// Change the value to which this path points to.
 		template <typename V> inline
-		void write(State* state, V&& value) {
+		void write(State* state, V&& value) const {
 			size_t pushedParents = luwra::push(state, parent);
 			if (pushedParents > 1)
 				lua_pop(state, static_cast<int>(pushedParents - 1));
@@ -58,35 +58,38 @@ namespace internal {
 		State* state;
 		A accessor;
 
+		TableAccessor(const TableAccessor&) = delete;
+		TableAccessor(TableAccessor&&) = delete;
+
 		template <typename V> inline
-		V read() {
+		V read() const && {
 			return accessor.template read<V>(state);
 		}
 
 		template <typename V> inline
-		operator V() {
+		operator V() const && {
 			return accessor.template read<V>(state);
 		}
 
 		template <typename V> inline
-		TableAccessor<A>& write(V&& value) {
+		const TableAccessor<A>&& write(V&& value) const && {
 			accessor.write(state, std::forward<V>(value));
-			return *this;
+			return std::move(*this);
 		}
 
 		template <typename V> inline
-		TableAccessor<A>& operator =(V&& value) {
+		const TableAccessor<A>&& operator =(V&& value) const && {
 			accessor.write(state, std::forward<V>(value));
-			return *this;
+			return std::move(*this);
 		}
 
 		template <typename K> inline
-		TableAccessor<Path<A, K>> access(K&& subkey) {
+		TableAccessor<Path<A, K>> access(K&& subkey) const && {
 			return {state, {accessor, std::forward<K>(subkey)}};
 		}
 
 		template <typename K> inline
-		TableAccessor<Path<A, K>> operator [](K&& subkey) {
+		TableAccessor<Path<A, K>> operator [](K&& subkey) const && {
 			return {state, {accessor, std::forward<K>(subkey)}};
 		}
 	};
@@ -126,17 +129,17 @@ struct Table {
 	}
 
 	template <typename K> inline
-	internal::TableAccessor<internal::Path<Reference, K>> access(K&& key)  {
+	internal::TableAccessor<internal::Path<const Reference&, K>> access(K&& key) const {
 		return {ref.impl->state, {ref, std::forward<K>(key)}};
 	}
 
 	template <typename K> inline
-	internal::TableAccessor<internal::Path<Reference, K>> operator [](K&& key) {
+	internal::TableAccessor<internal::Path<const Reference&, K>> operator [](K&& key) const {
 		return {ref.impl->state, {ref, std::forward<K>(key)}};
 	}
 
 	inline
-	void update(const FieldVector& fields) {
+	void update(const FieldVector& fields) const {
 		State* state = ref.impl->state;
 
 		push(state, ref);
@@ -146,7 +149,7 @@ struct Table {
 	}
 
 	template <typename K> inline
-	bool has(K&& key) {
+	bool has(K&& key) const {
 		State* state = ref.impl->state;
 
 		push(state, ref);
@@ -163,7 +166,7 @@ struct Table {
 	}
 
 	template <typename V, typename K> inline
-	void set(K&& key, V&& value) {
+	void set(K&& key, V&& value) const {
 		State* state = ref.impl->state;
 		push(state, ref);
 
@@ -180,7 +183,7 @@ struct Table {
 	}
 
 	template <typename V, typename K> inline
-	V get(K&& key) {
+	V get(K&& key) const {
 		State* state = ref.impl->state;
 
 		push(state, ref);

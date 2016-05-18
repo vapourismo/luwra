@@ -326,7 +326,7 @@ struct Reference {
 	 * Read the referenced value.
 	 */
 	template <typename T> inline
-	T read() {
+	T read() const {
 		size_t pushed = impl->push();
 		T ret = Value<T>::read(impl->state, -1);
 
@@ -338,7 +338,7 @@ struct Reference {
 	 * Shortcut for `read<T>()`.
 	 */
 	template <typename T> inline
-	operator T() {
+	operator T() const {
 		return read<T>();
 	}
 };
