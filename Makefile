@@ -62,7 +62,7 @@ $(TEST_DIR)/%.o: $(TEST_DIR)/%.cpp Makefile
 
 # Examples
 examples: $(EXAMPLE_OBJS)
-	@for ex in $(EXAMPLE_OBJS); do echo "> Example '$$ex'"; ./$$ex; done
+	@for ex in $(EXAMPLE_OBJS); do echo "> Example '$$ex'"; ./$$ex || exit 1; done
 
 -include $(EXAMPLE_DEPS)
 
