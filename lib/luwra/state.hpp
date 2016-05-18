@@ -64,7 +64,7 @@ struct StateWrapper: Table {
 	 */
 	template <typename T> inline
 	void registerUserType(
-		const std::string& ctor_name,
+		const char* ctor_name,
 		const FieldVector& methods = FieldVector(),
 		const FieldVector& meta_methods = FieldVector()
 	) {
