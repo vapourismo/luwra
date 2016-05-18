@@ -54,7 +54,7 @@ namespace internal {
 	};
 
 	template <typename A>
-	struct TableAccessor2 {
+	struct TableAccessor {
 		State* state;
 		A accessor;
 
@@ -69,24 +69,24 @@ namespace internal {
 		}
 
 		template <typename V> inline
-		TableAccessor2<A>& write(V&& value) {
+		TableAccessor<A>& write(V&& value) {
 			accessor.write(state, std::forward<V>(value));
 			return *this;
 		}
 
 		template <typename V> inline
-		TableAccessor2<A>& operator =(V&& value) {
+		TableAccessor<A>& operator =(V&& value) {
 			accessor.write(state, std::forward<V>(value));
 			return *this;
 		}
 
 		template <typename K> inline
-		TableAccessor2<Path<A, K>> access(K&& subkey) {
+		TableAccessor<Path<A, K>> access(K&& subkey) {
 			return {state, {accessor, std::forward<K>(subkey)}};
 		}
 
 		template <typename K> inline
-		TableAccessor2<Path<A, K>> operator [](K&& subkey) {
+		TableAccessor<Path<A, K>> operator [](K&& subkey) {
 			return {state, {accessor, std::forward<K>(subkey)}};
 		}
 	};
@@ -126,12 +126,12 @@ struct Table {
 	}
 
 	template <typename K> inline
-	internal::TableAccessor2<internal::Path<Reference, K>> access(K&& key)  {
+	internal::TableAccessor<internal::Path<Reference, K>> access(K&& key)  {
 		return {ref.impl->state, {ref, std::forward<K>(key)}};
 	}
 
 	template <typename K> inline
-	internal::TableAccessor2<internal::Path<Reference, K>> operator [](K&& key) {
+	internal::TableAccessor<internal::Path<Reference, K>> operator [](K&& key) {
 		return {ref.impl->state, {ref, std::forward<K>(key)}};
 	}
 
