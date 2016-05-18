@@ -14,9 +14,103 @@
 LUWRA_NS_BEGIN
 
 namespace internal {
-	template <typename K>
-	struct TableAccessor;
+	// This represents a "path" which will be resolved lazily. It is useful for chained table
+	// access. An access like 'table.field1.field2' would be represented similiar to
+	// {{table, field1}, field}.
+	template <typename P, typename K>
+	struct Path {
+		P parent;
+		K key;
+
+		// Read the value to which this path points to.
+		template <typename V> inline
+		V read(State* state) {
+			luwra::push(state, *this);
+
+			V value = luwra::read<V>(state, -1);
+
+			lua_pop(state, 1);
+			return value;
+		}
+
+		// Change the value to which this path points to.
+		template <typename V> inline
+		void write(State* state, V&& value) {
+			size_t pushedParents = luwra::push(state, parent);
+			if (pushedParents > 1)
+				lua_pop(state, static_cast<int>(pushedParents - 1));
+
+			size_t pushedKeys = luwra::push(state, key);
+			if (pushedKeys > 1)
+				lua_pop(state, static_cast<int>(pushedKeys - 1));
+
+			size_t pushedValues = luwra::push(state, std::forward<V>(value));
+			if (pushedValues > 1)
+				lua_pop(state, static_cast<int>(pushedValues - 1));
+
+			lua_rawset(state, -3);
+			lua_pop(state, 1);
+		}
+	};
+
+	template <typename A>
+	struct TableAccessor2 {
+		State* state;
+		A accessor;
+
+		template <typename V> inline
+		V read() {
+			return accessor.template read<V>(state);
+		}
+
+		template <typename V> inline
+		operator V() {
+			return accessor.template read<V>(state);
+		}
+
+		template <typename V> inline
+		TableAccessor2<A>& write(V&& value) {
+			accessor.write(state, std::forward<V>(value));
+			return *this;
+		}
+
+		template <typename V> inline
+		TableAccessor2<A>& operator =(V&& value) {
+			accessor.write(state, std::forward<V>(value));
+			return *this;
+		}
+
+		template <typename K> inline
+		TableAccessor2<Path<A, K>> access(K&& subkey) {
+			return {state, {accessor, std::forward<K>(subkey)}};
+		}
+
+		template <typename K> inline
+		TableAccessor2<Path<A, K>> operator [](K&& subkey) {
+			return {state, {accessor, std::forward<K>(subkey)}};
+		}
+	};
 }
+
+template <typename P, typename K>
+struct Value<internal::Path<P, K>> {
+	// Push the value to which the path points onto the stack.
+	static inline
+	size_t push(State* state, const internal::Path<P, K>& accessor) {
+		size_t pushedParents = luwra::push(state, accessor.parent);
+		if (pushedParents > 1)
+			lua_pop(state, static_cast<int>(pushedParents - 1));
+
+		size_t pushedKeys = luwra::push(state, accessor.key);
+		if (pushedKeys > 1)
+			lua_pop(state, static_cast<int>(pushedKeys - 1));
+
+		lua_rawget(state, -2);
+		lua_remove(state, -2);
+
+		return 1;
+	}
+};
 
 struct Table {
 	Reference ref;
@@ -32,11 +126,13 @@ struct Table {
 	}
 
 	template <typename K> inline
-	internal::TableAccessor<K> access(K&& key);
+	internal::TableAccessor2<internal::Path<Reference, K>> access(K&& key)  {
+		return {ref.impl->state, {ref, std::forward<K>(key)}};
+	}
 
 	template <typename K> inline
-	internal::TableAccessor<K> operator [](K&& key) {
-		return access<K>(std::forward<K>(key));
+	internal::TableAccessor2<internal::Path<Reference, K>> operator [](K&& key) {
+		return {ref.impl->state, {ref, std::forward<K>(key)}};
 	}
 
 	inline
@@ -100,54 +196,6 @@ struct Table {
 		return ret;
 	}
 };
-
-namespace internal {
-	template <typename K>
-	struct TableAccessor {
-		Table parent;
-		K key;
-
-		template <typename V> inline
-		V read() {
-			return parent.get<V>(key);
-		}
-
-		template <typename V> inline
-		operator V() {
-			return parent.get<V>(key);
-		}
-
-		template <typename V> inline
-		TableAccessor<K>& write(V&& value) {
-			parent.set(key, std::forward<V>(value));
-			return *this;
-		}
-
-		template <typename V> inline
-		TableAccessor<K>& operator =(V&& value) {
-			parent.set(key, std::forward<V>(value));
-			return *this;
-		}
-
-		template <typename T> inline
-		TableAccessor<T> access(T&& subkey) {
-			return {read<Table>(), std::forward<T>(subkey)};
-		}
-
-		template <typename T> inline
-		TableAccessor<T> operator [](T&& subkey) {
-			return {read<Table>(), std::forward<T>(subkey)};
-		}
-	};
-}
-
-/**
- * Table
- */
-template <typename K> inline
-internal::TableAccessor<K> Table::access(K&& key) {
-	return {*this, std::forward<K>(key)};
-}
 
 /**
  * See [Table](@ref Table).
