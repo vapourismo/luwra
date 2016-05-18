@@ -238,7 +238,7 @@ namespace internal {
 		using T = StripUserType<U>;
 
 		static inline
-		void registerConstructor(State* state, const std::string& name) {
+		void registerConstructor(State* state, const char* name) {
 			setGlobal(state, name, &UserTypeWrapper<T>::template construct<A...>);
 		}
 	};
@@ -251,7 +251,7 @@ namespace internal {
 template <typename S> static inline
 void registerUserType(
 	State* state,
-	const std::string& ctor_name,
+	const char* ctor_name,
 	const FieldVector& methods = FieldVector(),
 	const FieldVector& meta_methods = FieldVector()
 ) {

@@ -75,16 +75,16 @@ struct StateWrapper: Table {
 	 * Execute a piece of code.
 	 */
 	inline
-	int runString(const std::string& code) {
-		return luaL_dostring(state, code.c_str());
+	int runString(const char* code) {
+		return luaL_dostring(state, code);
 	}
 
 	/**
 	 * Execute a file.
 	 */
 	inline
-	int runFile(const std::string& filepath) {
-		return luaL_dofile(state, filepath.c_str());
+	int runFile(const char* filepath) {
+		return luaL_dofile(state, filepath);
 	}
 };
 
