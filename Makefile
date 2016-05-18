@@ -75,10 +75,13 @@ $(PLAYGROUND_OBJ): $(EXAMPLE_DIR)/$(PLAYGROUND_SRC) Makefile
 	$(CXX) $(USECXXFLAGS) $(USELDFLAGS) -MMD -MF$(<:%.cpp=%.d) -MT$@ -o$@ $< $(USELDLIBS) -lprofiler
 
 # Playground
-playground: $(PLAYGROUND_OBJ)
+playground-prof: $(PLAYGROUND_OBJ)
 	CPUPROFILE=./cpuprofile.prof ./$(PLAYGROUND_OBJ)
 	pprof --pdf ./$(PLAYGROUND_OBJ) ./cpuprofile.prof > cpuprofile.pdf
 	xdg-open cpuprofile.pdf
 
+playground: $(PLAYGROUND_OBJ)
+	./$(PLAYGROUND_OBJ)
+
 # Phony
-.PHONY: all clean docs test examples playground
+.PHONY: all clean docs test examples playground playground-prof
