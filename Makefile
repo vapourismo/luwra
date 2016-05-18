@@ -38,7 +38,9 @@ USELDLIBS       += $(LDLIBS) -lm -l$(LUA_LIBNAME) -ldl
 all: test examples
 
 clean:
-	$(RM) $(EXAMPLE_OBJS) $(EXAMPLE_DEPS) $(TEST_OUT) $(TEST_OBJS) $(TEST_DEPS)
+	$(RM) $(EXAMPLE_OBJS) $(EXAMPLE_DEPS)
+	$(RM) $(TEST_OUT) $(TEST_OBJS) $(TEST_DEPS)
+	$(RM) $(PLAYGROUND_DEP) $(PLAYGROUND_OBJ)
 
 # Documentation
 docs:
