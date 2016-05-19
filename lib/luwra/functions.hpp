@@ -77,6 +77,11 @@ struct Value<NativeFunction<R>> {
 		luaL_checktype(state, index, LUA_TFUNCTION);
 		return {state, index};
 	}
+
+	static inline
+	size_t push(State* state, const NativeFunction<R>& func) {
+		return Value<Reference>::push(state, func);
+	}
 };
 
 LUWRA_NS_END
