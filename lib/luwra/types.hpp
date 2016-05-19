@@ -16,6 +16,10 @@
 #include <type_traits>
 #include <memory>
 #include <limits>
+#include <vector>
+#include <list>
+#include <initializer_list>
+#include <map>
 
 LUWRA_NS_BEGIN
 
@@ -468,6 +472,10 @@ struct Pushable: virtual internal::PushableI {
 		if (interface)
 			delete interface;
 	}
+
+	bool operator <(const Pushable& other) const {
+		return interface < other.interface;
+	}
 };
 
 template <>
@@ -475,6 +483,66 @@ struct Value<Pushable> {
 	static inline
 	size_t push(State* state, const Pushable& value) {
 		return value.push(state);
+	}
+};
+
+template <typename T>
+struct Value<std::vector<T>> {
+	static inline
+	size_t push(State* state, const std::vector<T>& vec) {
+		lua_createtable(state, vec.size(), 0);
+
+		int size = static_cast<int>(vec.size());
+		for (int i = 0; i < size; i++) {
+			size_t pushedValues = luwra::push(state, vec[i]);
+			if (pushedValues > 1)
+				lua_pop(state, static_cast<int>(pushedValues - 1));
+
+			lua_rawseti(state, -2, i + 1);
+		}
+
+		return 1;
+	}
+};
+
+template <typename T>
+struct Value<std::list<T>> {
+	static inline
+	size_t push(State* state, const std::list<T>& lst) {
+		lua_createtable(state, lst.size(), 0);
+
+		int i = 0;
+		for (const T& item: lst) {
+			size_t pushedValues = luwra::push(state, item);
+			if (pushedValues > 1)
+				lua_pop(state, static_cast<int>(pushedValues - 1));
+
+			lua_rawseti(state, -2, ++i);
+		}
+
+		return 1;
+	}
+};
+
+template <typename K, typename V>
+struct Value<std::map<K, V>> {
+	static inline
+	size_t push(State* state, const std::map<K, V>& map) {
+		lua_createtable(state, 0, map.size());
+
+		for (const auto& entry: map) {
+			size_t pushedKeys = luwra::push(state, entry.first);
+			if (pushedKeys > 1)
+				lua_pop(state, static_cast<int>(pushedKeys - 1));
+
+			size_t pushedValues = luwra::push(state, entry.second);
+			if (pushedValues > 1)
+				lua_pop(state, static_cast<int>(pushedValues - 1));
+
+			lua_rawset(state, -3);
+		}
+
+		return 1;
 	}
 };
 

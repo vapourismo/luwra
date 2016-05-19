@@ -5,6 +5,9 @@
 #include <string>
 #include <utility>
 #include <type_traits>
+#include <vector>
+#include <list>
+#include <initializer_list>
 
 // Numbers are royally fucked. They might or might not be stored in a floating-point number, which
 // makes testing for integer limits pointless.
@@ -144,4 +147,57 @@ TEST_CASE("Pushable") {
 	REQUIRE(luwra::push(state, pushable) == 1);
 
 	REQUIRE(luwra::read<int>(state, -1) == 1337);
+}
+
+TEST_CASE("Value<vector>") {
+	luwra::StateWrapper state;
+	state.loadStandardLibrary();
+
+	std::vector<int> v {1, 2, 3, 4, 5};
+	REQUIRE(luwra::push(state, v) == 1);
+
+	state["v"] = v;
+
+	REQUIRE(state.runString(
+		"x = 0\n"
+		"for i, j in ipairs(v) do x = x + i + j end\n"
+		"return x"
+	) == LUA_OK);
+
+	REQUIRE(luwra::read<int>(state, -1) == 30);
+}
+
+TEST_CASE("Value<list>") {
+	luwra::StateWrapper state;
+	state.loadStandardLibrary();
+
+	std::list<int> v {1, 2, 3, 4, 5};
+	REQUIRE(luwra::push(state, v) == 1);
+
+	state["v"] = v;
+
+	REQUIRE(state.runString(
+		"x = 0\n"
+		"for i, j in ipairs(v) do x = x + i + j end\n"
+		"return x"
+	) == LUA_OK);
+
+	REQUIRE(luwra::read<int>(state, -1) == 30);
+}
+
+TEST_CASE("Value<map>") {
+	luwra::StateWrapper state;
+
+	std::map<luwra::Pushable, luwra::Pushable> v {
+		{"hello", 13},
+		{37, "world"}
+	};
+	REQUIRE(luwra::push(state, v) == 1);
+
+	state["v"] = v;
+
+	REQUIRE(state.runString("return v.hello, v[37]") == LUA_OK);
+
+	REQUIRE(luwra::read<int>(state, -2) == 13);
+	REQUIRE(luwra::read<std::string>(state, -1) == "world");
 }
