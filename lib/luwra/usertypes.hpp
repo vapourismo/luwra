@@ -263,6 +263,13 @@ void registerUserType(
 LUWRA_NS_END
 
 /**
+ * Generate a user type member manifest. This is basically any type which can be constructed using a
+ * string and a `lua_CFunction`. For example `std::pair<Pushable, Pushable>`.
+ */
+#define LUWRA_MEMBER(type, name) \
+	{#name, LUWRA_WRAP(__LUWRA_NS_RESOLVE(type, name))}
+
+/**
  * Generate a `lua_CFunction` wrapper for a constructor.
  * \param type Type to instantiate
  * \param ...  Constructor parameter types
@@ -283,14 +290,5 @@ LUWRA_NS_END
 		const std::string UserTypeReg<type>::name = (regname); \
 	} \
 	LUWRA_NS_END
-
-#define LUWRA_FIELD(type, name) \
-	{#name, LUWRA_WRAP_FIELD(__LUWRA_NS_RESOLVE(type, name))}
-
-#define LUWRA_METHOD(type, name) \
-	{#name, LUWRA_WRAP_METHOD(__LUWRA_NS_RESOLVE(type, name))}
-
-#define LUWRA_FUNCTION(type, name) \
-	{#name, LUWRA_WRAP_FUNCTION(__LUWRA_NS_RESOLVE(type, name))}
 
 #endif
