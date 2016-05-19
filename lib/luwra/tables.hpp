@@ -83,6 +83,9 @@ namespace internal {
 		TableAccessor(const TableAccessor&) = delete;
 		TableAccessor(TableAccessor&&) = delete;
 
+		TableAccessor& operator =(const TableAccessor&) = delete;
+		TableAccessor& operator =(TableAccessor&&) = delete;
+
 		template <typename V> inline
 		V read() const && {
 			return accessor.template read<V>(state);
@@ -94,13 +97,13 @@ namespace internal {
 		}
 
 		template <typename V> inline
-		const TableAccessor<A>&& write(V&& value) const && {
+		const TableAccessor&& write(V&& value) const && {
 			accessor.write(state, std::forward<V>(value));
 			return std::move(*this);
 		}
 
 		template <typename V> inline
-		const TableAccessor<A>&& operator =(V&& value) const && {
+		const TableAccessor&& operator =(V&& value) const && {
 			accessor.write(state, std::forward<V>(value));
 			return std::move(*this);
 		}
