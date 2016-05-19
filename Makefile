@@ -7,7 +7,7 @@ EXEC            = exec
 TEST_DIR        := tests
 TEST_OUT        := $(TEST_DIR)/all
 TEST_SRCS       := all.cpp auxiliary.cpp types.cpp stack.cpp functions.cpp usertypes.cpp \
-                   wrappers.cpp
+                   wrappers.cpp tables.cpp
 TEST_DEPS       := $(TEST_SRCS:%.cpp=$(TEST_DIR)/%.d)
 TEST_OBJS       := $(TEST_SRCS:%.cpp=$(TEST_DIR)/%.o)
 

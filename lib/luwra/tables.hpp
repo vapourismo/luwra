@@ -52,7 +52,29 @@ namespace internal {
 			lua_pop(state, 1);
 		}
 	};
+}
 
+template <typename P, typename K>
+struct Value<internal::Path<P, K>> {
+	// Push the value to which the path points onto the stack.
+	static inline
+	size_t push(State* state, const internal::Path<P, K>& accessor) {
+		size_t pushedParents = luwra::push(state, accessor.parent);
+		if (pushedParents > 1)
+			lua_pop(state, static_cast<int>(pushedParents - 1));
+
+		size_t pushedKeys = luwra::push(state, accessor.key);
+		if (pushedKeys > 1)
+			lua_pop(state, static_cast<int>(pushedKeys - 1));
+
+		lua_rawget(state, -2);
+		lua_remove(state, -2);
+
+		return 1;
+	}
+};
+
+namespace internal {
 	template <typename A>
 	struct TableAccessor {
 		State* state;
@@ -94,26 +116,6 @@ namespace internal {
 		}
 	};
 }
-
-template <typename P, typename K>
-struct Value<internal::Path<P, K>> {
-	// Push the value to which the path points onto the stack.
-	static inline
-	size_t push(State* state, const internal::Path<P, K>& accessor) {
-		size_t pushedParents = luwra::push(state, accessor.parent);
-		if (pushedParents > 1)
-			lua_pop(state, static_cast<int>(pushedParents - 1));
-
-		size_t pushedKeys = luwra::push(state, accessor.key);
-		if (pushedKeys > 1)
-			lua_pop(state, static_cast<int>(pushedKeys - 1));
-
-		lua_rawget(state, -2);
-		lua_remove(state, -2);
-
-		return 1;
-	}
-};
 
 struct Table {
 	Reference ref;
