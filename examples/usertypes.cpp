@@ -43,7 +43,7 @@ int main() {
 			LUWRA_MEMBER(Point, scale),
 			LUWRA_MEMBER(Point, x),
 			LUWRA_MEMBER(Point, y),
-			{"magic", luwra::FieldVector {
+			{"magic", luwra::MemberMap {
 				{"number", 1337},
 				{"string", "Hello World"}
 			}}

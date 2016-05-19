@@ -8,7 +8,7 @@ using namespace luwra;
 int main() {
 	StateWrapper state;
 
-	state["t1"] = FieldVector {};
+	state["t1"] = MemberMap {};
 
 	for (int i = 0; i < 10000; i++) {
 		state["t1"]["value"] = i;

@@ -144,7 +144,7 @@ struct Table {
 	}
 
 	inline
-	void update(const FieldVector& fields) const {
+	void update(const MemberMap& fields) const {
 		State* state = ref.impl->state;
 
 		push(state, ref);

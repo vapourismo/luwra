@@ -65,8 +65,8 @@ struct StateWrapper: Table {
 	template <typename T> inline
 	void registerUserType(
 		const char* ctor_name,
-		const FieldVector& methods = FieldVector(),
-		const FieldVector& meta_methods = FieldVector()
+		const MemberMap& methods = MemberMap(),
+		const MemberMap& meta_methods = MemberMap()
 	) {
 		::luwra::registerUserType<T>(state, ctor_name, methods, meta_methods);
 	}

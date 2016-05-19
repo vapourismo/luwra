@@ -202,8 +202,8 @@ struct Value<U*> {
 template <typename U> static inline
 void registerUserType(
 	State* state,
-	const FieldVector& methods = FieldVector(),
-	const FieldVector& meta_methods = FieldVector()
+	const MemberMap& methods = MemberMap(),
+	const MemberMap& meta_methods = MemberMap()
 ) {
 	using Wrapper = internal::UserTypeWrapper<U>;
 
@@ -211,11 +211,11 @@ void registerUserType(
 	luaL_newmetatable(state, Wrapper::Reg::name.c_str());
 
 	// Insert methods
-	setFields(state, -1, {
-		{"__index",    methods},
-		{"__gc",       &Wrapper::destruct},
-		{"__tostring", &Wrapper::stringify}
-	});
+	setFields(state, -1,
+		"__index",    methods,
+		"__gc",       &Wrapper::destruct,
+		"__tostring", &Wrapper::stringify
+	);
 
 	// Insert meta methods
 	setFields(state, -1, meta_methods);
@@ -252,8 +252,8 @@ template <typename S> static inline
 void registerUserType(
 	State* state,
 	const char* ctor_name,
-	const FieldVector& methods = FieldVector(),
-	const FieldVector& meta_methods = FieldVector()
+	const MemberMap& methods = MemberMap(),
+	const MemberMap& meta_methods = MemberMap()
 ) {
 	using T = typename internal::UserTypeSignature<S>::T;
 	registerUserType<T>(state, methods, meta_methods);
