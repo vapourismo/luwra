@@ -1,10 +1,13 @@
 # General
-Luwra provides an easy way to turn any C or C++ function into a
-[lua_CFunction](http://www.lua.org/manual/5.3/manual.html#lua_CFunction) which can be used by the
-Lua VM. Note, all parameter types must be readable from the stack (`Value<T>::read` exists for all)
-and the return type must be pushable (`Value<T>::push` exists).
+Luwra provides a simple way to generate
+Lua [C functions](http://www.lua.org/manual/5.3/manual.html#lua_CFunction) from functions and class
+members like methods and accessors using the `LUWRA_WRAP` macro. These kind of C functions are
+useful, because they work just like regular Lua functions within the Lua virtual machine.
 
-## Wrap functions
+## Functions
+When wrapping functions, one must consider that all parameter types must be able to be read from the
+stack and the return type must be able to be pushed onto the stack.
+
 Assuming you have a function similiar to this:
 
 ```c++
@@ -32,7 +35,7 @@ Calling the function from Lua is fairly straightforward:
 local my_result = my_function("Hello World", 1337)
 print(my_result)
 ```
-## Wrap methods and fields
+## Methods and fields
 It is also possible to turn C++ field accessors and methods into `lua_CFunction`s. It is a little
 trickier than wrapping normal functions. The resulting Lua functions expect the first (or `self`)
 parameter to be a user type instance of the type which the wrapped field or method belongs to.

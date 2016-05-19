@@ -8,7 +8,7 @@
   
   
   
-  <title>Function Wrapping - Luwra</title>
+  <title>Wrapping - Luwra</title>
   
 
   <link rel="shortcut icon" href="../img/favicon.ico">
@@ -23,7 +23,7 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Function Wrapping";
+    var mkdocs_page_name = "Wrapping";
     var mkdocs_page_input_path = "wrapping.md";
     var mkdocs_page_url = "/wrapping/";
   </script>
@@ -77,15 +77,15 @@
           
             <li>
     <li class="toctree-l1 current">
-        <a class="current" href="./">Function Wrapping</a>
+        <a class="current" href="./">Wrapping</a>
         
             <ul>
             
                 <li class="toctree-l3"><a href="#general">General</a></li>
                 
-                    <li><a class="toctree-l4" href="#wrap-functions">Wrap functions</a></li>
+                    <li><a class="toctree-l4" href="#functions">Functions</a></li>
                 
-                    <li><a class="toctree-l4" href="#wrap-methods-and-fields">Wrap methods and fields</a></li>
+                    <li><a class="toctree-l4" href="#methods-and-fields">Methods and fields</a></li>
                 
             
             </ul>
@@ -122,7 +122,7 @@
     
       
     
-    <li>Function Wrapping</li>
+    <li>Wrapping</li>
     <li class="wy-breadcrumbs-aside">
       
         
@@ -137,11 +137,13 @@
             <div class="section">
               
                 <h1 id="general">General</h1>
-<p>Luwra provides an easy way to turn any C or C++ function into a
-<a href="http://www.lua.org/manual/5.3/manual.html#lua_CFunction">lua_CFunction</a> which can be used by the
-Lua VM. Note, all parameter types must be readable from the stack (<code>Value&lt;T&gt;::read</code> exists for all)
-and the return type must be pushable (<code>Value&lt;T&gt;::push</code> exists).</p>
-<h2 id="wrap-functions">Wrap functions</h2>
+<p>Luwra provides a simple way to generate
+Lua <a href="http://www.lua.org/manual/5.3/manual.html#lua_CFunction">C functions</a> from functions and class
+members like methods and accessors using the <code>LUWRA_WRAP</code> macro. These kind of C functions are
+useful, because they work just like regular Lua functions within the Lua virtual machine.</p>
+<h2 id="functions">Functions</h2>
+<p>When wrapping functions, one must consider that all parameter types must be able to be read from the
+stack and the return type must be able to be pushed onto the stack.</p>
 <p>Assuming you have a function similiar to this:</p>
 <pre><code class="c++">int my_function(const char* a, int b) {
     return /* magic */;
@@ -163,7 +165,7 @@ The macros will take care of this themselves. You must provide only the name of 
 print(my_result)
 </code></pre>
 
-<h2 id="wrap-methods-and-fields">Wrap methods and fields</h2>
+<h2 id="methods-and-fields">Methods and fields</h2>
 <p>It is also possible to turn C++ field accessors and methods into <code>lua_CFunction</code>s. It is a little
 trickier than wrapping normal functions. The resulting Lua functions expect the first (or <code>self</code>)
 parameter to be a user type instance of the type which the wrapped field or method belongs to.</p>

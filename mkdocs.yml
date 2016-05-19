@@ -5,7 +5,7 @@ pages:
   - 'Home': index.md
   - 'Basics': basics.md
   - 'Advanced Stack Interaction': advanced.md
-  - 'Function Wrapping': wrapping.md
+  - 'Wrapping': wrapping.md
   - 'User Types': user-types.md
 theme: readthedocs
 docs_dir: docs/mkdocs

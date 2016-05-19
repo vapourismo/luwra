@@ -73,6 +73,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value_3_01float_01_4.html">Value&lt; float &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value_3_01internal_1_1Path_3_01P_00_01K_01_4_01_4.html">Value&lt; internal::Path&lt; P, K &gt; &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value_3_01long_01double_01_4.html">Value&lt; long double &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value_3_01NativeFunction_3_01R_01_4_01_4.html">Value&lt; NativeFunction&lt; R &gt; &gt;</a></td></tr>
@@ -135,20 +137,20 @@ Functions</h2></td></tr>
 <tr class="separator:a7814014b3adfbb6899255f120e70af26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a73f160e82f91ae974ea33c72248c35"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a7a73f160e82f91ae974ea33c72248c35">setMetatable</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, const char *name)</td></tr>
 <tr class="separator:a7a73f160e82f91ae974ea33c72248c35"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afed27900ff117638937ad92e0217258d"><td class="memTemplParams" colspan="2">template&lt;typename V &gt; </td></tr>
-<tr class="memitem:afed27900ff117638937ad92e0217258d"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#afed27900ff117638937ad92e0217258d">setGlobal</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, const std::string &amp;name, V value)</td></tr>
-<tr class="separator:afed27900ff117638937ad92e0217258d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0a7dbbbdb339227c6ecaaa46422e05b"><td class="memTemplParams" colspan="2">template&lt;typename V &gt; </td></tr>
-<tr class="memitem:af0a7dbbbdb339227c6ecaaa46422e05b"><td class="memTemplItemLeft" align="right" valign="top">static V&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#af0a7dbbbdb339227c6ecaaa46422e05b">getGlobal</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, const std::string &amp;name)</td></tr>
-<tr class="separator:af0a7dbbbdb339227c6ecaaa46422e05b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61be315f787a0897b4685265cec96f75"><td class="memTemplParams" colspan="2">template&lt;typename V &gt; </td></tr>
+<tr class="memitem:a61be315f787a0897b4685265cec96f75"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a61be315f787a0897b4685265cec96f75">setGlobal</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, const char *name, V &amp;&amp;value)</td></tr>
+<tr class="separator:a61be315f787a0897b4685265cec96f75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a289b69f3233932b425bc88f8079cb967"><td class="memTemplParams" colspan="2">template&lt;typename V &gt; </td></tr>
+<tr class="memitem:a289b69f3233932b425bc88f8079cb967"><td class="memTemplItemLeft" align="right" valign="top">static V&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a289b69f3233932b425bc88f8079cb967">getGlobal</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, const char *name)</td></tr>
+<tr class="separator:a289b69f3233932b425bc88f8079cb967"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d630ce9ae9b10af33624f70dde4b148"><td class="memTemplParams" colspan="2">template&lt;typename... R&gt; </td></tr>
 <tr class="memitem:a1d630ce9ae9b10af33624f70dde4b148"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a1d630ce9ae9b10af33624f70dde4b148">setFields</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int index, R &amp;&amp;...args)</td></tr>
 <tr class="separator:a1d630ce9ae9b10af33624f70dde4b148"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a00729c47fba6114115f2e3f32c21f0b8"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a00729c47fba6114115f2e3f32c21f0b8">setFields</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int index, const <a class="el" href="namespaceluwra.html#ac090722c6d5d6b88b31895aad64788c2">FieldVector</a> &amp;fields)</td></tr>
 <tr class="separator:a00729c47fba6114115f2e3f32c21f0b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a06cabc81163602ec1fd8f580944f5b86"><td class="memTemplParams" colspan="2">template&lt;typename V , typename K &gt; </td></tr>
-<tr class="memitem:a06cabc81163602ec1fd8f580944f5b86"><td class="memTemplItemLeft" align="right" valign="top">static V&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a06cabc81163602ec1fd8f580944f5b86">getField</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int index, K key)</td></tr>
-<tr class="separator:a06cabc81163602ec1fd8f580944f5b86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaca0b051ab1fd52dfbc752c2ac1fb4ba"><td class="memTemplParams" colspan="2">template&lt;typename V , typename K &gt; </td></tr>
+<tr class="memitem:aaca0b051ab1fd52dfbc752c2ac1fb4ba"><td class="memTemplItemLeft" align="right" valign="top">static V&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#aaca0b051ab1fd52dfbc752c2ac1fb4ba">getField</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int index, K &amp;&amp;key)</td></tr>
+<tr class="separator:aaca0b051ab1fd52dfbc752c2ac1fb4ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa20e363f38b3ae5a168cf40365f5646a"><td class="memTemplParams" colspan="2">template&lt;typename S , typename F , typename... X&gt; </td></tr>
 <tr class="memitem:aa20e363f38b3ae5a168cf40365f5646a"><td class="memTemplItemLeft" align="right" valign="top">static internal::Layout&lt; S &gt;::ReturnType&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#aa20e363f38b3ae5a168cf40365f5646a">direct</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int pos, F &amp;&amp;hook, X &amp;&amp;...args)</td></tr>
 <tr class="separator:aa20e363f38b3ae5a168cf40365f5646a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -175,12 +177,12 @@ Functions</h2></td></tr>
 <tr class="separator:a6dc1624dc2f382d10651768a89788204"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5889ab9407f644452b38fbcc8fbae63a"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structluwra_1_1Table.html">Table</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a5889ab9407f644452b38fbcc8fbae63a">getGlobalsTable</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state)</td></tr>
 <tr class="separator:a5889ab9407f644452b38fbcc8fbae63a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8e7eab11fc2cf3f258ffd81571066fa"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ae8e7eab11fc2cf3f258ffd81571066fa"><td class="memTemplItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#ae8e7eab11fc2cf3f258ffd81571066fa">push</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, T value)</td></tr>
-<tr class="separator:ae8e7eab11fc2cf3f258ffd81571066fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a083af86d9ec488ddd0dee8c4cf0acdff"><td class="memTemplParams" colspan="2">template&lt;typename T1 , typename T2 , typename... TR&gt; </td></tr>
-<tr class="memitem:a083af86d9ec488ddd0dee8c4cf0acdff"><td class="memTemplItemLeft" align="right" valign="top">size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a083af86d9ec488ddd0dee8c4cf0acdff">push</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, T1 value, T2 &amp;&amp;head, TR &amp;&amp;...rest)</td></tr>
-<tr class="separator:a083af86d9ec488ddd0dee8c4cf0acdff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6cf73d2416b43f1a90eb243a98cff5b"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ab6cf73d2416b43f1a90eb243a98cff5b"><td class="memTemplItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#ab6cf73d2416b43f1a90eb243a98cff5b">push</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, T &amp;&amp;value)</td></tr>
+<tr class="separator:ab6cf73d2416b43f1a90eb243a98cff5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb3a2b72974e20286b67753a42c6df41"><td class="memTemplParams" colspan="2">template&lt;typename T1 , typename T2 , typename... TR&gt; </td></tr>
+<tr class="memitem:abb3a2b72974e20286b67753a42c6df41"><td class="memTemplItemLeft" align="right" valign="top">size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#abb3a2b72974e20286b67753a42c6df41">push</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, T1 &amp;&amp;value, T2 &amp;&amp;head, TR &amp;&amp;...rest)</td></tr>
+<tr class="separator:abb3a2b72974e20286b67753a42c6df41"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4fe4e574680cf54a0f8d958740eb90ab"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a4fe4e574680cf54a0f8d958740eb90ab"><td class="memTemplItemLeft" align="right" valign="top">static T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a4fe4e574680cf54a0f8d958740eb90ab">read</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int index)</td></tr>
 <tr class="separator:a4fe4e574680cf54a0f8d958740eb90ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -190,9 +192,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a1d7d357f904e0bd68b66d9588fbe341a"><td class="memTemplParams" colspan="2">template&lt;typename U &gt; </td></tr>
 <tr class="memitem:a1d7d357f904e0bd68b66d9588fbe341a"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a1d7d357f904e0bd68b66d9588fbe341a">registerUserType</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, const <a class="el" href="namespaceluwra.html#ac090722c6d5d6b88b31895aad64788c2">FieldVector</a> &amp;methods=<a class="el" href="namespaceluwra.html#ac090722c6d5d6b88b31895aad64788c2">FieldVector</a>(), const <a class="el" href="namespaceluwra.html#ac090722c6d5d6b88b31895aad64788c2">FieldVector</a> &amp;meta_methods=<a class="el" href="namespaceluwra.html#ac090722c6d5d6b88b31895aad64788c2">FieldVector</a>())</td></tr>
 <tr class="separator:a1d7d357f904e0bd68b66d9588fbe341a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a683f6075862f8fc5cad0d76445f2f607"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a683f6075862f8fc5cad0d76445f2f607"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a683f6075862f8fc5cad0d76445f2f607">registerUserType</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, const std::string &amp;ctor_name, const <a class="el" href="namespaceluwra.html#ac090722c6d5d6b88b31895aad64788c2">FieldVector</a> &amp;methods=<a class="el" href="namespaceluwra.html#ac090722c6d5d6b88b31895aad64788c2">FieldVector</a>(), const <a class="el" href="namespaceluwra.html#ac090722c6d5d6b88b31895aad64788c2">FieldVector</a> &amp;meta_methods=<a class="el" href="namespaceluwra.html#ac090722c6d5d6b88b31895aad64788c2">FieldVector</a>())</td></tr>
-<tr class="separator:a683f6075862f8fc5cad0d76445f2f607"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ef30f7916e71abe07c7a042a25e60e7"><td class="memTemplParams" colspan="2">template&lt;typename S &gt; </td></tr>
+<tr class="memitem:a1ef30f7916e71abe07c7a042a25e60e7"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a1ef30f7916e71abe07c7a042a25e60e7">registerUserType</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, const char *ctor_name, const <a class="el" href="namespaceluwra.html#ac090722c6d5d6b88b31895aad64788c2">FieldVector</a> &amp;methods=<a class="el" href="namespaceluwra.html#ac090722c6d5d6b88b31895aad64788c2">FieldVector</a>(), const <a class="el" href="namespaceluwra.html#ac090722c6d5d6b88b31895aad64788c2">FieldVector</a> &amp;meta_methods=<a class="el" href="namespaceluwra.html#ac090722c6d5d6b88b31895aad64788c2">FieldVector</a>())</td></tr>
+<tr class="separator:a1ef30f7916e71abe07c7a042a25e60e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a class="anchor" id="a4e313d0af10393323fa280848c3888a1"></a>
@@ -620,7 +622,7 @@ template&lt;typename S , typename F , typename... A&gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a06cabc81163602ec1fd8f580944f5b86"></a>
+<a class="anchor" id="aaca0b051ab1fd52dfbc752c2ac1fb4ba"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -644,7 +646,7 @@ template&lt;typename V , typename K &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">K&#160;</td>
+          <td class="paramtype">K &amp;&amp;&#160;</td>
           <td class="paramname"><em>key</em>&#160;</td>
         </tr>
         <tr>
@@ -663,7 +665,7 @@ template&lt;typename V , typename K &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="af0a7dbbbdb339227c6ecaaa46422e05b"></a>
+<a class="anchor" id="a289b69f3233932b425bc88f8079cb967"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -681,7 +683,7 @@ template&lt;typename V &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>name</em>&#160;</td>
         </tr>
         <tr>
@@ -830,7 +832,7 @@ template&lt;typename S , typename F , typename... A&gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="ae8e7eab11fc2cf3f258ffd81571066fa"></a>
+<a class="anchor" id="ab6cf73d2416b43f1a90eb243a98cff5b"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -848,7 +850,7 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">T&#160;</td>
+          <td class="paramtype">T &amp;&amp;&#160;</td>
           <td class="paramname"><em>value</em>&#160;</td>
         </tr>
         <tr>
@@ -863,11 +865,11 @@ template&lt;typename T &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Convenient wrapped for <a class="el" href="structluwra_1_1Value.html#aa376d68285606c206562b822e8187384">Value&lt;T&gt;::push</a>. </p>
+<p>Convenient wrapped for Value&lt;T&gt;::push. </p>
 
 </div>
 </div>
-<a class="anchor" id="a083af86d9ec488ddd0dee8c4cf0acdff"></a>
+<a class="anchor" id="abb3a2b72974e20286b67753a42c6df41"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -882,7 +884,7 @@ template&lt;typename T1 , typename T2 , typename... TR&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">T1&#160;</td>
+          <td class="paramtype">T1 &amp;&amp;&#160;</td>
           <td class="paramname"><em>value</em>, </td>
         </tr>
         <tr>
@@ -941,7 +943,7 @@ template&lt;typename T &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Convenient wrapper for <a class="el" href="structluwra_1_1Value.html#a41e193fdb55028189fe8ca5e503efcfa">Value&lt;T&gt;::read</a>. </p>
+<p>Convenient wrapper for Value&lt;T&gt;::read. </p>
 
 </div>
 </div>
@@ -1003,11 +1005,11 @@ template&lt;typename U &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a683f6075862f8fc5cad0d76445f2f607"></a>
+<a class="anchor" id="a1ef30f7916e71abe07c7a042a25e60e7"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename T &gt; </div>
+template&lt;typename S &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -1021,7 +1023,7 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ctor_name</em>, </td>
         </tr>
         <tr>
@@ -1150,7 +1152,7 @@ template&lt;typename... R&gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="afed27900ff117638937ad92e0217258d"></a>
+<a class="anchor" id="a61be315f787a0897b4685265cec96f75"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -1168,13 +1170,13 @@ template&lt;typename V &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>name</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">V&#160;</td>
+          <td class="paramtype">V &amp;&amp;&#160;</td>
           <td class="paramname"><em>value</em>&#160;</td>
         </tr>
         <tr>
