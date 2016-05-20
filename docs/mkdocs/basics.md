@@ -38,6 +38,29 @@ std::map&lt;K, V&gt;                   | yes      | yes      | table
 **Note:** Some numeric types have a different size than their matching Lua type - they will be
 truncated during push or read operations.
 
+## Extending supported types
+If you are missing a type that cannot be used as a [user type](/user-types), you can add a
+specialization of [Value][luwra-value]. All you need to do is modify the following snippet for your
+type `T`.
+
+```c++
+namespace luwra {
+	template <>
+	struct Value<T> {
+		static inline
+		T read(State* state, int index) {
+			return /* Return the instance of T that you have read at the given index */;
+		}
+
+		static inline
+		size_t push(State* state, const T& value) {
+			// Push the given value on top of the stack
+			return /* Return how many values you have pushed onto the stack */;
+		}
+	};
+}
+```
+
 ## Pushing C++ values
 When pushing values onto the stack you can either use [Value&lt;T&gt;::push][luwra-value-push] or
 the more convenient [push][luwra-push].
