@@ -8,6 +8,9 @@ TEST_CASE("NativeFunction<R>") {
 
 	auto fun = luwra::read<luwra::NativeFunction<int>>(state, -1);
 	REQUIRE(fun(13, 37) == 50);
+
+	luwra::NativeFunction<double> fun2 = fun;
+	REQUIRE(fun2(37.13, 13.37) == 50.5);
 }
 
 TEST_CASE("NativeFunction<void>") {
