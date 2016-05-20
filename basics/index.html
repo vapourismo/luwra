@@ -146,13 +146,9 @@
               
                 <h1 id="integration">Integration</h1>
 <p>Luwra does not provide a standalone version of Lua nor does it isolate its features. This means that
-all functions and classes operate on
-<a href="http://www.lua.org/manual/5.3/manual.html#lua_State">lua_State</a> (or the alias
-<a href="../reference/namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a>). Doing this allows you to
-integrate Luwra however you like.</p>
+all functions and classes can operate on <a href="http://www.lua.org/manual/5.3/manual.html#lua_State">lua_State</a> (or the alias <a href="../reference/namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a>).
+Doing this allows you to integrate Luwra however you like.</p>
 <h1 id="stack-interaction">Stack Interaction</h1>
-<p>Although Luwra provides a variety of features, its main concern is efficient and safe interaction
-with the Lua stack.</p>
 <p>A fundamental aspect of this is the abstract template <a href="../reference/structluwra_1_1Value.html">Value</a>.
 Every type which can be pushed onto or read from the stack has a specialization of it.
 Useful implementations are provided out of the box:</p>
@@ -269,27 +265,45 @@ Useful implementations are provided out of the box:</p>
 <td>nil</td>
 </tr>
 <tr>
-<td>std::tuple&lt;T&gt;</td>
+<td>std::tuple&lt;T...&gt;</td>
 <td>yes</td>
 <td>no</td>
 <td><em>depends on the tuple contents</em></td>
 </tr>
 <tr>
+<td>std::vector&lt;T&gt;</td>
+<td>yes</td>
+<td>yes</td>
+<td>table</td>
+</tr>
+<tr>
+<td>std::list&lt;T&gt;</td>
+<td>yes</td>
+<td>yes</td>
+<td>table</td>
+</tr>
+<tr>
+<td>std::map&lt;K, V&gt;</td>
+<td>yes</td>
+<td>yes</td>
+<td>table</td>
+</tr>
+<tr>
 <td><a href="http://www.lua.org/manual/5.3/manual.html#lua_CFunction">lua_CFunction</a></td>
 <td>yes</td>
 <td>no</td>
-<td>function</td>
+<td>function, table or userdata</td>
 </tr>
 <tr>
-<td><a href="../reference/structluwra_1_1NativeFunction_3_01R_07A_8_8_8_08_4.html">NativeFunction&lt;R(A...)&gt;</a></td>
-<td>no</td>
+<td><a href="../reference/structluwra_1_1NativeFunction_3_01R_07A_8_8_8_08_4.html">NativeFunction</a></td>
+<td>yes</td>
 <td>yes</td>
 <td>function</td>
 </tr>
 <tr>
-<td><a href="../reference/namespaceluwra.html#ac090722c6d5d6b88b31895aad64788c2">FieldVector</a></td>
+<td><a href="../reference/structluwra_1_1Table.html">Table</a></td>
 <td>yes</td>
-<td>no</td>
+<td>yes</td>
 <td>table</td>
 </tr>
 </tbody>
@@ -297,9 +311,8 @@ Useful implementations are provided out of the box:</p>
 <p><strong>Note:</strong> Some numeric types have a different size than their matching Lua type - they will be
 truncated during push or read operations.</p>
 <h2 id="pushing-c-values">Pushing C++ values</h2>
-<p>When pushing values onto the stack you can either use
-<a href="../reference/structluwra_1_1Value.html#aa376d68285606c206562b822e8187384">Value&lt;T&gt;::push</a> or the more
-convenient <a href="../reference/namespaceluwra.html#ae8e7eab11fc2cf3f258ffd81571066fa">push</a>.</p>
+<p>When pushing values onto the stack you can either use <a href="../reference/structluwra_1_1Value.html#aa376d68285606c206562b822e8187384">Value&lt;T&gt;::push</a> or
+the more convenient <a href="../reference/namespaceluwra.html#ae8e7eab11fc2cf3f258ffd81571066fa">push</a>.</p>
 <pre><code class="c++">// Push an integer
 luwra::push(lua, 1338);
 
@@ -313,15 +326,17 @@ luwra::push(lua, false);
 luwra::push(lua, &quot;Hello World&quot;);
 
 // Push a table
-luwra::push(lua, luwra::FieldVector {
+luwra::push(lua, luwra::MemberMap {
     {&quot;one&quot;, 1},
     {1, &quot;one&quot;},
-    {&quot;nested&quot;, luwra::FieldVector {
+    {&quot;nested&quot;, luwra::MemberMap {
         {&quot;more&quot;, &quot;fields&quot;}
     }}
 });
 </code></pre>
 
+<p><strong>Note:</strong> <code>luwra::MemberMap</code> is an alias for <code>std:map&lt;luwra::Pushable, luwra::Pushable&gt;</code>. Its keys
+and values are constructible using any pushable type.</p>
 <p>This produces the following stack layout:</p>
 <table>
 <thead>
@@ -362,9 +377,8 @@ luwra::push(lua, luwra::FieldVector {
 <p>It is possible to provide a template parameter to <code>push</code> to enforce pushing a specific type.
 In most cases you are probably better off by letting the compiler infer the template parameter.</p>
 <h2 id="reading-lua-values">Reading Lua values</h2>
-<p>Simple retrieval of Lua values is done using
-<a href="../reference/namespaceluwra.html#a4fe4e574680cf54a0f8d958740eb90ab">read&lt;T&gt;</a>. Consider the
-stack layout from the previous example. This is how you would retrieve a value from the stack.</p>
+<p>Simple retrieval of Lua values is done using <a href="../reference/namespaceluwra.html#a4fe4e574680cf54a0f8d958740eb90ab">read&lt;T&gt;</a>. Consider the stack layout
+from the previous example. This is how you would retrieve a value from the stack.</p>
 <pre><code class="c++">// Retrieve the integer at position 1
 int value = luwra::read&lt;int&gt;(lua, 1);
 
@@ -373,15 +387,14 @@ int value = luwra::read&lt;int&gt;(lua, -5);
 </code></pre>
 
 <h2 id="read-and-type-errors">Read and type errors</h2>
-<p>What happens when a value which you are trying to read mismatches the expected type or cannot be
-converted to it? Most <code>Value&lt;T&gt;</code> specializations use Lua's <code>luaL_check*</code> functions to retrieve
-the values from the stack. This means that no exceptions will be thrown - instead the error handling
-is delegated to the Lua VM. Have a look at the
-<a href="http://www.lua.org/manual/5.3/manual.html#4.6">error handling documentation</a> for more information.</p>
+<p>What happens when a value mismatches the expected type or cannot be converted to it? Most
+<a href="../reference/structluwra_1_1Value.html">Value</a> specializations use Lua's <code>luaL_check*</code> functions to retrieve the values from
+the stack. This means that no exceptions will be thrown - instead the error handling is delegated to
+the Lua VM. Have a look at the <a href="http://www.lua.org/manual/5.3/manual.html#4.6">error handling documentation</a> for more
+information.</p>
 <h1 id="globals">Globals</h1>
-<p>In order to convenient register values in the global namespace, Luwra provides
-<a href="../reference/namespaceluwra.html#afed27900ff117638937ad92e0217258d">setGlobal</a> and
-<a href="../reference/namespaceluwra.html#af0a7dbbbdb339227c6ecaaa46422e05b">getGlobal</a>.</p>
+<p>In order to conveniently register values in the global namespace, Luwra provides
+<a href="../reference/namespaceluwra.html#afed27900ff117638937ad92e0217258d">setGlobal</a> and [getGlobal][luwra-global].</p>
 <pre><code class="c++">// Register in the global namespace
 luwra::setGlobal(lua, &quot;almostPi&quot;, 3.14);
 
