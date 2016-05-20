@@ -50,6 +50,7 @@ struct Value<std::nullptr_t> {
 		return 1;
 	}
 };
+
 /**
  * Convenient wrapped for [Value<T>::push](@ref Value<T>::push).
  */
