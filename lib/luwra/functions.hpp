@@ -10,6 +10,9 @@
 #include "common.hpp"
 #include "types.hpp"
 #include "stack.hpp"
+#include "usertypes.hpp"
+
+#include <functional>
 
 LUWRA_NS_BEGIN
 
@@ -74,13 +77,20 @@ template <typename R>
 struct Value<NativeFunction<R>> {
 	static inline
 	NativeFunction<R> read(State* state, int index) {
-		luaL_checktype(state, index, LUA_TFUNCTION);
 		return {state, index};
 	}
 
 	static inline
 	size_t push(State* state, const NativeFunction<R>& func) {
 		return Value<Reference>::push(state, func);
+	}
+};
+
+template <typename R, typename... A>
+struct Value<std::function<R(A...)>> {
+	static inline
+	std::function<R(A...)> read(State* state, int index) {
+		return {Value<NativeFunction<R>>::read(state, index)};
 	}
 };
 
