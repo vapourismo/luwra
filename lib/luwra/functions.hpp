@@ -77,7 +77,11 @@ struct NativeFunction<void> {
 	inline
 	NativeFunction(State* state, int index):
 		ref(state, index)
-	{}
+	{
+		int type = lua_type(state, index);
+		if (type != LUA_TTABLE && type != LUA_TUSERDATA && type != LUA_TFUNCTION)
+			luaL_argerror(state, index, "Expected table, userdata or function");
+	}
 
 	inline
 	void operator ()() const {
