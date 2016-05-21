@@ -169,12 +169,12 @@ Functions</h2></td></tr>
 <tr class="memitem:ae5412e502815db7aa2a10e6c84394457"><td class="memTemplParams" colspan="2">template&lt;typename R , typename... A&gt; </td></tr>
 <tr class="memitem:ae5412e502815db7aa2a10e6c84394457"><td class="memTemplItemLeft" align="right" valign="top">static R&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#ae5412e502815db7aa2a10e6c84394457">apply</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, R(*fun)(A...))</td></tr>
 <tr class="separator:ae5412e502815db7aa2a10e6c84394457"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a983092513bfded87189613f8dc27ebbe"><td class="memTemplParams" colspan="2">template&lt;typename R , typename... A&gt; </td></tr>
-<tr class="memitem:a983092513bfded87189613f8dc27ebbe"><td class="memTemplItemLeft" align="right" valign="top">static R&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a983092513bfded87189613f8dc27ebbe">apply</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int pos, const std::function&lt; R(A...)&gt; &amp;fun)</td></tr>
-<tr class="separator:a983092513bfded87189613f8dc27ebbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9a121cbb3ba2b4fb7ee8b2c12472ab51"><td class="memTemplParams" colspan="2">template&lt;typename R , typename... A&gt; </td></tr>
-<tr class="memitem:a9a121cbb3ba2b4fb7ee8b2c12472ab51"><td class="memTemplItemLeft" align="right" valign="top">static R&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a9a121cbb3ba2b4fb7ee8b2c12472ab51">apply</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, const std::function&lt; R(A...)&gt; &amp;fun)</td></tr>
-<tr class="separator:a9a121cbb3ba2b4fb7ee8b2c12472ab51"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d726851173a305be65e763d989d0756"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a8d726851173a305be65e763d989d0756"><td class="memTemplItemLeft" align="right" valign="top">static internal::FunctionObjectReturnType&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a8d726851173a305be65e763d989d0756">apply</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int pos, const T &amp;obj)</td></tr>
+<tr class="separator:a8d726851173a305be65e763d989d0756"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a816acd63f544fe4418ef4ac8e9d968e7"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a816acd63f544fe4418ef4ac8e9d968e7"><td class="memTemplItemLeft" align="right" valign="top">static internal::FunctionObjectReturnType&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a816acd63f544fe4418ef4ac8e9d968e7">apply</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, const T &amp;obj)</td></tr>
+<tr class="separator:a816acd63f544fe4418ef4ac8e9d968e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f24fc70cb48531cf1e3da6a3a741971"><td class="memTemplParams" colspan="2">template&lt;typename S , typename F , typename... A&gt; </td></tr>
 <tr class="memitem:a9f24fc70cb48531cf1e3da6a3a741971"><td class="memTemplItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a9f24fc70cb48531cf1e3da6a3a741971">map</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int pos, F &amp;&amp;hook, A &amp;&amp;...args)</td></tr>
 <tr class="separator:a9f24fc70cb48531cf1e3da6a3a741971"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -304,7 +304,7 @@ template&lt;typename R , typename... A&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Synonym for <a class="el" href="namespaceluwra.html#aa20e363f38b3ae5a168cf40365f5646a">direct</a> with a function pointer which lets you omit all template parameters. The stack layout will be inferred using the signature of the given function pointer. </p>
+<p>A version of <a class="el" href="namespaceluwra.html#aa20e363f38b3ae5a168cf40365f5646a">direct</a> which is specialized for function pointers; therefore allows you to omit the template parameters since the compiler can infer its parameter and return types. </p>
 
 </div>
 </div>
@@ -345,17 +345,17 @@ template&lt;typename R , typename... A&gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a983092513bfded87189613f8dc27ebbe"></a>
+<a class="anchor" id="a8d726851173a305be65e763d989d0756"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename R , typename... A&gt; </div>
+template&lt;typename T &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static R luwra::apply </td>
+          <td class="memname">static internal::FunctionObjectReturnType&lt;T&gt; luwra::apply </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *&#160;</td>
           <td class="paramname"><em>state</em>, </td>
@@ -369,8 +369,8 @@ template&lt;typename R , typename... A&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::function&lt; R(A...)&gt; &amp;&#160;</td>
-          <td class="paramname"><em>fun</em>&#160;</td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>obj</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -384,21 +384,21 @@ template&lt;typename R , typename... A&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Synonym for <a class="el" href="namespaceluwra.html#aa20e363f38b3ae5a168cf40365f5646a">direct</a> with a function object which lets you omit all template parameters. The stack layout will be inferred using the template parameter to your <code>std::function</code> object. </p>
+<p>A version of <a class="el" href="namespaceluwra.html#aa20e363f38b3ae5a168cf40365f5646a">direct</a> which tries to infer the stack layout from the given <code>Callable</code>. </p>
 
 </div>
 </div>
-<a class="anchor" id="a9a121cbb3ba2b4fb7ee8b2c12472ab51"></a>
+<a class="anchor" id="a816acd63f544fe4418ef4ac8e9d968e7"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename R , typename... A&gt; </div>
+template&lt;typename T &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static R luwra::apply </td>
+          <td class="memname">static internal::FunctionObjectReturnType&lt;T&gt; luwra::apply </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *&#160;</td>
           <td class="paramname"><em>state</em>, </td>
@@ -406,8 +406,8 @@ template&lt;typename R , typename... A&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::function&lt; R(A...)&gt; &amp;&#160;</td>
-          <td class="paramname"><em>fun</em>&#160;</td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>obj</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -421,7 +421,7 @@ template&lt;typename R , typename... A&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Same as <code>apply(state, 1, fun)</code>. </p>
+<p>Same as <code>apply(state, 1, obj)</code>. </p>
 
 </div>
 </div>

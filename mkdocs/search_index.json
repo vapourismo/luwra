@@ -51,23 +51,33 @@
             "title": "Read and type errors"
         },
         {
-            "location": "/advanced/",
-            "text": "Advanced stack interaction\n\n\nInstead of extracting every Lua value seperately and pushing the result of your C++ function back\nonto the stack again, you can use one of the following functions to make this process easier for\nyou.\n\n\nInvoke a Callable with Lua values\n\n\nThe function \ndirect\n lets you specify a \nstack signature\n in order to extract the\nvalues and invoke a \nCallable\n with them.\n\n\nConsider the following:\n\n\nstring result = foo(luwra::read<string>(lua, n), luwra::read<int>(lua, n + 1));\n\n\n\n\nIt could be rewritting like this:\n\n\nstring result = luwra::direct<string(string, int)>(lua, n, foo);\n\n\n\n\nNote:\n The result of \nfoo\n is not pushed onto the stack. Except for the extraction of Lua values,\neverything happens on the C++ side.\n\n\nInvoke a function with Lua values\n\n\napply\n is similiar to \ndirect\n. It differs from \ndirect\n by providing\nspecific overloads for function pointers and function objects. Although \ndirect\n works with function pointers\nand function objects, it is often more convenient to use \napply\n since it allows the compiler to\ninfer the \nstack signature\n without providing a template parameter.\n\n\nProvided a function \nfoo\n which has been declared as used in the example above:\n\n\nstring foo(string bar, int baz);\n\n// ... or with a function object\nfunction<string(string, int)> foo = /* magic */;\n\n\n\n\nOne would use \nfoo\n like this:\n\n\nstring result = luwra::apply(lua, n, foo);",
+            "location": "/advanced-stack-interaction/",
+            "text": "Advanced stack interaction\n\n\nInstead of extracting every Lua value seperately and pushing the result of your C++ function back\nonto the stack again, you can use one of the following functions to make this process easier for\nyou.\n\n\nManual stack layout\n\n\nThe function \ndirect\n lets you specify a \nstack signature\n in order to extract the\nvalues and invoke a \nCallable\n with them.\n\n\nWithout returning to Lua\n\n\nConsider the following:\n\n\nstring result = foo(luwra::read<string>(lua, n), luwra::read<int>(lua, n + 1));\n\n\n\n\nIt could be rewritting like this:\n\n\nstring result = luwra::direct<string(string, int)>(lua, n, foo);\n\n\n\n\nThis will read all the required values off the stack, invoke \nfoo\n with them and return its value to\nyou.\n\n\nReturning values to the stack\n\n\nAn alternative to \ndirect\n is \nmap\n. It does exactly the same, with the\nexception that it returns the resulting value back to the Lua stack.\n\n\nluwra::map<string(string, int)>(lua, n, foo);\n\n\n\n\nInvoke a function with Lua values\n\n\napply\n is similiar to \ndirect\n. It differs from \ndirect\n by providing\nspecific overloads for function pointers and function objects. Although \ndirect\n works with function pointers\nand function objects, it is often more convenient to use \napply\n since it allows the compiler to\ninfer the \nstack signature\n without providing a template parameter.\n\n\nProvided a function \nfoo\n which has been declared as used in the example above:\n\n\nstring foo(string bar, int baz);\n\n// ... or with a function object\nfunction<string(string, int)> foo = /* magic */;\n\n\n\n\nOne would use \nfoo\n like this:\n\n\nstring result = luwra::apply(lua, n, foo);\n\n\n\n\nIt also works with Lambdas, because they are function objects aswell.\n\n\nstring result = luwra::apply(lua, n, [](string a, int b) -> string {\n    // Magic\n});",
             "title": "Advanced Stack Interaction"
         },
         {
-            "location": "/advanced/#advanced-stack-interaction",
+            "location": "/advanced-stack-interaction/#advanced-stack-interaction",
             "text": "Instead of extracting every Lua value seperately and pushing the result of your C++ function back\nonto the stack again, you can use one of the following functions to make this process easier for\nyou.",
             "title": "Advanced stack interaction"
         },
         {
-            "location": "/advanced/#invoke-a-callable-with-lua-values",
-            "text": "The function  direct  lets you specify a  stack signature  in order to extract the\nvalues and invoke a  Callable  with them.  Consider the following:  string result = foo(luwra::read<string>(lua, n), luwra::read<int>(lua, n + 1));  It could be rewritting like this:  string result = luwra::direct<string(string, int)>(lua, n, foo);  Note:  The result of  foo  is not pushed onto the stack. Except for the extraction of Lua values,\neverything happens on the C++ side.",
-            "title": "Invoke a Callable with Lua values"
+            "location": "/advanced-stack-interaction/#manual-stack-layout",
+            "text": "The function  direct  lets you specify a  stack signature  in order to extract the\nvalues and invoke a  Callable  with them.",
+            "title": "Manual stack layout"
         },
         {
-            "location": "/advanced/#invoke-a-function-with-lua-values",
-            "text": "apply  is similiar to  direct . It differs from  direct  by providing\nspecific overloads for function pointers and function objects. Although  direct  works with function pointers\nand function objects, it is often more convenient to use  apply  since it allows the compiler to\ninfer the  stack signature  without providing a template parameter.  Provided a function  foo  which has been declared as used in the example above:  string foo(string bar, int baz);\n\n// ... or with a function object\nfunction<string(string, int)> foo = /* magic */;  One would use  foo  like this:  string result = luwra::apply(lua, n, foo);",
+            "location": "/advanced-stack-interaction/#without-returning-to-lua",
+            "text": "Consider the following:  string result = foo(luwra::read<string>(lua, n), luwra::read<int>(lua, n + 1));  It could be rewritting like this:  string result = luwra::direct<string(string, int)>(lua, n, foo);  This will read all the required values off the stack, invoke  foo  with them and return its value to\nyou.",
+            "title": "Without returning to Lua"
+        },
+        {
+            "location": "/advanced-stack-interaction/#returning-values-to-the-stack",
+            "text": "An alternative to  direct  is  map . It does exactly the same, with the\nexception that it returns the resulting value back to the Lua stack.  luwra::map<string(string, int)>(lua, n, foo);",
+            "title": "Returning values to the stack"
+        },
+        {
+            "location": "/advanced-stack-interaction/#invoke-a-function-with-lua-values",
+            "text": "apply  is similiar to  direct . It differs from  direct  by providing\nspecific overloads for function pointers and function objects. Although  direct  works with function pointers\nand function objects, it is often more convenient to use  apply  since it allows the compiler to\ninfer the  stack signature  without providing a template parameter.  Provided a function  foo  which has been declared as used in the example above:  string foo(string bar, int baz);\n\n// ... or with a function object\nfunction<string(string, int)> foo = /* magic */;  One would use  foo  like this:  string result = luwra::apply(lua, n, foo);  It also works with Lambdas, because they are function objects aswell.  string result = luwra::apply(lua, n, [](string a, int b) -> string {\n    // Magic\n});",
             "title": "Invoke a function with Lua values"
         },
         {

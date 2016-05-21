@@ -24,8 +24,8 @@
   <script>
     // Current page data
     var mkdocs_page_name = "Advanced Stack Interaction";
-    var mkdocs_page_input_path = "advanced.md";
-    var mkdocs_page_url = "/advanced/";
+    var mkdocs_page_input_path = "advanced-stack-interaction.md";
+    var mkdocs_page_url = "/advanced-stack-interaction/";
   </script>
   
   <script src="../js/jquery-2.1.1.min.js"></script>
@@ -76,7 +76,7 @@
             
                 <li class="toctree-l3"><a href="#advanced-stack-interaction">Advanced stack interaction</a></li>
                 
-                    <li><a class="toctree-l4" href="#invoke-a-callable-with-lua-values">Invoke a Callable with Lua values</a></li>
+                    <li><a class="toctree-l4" href="#manual-stack-layout">Manual stack layout</a></li>
                 
                     <li><a class="toctree-l4" href="#invoke-a-function-with-lua-values">Invoke a function with Lua values</a></li>
                 
@@ -140,9 +140,10 @@
 <p>Instead of extracting every Lua value seperately and pushing the result of your C++ function back
 onto the stack again, you can use one of the following functions to make this process easier for
 you.</p>
-<h2 id="invoke-a-callable-with-lua-values">Invoke a Callable with Lua values</h2>
+<h2 id="manual-stack-layout">Manual stack layout</h2>
 <p>The function <a href="../reference/namespaceluwra.html#aa20e363f38b3ae5a168cf40365f5646a">direct</a> lets you specify a <em>stack signature</em> in order to extract the
 values and invoke a <code>Callable</code> with them.</p>
+<h3 id="without-returning-to-lua">Without returning to Lua</h3>
 <p>Consider the following:</p>
 <pre><code class="c++">string result = foo(luwra::read&lt;string&gt;(lua, n), luwra::read&lt;int&gt;(lua, n + 1));
 </code></pre>
@@ -151,8 +152,14 @@ values and invoke a <code>Callable</code> with them.</p>
 <pre><code class="c++">string result = luwra::direct&lt;string(string, int)&gt;(lua, n, foo);
 </code></pre>
 
-<p><strong>Note:</strong> The result of <code>foo</code> is not pushed onto the stack. Except for the extraction of Lua values,
-everything happens on the C++ side.</p>
+<p>This will read all the required values off the stack, invoke <code>foo</code> with them and return its value to
+you.</p>
+<h3 id="returning-values-to-the-stack">Returning values to the stack</h3>
+<p>An alternative to <a href="../reference/namespaceluwra.html#aa20e363f38b3ae5a168cf40365f5646a">direct</a> is <a href="../reference/namespaceluwra.html#a9f24fc70cb48531cf1e3da6a3a741971">map</a>. It does exactly the same, with the
+exception that it returns the resulting value back to the Lua stack.</p>
+<pre><code class="c++">luwra::map&lt;string(string, int)&gt;(lua, n, foo);
+</code></pre>
+
 <h2 id="invoke-a-function-with-lua-values">Invoke a function with Lua values</h2>
 <p><a href="../reference/namespaceluwra.html#a839077ddd9c3d0565a40c574bc8e9555">apply</a> is similiar to <a href="../reference/namespaceluwra.html#aa20e363f38b3ae5a168cf40365f5646a">direct</a>. It differs from <code>direct</code> by providing
 specific overloads for function pointers and function objects. Although <code>direct</code> works with function pointers
@@ -167,6 +174,12 @@ function&lt;string(string, int)&gt; foo = /* magic */;
 
 <p>One would use <code>foo</code> like this:</p>
 <pre><code class="c++">string result = luwra::apply(lua, n, foo);
+</code></pre>
+
+<p>It also works with Lambdas, because they are function objects aswell.</p>
+<pre><code class="c++">string result = luwra::apply(lua, n, [](string a, int b) -&gt; string {
+    // Magic
+});
 </code></pre>
               
             </div>
