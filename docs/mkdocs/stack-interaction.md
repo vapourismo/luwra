@@ -57,8 +57,8 @@ namespace luwra {
 ```
 
 ## Pushing C++ values
-When pushing values onto the stack you can either use [Value&lt;T&gt;::push][luwra-value-push] or
-the more convenient [push][luwra-push].
+When pushing values onto the stack you can either use `Value<T>::push` or the more convenient
+[push][luwra-push].
 
 ```c++
 // Push an integer
@@ -97,8 +97,9 @@ Absolute Position | Relative Position | Value
 4                 | -2                | `"Hello World"`
 5                 | -1                | `{one = 1, [1] = "one", nested = {more = "fields"}}`
 
-It is possible to provide a template parameter to `push` to enforce pushing a specific type.
-In most cases you are probably better off by letting the compiler infer the template parameter.
+It is possible to provide a template parameter to [push][luwra-push] to enforce pushing a specific
+type. In most cases you are probably better off by letting the compiler infer the template
+parameter.
 
 ## Reading Lua values
 Simple retrieval of Lua values is done using [read&lt;T&gt;][luwra-read]. Consider the stack layout
@@ -122,9 +123,9 @@ information.
 [lua-cfunction]: http://www.lua.org/manual/5.3/manual.html#lua_CFunction
 [lua-errorhandling]: http://www.lua.org/manual/5.3/manual.html#4.6
 [luwra-value]: /reference/structluwra_1_1Value.html
-[luwra-nativefunction]: /reference/structluwra_1_1NativeFunction_3_01R_07A_8_8_8_08_4.html
+[luwra-nativefunction]: /reference/structluwra_1_1NativeFunction.html
 [luwra-table]: /reference/structluwra_1_1Table.html
 [luwra-read]: /reference/namespaceluwra.html#a4fe4e574680cf54a0f8d958740eb90ab
 [luwra-value-push]: /reference/structluwra_1_1Value.html#aa376d68285606c206562b822e8187384
-[luwra-push]: /reference/namespaceluwra.html#ae8e7eab11fc2cf3f258ffd81571066fa
+[luwra-push]: /reference/namespaceluwra.html#ab6cf73d2416b43f1a90eb243a98cff5b
 [luwra-membermap]: /reference/namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a
