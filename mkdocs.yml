@@ -4,7 +4,7 @@ repo_url: https://github.com/vapourismo/luwra
 pages:
   - 'Home': index.md
   - 'Stack Interaction': stack-interaction.md
-  - 'Advanced Stack Interaction': advanced.md
+  - 'Advanced Stack Interaction': advanced-stack-interaction.md
   - 'Wrapping': wrapping.md
   - 'User Types': user-types.md
 theme: readthedocs

@@ -3,10 +3,11 @@ Instead of extracting every Lua value seperately and pushing the result of your 
 onto the stack again, you can use one of the following functions to make this process easier for
 you.
 
-## Invoke a Callable with Lua values
+## Manual stack layout
 The function [direct][luwra-direct] lets you specify a *stack signature* in order to extract the
 values and invoke a `Callable` with them.
 
+### Without returning to Lua
 Consider the following:
 
 ```c++
@@ -19,8 +20,16 @@ It could be rewritting like this:
 string result = luwra::direct<string(string, int)>(lua, n, foo);
 ```
 
-**Note:** The result of `foo` is not pushed onto the stack. Except for the extraction of Lua values,
-everything happens on the C++ side.
+This will read all the required values off the stack, invoke `foo` with them and return its value to
+you.
+
+### Returning values to the stack
+An alternative to [direct][luwra-direct] is [map][luwra-map]. It does exactly the same, with the
+exception that it returns the resulting value back to the Lua stack.
+
+```c++
+luwra::map<string(string, int)>(lua, n, foo);
+```
 
 ## Invoke a function with Lua values
 [apply][luwra-apply] is similiar to [direct][luwra-direct]. It differs from `direct` by providing
@@ -43,5 +52,14 @@ One would use `foo` like this:
 string result = luwra::apply(lua, n, foo);
 ```
 
+It also works with Lambdas, because they are function objects aswell.
+
+```c++
+string result = luwra::apply(lua, n, [](string a, int b) -> string {
+	// Magic
+});
+```
+
 [luwra-direct]: /reference/namespaceluwra.html#aa20e363f38b3ae5a168cf40365f5646a
 [luwra-apply]: /reference/namespaceluwra.html#a839077ddd9c3d0565a40c574bc8e9555
+[luwra-map]: /reference/namespaceluwra.html#a9f24fc70cb48531cf1e3da6a3a741971
