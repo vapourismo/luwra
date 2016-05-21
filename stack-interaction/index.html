@@ -287,7 +287,7 @@ out of the box:</p>
 <td>function, table or userdata</td>
 </tr>
 <tr>
-<td><a href="../reference/structluwra_1_1NativeFunction_3_01R_07A_8_8_8_08_4.html">NativeFunction</a></td>
+<td><a href="../reference/structluwra_1_1NativeFunction.html">NativeFunction</a></td>
 <td>yes</td>
 <td>yes</td>
 <td>function</td>
@@ -324,8 +324,8 @@ type <code>T</code>.</p>
 </code></pre>
 
 <h2 id="pushing-c-values">Pushing C++ values</h2>
-<p>When pushing values onto the stack you can either use <a href="../reference/structluwra_1_1Value.html#aa376d68285606c206562b822e8187384">Value&lt;T&gt;::push</a> or
-the more convenient <a href="../reference/namespaceluwra.html#ae8e7eab11fc2cf3f258ffd81571066fa">push</a>.</p>
+<p>When pushing values onto the stack you can either use <code>Value&lt;T&gt;::push</code> or the more convenient
+<a href="../reference/namespaceluwra.html#ab6cf73d2416b43f1a90eb243a98cff5b">push</a>.</p>
 <pre><code class="c++">// Push an integer
 luwra::push(lua, 1338);
 
@@ -388,8 +388,9 @@ pushable type.</p>
 </tr>
 </tbody>
 </table>
-<p>It is possible to provide a template parameter to <code>push</code> to enforce pushing a specific type.
-In most cases you are probably better off by letting the compiler infer the template parameter.</p>
+<p>It is possible to provide a template parameter to <a href="../reference/namespaceluwra.html#ab6cf73d2416b43f1a90eb243a98cff5b">push</a> to enforce pushing a specific
+type. In most cases you are probably better off by letting the compiler infer the template
+parameter.</p>
 <h2 id="reading-lua-values">Reading Lua values</h2>
 <p>Simple retrieval of Lua values is done using <a href="../reference/namespaceluwra.html#a4fe4e574680cf54a0f8d958740eb90ab">read&lt;T&gt;</a>. Consider the stack layout
 from the previous example. This is how you would retrieve a value from the stack.</p>
