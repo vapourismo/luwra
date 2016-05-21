@@ -107,13 +107,53 @@ typename internal::Layout<S>::ReturnType direct(State* state, F&& hook, A&&... a
 	);
 }
 
+namespace internal {
+	template <typename T>
+	struct FunctionObjectHelper {
+		static_assert(sizeof(T) == -1, "Invalid template parameter to FunctionObjectHelper");
+	};
+
+	template <typename T, typename R, typename... A>
+	struct FunctionObjectHelper<R (T::*)(A...)> {
+		using Signature = R(A...);
+		using ReturnType = R;
+	};
+
+	template <typename T, typename R, typename... A>
+	struct FunctionObjectHelper<R (T::*)(A...) const>:
+		FunctionObjectHelper<R (T::*)(A...)>
+	{};
+
+	template <typename T, typename R, typename... A>
+	struct FunctionObjectHelper<R (T::*)(A...) volatile>:
+		FunctionObjectHelper<R (T::*)(A...)>
+	{};
+
+	template <typename T, typename R, typename... A>
+	struct FunctionObjectHelper<R (T::*)(A...) const volatile>:
+		FunctionObjectHelper<R (T::*)(A...)>
+	{};
+
+	template <typename T>
+	using FunctionObjectLayout =
+		Layout<typename FunctionObjectHelper<decltype(&T::operator ())>::Signature>;
+
+	template <typename T>
+	using FunctionObjectReturnType =
+		typename FunctionObjectHelper<decltype(&T::operator ())>::ReturnType;
+}
+
 /**
- * Synonym for [direct](@ref direct) with a function pointer which lets you omit all template parameters.
- * The stack layout will be inferred using the signature of the given function pointer.
+ * A version of [direct](@ref direct) which is specialized for function pointers; therefore allows
+ * you to omit the template parameters since the compiler can infer its parameter and return types.
  */
 template <typename R, typename... A> static inline
 R apply(State* state, int pos, R (* fun)(A...)) {
-	return direct<R(A...)>(state, pos, fun);
+	return internal::Layout<R(A...)>::direct(
+		state,
+		pos,
+		fun
+	);
 }
 
 /**
@@ -121,24 +161,36 @@ R apply(State* state, int pos, R (* fun)(A...)) {
  */
 template <typename R, typename... A> static inline
 R apply(State* state, R (* fun)(A...)) {
-	return apply(state, 1, fun);
+	return internal::Layout<R(A...)>::direct(
+		state,
+		1,
+		fun
+	);
 }
 
 /**
- * Synonym for [direct](@ref direct) with a function object which lets you omit all template parameters.
- * The stack layout will be inferred using the template parameter to your `std::function` object.
+ * A version of [direct](@ref direct) which tries to infer the stack layout from the given
+ * `Callable`.
  */
-template <typename R, typename... A> static inline
-R apply(State* state, int pos, const std::function<R(A...)>& fun) {
-	return internal::Layout<R(A...)>::direct(state, pos, fun);
+template <typename T> static inline
+internal::FunctionObjectReturnType<T> apply(State* state, int pos, const T& obj) {
+	return internal::FunctionObjectLayout<T>::direct(
+		state,
+		pos,
+		obj
+	);
 }
 
 /**
- * Same as `apply(state, 1, fun)`.
+ * Same as `apply(state, 1, obj)`.
  */
-template <typename R, typename... A> static inline
-R apply(State* state, const std::function<R(A...)>& fun) {
-	return apply(state, 1, fun);
+template <typename T> static inline
+internal::FunctionObjectReturnType<T> apply(State* state, const T& obj) {
+	return internal::FunctionObjectLayout<T>::direct(
+		state,
+		1,
+		obj
+	);
 }
 
 namespace internal {

@@ -2,22 +2,30 @@
 
 #include <string>
 #include <iostream>
+#include <functional>
 
 using namespace luwra;
 
+static int foo(int a, int b) {
+	return a + b;
+}
+
 int main() {
 	StateWrapper state;
+	push(state, 13);
+	push(state, 37);
 
-	state["t1"] = FieldVector {};
+	std::function<int(int, int)> bar(&foo);
+	std::function<int(int, int)> baz([](int a, int b) -> int {
+		return a + b;
+	});
 
-	for (int i = 0; i < 50000000; i++) {
-		state["t1"]["value"] = i;
-		int j = state["t1"]["value"];
-
-		if (j != i) {
-			return 1;
-		}
-	}
+	std::cout << apply(state, 1, &foo) << std::endl;
+	std::cout << apply(state, 1, bar) << std::endl;
+	std::cout << apply(state, 1, baz) << std::endl;
+	std::cout << apply(state, 1, [](int a, int b) -> int {
+		return a + b;
+	}) << std::endl;
 
 	return 0;
 }
