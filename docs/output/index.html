@@ -63,6 +63,9 @@
                 <li class="toctree-l3"><a href="#installation">Installation</a></li>
                 
             
+                <li class="toctree-l3"><a href="#integration">Integration</a></li>
+                
+            
                 <li class="toctree-l3"><a href="#reference-manual">Reference Manual</a></li>
                 
             
@@ -73,7 +76,7 @@
           
             <li>
     <li class="toctree-l1 ">
-        <a class="" href="basics/">Basics</a>
+        <a class="" href="stack-interaction/">Stack Interaction</a>
         
     </li>
 <li>
@@ -138,12 +141,16 @@
                 <h1 id="installation">Installation</h1>
 <p>Luwra is a header-only library, which means that nothing has to be compiled in order to use it.
 Simply clone the <a href="https://github.com/vapourismo/luwra">repository</a> or
-<a href="https://github.com/vapourismo/luwra/archive/master.zip">download</a> and extract it to a directory of
-your preference.</p>
+<a href="https://github.com/vapourismo/luwra/archive/master.zip">download</a> it and extract it to a directory
+of your preference.</p>
 <p>For your application to be able to reach the <code>lib/luwra.hpp</code> header file, you must add
 <code>/path/to/luwra/lib</code> to the list of include paths. With Clang and GCC that is done using the
 <code>-I/path/to/luwra/lib</code> command-line parameter.</p>
 <p>Now you can simply <code>#include &lt;luwra.hpp&gt;</code> in your C++ files and start using Luwra.</p>
+<h1 id="integration">Integration</h1>
+<p>This library does not provide a standalone version of Lua nor does it isolate its features. This
+means that all functions and classes can operate on <a href="http://www.lua.org/manual/5.3/manual.html#lua_State">lua_State</a> (or the alias
+<a href="./reference/namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a>). Doing this allows you to integrate Luwra however you like.</p>
 <h1 id="reference-manual">Reference Manual</h1>
 <p>A reference manual exists <a href="./reference/namespaceluwra.html">here</a>.</p>
               
@@ -153,7 +160,7 @@ your preference.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="basics/" class="btn btn-neutral float-right" title="Basics">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="stack-interaction/" class="btn btn-neutral float-right" title="Stack Interaction">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
     </div>
@@ -183,7 +190,7 @@ your preference.</p>
       
       
       
-        <span style="margin-left: 15px"><a href="basics/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="stack-interaction/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
@@ -193,5 +200,5 @@ your preference.</p>
 
 <!--
 MkDocs version : 0.15.3
-Build Date UTC : 2016-05-20 20:49:36.625613
+Build Date UTC : 2016-05-21 15:22:08.371518
 -->

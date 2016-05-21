@@ -1,12 +1,7 @@
-# Integration
-Luwra does not provide a standalone version of Lua nor does it isolate its features. This means that
-all functions and classes can operate on [lua_State][lua-state] (or the alias [State][luwra-state]).
-Doing this allows you to integrate Luwra however you like.
-
-# Stack Interaction
-A fundamental aspect of this is the abstract template [Value][luwra-value].
-Every type which can be pushed onto or read from the stack has a specialization of it.
-Useful implementations are provided out of the box:
+# Stack interaction
+A fundamental aspect of this is the abstract template [Value][luwra-value]. Every type which can be
+pushed onto or read from the stack has a specialization of it. Useful implementations are provided
+out of the box:
 
 C++ type                               | Pushable | Readable | Lua type
 ---------------------------------------|----------|----------|----------------------------
@@ -88,8 +83,9 @@ luwra::push(lua, luwra::MemberMap {
 });
 ```
 
-**Note:** `luwra::MemberMap` is an alias for `std:map<luwra::Pushable, luwra::Pushable>`. Its keys
-and values are constructible using any pushable type.
+**Note:** [luwra::MemberMap][luwra-membermap] is an alias for
+`std:map<luwra::Pushable, luwra::Pushable>`. Its keys and values are constructible using any
+pushable type.
 
 This produces the following stack layout:
 
@@ -123,27 +119,12 @@ the stack. This means that no exceptions will be thrown - instead the error hand
 the Lua VM. Have a look at the [error handling documentation][lua-errorhandling] for more
 information.
 
-# Globals
-In order to conveniently register values in the global namespace, Luwra provides
-[setGlobal][luwra-setglobal] and [getGlobal][luwra-global].
-
-```c++
-// Register in the global namespace
-luwra::setGlobal(lua, "almostPi", 3.14);
-
-// Retrieve from globals
-double almostPi = luwra::getGlobal<double>(lua, "almostPi");
-```
-
-[lua-state]: http://www.lua.org/manual/5.3/manual.html#lua_State
 [lua-cfunction]: http://www.lua.org/manual/5.3/manual.html#lua_CFunction
 [lua-errorhandling]: http://www.lua.org/manual/5.3/manual.html#4.6
-[luwra-state]: /reference/namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d
 [luwra-value]: /reference/structluwra_1_1Value.html
 [luwra-nativefunction]: /reference/structluwra_1_1NativeFunction_3_01R_07A_8_8_8_08_4.html
 [luwra-table]: /reference/structluwra_1_1Table.html
 [luwra-read]: /reference/namespaceluwra.html#a4fe4e574680cf54a0f8d958740eb90ab
 [luwra-value-push]: /reference/structluwra_1_1Value.html#aa376d68285606c206562b822e8187384
 [luwra-push]: /reference/namespaceluwra.html#ae8e7eab11fc2cf3f258ffd81571066fa
-[luwra-setglobal]: /reference/namespaceluwra.html#afed27900ff117638937ad92e0217258d
-[luwra-getglobal]: /reference/namespaceluwra.html#af0a7dbbbdb339227c6ecaaa46422e05b
+[luwra-membermap]: /reference/namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a

@@ -8,7 +8,7 @@
   
   
   
-  <title>Basics - Luwra</title>
+  <title>Stack Interaction - Luwra</title>
   
 
   <link rel="shortcut icon" href="../img/favicon.ico">
@@ -23,9 +23,9 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Basics";
-    var mkdocs_page_input_path = "basics.md";
-    var mkdocs_page_url = "/basics/";
+    var mkdocs_page_name = "Stack Interaction";
+    var mkdocs_page_input_path = "stack-interaction.md";
+    var mkdocs_page_url = "/stack-interaction/";
   </script>
   
   <script src="../js/jquery-2.1.1.min.js"></script>
@@ -63,14 +63,11 @@
           
             <li>
     <li class="toctree-l1 current">
-        <a class="current" href="./">Basics</a>
+        <a class="current" href="./">Stack Interaction</a>
         
             <ul>
             
-                <li class="toctree-l3"><a href="#integration">Integration</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#stack-interaction">Stack Interaction</a></li>
+                <li class="toctree-l3"><a href="#stack-interaction">Stack interaction</a></li>
                 
                     <li><a class="toctree-l4" href="#extending-supported-types">Extending supported types</a></li>
                 
@@ -79,9 +76,6 @@
                     <li><a class="toctree-l4" href="#reading-lua-values">Reading Lua values</a></li>
                 
                     <li><a class="toctree-l4" href="#read-and-type-errors">Read and type errors</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#globals">Globals</a></li>
                 
             
             </ul>
@@ -132,7 +126,7 @@
     
       
     
-    <li>Basics</li>
+    <li>Stack Interaction</li>
     <li class="wy-breadcrumbs-aside">
       
         
@@ -146,14 +140,10 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="integration">Integration</h1>
-<p>Luwra does not provide a standalone version of Lua nor does it isolate its features. This means that
-all functions and classes can operate on <a href="http://www.lua.org/manual/5.3/manual.html#lua_State">lua_State</a> (or the alias <a href="../reference/namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a>).
-Doing this allows you to integrate Luwra however you like.</p>
-<h1 id="stack-interaction">Stack Interaction</h1>
-<p>A fundamental aspect of this is the abstract template <a href="../reference/structluwra_1_1Value.html">Value</a>.
-Every type which can be pushed onto or read from the stack has a specialization of it.
-Useful implementations are provided out of the box:</p>
+                <h1 id="stack-interaction">Stack interaction</h1>
+<p>A fundamental aspect of this is the abstract template <a href="../reference/structluwra_1_1Value.html">Value</a>. Every type which can be
+pushed onto or read from the stack has a specialization of it. Useful implementations are provided
+out of the box:</p>
 <table>
 <thead>
 <tr>
@@ -358,8 +348,9 @@ luwra::push(lua, luwra::MemberMap {
 });
 </code></pre>
 
-<p><strong>Note:</strong> <code>luwra::MemberMap</code> is an alias for <code>std:map&lt;luwra::Pushable, luwra::Pushable&gt;</code>. Its keys
-and values are constructible using any pushable type.</p>
+<p><strong>Note:</strong> <a href="../reference/namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">luwra::MemberMap</a> is an alias for
+<code>std:map&lt;luwra::Pushable, luwra::Pushable&gt;</code>. Its keys and values are constructible using any
+pushable type.</p>
 <p>This produces the following stack layout:</p>
 <table>
 <thead>
@@ -415,15 +406,6 @@ int value = luwra::read&lt;int&gt;(lua, -5);
 the stack. This means that no exceptions will be thrown - instead the error handling is delegated to
 the Lua VM. Have a look at the <a href="http://www.lua.org/manual/5.3/manual.html#4.6">error handling documentation</a> for more
 information.</p>
-<h1 id="globals">Globals</h1>
-<p>In order to conveniently register values in the global namespace, Luwra provides
-<a href="../reference/namespaceluwra.html#afed27900ff117638937ad92e0217258d">setGlobal</a> and [getGlobal][luwra-global].</p>
-<pre><code class="c++">// Register in the global namespace
-luwra::setGlobal(lua, &quot;almostPi&quot;, 3.14);
-
-// Retrieve from globals
-double almostPi = luwra::getGlobal&lt;double&gt;(lua, &quot;almostPi&quot;);
-</code></pre>
               
             </div>
           </div>
