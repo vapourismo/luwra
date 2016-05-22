@@ -123,7 +123,7 @@ internal::StripUserType<U>& construct(State* state, A&&... args) {
  * User type
  */
 template <typename U>
-struct Value<U&> {
+struct Value {
 	using T = internal::StripUserType<U>;
 
 	/**
@@ -153,6 +153,9 @@ struct Value<U&> {
 		return 1;
 	}
 };
+
+template <typename U>
+struct Value<U&>: Value<U> {};
 
 /**
  * User type

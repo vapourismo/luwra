@@ -33,7 +33,7 @@ using CFunction = lua_CFunction;
  * User type
  */
 template <typename T>
-struct Value: Value<T&> {};
+struct Value;
 
 // Nil
 template <>
