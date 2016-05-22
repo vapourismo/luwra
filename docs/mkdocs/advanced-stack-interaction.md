@@ -31,19 +31,14 @@ exception that it returns the resulting value back to the Lua stack.
 luwra::map<string(string, int)>(lua, n, foo);
 ```
 
-## Invoke a function with Lua values
-[apply][luwra-apply] is similiar to [direct][luwra-direct]. It differs from `direct` by providing
-specific overloads for function pointers and function objects. Although `direct` works with function pointers
-and function objects, it is often more convenient to use `apply` since it allows the compiler to
-infer the *stack signature* without providing a template parameter.
+## Automatic stack layout
+[apply][luwra-apply] is similiar to [direct][luwra-direct]. It differs from `direct` because it is
+able to infer the stack layout from the given `Callable`.
 
 Provided a function `foo` which has been declared as used in the example above:
 
 ```c++
 string foo(string bar, int baz);
-
-// ... or with a function object
-function<string(string, int)> foo = /* magic */;
 ```
 
 One would use `foo` like this:
@@ -61,5 +56,5 @@ string result = luwra::apply(lua, n, [](string a, int b) -> string {
 ```
 
 [luwra-direct]: /reference/namespaceluwra.html#aa20e363f38b3ae5a168cf40365f5646a
-[luwra-apply]: /reference/namespaceluwra.html#a839077ddd9c3d0565a40c574bc8e9555
 [luwra-map]: /reference/namespaceluwra.html#a9f24fc70cb48531cf1e3da6a3a741971
+[luwra-apply]: /reference/namespaceluwra.html#a839077ddd9c3d0565a40c574bc8e9555
