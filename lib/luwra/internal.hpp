@@ -19,10 +19,16 @@ namespace internal {
 	// Information about function signature
 	template <typename R, typename... A>
 	struct CallableInfo<R(A...)> {
+		// A call to an instance would evaluate to this type
 		using ReturnType = R;
 
+		// Pass the template parameter pack to another template
 		template <template <typename...> class T>
 		using RelayArguments = T<A...>;
+
+		// Pass the signature of this callable to another template
+		template <template <typename> class T>
+		using RelaySignature = T<R(A...)>;
 	};
 
 	// Information about function pointers

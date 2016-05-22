@@ -29,6 +29,8 @@ TEST_CASE("StackInteraction") {
 	// Absolute index
 	REQUIRE(luwra::apply(state, test_function_1) == -1);
 	REQUIRE(luwra::apply(state, 1, test_function_1) == -1);
+	REQUIRE(luwra::apply(state, [](int a, int b) -> int { return a - b; }) == -1);
+	REQUIRE(luwra::apply(state, 2, [](int a, int b) -> int { return a + b; }) == 6);
 	REQUIRE(luwra::apply(state, test_function_2) == 9);
 	REQUIRE(luwra::apply(state, 1, test_function_2) == 9);
 
@@ -36,4 +38,5 @@ TEST_CASE("StackInteraction") {
 	REQUIRE(luwra::apply(state, -2, test_function_1) == -2);
 	REQUIRE(luwra::apply(state, -3, test_function_1) == -1);
 	REQUIRE(luwra::apply(state, -3, test_function_2) == 9);
+	REQUIRE(luwra::apply(state, -3, [](int a, int b, int c) -> int { return a - b + c; }) == 3);
 }

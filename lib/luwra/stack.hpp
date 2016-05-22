@@ -9,6 +9,7 @@
 
 #include "common.hpp"
 #include "types.hpp"
+#include "internal.hpp"
 
 #include <cassert>
 #include <utility>
@@ -107,77 +108,17 @@ typename internal::Layout<S>::ReturnType direct(State* state, F&& hook, A&&... a
 	);
 }
 
-namespace internal {
-	template <typename T>
-	struct FunctionObjectHelper {
-		static_assert(sizeof(T) == -1, "Invalid template parameter to FunctionObjectHelper");
-	};
-
-	template <typename T, typename R, typename... A>
-	struct FunctionObjectHelper<R (T::*)(A...)> {
-		using Signature = R(A...);
-		using ReturnType = R;
-	};
-
-	template <typename T, typename R, typename... A>
-	struct FunctionObjectHelper<R (T::*)(A...) const>:
-		FunctionObjectHelper<R (T::*)(A...)>
-	{};
-
-	template <typename T, typename R, typename... A>
-	struct FunctionObjectHelper<R (T::*)(A...) volatile>:
-		FunctionObjectHelper<R (T::*)(A...)>
-	{};
-
-	template <typename T, typename R, typename... A>
-	struct FunctionObjectHelper<R (T::*)(A...) const volatile>:
-		FunctionObjectHelper<R (T::*)(A...)>
-	{};
-
-	template <typename T>
-	using FunctionObjectLayout =
-		Layout<typename FunctionObjectHelper<decltype(&T::operator ())>::Signature>;
-
-	template <typename T>
-	using FunctionObjectReturnType =
-		typename FunctionObjectHelper<decltype(&T::operator ())>::ReturnType;
-}
-
-/**
- * A version of [direct](@ref direct) which is specialized for function pointers; therefore allows
- * you to omit the template parameters since the compiler can infer its parameter and return types.
- */
-template <typename R, typename... A> static inline
-R apply(State* state, int pos, R (* fun)(A...)) {
-	return internal::Layout<R(A...)>::direct(
-		state,
-		pos,
-		fun
-	);
-}
-
-/**
- * Same as `apply(state, 1, fun)`.
- */
-template <typename R, typename... A> static inline
-R apply(State* state, R (* fun)(A...)) {
-	return internal::Layout<R(A...)>::direct(
-		state,
-		1,
-		fun
-	);
-}
-
 /**
  * A version of [direct](@ref direct) which tries to infer the stack layout from the given
- * `Callable`.
+ * `Callable`. It allows you to omit the template parameters since the compiler is able to infer the
+ * parameter and return types.
  */
 template <typename T> static inline
-internal::FunctionObjectReturnType<T> apply(State* state, int pos, const T& obj) {
-	return internal::FunctionObjectLayout<T>::direct(
+typename internal::CallableInfo<T>::ReturnType apply(State* state, int pos, T&& obj) {
+	return internal::CallableInfo<T>::template RelaySignature<internal::Layout>::direct(
 		state,
 		pos,
-		obj
+		std::forward<T>(obj)
 	);
 }
 
@@ -185,12 +126,8 @@ internal::FunctionObjectReturnType<T> apply(State* state, int pos, const T& obj)
  * Same as `apply(state, 1, obj)`.
  */
 template <typename T> static inline
-internal::FunctionObjectReturnType<T> apply(State* state, const T& obj) {
-	return internal::FunctionObjectLayout<T>::direct(
-		state,
-		1,
-		obj
-	);
+typename internal::CallableInfo<T>::ReturnType apply(State* state, T&& obj) {
+	return apply(state, 1, std::forward<T>(obj));
 }
 
 namespace internal {
