@@ -78,7 +78,7 @@
                 
                     <li><a class="toctree-l4" href="#manual-stack-layout">Manual stack layout</a></li>
                 
-                    <li><a class="toctree-l4" href="#invoke-a-function-with-lua-values">Invoke a function with Lua values</a></li>
+                    <li><a class="toctree-l4" href="#automatic-stack-layout">Automatic stack layout</a></li>
                 
             
             </ul>
@@ -160,16 +160,11 @@ exception that it returns the resulting value back to the Lua stack.</p>
 <pre><code class="c++">luwra::map&lt;string(string, int)&gt;(lua, n, foo);
 </code></pre>
 
-<h2 id="invoke-a-function-with-lua-values">Invoke a function with Lua values</h2>
-<p><a href="../reference/namespaceluwra.html#a839077ddd9c3d0565a40c574bc8e9555">apply</a> is similiar to <a href="../reference/namespaceluwra.html#aa20e363f38b3ae5a168cf40365f5646a">direct</a>. It differs from <code>direct</code> by providing
-specific overloads for function pointers and function objects. Although <code>direct</code> works with function pointers
-and function objects, it is often more convenient to use <code>apply</code> since it allows the compiler to
-infer the <em>stack signature</em> without providing a template parameter.</p>
+<h2 id="automatic-stack-layout">Automatic stack layout</h2>
+<p><a href="../reference/namespaceluwra.html#a839077ddd9c3d0565a40c574bc8e9555">apply</a> is similiar to <a href="../reference/namespaceluwra.html#aa20e363f38b3ae5a168cf40365f5646a">direct</a>. It differs from <code>direct</code> because it is
+able to infer the stack layout from the given <code>Callable</code>.</p>
 <p>Provided a function <code>foo</code> which has been declared as used in the example above:</p>
 <pre><code class="c++">string foo(string bar, int baz);
-
-// ... or with a function object
-function&lt;string(string, int)&gt; foo = /* magic */;
 </code></pre>
 
 <p>One would use <code>foo</code> like this:</p>
