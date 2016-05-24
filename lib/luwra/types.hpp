@@ -277,6 +277,8 @@ namespace internal {
 		// Lua reference.
 		ReferenceImpl(const ReferenceImpl& other) = delete;
 		ReferenceImpl(ReferenceImpl&& other) = delete;
+		ReferenceImpl& operator =(const ReferenceImpl&) = delete;
+		ReferenceImpl& operator =(ReferenceImpl&&) = delete;
 
 		inline
 		~ReferenceImpl() {
