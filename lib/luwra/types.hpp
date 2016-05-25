@@ -51,6 +51,15 @@ struct Value<std::nullptr_t> {
 	}
 };
 
+template <>
+struct Value<State*> {
+	static inline
+	State* read(State* state, int n) {
+		luaL_checktype(state, n, LUA_TTHREAD);
+		return lua_tothread(state, n);
+	}
+};
+
 /**
  * Convenient wrapped for [Value<T>::push](@ref Value<T>::push).
  */
