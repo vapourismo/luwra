@@ -1,31 +1,31 @@
 #include <luwra.hpp>
-
-#include <string>
 #include <iostream>
-#include <functional>
 
 using namespace luwra;
 
-static int foo(int a, int b) {
-	return a + b;
-}
+struct A {
+	A() {
+		std::cout << "A()" << std::endl;
+	}
+
+	A(const A&) {
+		std::cout << "A(const A&)" << std::endl;
+	}
+
+	A(A&&) {
+		std::cout << "A(A&&)" << std::endl;
+	}
+};
 
 int main() {
 	StateWrapper state;
-	push(state, 13);
-	push(state, 37);
 
-	std::function<int(int, int)> bar(&foo);
-	std::function<int(int, int)> baz([](int a, int b) -> int {
-		return a + b;
-	});
+	// A a;
 
-	std::cout << apply(state, 1, &foo) << std::endl;
-	std::cout << apply(state, 1, bar) << std::endl;
-	std::cout << apply(state, 1, baz) << std::endl;
-	std::cout << apply(state, 1, [](int a, int b) -> int {
-		return a + b;
-	}) << std::endl;
+	const int i = 1338;
+	Pushable m(i);
+
+	push(state, m);
 
 	return 0;
 }

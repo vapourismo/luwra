@@ -426,29 +426,18 @@ namespace internal {
 	struct PushableI {
 		virtual
 		size_t push(State* state) const = 0;
-
-		virtual
-		PushableI* copy() const = 0;
-
-		virtual
-		~PushableI() {}
 	};
 
 	template <typename T>
 	struct PushableT: virtual PushableI {
 		T value;
 
-		inline
-		PushableT(T value): value(value) {}
+		template <typename P> inline
+		PushableT(P&& value): value(std::forward<P>(value)) {}
 
 		virtual
 		size_t push(State* state) const {
 			return luwra::push(state, value);
-		}
-
-		virtual
-		PushableI* copy() const {
-			return new PushableT<T>(value);
 		}
 	};
 }
@@ -457,16 +446,11 @@ namespace internal {
  * A value which may be pushed onto the stack.
  */
 struct Pushable {
-	std::unique_ptr<internal::PushableI> interface;
+	std::shared_ptr<internal::PushableI> interface;
 
 	template <typename T> inline
 	Pushable(T&& value):
 		interface(new internal::PushableT<T>(std::forward<T>(value)))
-	{}
-
-	inline
-	Pushable(const Pushable& other):
-		interface(other.interface->copy())
 	{}
 
 	inline

@@ -67,6 +67,7 @@ examples: $(EXAMPLE_OBJS)
 	@for ex in $(EXAMPLE_OBJS); do echo "> Example '$$ex'"; ./$$ex || exit 1; done
 
 -include $(EXAMPLE_DEPS)
+-include $(PLAYGROUND_DEP)
 
 $(EXAMPLE_DIR)/%.out: $(EXAMPLE_DIR)/%.cpp Makefile
 	$(CXX) $(USECXXFLAGS) $(USELDFLAGS) -MMD -MF$(<:%.cpp=%.d) -MT$@ -o$@ $< $(USELDLIBS)
