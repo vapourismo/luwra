@@ -457,24 +457,17 @@ namespace internal {
  * A value which may be pushed onto the stack.
  */
 struct Pushable {
-	internal::PushableI* interface;
+	std::unique_ptr<internal::PushableI> interface;
 
 	template <typename T> inline
-	Pushable(T value): interface(new internal::PushableT<T>(value)) {}
+	Pushable(T&& value):
+		interface(new internal::PushableT<T>(std::forward<T>(value)))
+	{}
 
 	inline
-	Pushable(Pushable&& other): interface(other.interface) {
-		other.interface = nullptr;
-	}
-
-	inline
-	Pushable(const Pushable& other): interface(other.interface->copy()) {}
-
-	inline
-	~Pushable() {
-		if (interface)
-			delete interface;
-	}
+	Pushable(const Pushable& other):
+		interface(other.interface->copy())
+	{}
 
 	inline
 	bool operator <(const Pushable& other) const {
