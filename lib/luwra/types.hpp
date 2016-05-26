@@ -456,7 +456,7 @@ namespace internal {
 /**
  * A value which may be pushed onto the stack.
  */
-struct Pushable: virtual internal::PushableI {
+struct Pushable {
 	internal::PushableI* interface;
 
 	template <typename T> inline
@@ -467,24 +467,16 @@ struct Pushable: virtual internal::PushableI {
 		other.interface = nullptr;
 	}
 
+	inline
 	Pushable(const Pushable& other): interface(other.interface->copy()) {}
 
-	virtual
-	size_t push(State* state) const {
-		return interface->push(state);
-	}
-
-	virtual
-	internal::PushableI* copy() const {
-		return new Pushable(*this);
-	}
-
-	virtual
+	inline
 	~Pushable() {
 		if (interface)
 			delete interface;
 	}
 
+	inline
 	bool operator <(const Pushable& other) const {
 		return interface < other.interface;
 	}
@@ -494,7 +486,7 @@ template <>
 struct Value<Pushable> {
 	static inline
 	size_t push(State* state, const Pushable& value) {
-		return value.push(state);
+		return value.interface->push(state);
 	}
 };
 
