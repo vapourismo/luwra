@@ -262,8 +262,8 @@ namespace internal {
 
 	// Implementation of a reference which takes care of the lifetime of a Lua reference
 	struct ReferenceImpl {
-		State* const state;
-		const int ref;
+		State* state;
+		int ref;
 		bool autoUnref = true;
 
 		// Reference a value at an index.
@@ -297,7 +297,7 @@ namespace internal {
 		// Small shortcut to make the `push`-implementations for `Table` and `Reference` consistent,
 		// since both use this struct internally.
 		inline
-		size_t push(State* targetState) {
+		size_t push(State* targetState) const {
 			lua_rawgeti(state, LUA_REGISTRYINDEX, ref);
 
 			if (state != targetState)
@@ -307,13 +307,13 @@ namespace internal {
 		}
 
 		inline
-		size_t push() {
+		size_t push() const {
 			lua_rawgeti(state, LUA_REGISTRYINDEX, ref);
 			return 1;
 		}
 	};
 
-	using SharedReferenceImpl = std::shared_ptr<internal::ReferenceImpl>;
+	using SharedReferenceImpl = std::shared_ptr<const internal::ReferenceImpl>;
 }
 
 /**
