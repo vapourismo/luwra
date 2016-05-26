@@ -72,7 +72,7 @@ size_t push(State* state, T&& value) {
 /**
  * Allows you to push multiple values at once.
  */
-template <typename T1, typename T2, typename... TR>
+template <typename T1, typename T2, typename... TR> static inline
 size_t push(State* state, T1&& value, T2&& head, TR&&... rest) {
 	return
 		push(state, std::forward<T1>(value)) +
