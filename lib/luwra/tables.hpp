@@ -74,18 +74,25 @@ struct Value<internal::Path<P, K>> {
 	}
 };
 
+struct Table;
+
 namespace internal {
 	template <typename A>
-	struct TableAccessor {
+	class TableAccessor {
+	public:
 		State* state;
 		A accessor;
 
-		TableAccessor(const TableAccessor&) = delete;
-		TableAccessor(TableAccessor&&) = delete;
+	private:
+		TableAccessor(const TableAccessor&) = default;
+		TableAccessor(TableAccessor&&) = default;
 
 		TableAccessor& operator =(const TableAccessor&) = delete;
 		TableAccessor& operator =(TableAccessor&&) = delete;
 
+		friend struct luwra::Table;
+
+	public:
 		template <typename V> inline
 		V read() const && {
 			return accessor.template read<V>(state);
@@ -110,7 +117,13 @@ namespace internal {
 
 		template <typename K> inline
 		TableAccessor<Path<A, K>> access(K&& subkey) const && {
-			return {state, {accessor, std::forward<K>(subkey)}};
+			return TableAccessor<Path<A, K>> {
+				state,
+				Path<A, K> {
+					accessor,
+					std::forward<K>(subkey)
+				}
+			};
 		}
 
 		template <typename K> inline
@@ -143,12 +156,24 @@ struct Table {
 
 	template <typename K> inline
 	internal::TableAccessor<internal::Path<const Reference&, K>> access(K&& key) const {
-		return {ref.impl->state, {ref, std::forward<K>(key)}};
+		return internal::TableAccessor<internal::Path<const Reference&, K>> {
+			ref.impl->state,
+			internal::Path<const Reference&, K> {
+				ref,
+				std::forward<K>(key)
+			}
+		};
 	}
 
 	template <typename K> inline
 	internal::TableAccessor<internal::Path<const Reference&, K>> operator [](K&& key) const {
-		return {ref.impl->state, {ref, std::forward<K>(key)}};
+		return internal::TableAccessor<internal::Path<const Reference&, K>> {
+			ref.impl->state,
+			internal::Path<const Reference&, K> {
+				ref,
+				std::forward<K>(key)
+			}
+		};
 	}
 
 	inline
