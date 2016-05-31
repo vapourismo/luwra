@@ -21,10 +21,6 @@ env:
   - LUA_VERSION=5.2.4 COMPILER=clang++-3.7
   - LUA_VERSION=5.1.5 COMPILER=clang++-3.7
 
-  - LUA_VERSION=5.3.2 COMPILER=clang++-3.8
-  - LUA_VERSION=5.2.4 COMPILER=clang++-3.8
-  - LUA_VERSION=5.1.5 COMPILER=clang++-3.8
-
 cache:
   directories:
     - lua-$LUA_VERSION
@@ -47,13 +43,11 @@ addons:
   apt:
     sources:
       - llvm-toolchain-precise-3.7
-      - llvm-toolchain-precise-3.8
       - ubuntu-toolchain-r-test
     packages:
       - make
       - wget
       - clang-3.7
-      - clang-3.8
       - g++-4.8
       - g++-4.9
       - g++-5
