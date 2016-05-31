@@ -128,7 +128,13 @@ namespace internal {
 
 		template <typename K> inline
 		TableAccessor<Path<A, K>> operator [](K&& subkey) const && {
-			return {state, {accessor, std::forward<K>(subkey)}};
+			return TableAccessor<Path<A, K>> {
+				state,
+				Path<A, K> {
+					accessor,
+					std::forward<K>(subkey)
+				}
+			};
 		}
 	};
 }
