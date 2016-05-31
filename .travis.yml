@@ -1,23 +1,38 @@
 language: cpp
-compiler:
-  - clang
-  - gcc
 
 env:
-  # Lua versions to test against
-  - LUA_VERSION=5.3.2
-  - LUA_VERSION=5.2.4
-  - LUA_VERSION=5.1.5
+  - LUA_VERSION=5.3.2 COMPILER=g++-4.8
+  - LUA_VERSION=5.2.4 COMPILER=g++-4.8
+  - LUA_VERSION=5.1.5 COMPILER=g++-4.8
+
+  - LUA_VERSION=5.3.2 COMPILER=g++-4.9
+  - LUA_VERSION=5.2.4 COMPILER=g++-4.9
+  - LUA_VERSION=5.1.5 COMPILER=g++-4.9
+
+  - LUA_VERSION=5.3.2 COMPILER=g++-5
+  - LUA_VERSION=5.2.4 COMPILER=g++-5
+  - LUA_VERSION=5.1.5 COMPILER=g++-5
+
+  - LUA_VERSION=5.3.2 COMPILER=g++-6
+  - LUA_VERSION=5.2.4 COMPILER=g++-6
+  - LUA_VERSION=5.1.5 COMPILER=g++-6
+
+  - LUA_VERSION=5.3.2 COMPILER=clang++-3.7
+  - LUA_VERSION=5.2.4 COMPILER=clang++-3.7
+  - LUA_VERSION=5.1.5 COMPILER=clang++-3.7
+
+  - LUA_VERSION=5.3.2 COMPILER=clang++-3.8
+  - LUA_VERSION=5.2.4 COMPILER=clang++-3.8
+  - LUA_VERSION=5.1.5 COMPILER=clang++-3.8
 
 cache:
   directories:
     - lua-$LUA_VERSION
 
-install:
-  # Select compiler
-  - if [[ "$CXX" = "g++" ]]; then export CXX="g++-5"; fi
-  - if [[ "$CXX" = "clang++" ]]; then export CXX="clang++-3.7"; fi
+before_install:
+  - export CXX=$COMPILER
 
+install:
   # Build Lua
   - test -e "lua-$LUA_VERSION/src" || (wget "http://www.lua.org/ftp/lua-$LUA_VERSION.tar.gz" && tar xvfz "lua-$LUA_VERSION.tar.gz")
   - pushd "lua-$LUA_VERSION/src"
@@ -32,9 +47,14 @@ addons:
   apt:
     sources:
       - llvm-toolchain-precise-3.7
+      - llvm-toolchain-precise-3.8
       - ubuntu-toolchain-r-test
     packages:
-      - clang-3.7
-      - g++-5
       - make
       - wget
+      - clang-3.7
+      - clang-3.8
+      - g++-4.8
+      - g++-4.9
+      - g++-5
+      - g++-6
