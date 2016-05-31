@@ -74,25 +74,12 @@ struct Value<internal::Path<P, K>> {
 	}
 };
 
-struct Table;
-
 namespace internal {
 	template <typename A>
-	class TableAccessor {
-	public:
+	struct TableAccessor {
 		State* state;
 		A accessor;
 
-	private:
-		TableAccessor(const TableAccessor&) = default;
-		TableAccessor(TableAccessor&&) = default;
-
-		TableAccessor& operator =(const TableAccessor&) = delete;
-		TableAccessor& operator =(TableAccessor&&) = delete;
-
-		friend struct luwra::Table;
-
-	public:
 		template <typename V> inline
 		V read() const && {
 			return accessor.template read<V>(state);
