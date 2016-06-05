@@ -1,31 +1,27 @@
 #include <luwra.hpp>
 #include <iostream>
+#include <string>
 
 using namespace luwra;
 
-struct A {
-	A() {
-		std::cout << "A()" << std::endl;
-	}
+void test(const Table& tbl) {
+	int v = tbl["field"];
+	std::cout << v << std::endl;
 
-	A(const A&) {
-		std::cout << "A(const A&)" << std::endl;
-	}
-
-	A(A&&) {
-		std::cout << "A(A&&)" << std::endl;
-	}
-};
+	tbl["field"] = 1338;
+}
 
 int main() {
 	StateWrapper state;
 
-	// A a;
+	Table tbl(state);
+	tbl["field"] = 1337;
 
-	const int i = 1338;
-	Pushable m(i);
+	push(state, tbl);
+	apply(state, test);
 
-	push(state, m);
+	int v = tbl["field"];
+	std::cout << v << std::endl;
 
 	return 0;
 }
