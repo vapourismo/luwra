@@ -15,6 +15,9 @@ This library does not provide a standalone version of Lua nor does it isolate it
 means that all functions and classes can operate on [lua_State][lua-state] (or the alias
 [State][luwra-state]). Doing this allows you to integrate Luwra however you like.
 
+Nevertheless, you must have a version of Lua installed. Luwra will include the necessary header
+files, but it can't link against the Lua library itself.
+
 # Reference Manual
 A reference manual exists [here][luwra-refmanual].
 
