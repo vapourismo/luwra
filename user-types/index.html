@@ -143,8 +143,8 @@
             <div class="section">
               
                 <h1 id="user-types">User Types</h1>
-<p>A user type is a collection of class members bundled into a metatable. Before user types can be used
-in Lua, you must register such metatable in Lua's registry.</p>
+<p>A user type is a collection of class members bundled into a metatable. In order to use all class
+members, one must register the type's metatable in Lua's registry.</p>
 <p>The following examples work on this class:</p>
 <pre><code class="c++">struct Point {
     double x, y;
@@ -171,7 +171,7 @@ in Lua, you must register such metatable in Lua's registry.</p>
 </code></pre>
 
 <h2 id="register-user-type-with-constructor">Register user type with constructor</h2>
-<p><a href="../reference/namespaceluwra.html#a683f6075862f8fc5cad0d76445f2f607">registerUserType&lt;S&gt;</a> allows
+<p><a href="../reference/namespaceluwra.html#acc685345fabe835a7f8323e7098e39f6">registerUserType&lt;S&gt;</a> allows
 you to register a metatable and constructor in the global namespace. The template parameter to
 <code>registerUserType</code> is a signature in the form of <code>U(A...)</code> where <code>U</code> is your user type and <code>A...</code>
 the parameter types to the constructor which you want to register.</p>
@@ -199,13 +199,13 @@ overridden.</p>
 );
 </code></pre>
 
-<p>Parameter 3 and 4 are instances of
-<a href="../reference/namespaceluwra.html#ac090722c6d5d6b88b31895aad64788c2">FieldVector</a>. The <code>LUWRA_MEMBER</code> macro
-generates a <code>std::pair&lt;Pushable, Pushable&gt;</code> expression.</p>
+<p>Parameter 3 and 4 are instances of <a href="../reference/namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a>. The <code>LUWRA_MEMBER</code> macro generates
+a <code>std::pair&lt;Pushable, Pushable&gt;</code> expression which initializes a key-value association.</p>
 <pre><code class="c++">LUWRA_MEMBER(Point, scale) === {&quot;scale&quot;, LUWRA_WRAP(Point::scale)}
 </code></pre>
 
-<p><code>Pushable</code> has an implicit constructor, which makes it convenient to add other types of fields:</p>
+<p><code>Pushable</code> is constructible using every pushable type, which makes it convenient to add other types
+of fields:</p>
 <pre><code class="c++">luwra::registerUserType&lt;Point(double, double)&gt;(
     lua,
 
@@ -217,7 +217,7 @@ generates a <code>std::pair&lt;Pushable, Pushable&gt;</code> expression.</p>
         {&quot;scale&quot;, LUWRA_WRAP(Point::scale)},
         {&quot;x&quot;,     LUWRA_WRAP(Point::x)},
         {&quot;y&quot;,     LUWRA_WRAP(Point::y)},
-        {&quot;magic&quot;, luwra::FieldVector {
+        {&quot;magic&quot;, luwra::MemberMap {
             {&quot;number&quot;, 1337},
             {&quot;string&quot;, &quot;Hello World&quot;}
         }}
@@ -232,7 +232,7 @@ generates a <code>std::pair&lt;Pushable, Pushable&gt;</code> expression.</p>
 
 <h2 id="register-user-type-without-constructor">Register user type without constructor</h2>
 <p>To register only the metatable associated with a user type, simply omit the constructor parameters
-and name from the call to <code>registerUserType</code>.</p>
+and name from the call to <a href="../reference/namespaceluwra.html#a0a744cd63bf0d4f611a62b8a56df714e">registerUserType</a>.</p>
 <pre><code class="c++">luwra::registerUserType&lt;Point&gt;(
     lua,
 
@@ -241,7 +241,7 @@ and name from the call to <code>registerUserType</code>.</p>
         {&quot;scale&quot;, LUWRA_WRAP(Point::scale)},
         {&quot;x&quot;,     LUWRA_WRAP(Point::x)},
         {&quot;y&quot;,     LUWRA_WRAP(Point::y)},
-        {&quot;magic&quot;, luwra::FieldVector {
+        {&quot;magic&quot;, luwra::MemberMap {
             {&quot;number&quot;, 1337},
             {&quot;string&quot;, &quot;Hello World&quot;}
         }}
@@ -280,7 +280,7 @@ point:x(point.magic.number)
 
 <h2 id="manually-constructing-a-user-type">Manually constructing a user type</h2>
 <p>Provided you already registered your user type, one can create it from the C++ side aswell.
-<a href="../reference/namespaceluwra.html#af079dcca8e67d88e5cfdc7e8872cf5d7">construct&lt;U&gt;</a> provides this
+<a href="../reference/namespaceluwra.html#af079dcca8e67d88e5cfdc7e8872cf5d7">construct</a> provides this
 functionality. Given the user type and constructor parameters, it will construct the user type on
 top of the stack:</p>
 <pre><code class="c++">Point&amp; my_point = luwra::construct&lt;Point&gt;(lua, 13.37, 73.31);
@@ -308,7 +308,9 @@ done using the <code>LUWRA_DEF_REGISTRY_NAME</code> macro.</p>
 LUWRA_DEF_REGISTRY_NAME(MyUserType, &quot;MyUserType&quot;)
 </code></pre>
 
-<p>Choosing this method will not prefix the registry name with the value of <code>LUWRA_REGISTRY_PREFIX</code>.</p>
+<p>This method will not prefix the registry name with the value of <code>LUWRA_REGISTRY_PREFIX</code>.
+The <code>LUWRA_DEF_REGISTRY_NAME</code> macro has to be used at the root namespace, using it inside a
+namespace scope will have not effect.</p>
               
             </div>
           </div>
