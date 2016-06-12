@@ -1,32 +1,67 @@
 language: cpp
 
-env:
-  - LUA_VERSION=5.3.2 COMPILER=g++-4.8
-  - LUA_VERSION=5.2.4 COMPILER=g++-4.8
-  - LUA_VERSION=5.1.5 COMPILER=g++-4.8
+matrix:
+  include:
+    # Lua 5.3
+    - env: LUA_VERSION=5.3.3 COMPILER=g++-4.8
+      compiler: gcc
+      addons:
+        apt: {sources: ['ubuntu-toolchain-r-test'], packages: ['g++-4.8']}
+    - env: LUA_VERSION=5.3.3 COMPILER=g++-4.9
+      compiler: gcc
+      addons:
+        apt: {sources: ['ubuntu-toolchain-r-test'], packages: ['g++-4.9']}
+    - env: LUA_VERSION=5.3.3 COMPILER=g++-5
+      compiler: gcc
+      addons:
+        apt: {sources: ['ubuntu-toolchain-r-test'], packages: ['g++-5']}
+    - env: LUA_VERSION=5.3.3 COMPILER=g++-6
+      compiler: gcc
+      addons:
+        apt: {sources: ['ubuntu-toolchain-r-test'], packages: ['g++-6']}
 
-  - LUA_VERSION=5.3.2 COMPILER=g++-4.9
-  - LUA_VERSION=5.2.4 COMPILER=g++-4.9
-  - LUA_VERSION=5.1.5 COMPILER=g++-4.9
+    # Lua 5.2
+    - env: LUA_VERSION=5.2.4 COMPILER=g++-4.8
+      compiler: gcc
+      addons:
+        apt: {sources: ['ubuntu-toolchain-r-test'], packages: ['g++-4.8']}
+    - env: LUA_VERSION=5.2.4 COMPILER=g++-4.9
+      compiler: gcc
+      addons:
+        apt: {sources: ['ubuntu-toolchain-r-test'], packages: ['g++-4.9']}
+    - env: LUA_VERSION=5.2.4 COMPILER=g++-5
+      compiler: gcc
+      addons:
+        apt: {sources: ['ubuntu-toolchain-r-test'], packages: ['g++-5']}
+    - env: LUA_VERSION=5.2.4 COMPILER=g++-6
+      compiler: gcc
+      addons:
+        apt: {sources: ['ubuntu-toolchain-r-test'], packages: ['g++-6']}
 
-  - LUA_VERSION=5.3.2 COMPILER=g++-5
-  - LUA_VERSION=5.2.4 COMPILER=g++-5
-  - LUA_VERSION=5.1.5 COMPILER=g++-5
-
-  - LUA_VERSION=5.3.2 COMPILER=g++-6
-  - LUA_VERSION=5.2.4 COMPILER=g++-6
-  - LUA_VERSION=5.1.5 COMPILER=g++-6
-
-  - LUA_VERSION=5.3.2 COMPILER=clang++-3.7
-  - LUA_VERSION=5.2.4 COMPILER=clang++-3.7
-  - LUA_VERSION=5.1.5 COMPILER=clang++-3.7
+    # Lua 5.1
+    - env: LUA_VERSION=5.1.5 COMPILER=g++-4.8
+      compiler: gcc
+      addons:
+        apt: {sources: ['ubuntu-toolchain-r-test'], packages: ['g++-4.8']}
+    - env: LUA_VERSION=5.1.5 COMPILER=g++-4.9
+      compiler: gcc
+      addons:
+        apt: {sources: ['ubuntu-toolchain-r-test'], packages: ['g++-4.9']}
+    - env: LUA_VERSION=5.1.5 COMPILER=g++-5
+      compiler: gcc
+      addons:
+        apt: {sources: ['ubuntu-toolchain-r-test'], packages: ['g++-5']}
+    - env: LUA_VERSION=5.1.5 COMPILER=g++-6
+      compiler: gcc
+      addons:
+        apt: {sources: ['ubuntu-toolchain-r-test'], packages: ['g++-6']}
 
 cache:
   directories:
     - lua-$LUA_VERSION
 
 before_install:
-  - export CXX=$COMPILER
+  - if [[ -n "$COMPILER" ]]; then export CXX=$COMPILER; fi
 
 install:
   # Build Lua
@@ -41,14 +76,6 @@ script:
 
 addons:
   apt:
-    sources:
-      - llvm-toolchain-precise-3.7
-      - ubuntu-toolchain-r-test
     packages:
       - make
       - wget
-      - clang-3.7
-      - g++-4.8
-      - g++-4.9
-      - g++-5
-      - g++-6
