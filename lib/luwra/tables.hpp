@@ -15,7 +15,7 @@ LUWRA_NS_BEGIN
 
 namespace internal {
 	// This represents a "path" which will be resolved lazily. It is useful for chained table
-	// access. An access like 'table.field1.field2' would be represented similiar to
+	// access. An access like 'table.field1.field2' would be represented similar to
 	// `Path<Path<Table, std::string>, std::string> table {{table, "field1"}, "field"}`.
 	template <typename P, typename K>
 	struct Path {

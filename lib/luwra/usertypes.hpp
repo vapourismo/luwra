@@ -76,7 +76,7 @@ namespace internal {
 			return 0;
 		}
 
-		// This is converts the userdata in Lua to a string.
+		// This converts the userdata in Lua to a string.
 		static inline
 		int stringify(State* state) {
 			return static_cast<int>(

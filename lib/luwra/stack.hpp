@@ -171,7 +171,7 @@ namespace internal {
 }
 
 /**
- * Similiar to [direct](@ref direct) but pushes the result of the given `Callable` onto the stack.
+ * Similar to [direct](@ref direct) but pushes the result of the given `Callable` onto the stack.
  * \returns Number of values pushed
  */
 template <typename S, typename F, typename... A> static inline
