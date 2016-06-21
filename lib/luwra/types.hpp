@@ -422,6 +422,18 @@ struct Value<const T>: Value<T> {};
 template <typename T>
 struct Value<volatile T>: Value<T> {};
 
+/**
+ * Fix specialization for lvalue reference types.
+ */
+template <typename U>
+struct Value<U&>: Value<U> {};
+
+/**
+ * Fix specialization for rvalue reference types.
+ */
+template <typename U>
+struct Value<U&&>: Value<U> {};
+
 namespace internal {
 	struct PushableI {
 		virtual

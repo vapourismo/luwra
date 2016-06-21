@@ -154,9 +154,6 @@ struct Value {
 	}
 };
 
-template <typename U>
-struct Value<U&>: Value<U> {};
-
 /**
  * User type
  */
