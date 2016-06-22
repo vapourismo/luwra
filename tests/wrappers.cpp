@@ -14,7 +14,7 @@ static int dummy6(int a, int b) { return 1337 * a + b; }
 #define LUWRA_GW_TEST_PTRS(param, type) \
 	{ \
 		luwra::CFunction wrap_auto = LUWRA_WRAP(param); \
-		luwra::CFunction wrap_manual = &luwra::internal::GenericWrapper<type>::invoke<&param>; \
+		luwra::CFunction wrap_manual = &luwra::internal::Wrapper<type>::invoke<&param>; \
 		REQUIRE(wrap_auto != nullptr); \
 		REQUIRE(wrap_manual != nullptr); \
 		REQUIRE(wrap_auto == wrap_manual); \
@@ -49,7 +49,7 @@ static int dummy6(int a, int b) { return 1337 * a + b; }
 		REQUIRE(expected_result == given_result); \
 	}
 
-TEST_CASE("GenericWrapper<R(A...)>") {
+TEST_CASE("Wrapper<R(A...)>") {
 	LUWRA_GW_TEST_PTRS(dummy1, void());
 	LUWRA_GW_TEST_PTRS(dummy2, void(int));
 	LUWRA_GW_TEST_PTRS(dummy3, void(int, int));
@@ -130,7 +130,7 @@ struct Dummy {
 		REQUIRE(expected_result == given_result); \
 	}
 
-TEST_CASE("R (T::*)(A...)") {
+TEST_CASE("Wrapper<R (T::*)(A...)>") {
 	LUWRA_GW_TEST_PTRS(Dummy::dummy1, void (Dummy::*)());
 	LUWRA_GW_TEST_PTRS(Dummy::dummy2, void (Dummy::*)(int));
 	LUWRA_GW_TEST_PTRS(Dummy::dummy3, void (Dummy::*)(int, int));
@@ -148,7 +148,7 @@ TEST_CASE("R (T::*)(A...)") {
 	LUWRA_GW_TEST_METH_NONVOID(dummy6, (13, 37));
 }
 
-TEST_CASE("R (T::*)(A...) volatile") {
+TEST_CASE("Wrapper<R (T::*)(A...) volatile>") {
 	LUWRA_GW_TEST_PTRS(Dummy::dummy7, void (Dummy::*)() volatile);
 	LUWRA_GW_TEST_PTRS(Dummy::dummy8, void (Dummy::*)(int) volatile);
 	LUWRA_GW_TEST_PTRS(Dummy::dummy9, void (Dummy::*)(int, int) volatile);
@@ -166,7 +166,7 @@ TEST_CASE("R (T::*)(A...) volatile") {
 	LUWRA_GW_TEST_METH_NONVOID(dummy12, (13, 37));
 }
 
-TEST_CASE("R (T::*)(A...) const") {
+TEST_CASE("Wrapper<R (T::*)(A...) const>") {
 	LUWRA_GW_TEST_PTRS(Dummy::dummy13, int (Dummy::*)() const);
 	LUWRA_GW_TEST_PTRS(Dummy::dummy14, int (Dummy::*)(int) const);
 	LUWRA_GW_TEST_PTRS(Dummy::dummy15, int (Dummy::*)(int, int) const);
@@ -176,7 +176,7 @@ TEST_CASE("R (T::*)(A...) const") {
 	LUWRA_GW_TEST_METH_NONVOID(dummy15, (13, 37));
 }
 
-TEST_CASE("R (T::*)(A...) const volatile") {
+TEST_CASE("Wrapper<R (T::*)(A...) const volatile>") {
 	LUWRA_GW_TEST_PTRS(Dummy::dummy16, int (Dummy::*)() const volatile);
 	LUWRA_GW_TEST_PTRS(Dummy::dummy17, int (Dummy::*)(int) const volatile);
 	LUWRA_GW_TEST_PTRS(Dummy::dummy18, int (Dummy::*)(int, int) const volatile);
@@ -186,7 +186,7 @@ TEST_CASE("R (T::*)(A...) const volatile") {
 	LUWRA_GW_TEST_METH_NONVOID(dummy18, (13, 37));
 }
 
-TEST_CASE("const R T::*") {
+TEST_CASE("Wrapper<const R T::*>") {
 	LUWRA_GW_TEST_PTRS(Dummy::const_field, const int (Dummy::*));
 
 	luwra::StateWrapper state;
@@ -200,7 +200,7 @@ TEST_CASE("const R T::*") {
 	REQUIRE(luwra::read<int>(state, -1) == dummy.const_field);
 }
 
-TEST_CASE("R T::*") {
+TEST_CASE("Wrapper<R T::*>") {
 	LUWRA_GW_TEST_PTRS(Dummy::field, int (Dummy::*));
 
 	luwra::StateWrapper state;

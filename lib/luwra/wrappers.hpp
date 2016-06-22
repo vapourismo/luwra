@@ -12,161 +12,177 @@
 #include "types.hpp"
 #include "stack.hpp"
 
+#include <type_traits>
+
 LUWRA_NS_BEGIN
 
 namespace internal {
-	// Specializations of this template shall provide a static function `int invoke(State* state)`,
-	// which serves as an instance of `lua_CFunction`.
-	// Pointers to these functions can be passed to the Lua VM, so that their functionality is
-	// available within a Lua program.
-	template <typename T>
-	struct GenericWrapper {
+	// Method wrapper implementation for calling a method of type MethodPointer on an instance of
+	// Klass.
+	template <
+		typename MethodPointer,
+		typename Klass = typename MemberInfo<MethodPointer>::MemberOf
+	>
+	struct MemberMethodImpl {
+		using BaseKlass = typename MemberInfo<MethodPointer>::MemberOf;
+
+		// Make sure that a member pointer with type MethodPointer is member of a base class that
+		// Klass derives from. This condition also allows BaseKlass == Klass.
 		static_assert(
-			sizeof(T) == -1,
-			"Template parameter to GenericWrapper is not valid"
+			std::is_base_of<BaseKlass, Klass>::value,
+			"Instances of MethodPointer are not part of Klass"
+		);
+
+		using Ret = typename CallableInfo<MethodPointer>::ReturnType;
+
+		// This class will receive the argument types of MethodPointer.
+		template <typename... Args>
+		struct ArgumentsReceiver {
+			using MapSignature = Ret(Klass*, Args...);
+
+			template <MethodPointer meth> static inline
+			Ret hook(Klass* parent, Args&&... args) {
+				return (parent->*meth)(std::forward<Args>(args)...);
+			}
+		};
+
+		// Relay argument types in order to find the appropriate MapSignature and hook function.
+		using Receiver =
+			typename CallableInfo<MethodPointer>::template RelayArguments<ArgumentsReceiver>;
+
+		template <MethodPointer meth> static inline
+		int invoke(State* state) {
+			return static_cast<int>(
+				map<typename Receiver::MapSignature>(state, Receiver::template hook<meth>)
+			);
+		}
+	};
+
+	// Catch attempts to wrap non-member pointers.
+	template <
+		typename MemberPointer,
+		typename Klass = typename MemberInfo<MemberPointer>::MemberOf
+	>
+	struct MemberWrapper {
+		static_assert(
+			sizeof(MemberPointer) == -1,
+			"MemberPointer is not a member pointer type"
 		);
 	};
 
-	// This wraps generic functions. All parameters are read off the stack using their respective
-	// `Value` specialization and subsequently passed to the function. The returned value will be
-	// pushed onto the stack.
-	template <typename R, typename... A>
-	struct GenericWrapper<R(A...)> {
-		template <R (* fun)(A...)> static inline
+	// Wrap methods that expect 'this' to be const-volatile-qualified.
+	template <typename Klass, typename BaseKlass, typename Ret, typename... Args>
+	struct MemberWrapper<Ret (BaseKlass::*)(Args...) const volatile, Klass>:
+		MemberMethodImpl<Ret (BaseKlass::*)(Args...) const volatile, Klass>
+	{};
+
+	// Wrap methods that expect 'this' to be const-qualified.
+	template <typename Klass, typename BaseKlass, typename Ret, typename... Args>
+	struct MemberWrapper<Ret (BaseKlass::*)(Args...) const, Klass>:
+		MemberMethodImpl<Ret (BaseKlass::*)(Args...) const, Klass>
+	{};
+
+	// Wrap methods that expect 'this' to be volatile-qualified.
+	template <typename Klass, typename BaseKlass, typename Ret, typename... Args>
+	struct MemberWrapper<Ret (BaseKlass::*)(Args...) volatile, Klass>:
+		MemberMethodImpl<Ret (BaseKlass::*)(Args...) volatile, Klass>
+	{};
+
+	// Wrap methods that expect 'this' to be unqualified.
+	template <typename Klass, typename BaseKlass, typename Ret, typename... Args>
+	struct MemberWrapper<Ret (BaseKlass::*)(Args...), Klass>:
+		MemberMethodImpl<Ret (BaseKlass::*)(Args...), Klass>
+	{};
+
+	// Wrap const-qualified field, provides only the getter.
+	template <typename Klass, typename BaseKlass, typename FieldType>
+	struct MemberWrapper<const FieldType BaseKlass::*, Klass> {
+		static_assert(
+			std::is_base_of<BaseKlass, Klass>::value,
+			"Instances of the given field pointer type are not part of Klass"
+		);
+
+		template <const FieldType BaseKlass::* accessor> static inline
 		int invoke(State* state) {
 			return static_cast<int>(
-				map<R(A...)>(state, fun)
+				push(state, read<Klass*>(state, 1)->*accessor)
 			);
 		}
 	};
 
-	// An alias for the `R(A...)` specialization. It primarily exists because functions aren't
+	// Wrap field, provides getter and setter.
+	template <typename Klass, typename BaseKlass, typename FieldType>
+	struct MemberWrapper<FieldType BaseKlass::*, Klass> {
+		static_assert(
+			std::is_base_of<BaseKlass, Klass>::value,
+			"Instances of the given field pointer type are not part of Klass"
+		);
+
+		template <FieldType BaseKlass::* accessor> static inline
+		int invoke(State* state) {
+			if (lua_gettop(state) > 1) {
+				read<Klass*>(state, 1)->*accessor = read<FieldType>(state, 2);
+				return 0;
+			} else {
+				return static_cast<int>(
+					push(state, read<Klass*>(state, 1)->*accessor)
+				);
+			}
+		}
+	};
+
+	// Catch attempts to wrap unwrappable types.
+	template <typename ToBeWrapped>
+	struct Wrapper {
+		static_assert(
+			sizeof(ToBeWrapped) == -1,
+			"Template parameter to Wrapper is not wrappable"
+		);
+	};
+
+	// Wrap a function. All parameters are read off the stack using their respective `Value`
+	// specialization and subsequently passed to the function. The returned value will be pushed
+	// onto the stack.
+	template <typename Ret, typename... Args>
+	struct Wrapper<Ret(Args...)> {
+		template <Ret (* fun)(Args...)> static inline
+		int invoke(State* state) {
+			return static_cast<int>(
+				map<Ret(Args...)>(state, fun)
+			);
+		}
+	};
+
+	// An alias for the `Ret(Args...)` specialization. It primarily exists because functions aren't
 	// passable as values, instead they are referenced using a function pointer.
-	template <typename R, typename... A>
-	struct GenericWrapper<R (*)(A...)>: GenericWrapper<R(A...)> {};
-
-	// To avoid repeating the same code for the several types of method pointers, the base code is
-	// unified here.
-	template <typename MP, typename B, typename T, typename R, typename... A>
-	struct MethodWrapperImpl {
-		template <MP meth> static inline
-		R hook(B* parent, A&&... args) {
-			return (parent->*meth)(std::forward<A>(args)...);
-		}
-
-		template <MP meth> static inline
-		int invoke(State* state) {
-			return static_cast<int>(
-				map<R(B*, A...)>(state, hook<meth>)
-			);
-		}
-	};
+	template <typename Ret, typename... Args>
+	struct Wrapper<Ret (*)(Args...)>:
+		Wrapper<Ret(Args...)> {};
 
 	// Wrap methods that expect `this` to be 'const volatile'-qualified.
-	template <typename T, typename R, typename... A>
-	struct GenericWrapper<R (T::*)(A...) const volatile>:
-		MethodWrapperImpl<R (T::*)(A...) const volatile, T, T, R, A...>
-	{};
+	template <typename Klasss, typename Ret, typename... Args>
+	struct Wrapper<Ret (Klasss::*)(Args...) const volatile>:
+		MemberWrapper<Ret (Klasss::*)(Args...) const volatile>{};
 
 	// Wrap methods that expect `this` to be 'const'-qualified.
-	template <typename T, typename R, typename... A>
-	struct GenericWrapper<R (T::*)(A...) const>:
-		MethodWrapperImpl<R (T::*)(A...) const, T, T, R, A...>
-	{};
+	template <typename Klasss, typename Ret, typename... Args>
+	struct Wrapper<Ret (Klasss::*)(Args...) const>:
+		MemberWrapper<Ret (Klasss::*)(Args...) const>{};
 
 	// Wrap methods that expect `this` to be 'volatile'-qualified.
-	template <typename T, typename R, typename... A>
-	struct GenericWrapper<R (T::*)(A...) volatile>:
-		MethodWrapperImpl<R (T::*)(A...) volatile, T, T, R, A...>
-	{};
+	template <typename Klasss, typename Ret, typename... Args>
+	struct Wrapper<Ret (Klasss::*)(Args...) volatile>:
+		MemberWrapper<Ret (Klasss::*)(Args...) volatile>{};
 
 	// Wrap methods that expect `this` to be unqualified.
-	template <typename T, typename R, typename... A>
-	struct GenericWrapper<R (T::*)(A...)>:
-		MethodWrapperImpl<R (T::*)(A...), T, T, R, A...>
-	{};
+	template <typename Klasss, typename Ret, typename... Args>
+	struct Wrapper<Ret (Klasss::*)(Args...)>:
+		MemberWrapper<Ret (Klasss::*)(Args...)>{};
 
-	// Wrap a 'const'-qualified field accessor. Because the field can not be changed, this wrapper
-	// does not provide a setter mechanism.
-	template <typename T, typename R>
-	struct GenericWrapper<const R T::*> {
-		template <const R T::* accessor> static inline
-		int invoke(State* state) {
-			return static_cast<int>(
-				push(state, read<T*>(state, 1)->*accessor)
-			);
-		}
-	};
-
-	// Wrap a field accessor. The wrapper provides both setter and getter mechanism.
-	template <typename T, typename R>
-	struct GenericWrapper<R T::*> {
-		template <R T::* accessor> static inline
-		int invoke(State* state) {
-			if (lua_gettop(state) > 1) {
-				read<T*>(state, 1)->*accessor = read<R>(state, 2);
-				return 0;
-			} else {
-				return static_cast<int>(
-					push(state, read<T*>(state, 1)->*accessor)
-				);
-			}
-		}
-	};
-
-	// What follows are aliases or reimplementations of 'GenericWrapper' which force member pointers
-	// to be applicable to specific base classes. They are useful when working with inherited
-	// members.
-	template <typename B, typename T>
-	struct GenericMemberWrapper: GenericWrapper<T> {
-		static_assert(sizeof(T) == -1, "Template parameters to GenericMemberWrapper are not valid");
-	};
-
-	template <typename B, typename T, typename R, typename... A>
-	struct GenericMemberWrapper<B, R (T::*)(A...) const volatile>:
-		MethodWrapperImpl<R (T::*)(A...) const volatile, B, T, R, A...>
-	{};
-
-	template <typename B, typename T, typename R, typename... A>
-	struct GenericMemberWrapper<B, R (T::*)(A...) const>:
-		MethodWrapperImpl<R (T::*)(A...) const, B, T, R, A...>
-	{};
-
-	template <typename B, typename T, typename R, typename... A>
-	struct GenericMemberWrapper<B, R (T::*)(A...) volatile>:
-		MethodWrapperImpl<R (T::*)(A...) volatile, B, T, R, A...>
-	{};
-
-	template <typename B, typename T, typename R, typename... A>
-	struct GenericMemberWrapper<B, R (T::*)(A...)>:
-		MethodWrapperImpl<R (T::*)(A...), B, T, R, A...>
-	{};
-
-	template <typename B, typename T, typename R>
-	struct GenericMemberWrapper<B, const R T::*> {
-		template <const R T::* accessor> static inline
-		int invoke(State* state) {
-			return static_cast<int>(
-				push(state, read<B*>(state, 1)->*accessor)
-			);
-		}
-	};
-
-	// Wrap a field accessor. The wrapper provides both setter and getter mechanism.
-	template <typename B, typename T, typename R>
-	struct GenericMemberWrapper<B, R T::*> {
-		template <R T::* accessor> static inline
-		int invoke(State* state) {
-			if (lua_gettop(state) > 1) {
-				read<B*>(state, 1)->*accessor = read<R>(state, 2);
-				return 0;
-			} else {
-				return static_cast<int>(
-					push(state, read<B*>(state, 1)->*accessor)
-				);
-			}
-		}
-	};
+	// Wrap field.
+	template <typename Klasss, typename Ret>
+	struct Wrapper<Ret Klasss::*>:
+		MemberWrapper<Ret Klasss::*> {};
 }
 
 LUWRA_NS_END
@@ -176,13 +192,13 @@ LUWRA_NS_END
  * \returns Wrapped entity as `lua_CFunction`
  */
 #define LUWRA_WRAP(entity) \
-	(&luwra::internal::GenericWrapper<decltype(&entity)>::template invoke<&entity>)
+	(&luwra::internal::Wrapper<decltype(&entity)>::template invoke<&entity>)
 
 /**
  * Same as `LUWRA_WRAP` but specifically for members of a class. It is imperative that you use this
  * macro instead of `LUWRA_WRAP` when working with inherited members.
  */
 #define LUWRA_WRAP_MEMBER(base, name) \
-	(&luwra::internal::GenericMemberWrapper<base, decltype(&__LUWRA_NS_RESOLVE(base, name))>::template invoke<&__LUWRA_NS_RESOLVE(base, name)>)
+	(&luwra::internal::MemberWrapper<decltype(&__LUWRA_NS_RESOLVE(base, name)), base>::template invoke<&__LUWRA_NS_RESOLVE(base, name)>)
 
 #endif

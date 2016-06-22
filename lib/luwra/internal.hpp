@@ -13,72 +13,104 @@ LUWRA_NS_BEGIN
 
 namespace internal {
 	// Information about function objects
-	template <typename T>
-	struct CallableInfo: CallableInfo<decltype(&T::operator ())> {};
+	template <typename Klass>
+	struct CallableInfo: CallableInfo<decltype(&Klass::operator ())> {};
 
 	// Information about function signature
-	template <typename R, typename... A>
-	struct CallableInfo<R(A...)> {
-		// A call to an instance would evaluate to this type
-		using ReturnType = R;
+	template <typename Ret, typename... Args>
+	struct CallableInfo<Ret(Args...)> {
+		// Args call to an instance would evaluate to this type
+		using ReturnType = Ret;
 
 		// Pass the template parameter pack to another template
-		template <template <typename...> class T>
-		using RelayArguments = T<A...>;
+		template <template <typename...> class Target>
+		using RelayArguments = Target<Args...>;
 
 		// Pass the signature of this callable to another template
-		template <template <typename> class T>
-		using RelaySignature = T<R(A...)>;
+		template <template <typename> class Target>
+		using RelaySignature = Target<Ret(Args...)>;
 	};
 
 	// Information about function pointers
-	template <typename R, typename... A>
-	struct CallableInfo<R (*)(A...)>: CallableInfo<R(A...)> {};
+	template <typename Ret, typename... Args>
+	struct CallableInfo<Ret (*)(Args...)>:
+		CallableInfo<Ret(Args...)> {};
 
 	// Information about method pointers
-	template <typename T, typename R, typename... A>
-	struct CallableInfo<R (T::*)(A...)>: CallableInfo<R(A...)> {};
+	template <typename Klass, typename Ret, typename... Args>
+	struct CallableInfo<Ret (Klass::*)(Args...)>:
+		CallableInfo<Ret(Args...)> {};
 
-	template <typename T, typename R, typename... A>
-	struct CallableInfo<R (T::*)(A...) const>: CallableInfo<R(A...)> {};
+	template <typename Klass, typename Ret, typename... Args>
+	struct CallableInfo<Ret (Klass::*)(Args...) const>:
+		CallableInfo<Ret(Args...)> {};
 
-	template <typename T, typename R, typename... A>
-	struct CallableInfo<R (T::*)(A...) volatile>: CallableInfo<R(A...)> {};
+	template <typename Klass, typename Ret, typename... Args>
+	struct CallableInfo<Ret (Klass::*)(Args...) volatile>:
+		CallableInfo<Ret(Args...)> {};
 
-	template <typename T, typename R, typename... A>
-	struct CallableInfo<R (T::*)(A...) const volatile>: CallableInfo<R(A...)> {};
+	template <typename Klass, typename Ret, typename... Args>
+	struct CallableInfo<Ret (Klass::*)(Args...) const volatile>:
+		CallableInfo<Ret(Args...)> {};
 
 	// Useful aliases
-	template <typename T>
-	struct CallableInfo<const T>: CallableInfo<T> {};
+	template <typename Callable>
+	struct CallableInfo<const Callable>:
+		CallableInfo<Callable> {};
+
+	template <typename Callable>
+	struct CallableInfo<volatile Callable>:
+		CallableInfo<Callable> {};
+
+	template <typename Callable>
+	struct CallableInfo<Callable&>:
+		CallableInfo<Callable> {};
+
+	template <typename Callable>
+	struct CallableInfo<Callable&&>:
+		CallableInfo<Callable> {};
 
 	template <typename T>
-	struct CallableInfo<volatile T>: CallableInfo<T> {};
-
-	template <typename T>
-	struct CallableInfo<T&>: CallableInfo<T> {};
-
-	template <typename T>
-	struct CallableInfo<T&&>: CallableInfo<T> {};
-
-	// Force `T`'s base to be `B`. Works only for member pointers.
-	template <typename B, typename T>
-	struct _ChangeMemberBase {
-		using Member = T;
+	struct MemberInfo {
+		static_assert(sizeof(T) == -1, "Template parameter to MemberInfo is not a member type");
 	};
 
-	template <typename B, typename T, typename R, typename... A>
-	struct _ChangeMemberBase<B, R (T::*)(A...)> {
-		using Member = R (B::*)(A...);
+	enum class MemberCategory {
+		Method, Field
 	};
 
-	template <typename B, typename T, typename R>
-	struct _ChangeMemberBase<B, R T::*> {
-		using Member = R B::*;
+	// Information about methods
+	template <typename Klass, typename Ret, typename... Args>
+	struct MemberInfo<Ret (Klass::*)(Args...)>:
+		CallableInfo<Ret (Klass::*)(Args...)>
+	{
+		using MemberOf = Klass;
+
+		static
+		constexpr MemberCategory category = MemberCategory::Method;
 	};
 
-	template <typename B, typename T>
-	using ChangeMemberBase = typename _ChangeMemberBase<B, T>::Member;
+	template <typename Klass, typename Ret, typename... Args>
+	struct MemberInfo<Ret (Klass::*)(Args...) const>:
+		MemberInfo<Ret (Klass::*)(Args...)> {};
+
+	template <typename Klass, typename Ret, typename... Args>
+	struct MemberInfo<Ret (Klass::*)(Args...) volatile>:
+		MemberInfo<Ret (Klass::*)(Args...)> {};
+
+	template <typename Klass, typename Ret, typename... Args>
+	struct MemberInfo<Ret (Klass::*)(Args...) const volatile>:
+		MemberInfo<Ret (Klass::*)(Args...)> {};
+
+	// Information about fields
+	template <typename Klass, typename Field>
+	struct MemberInfo<Field Klass::*> {
+		using MemberOf = Klass;
+		using FieldType = Field;
+
+		static
+		constexpr MemberCategory category = MemberCategory::Field;
+	};
 }
 
 LUWRA_NS_END
