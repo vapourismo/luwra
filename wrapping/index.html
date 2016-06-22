@@ -204,10 +204,10 @@ be an instance of the type which the wrapped field or method belongs to.</p>
 };
 </code></pre>
 
-<p>Wrapping field accessors and methods works identical to wrapping functions.</p>
-<pre><code class="c++">lua_CFunction cfun_x     = LUWRA_WRAP(Point::x),
-              cfun_y     = LUWRA_WRAP(Point::y),
-              cfun_scale = LUWRA_WRAP(Point::scale);
+<p>Wrapping field accessors and methods works almost identical to wrapping functions.</p>
+<pre><code class="c++">lua_CFunction cfun_x     = LUWRA_WRAP_MEMBER(Point, x),
+              cfun_y     = LUWRA_WRAP_MEMBER(Point, y),
+              cfun_scale = LUWRA_WRAP_MEMBER(Point, scale);
 
 // Register in global namespace
 luwra::setGlobal(lua, &quot;x&quot;, cfun_x);
@@ -215,6 +215,13 @@ luwra::setGlobal(lua, &quot;y&quot;, cfun_y);
 luwra::setGlobal(lua, &quot;scale&quot;, cfun_scale);
 </code></pre>
 
+<p>In this case, it is also possible to use <code>LUWRA_WRAP</code> to generate the C functions. The usage of
+<code>LUWRA_WRAP_MEMBER</code> is only required when working with inherited members, since it is impossible for
+the <code>LUWRA_WRAP</code> macro to be aware of inherited members.</p>
+<p>For example, if you are trying to wrap a member <code>B::foo</code> where <code>foo</code> is an inherited member of class
+<code>A</code> which <code>B</code> derives from, then <code>LUWRA_WRAP(B::foo)</code> would generate a function which is only
+applicable on instances of <code>A</code>. But <code>LUWRA_WRAP_MEMBER(B, foo)</code> generates a function that can only
+be applied to instances of <code>B</code>.</p>
 <p>Usage in Lua is analogous to function usage.</p>
 <pre><code class="lua">-- Instantiate 'Point' here, have a look at the User Types section to find out how to do this
 local my_point = ...

@@ -201,7 +201,7 @@ overridden.</p>
 
 <p>Parameter 3 and 4 are instances of <a href="../reference/namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a>. The <code>LUWRA_MEMBER</code> macro generates
 a <code>std::pair&lt;Pushable, Pushable&gt;</code> expression which initializes a key-value association.</p>
-<pre><code class="c++">LUWRA_MEMBER(Point, scale) === {&quot;scale&quot;, LUWRA_WRAP(Point::scale)}
+<pre><code class="c++">LUWRA_MEMBER(Point, scale) === {&quot;scale&quot;, LUWRA_WRAP_MEMBER(Point, scale)}
 </code></pre>
 
 <p><code>Pushable</code> is constructible using every pushable type, which makes it convenient to add other types
@@ -214,9 +214,9 @@ of fields:</p>
 
     // Methods need to be declared here
     {
-        {&quot;scale&quot;, LUWRA_WRAP(Point::scale)},
-        {&quot;x&quot;,     LUWRA_WRAP(Point::x)},
-        {&quot;y&quot;,     LUWRA_WRAP(Point::y)},
+        {&quot;scale&quot;, LUWRA_WRAP_MEMBER(Point, scale)},
+        {&quot;x&quot;,     LUWRA_WRAP_MEMBER(Point, x)},
+        {&quot;y&quot;,     LUWRA_WRAP_MEMBER(Point, y)},
         {&quot;magic&quot;, luwra::MemberMap {
             {&quot;number&quot;, 1337},
             {&quot;string&quot;, &quot;Hello World&quot;}
@@ -225,7 +225,7 @@ of fields:</p>
 
     // Meta methods may be registered aswell
     {
-        {&quot;__tostring&quot;, LUWRA_WRAP(Point::__tostring)}
+        {&quot;__tostring&quot;, LUWRA_WRAP_MEMBER(Point, __tostring)}
     }
 );
 </code></pre>
@@ -238,9 +238,9 @@ and name from the call to <a href="../reference/namespaceluwra.html#a0a744cd63bf
 
     // Methods need to be declared here
     {
-        {&quot;scale&quot;, LUWRA_WRAP(Point::scale)},
-        {&quot;x&quot;,     LUWRA_WRAP(Point::x)},
-        {&quot;y&quot;,     LUWRA_WRAP(Point::y)},
+        {&quot;scale&quot;, LUWRA_WRAP_MEMBER(Point, scale)},
+        {&quot;x&quot;,     LUWRA_WRAP_MEMBER(Point, x)},
+        {&quot;y&quot;,     LUWRA_WRAP_MEMBER(Point, y)},
         {&quot;magic&quot;, luwra::MemberMap {
             {&quot;number&quot;, 1337},
             {&quot;string&quot;, &quot;Hello World&quot;}
@@ -249,7 +249,7 @@ and name from the call to <a href="../reference/namespaceluwra.html#a0a744cd63bf
 
     // Meta methods may be registered aswell
     {
-        {&quot;__tostring&quot;, LUWRA_WRAP(Point::__tostring)}
+        {&quot;__tostring&quot;, LUWRA_WRAP_MEMBER(Point, __tostring)}
     }
 );
 </code></pre>
