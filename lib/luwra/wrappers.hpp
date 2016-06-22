@@ -73,30 +73,28 @@ namespace internal {
 	// Wrap methods that expect 'this' to be const-volatile-qualified.
 	template <typename Klass, typename BaseKlass, typename Ret, typename... Args>
 	struct MemberWrapper<Ret (BaseKlass::*)(Args...) const volatile, Klass>:
-		MemberMethodImpl<Ret (BaseKlass::*)(Args...) const volatile, Klass>
-	{};
+		MemberMethodImpl<Ret (BaseKlass::*)(Args...) const volatile, Klass> {};
 
 	// Wrap methods that expect 'this' to be const-qualified.
 	template <typename Klass, typename BaseKlass, typename Ret, typename... Args>
 	struct MemberWrapper<Ret (BaseKlass::*)(Args...) const, Klass>:
-		MemberMethodImpl<Ret (BaseKlass::*)(Args...) const, Klass>
-	{};
+		MemberMethodImpl<Ret (BaseKlass::*)(Args...) const, Klass> {};
 
 	// Wrap methods that expect 'this' to be volatile-qualified.
 	template <typename Klass, typename BaseKlass, typename Ret, typename... Args>
 	struct MemberWrapper<Ret (BaseKlass::*)(Args...) volatile, Klass>:
-		MemberMethodImpl<Ret (BaseKlass::*)(Args...) volatile, Klass>
-	{};
+		MemberMethodImpl<Ret (BaseKlass::*)(Args...) volatile, Klass> {};
 
 	// Wrap methods that expect 'this' to be unqualified.
 	template <typename Klass, typename BaseKlass, typename Ret, typename... Args>
 	struct MemberWrapper<Ret (BaseKlass::*)(Args...), Klass>:
-		MemberMethodImpl<Ret (BaseKlass::*)(Args...), Klass>
-	{};
+		MemberMethodImpl<Ret (BaseKlass::*)(Args...), Klass> {};
 
 	// Wrap const-qualified field, provides only the getter.
 	template <typename Klass, typename BaseKlass, typename FieldType>
 	struct MemberWrapper<const FieldType BaseKlass::*, Klass> {
+		// Make sure that a member pointer of the given type is member of a base class that Klass
+		// derives from. The case BaseKlass == Klass is also accepted.
 		static_assert(
 			std::is_base_of<BaseKlass, Klass>::value,
 			"Instances of the given field pointer type are not part of Klass"
@@ -113,6 +111,8 @@ namespace internal {
 	// Wrap field, provides getter and setter.
 	template <typename Klass, typename BaseKlass, typename FieldType>
 	struct MemberWrapper<FieldType BaseKlass::*, Klass> {
+		// Make sure that a member pointer of the given type is member of a base class that Klass
+		// derives from. The case BaseKlass == Klass is also accepted.
 		static_assert(
 			std::is_base_of<BaseKlass, Klass>::value,
 			"Instances of the given field pointer type are not part of Klass"
