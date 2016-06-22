@@ -267,7 +267,7 @@ LUWRA_NS_END
  * string and a `lua_CFunction`. For example `std::pair<Pushable, Pushable>`.
  */
 #define LUWRA_MEMBER(type, name) \
-	{#name, LUWRA_WRAP(__LUWRA_NS_RESOLVE(type, name))}
+	{#name, LUWRA_WRAP_MEMBER(type, name)}
 
 /**
  * Generate a `lua_CFunction` wrapper for a constructor.

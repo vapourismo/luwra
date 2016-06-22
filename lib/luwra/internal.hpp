@@ -60,6 +60,25 @@ namespace internal {
 
 	template <typename T>
 	struct CallableInfo<T&&>: CallableInfo<T> {};
+
+	// Force `T`'s base to be `B`. Works only for member pointers.
+	template <typename B, typename T>
+	struct _ChangeMemberBase {
+		using Member = T;
+	};
+
+	template <typename B, typename T, typename R, typename... A>
+	struct _ChangeMemberBase<B, R (T::*)(A...)> {
+		using Member = R (B::*)(A...);
+	};
+
+	template <typename B, typename T, typename R>
+	struct _ChangeMemberBase<B, R T::*> {
+		using Member = R B::*;
+	};
+
+	template <typename B, typename T>
+	using ChangeMemberBase = typename _ChangeMemberBase<B, T>::Member;
 }
 
 LUWRA_NS_END

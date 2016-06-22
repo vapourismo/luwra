@@ -4,24 +4,23 @@
 
 using namespace luwra;
 
-void test(const Table& tbl) {
-	int v = tbl["field"];
-	std::cout << v << std::endl;
+struct A {
+	void f() {
+		std::cout << "Hello World" << std::endl;
+	}
+};
 
-	tbl["field"] = 1338;
-}
+struct B: A {};
 
 int main() {
 	StateWrapper state;
+	state.loadStandardLibrary();
 
-	Table tbl(state);
-	tbl["field"] = 1337;
+	registerUserType<A()>(state, "A", {LUWRA_MEMBER(A, f)});
+	registerUserType<B()>(state, "B", {LUWRA_MEMBER(B, f)});
 
-	push(state, tbl);
-	apply(state, test);
-
-	int v = tbl["field"];
-	std::cout << v << std::endl;
+	if (state.runString("B():f()") != LUA_OK)
+		std::cerr << read<std::string>(state, -1) << std::endl;
 
 	return 0;
 }
