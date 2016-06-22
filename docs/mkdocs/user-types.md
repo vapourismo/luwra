@@ -66,7 +66,7 @@ Parameter 3 and 4 are instances of [MemberMap][luwra-membermap]. The `LUWRA_MEMB
 a `std::pair<Pushable, Pushable>` expression which initializes a key-value association.
 
 ```c++
-LUWRA_MEMBER(Point, scale) === {"scale", LUWRA_WRAP(Point::scale)}
+LUWRA_MEMBER(Point, scale) === {"scale", LUWRA_WRAP_MEMBER(Point, scale)}
 ```
 
 `Pushable` is constructible using every pushable type, which makes it convenient to add other types
@@ -81,9 +81,9 @@ luwra::registerUserType<Point(double, double)>(
 
     // Methods need to be declared here
     {
-        {"scale", LUWRA_WRAP(Point::scale)},
-        {"x",     LUWRA_WRAP(Point::x)},
-        {"y",     LUWRA_WRAP(Point::y)},
+        {"scale", LUWRA_WRAP_MEMBER(Point, scale)},
+        {"x",     LUWRA_WRAP_MEMBER(Point, x)},
+        {"y",     LUWRA_WRAP_MEMBER(Point, y)},
         {"magic", luwra::MemberMap {
             {"number", 1337},
             {"string", "Hello World"}
@@ -92,7 +92,7 @@ luwra::registerUserType<Point(double, double)>(
 
     // Meta methods may be registered aswell
     {
-        {"__tostring", LUWRA_WRAP(Point::__tostring)}
+        {"__tostring", LUWRA_WRAP_MEMBER(Point, __tostring)}
     }
 );
 ```
@@ -107,9 +107,9 @@ luwra::registerUserType<Point>(
 
     // Methods need to be declared here
     {
-        {"scale", LUWRA_WRAP(Point::scale)},
-        {"x",     LUWRA_WRAP(Point::x)},
-        {"y",     LUWRA_WRAP(Point::y)},
+        {"scale", LUWRA_WRAP_MEMBER(Point, scale)},
+        {"x",     LUWRA_WRAP_MEMBER(Point, x)},
+        {"y",     LUWRA_WRAP_MEMBER(Point, y)},
         {"magic", luwra::MemberMap {
             {"number", 1337},
             {"string", "Hello World"}
@@ -118,7 +118,7 @@ luwra::registerUserType<Point>(
 
     // Meta methods may be registered aswell
     {
-        {"__tostring", LUWRA_WRAP(Point::__tostring)}
+        {"__tostring", LUWRA_WRAP_MEMBER(Point, __tostring)}
     }
 );
 ```

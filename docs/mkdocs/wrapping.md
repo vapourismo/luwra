@@ -84,18 +84,27 @@ struct Point {
 };
 ```
 
-Wrapping field accessors and methods works identical to wrapping functions.
+Wrapping field accessors and methods works almost identical to wrapping functions.
 
 ```c++
-lua_CFunction cfun_x     = LUWRA_WRAP(Point::x),
-              cfun_y     = LUWRA_WRAP(Point::y),
-              cfun_scale = LUWRA_WRAP(Point::scale);
+lua_CFunction cfun_x     = LUWRA_WRAP_MEMBER(Point, x),
+              cfun_y     = LUWRA_WRAP_MEMBER(Point, y),
+              cfun_scale = LUWRA_WRAP_MEMBER(Point, scale);
 
 // Register in global namespace
 luwra::setGlobal(lua, "x", cfun_x);
 luwra::setGlobal(lua, "y", cfun_y);
 luwra::setGlobal(lua, "scale", cfun_scale);
 ```
+
+In this case, it is also possible to use `LUWRA_WRAP` to generate the C functions. The usage of
+`LUWRA_WRAP_MEMBER` is only required when working with inherited members, since it is impossible for
+the `LUWRA_WRAP` macro to be aware of inherited members.
+
+For example, if you are trying to wrap a member `B::foo` where `foo` is an inherited member of class
+`A` which `B` derives from, then `LUWRA_WRAP(B::foo)` would generate a function which is only
+applicable on instances of `A`. But `LUWRA_WRAP_MEMBER(B, foo)` generates a function that can only
+be applied to instances of `B`.
 
 Usage in Lua is analogous to function usage.
 
