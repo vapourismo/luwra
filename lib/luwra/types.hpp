@@ -87,42 +87,6 @@ T read(State* state, int index) {
 	return Value<T>::read(state, index);
 }
 
-/**
- * Define a template specialization of `Value` for `type` with a `retrf(State*, int)` which
- * extracts it from the stack and a `pushf(State*, type)` which pushes the value on the stack again.
- * This assumes that only one value will be pushed onto the stack.
- */
-#define LUWRA_DEF_VALUE(type, retrf, pushf)             \
-	template <>                                         \
-	struct Value<type> {                                \
-		static inline                                   \
-		type read(State* state, int n) {                \
-			return static_cast<type>(retrf(state, n));  \
-		}                                               \
-		                                                \
-		static inline                                   \
-		size_t push(State* state, type value) {         \
-			pushf(state, value);                        \
-			return 1;                                   \
-		}                                               \
-	}
-
-#ifndef luaL_checkboolean
-	/**
-	 * Check if the value at index `n` is a boolean and retrieve its value.
-	 */
-	#define luaL_checkboolean(state, n) \
-		(luaL_checktype(state, n, LUA_TBOOLEAN), lua_toboolean(state, n))
-#endif
-
-#ifndef luaL_checkcfunction
-	/**
-	 * Check if the value at index `n` is a C function and retrieve it.
-	 */
-	#define luaL_checkcfunction(state, n) \
-		(luaL_checktype(state, n, LUA_TCFUNCTION), lua_tocfunction(state, n))
-#endif
-
 namespace internal {
 	template <typename T>
 	struct NumericTransportValue {
@@ -202,12 +166,22 @@ LUWRA_DEF_NUMERIC(Integer, unsigned long int)
 LUWRA_DEF_NUMERIC(Integer, signed   long long int)
 LUWRA_DEF_NUMERIC(Integer, unsigned long long int)
 
-// C/C++ types
-LUWRA_DEF_VALUE(const char*, luaL_checkstring,  lua_pushstring);
-
 // Do not export these macros
-#undef LUWRA_DEF_VALUE
 #undef LUWRA_DEF_NUMERIC
+
+template <>
+struct Value<const char*> {
+	static inline
+	const char* read(State* state, int n) {
+		return luaL_checkstring(state, n);
+	}
+
+	static inline
+	size_t push(State* state, const char* value) {
+		lua_pushstring(state, value);
+		return 1;
+	}
+};
 
 template <>
 struct Value<std::string> {
@@ -229,7 +203,8 @@ template <>
 struct Value<bool> {
 	static inline
 	bool read(State* state, int n) {
-		return luaL_checkboolean(state, n) == 1;
+		luaL_checktype(state, n, LUA_TBOOLEAN);
+		return lua_toboolean(state, n) == 1;
 	}
 
 	static inline
@@ -246,18 +221,6 @@ struct Value<char[n]>: Value<const char*> {};
 // Alias for const string literals
 template <size_t n>
 struct Value<const char[n]>: Value<const char*> {};
-
-/**
- * C Functions may be pushed aswell.
- */
-template <>
-struct Value<CFunction> {
-	static inline
-	size_t push(State* state, CFunction fun) {
-		lua_pushcfunction(state, fun);
-		return 1;
-	}
-};
 
 namespace internal {
 	// Create reference the value pointed to by `index`. Does not remove the referenced value.

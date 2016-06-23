@@ -119,6 +119,15 @@ struct Value<std::function<R(A...)>> {
 	}
 };
 
+template <>
+struct Value<CFunction> {
+	static inline
+	size_t push(State* state, CFunction fun) {
+		lua_pushcfunction(state, fun);
+		return 1;
+	}
+};
+
 LUWRA_NS_END
 
 #endif
