@@ -326,16 +326,8 @@ struct Reference {
 	 * Create a reference to the value at the given index.
 	 */
 	inline
-	Reference(State* state, int indexOrRef, bool isIndex = true):
+	Reference(State* state, int indexOrRef = -1, bool isIndex = true):
 		impl(std::make_shared<internal::ReferenceImpl>(state, indexOrRef, isIndex))
-	{}
-
-	/**
-	 * Create a reference to the value at the top of the stack.
-	 */
-	inline
-	Reference(State* state):
-		impl(std::make_shared<internal::ReferenceImpl>(state))
 	{}
 
 	/**
