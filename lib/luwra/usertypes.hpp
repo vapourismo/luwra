@@ -63,7 +63,7 @@ namespace internal {
 			return static_cast<int>(
 				direct<size_t(A...)>(
 					state,
-					&Value<T&>::template push<A...>,
+					&Value<T>::template push<A...>,
 					state
 				)
 			);
@@ -175,14 +175,14 @@ struct Value<U*> {
 
 	/**
 	 * Copy a value onto the stack. This function behaves exactly as if you would call
-	 * `Value<U&>::push(state, *ptr)`.
+	 * `Value<U>::push(state, *ptr)`.
 	 * \param state Lua state
-	 * \param ptr   Pointer to the user type value
+	 * \param ptr   Pointer to the value
 	 * \returns Number of values that have been pushed
 	 */
 	static inline
 	size_t push(State* state, const T* ptr) {
-		return Value<T&>::push(state, *ptr);
+		return Value<T>::push(state, *ptr);
 	}
 };
 
