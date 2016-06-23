@@ -18,13 +18,13 @@
 LUWRA_NS_BEGIN
 
 namespace internal {
-	template <typename T>
-	using StripUserType = typename std::remove_cv<T>::type;
+	template <typename UserType>
+	using StripUserType = typename std::remove_cv<UserType>::type;
 
 	// User type registry identifiers
-	template <typename T>
+	template <typename UserType>
 	struct UserTypeReg {
-		// Dummy field which is used because it has a seperate address for each instance of T
+		// Dummy field which is used because it has a seperate address for each instance of UserType
 		static
 		const int id;
 
@@ -33,46 +33,34 @@ namespace internal {
 		const std::string name;
 	};
 
-	template <typename T>
-	const int UserTypeReg<T>::id = INT_MAX;
+	template <typename UserType>
+	const int UserTypeReg<UserType>::id = INT_MAX;
 
 	#ifndef LUWRA_REGISTRY_PREFIX
 		#define LUWRA_REGISTRY_PREFIX "Luwra#"
 	#endif
 
-	template <typename T>
-	const std::string UserTypeReg<T>::name =
+	template <typename UserType>
+	const std::string UserTypeReg<UserType>::name =
 		LUWRA_REGISTRY_PREFIX + std::to_string(uintptr_t(&id));
 
-	template <typename U>
-	struct UserTypeWrapper {
-		using T = StripUserType<U>;
-		using Reg = UserTypeReg<T>;
+	template <typename UserType>
+	struct UserTypeWrapper: UserTypeReg<StripUserType<UserType>> {
+		using Type = StripUserType<UserType>;
+		using Reg = UserTypeReg<Type>;
 
-		// Read the userdata instance of T from the stack.
+		// Read the userdata instance of Type from the stack.
 		static inline
-		T* check(State* state, int index) {
-			return static_cast<T*>(
+		Type* check(State* state, int index) {
+			return static_cast<Type*>(
 				luaL_checkudata(state, index, Reg::name.c_str())
-			);
-		}
-
-		// Constructs the user type in Lua.
-		template <typename... A> static inline
-		int construct(State* state) {
-			return static_cast<int>(
-				direct<size_t(A...)>(
-					state,
-					&Value<T>::template push<A...>,
-					state
-				)
 			);
 		}
 
 		// Use this as garbage-collector hook ('__gc' metatable); it will call the destructor.
 		static inline
 		int destruct(State* state) {
-			(*check(state, 1)).~T();
+			(*check(state, 1)).~Type();
 			return 0;
 		}
 
@@ -86,6 +74,20 @@ namespace internal {
 				)
 			);
 		}
+
+		template <typename... Args>
+		struct ConstructorWrapper {
+			static inline
+			int invoke(State* state) {
+				return static_cast<int>(
+					direct<size_t(Args...)>(
+						state,
+						&Value<Type>::template push<Args...>,
+						state
+					)
+				);
+			}
+		};
 	};
 }
 
@@ -98,12 +100,12 @@ namespace internal {
  * \param args  Constructor arguments
  * \returns Reference to the constructed value
  */
-template <typename U, typename... A> static inline
-internal::StripUserType<U>& construct(State* state, A&&... args) {
-	using Wrapper = internal::UserTypeWrapper<U>;
-	using T = typename Wrapper::T;
+template <typename UserType, typename... Args> static inline
+internal::StripUserType<UserType>& construct(State* state, Args&&... args) {
+	using Wrapper = internal::UserTypeWrapper<UserType>;
+	using Type = typename Wrapper::Type;
 
-	void* mem = lua_newuserdata(state, sizeof(T));
+	void* mem = lua_newuserdata(state, sizeof(Type));
 
 	if (!mem) {
 		luaL_error(state, "Failed to allocate user type");
@@ -111,10 +113,10 @@ internal::StripUserType<U>& construct(State* state, A&&... args) {
 	}
 
 	// Construct
-	T* value = new (mem) T {std::forward<A>(args)...};
+	Type* value = new (mem) Type {std::forward<Args>(args)...};
 
 	// Apply metatable for unqualified type
-	setMetatable(state, Wrapper::Reg::name.c_str());
+	setMetatable(state, Wrapper::name.c_str());
 
 	return *value;
 }
@@ -122,9 +124,9 @@ internal::StripUserType<U>& construct(State* state, A&&... args) {
 /**
  * User type
  */
-template <typename U>
+template <typename UserType>
 struct Value {
-	using T = internal::StripUserType<U>;
+	using Type = internal::StripUserType<UserType>;
 
 	/**
 	 * Reference a user type value on the stack.
@@ -133,9 +135,9 @@ struct Value {
 	 * \returns Reference to the user type value
 	 */
 	static inline
-	U& read(State* state, int n) {
-		// T is unqualified, therefore conversion from T& to U& is allowed
-		return *internal::UserTypeWrapper<T>::check(state, n);
+	UserType& read(State* state, int n) {
+		// Type is unqualified, therefore conversion from Type& to UserType& is allowed
+		return *internal::UserTypeWrapper<Type>::check(state, n);
 	}
 
 	/**
@@ -147,9 +149,9 @@ struct Value {
 	 * \param args  Constructor arguments
 	 * \returns Number of values that have been pushed onto the stack
 	 */
-	template <typename... A> static inline
-	size_t push(State* state, A&&... args) {
-		construct<T>(state, std::forward<A>(args)...);
+	template <typename... Args> static inline
+	size_t push(State* state, Args&&... args) {
+		construct<Type>(state, std::forward<Args>(args)...);
 		return 1;
 	}
 };
@@ -157,9 +159,9 @@ struct Value {
 /**
  * User type
  */
-template <typename U>
-struct Value<U*> {
-	using T = internal::StripUserType<U>;
+template <typename UserType>
+struct Value<UserType*> {
+	using Type = internal::StripUserType<UserType>;
 
 	/**
 	 * Reference a user type value on the stack.
@@ -168,47 +170,47 @@ struct Value<U*> {
 	 * \returns Pointer to the user type value.
 	 */
 	static inline
-	U* read(State* state, int n) {
-		// T is unqualified, therefore conversion from T* to U* is allowed
-		return internal::UserTypeWrapper<T>::check(state, n);
+	UserType* read(State* state, int n) {
+		// Type is unqualified, therefore conversion from Type* to UserType* is allowed
+		return internal::UserTypeWrapper<Type>::check(state, n);
 	}
 
 	/**
 	 * Copy a value onto the stack. This function behaves exactly as if you would call
-	 * `Value<U>::push(state, *ptr)`.
+	 * `Value<UserType>::push(state, *ptr)`.
 	 * \param state Lua state
 	 * \param ptr   Pointer to the value
 	 * \returns Number of values that have been pushed
 	 */
 	static inline
-	size_t push(State* state, const T* ptr) {
-		return Value<T>::push(state, *ptr);
+	size_t push(State* state, const UserType* ptr) {
+		return Value<UserType>::push(state, *ptr);
 	}
 };
 
 /**
- * Register the metatable for user type `T`. This function allows you to register methods
+ * Register the metatable for user type `UserType`. This function allows you to register methods
  * which are shared across all instances of this type.
  *
  * By default a garbage-collector hook and string representation function are added as meta methods.
  * Both can be overwritten.
  *
- * \tparam U User type struct or class
+ * \tparam UserType User type struct or class
  *
  * \param state        Lua state
  * \param methods      Map of methods
  * \param meta_methods Map of meta methods
  */
-template <typename U> static inline
+template <typename UserType> static inline
 void registerUserType(
 	State* state,
 	const MemberMap& methods = MemberMap(),
 	const MemberMap& meta_methods = MemberMap()
 ) {
-	using Wrapper = internal::UserTypeWrapper<U>;
+	using Wrapper = internal::UserTypeWrapper<UserType>;
 
 	// Setup an appropriate metatable name
-	luaL_newmetatable(state, Wrapper::Reg::name.c_str());
+	luaL_newmetatable(state, Wrapper::name.c_str());
 
 	// Insert methods
 	setFields(state, -1,
@@ -224,40 +226,34 @@ void registerUserType(
 	lua_pop(state, -1);
 }
 
-namespace internal {
-	template <typename T>
-	struct UserTypeSignature {
-		static_assert(
-			sizeof(T) == -1,
-			"Parameter to UserTypeSignature is not a valid signature"
-		);
-	};
-
-	template <typename U, typename... A>
-	struct UserTypeSignature<U(A...)> {
-		using T = StripUserType<U>;
-
-		static inline
-		void registerConstructor(State* state, const char* name) {
-			setGlobal(state, name, &UserTypeWrapper<T>::template construct<A...>);
-		}
-	};
-}
-
 /**
- * Same as the other `registerUserType` but registers the constructor as well. The template parameter
- * is a signature `U(A...)` where `U` is the user type and `A...` its constructor parameters.
+ * Same as the other `registerUserType` but registers the constructor as well. The template
+ * parameter is a signature `UserType(Args...)` where `UserType` is the user type and `Args...` its
+ * constructor parameters types.
  */
-template <typename S> static inline
+template <typename Sig> static inline
 void registerUserType(
 	State* state,
 	const char* ctor_name,
 	const MemberMap& methods = MemberMap(),
 	const MemberMap& meta_methods = MemberMap()
 ) {
-	using T = typename internal::UserTypeSignature<S>::T;
-	registerUserType<T>(state, methods, meta_methods);
-	internal::UserTypeSignature<S>::registerConstructor(state, ctor_name);
+	using UserType =
+		typename internal::StripUserType<
+			typename internal::CallableInfo<Sig>::ReturnType
+		>;
+
+	registerUserType<UserType>(state, methods, meta_methods);
+
+	setGlobal(
+		state,
+		ctor_name,
+		&internal::CallableInfo<Sig>::template RelayArguments<
+			// Relay parameter type list to this template and return the resulting type, which is
+			// internal::UserTypeWrapper<UserType>::ConstructorWrapper<Args...>.
+			internal::UserTypeWrapper<UserType>::template ConstructorWrapper
+		>::invoke
+	);
 }
 
 LUWRA_NS_END
@@ -276,7 +272,7 @@ LUWRA_NS_END
  * \return Wrapped function as `lua_CFunction`
  */
 #define LUWRA_WRAP_CONSTRUCTOR(type, ...) \
-	(&luwra::internal::UserTypeWrapper<luwra::internal::StripUserType<type>>::template construct<__VA_ARGS__>)
+	(&luwra::internal::UserTypeWrapper<luwra::internal::StripUserType<type>>::ConstructorWrapper<__VA_ARGS__>::invoke)
 
 /**
  * Define the registry name for a user type.
