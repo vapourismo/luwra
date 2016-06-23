@@ -141,11 +141,15 @@ struct Table {
 
 	Table(State* state):
 		Table(state, (lua_newtable(state), -1))
-	{}
+	{
+		lua_pop(state, 1);
+	}
 
 	Table(State* state, const MemberMap& fields):
 		Table(state, (luwra::push(state, fields), -1))
-	{}
+	{
+		lua_pop(state, 1);
+	}
 
 	template <typename K> inline
 	internal::TableAccessor<internal::Path<const Reference&, K>> access(K&& key) const {
