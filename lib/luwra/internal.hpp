@@ -14,7 +14,8 @@ LUWRA_NS_BEGIN
 namespace internal {
 	// Information about function objects
 	template <typename Klass>
-	struct CallableInfo: CallableInfo<decltype(&Klass::operator ())> {};
+	struct CallableInfo:
+		CallableInfo<decltype(&Klass::operator ())> {};
 
 	// Information about function signature
 	template <typename Ret, typename... Args>
@@ -75,19 +76,12 @@ namespace internal {
 		static_assert(sizeof(T) == -1, "Template parameter to MemberInfo is not a member type");
 	};
 
-	enum class MemberCategory {
-		Method, Field
-	};
-
 	// Information about methods
 	template <typename Klass, typename Ret, typename... Args>
 	struct MemberInfo<Ret (Klass::*)(Args...)>:
 		CallableInfo<Ret (Klass::*)(Args...)>
 	{
 		using MemberOf = Klass;
-
-		static
-		constexpr MemberCategory category = MemberCategory::Method;
 	};
 
 	template <typename Klass, typename Ret, typename... Args>
@@ -107,9 +101,6 @@ namespace internal {
 	struct MemberInfo<Field Klass::*> {
 		using MemberOf = Klass;
 		using FieldType = Field;
-
-		static
-		constexpr MemberCategory category = MemberCategory::Field;
 	};
 }
 
