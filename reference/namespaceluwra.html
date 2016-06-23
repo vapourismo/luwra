@@ -113,8 +113,6 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value_3_01U_01_6_6_01_4.html">Value&lt; U &amp;&amp; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value_3_01U_01_5_01_4.html">Value&lt; U * &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value_3_01unsigned_01char_01_4.html">Value&lt; unsigned char &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value_3_01unsigned_01int_01_4.html">Value&lt; unsigned int &gt;</a></td></tr>
@@ -124,6 +122,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value_3_01unsigned_01long_01long_01int_01_4.html">Value&lt; unsigned long long int &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value_3_01unsigned_01short_01_4.html">Value&lt; unsigned short &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value_3_01UserType_01_5_01_4.html">Value&lt; UserType * &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value_3_01volatile_01T_01_4.html">Value&lt; volatile T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -190,13 +190,13 @@ Functions</h2></td></tr>
 <tr class="memitem:a4fe4e574680cf54a0f8d958740eb90ab"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a4fe4e574680cf54a0f8d958740eb90ab"><td class="memTemplItemLeft" align="right" valign="top">static T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a4fe4e574680cf54a0f8d958740eb90ab">read</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int index)</td></tr>
 <tr class="separator:a4fe4e574680cf54a0f8d958740eb90ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af079dcca8e67d88e5cfdc7e8872cf5d7"><td class="memTemplParams" colspan="2">template&lt;typename U , typename... A&gt; </td></tr>
-<tr class="memitem:af079dcca8e67d88e5cfdc7e8872cf5d7"><td class="memTemplItemLeft" align="right" valign="top">static internal::StripUserType&lt; U &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#af079dcca8e67d88e5cfdc7e8872cf5d7">construct</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, A &amp;&amp;...args)</td></tr>
-<tr class="separator:af079dcca8e67d88e5cfdc7e8872cf5d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a744cd63bf0d4f611a62b8a56df714e"><td class="memTemplParams" colspan="2">template&lt;typename U &gt; </td></tr>
+<tr class="memitem:abdf275615d9b9278a0532a06d1203085"><td class="memTemplParams" colspan="2">template&lt;typename UserType , typename... Args&gt; </td></tr>
+<tr class="memitem:abdf275615d9b9278a0532a06d1203085"><td class="memTemplItemLeft" align="right" valign="top">static internal::StripUserType&lt; UserType &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#abdf275615d9b9278a0532a06d1203085">construct</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, Args &amp;&amp;...args)</td></tr>
+<tr class="separator:abdf275615d9b9278a0532a06d1203085"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a744cd63bf0d4f611a62b8a56df714e"><td class="memTemplParams" colspan="2">template&lt;typename UserType &gt; </td></tr>
 <tr class="memitem:a0a744cd63bf0d4f611a62b8a56df714e"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a0a744cd63bf0d4f611a62b8a56df714e">registerUserType</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, const <a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a> &amp;methods=<a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a>(), const <a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a> &amp;meta_methods=<a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a>())</td></tr>
 <tr class="separator:a0a744cd63bf0d4f611a62b8a56df714e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acc685345fabe835a7f8323e7098e39f6"><td class="memTemplParams" colspan="2">template&lt;typename S &gt; </td></tr>
+<tr class="memitem:acc685345fabe835a7f8323e7098e39f6"><td class="memTemplParams" colspan="2">template&lt;typename Sig &gt; </td></tr>
 <tr class="memitem:acc685345fabe835a7f8323e7098e39f6"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#acc685345fabe835a7f8323e7098e39f6">registerUserType</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, const char *ctor_name, const <a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a> &amp;methods=<a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a>(), const <a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a> &amp;meta_methods=<a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a>())</td></tr>
 <tr class="separator:acc685345fabe835a7f8323e7098e39f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -343,17 +343,17 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="af079dcca8e67d88e5cfdc7e8872cf5d7"></a>
+<a class="anchor" id="abdf275615d9b9278a0532a06d1203085"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename U , typename... A&gt; </div>
+template&lt;typename UserType , typename... Args&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static internal::StripUserType&lt;U&gt;&amp; luwra::construct </td>
+          <td class="memname">static internal::StripUserType&lt;UserType&gt;&amp; luwra::construct </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *&#160;</td>
           <td class="paramname"><em>state</em>, </td>
@@ -361,7 +361,7 @@ template&lt;typename U , typename... A&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">A &amp;&amp;...&#160;</td>
+          <td class="paramtype">Args &amp;&amp;...&#160;</td>
           <td class="paramname"><em>args</em>&#160;</td>
         </tr>
         <tr>
@@ -789,7 +789,7 @@ template&lt;typename T &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Convenient wrapped for <a class="el" href="structluwra_1_1Value.html#a8bc80186f8c426b98df816cdaaacb148">Value&lt;T&gt;::push</a>. </p>
+<p>Convenient wrapped for <a class="el" href="structluwra_1_1Value.html#af278665a3bcf786421131652d3510564">Value&lt;T&gt;::push</a>. </p>
 
 </div>
 </div>
@@ -875,7 +875,7 @@ template&lt;typename T &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Convenient wrapper for <a class="el" href="structluwra_1_1Value.html#a3e6b16d75c419bc04616e08444126214">Value&lt;T&gt;::read</a>. </p>
+<p>Convenient wrapper for <a class="el" href="structluwra_1_1Value.html#aeabaed6c7b97a0fbf8612c55904f6e12">Value&lt;T&gt;::read</a>. </p>
 
 </div>
 </div>
@@ -883,7 +883,7 @@ template&lt;typename T &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename U &gt; </div>
+template&lt;typename UserType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -918,11 +918,11 @@ template&lt;typename U &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Register the metatable for user type <code>T</code>. This function allows you to register methods which are shared across all instances of this type.</p>
+<p>Register the metatable for user type <code>UserType</code>. This function allows you to register methods which are shared across all instances of this type.</p>
 <p>By default a garbage-collector hook and string representation function are added as meta methods. Both can be overwritten.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">U</td><td>User type struct or class</td></tr>
+    <tr><td class="paramname">UserType</td><td>User type struct or class</td></tr>
   </table>
   </dd>
 </dl>
@@ -941,7 +941,7 @@ template&lt;typename U &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename S &gt; </div>
+template&lt;typename Sig &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -982,7 +982,7 @@ template&lt;typename S &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Same as the other <code>registerUserType</code> but registers the constructor as well. The template parameter is a signature <code>U(A...)</code> where <code>U</code> is the user type and <code>A...</code> its constructor parameters. </p>
+<p>Same as the other <code>registerUserType</code> but registers the constructor as well. The template parameter is a signature <code>UserType(Args...)</code> where <code>UserType</code> is the user type and <code>Args...</code> its constructor parameters types. </p>
 
 </div>
 </div>
