@@ -123,14 +123,6 @@ T read(State* state, int index) {
 		(luaL_checktype(state, n, LUA_TCFUNCTION), lua_tocfunction(state, n))
 #endif
 
-#ifndef luaL_pushstdstring
-	/**
-	 * push a `std::string` as string onto the stack.
-	 */
-	#define luaL_pushstdstring(state, stdstring) \
-		(lua_pushstring(state, (stdstring).c_str()))
-#endif
-
 namespace internal {
 	template <typename T>
 	struct NumericTransportValue {
@@ -212,11 +204,26 @@ LUWRA_DEF_NUMERIC(Integer, unsigned long long int)
 
 // C/C++ types
 LUWRA_DEF_VALUE(const char*, luaL_checkstring,  lua_pushstring);
-LUWRA_DEF_VALUE(std::string, luaL_checkstring,  luaL_pushstdstring);
 
 // Do not export these macros
 #undef LUWRA_DEF_VALUE
 #undef LUWRA_DEF_NUMERIC
+
+template <>
+struct Value<std::string> {
+	static inline
+	std::string read(State* state, int n) {
+		size_t length;
+		const char* value = luaL_checklstring(state, n, &length);
+		return {value, length};
+	}
+
+	static inline
+	size_t push(State* state, const std::string& value) {
+		lua_pushstring(state, value.c_str());
+		return 1;
+	}
+};
 
 template <>
 struct Value<bool> {
