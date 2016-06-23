@@ -5,7 +5,7 @@
 		<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 		<meta http-equiv="X-UA-Compatible" content="IE=9"/>
 		<meta name="generator" content="Doxygen 1.8.11"/>
-		<title>Luwra: luwra::Value&lt; U &gt; Struct Template Reference</title>
+		<title>Luwra: luwra::Value&lt; UserType &gt; Struct Template Reference</title>
 		<link href="tabs.css" rel="stylesheet" type="text/css"/>
 		<script type="text/javascript" src="jquery.js"></script>
 		<script type="text/javascript" src="dynsections.js"></script>
@@ -41,39 +41,37 @@
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="structluwra_1_1Value-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">luwra::Value&lt; U &gt; Struct Template Reference</div>  </div>
+<div class="title">luwra::Value&lt; UserType &gt; Struct Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p>Inherited by <a class="el" href="structluwra_1_1Value_3_01U_01_6_01_4.html">luwra::Value&lt; U &amp; &gt;</a>, and <a class="el" href="structluwra_1_1Value_3_01U_01_6_6_01_4.html">luwra::Value&lt; U &amp;&amp; &gt;</a>.</p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a0874e7a8ebd1f1c3f19f221feb39f63b"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value.html#a0874e7a8ebd1f1c3f19f221feb39f63b">T</a> = internal::StripUserType&lt; U &gt;</td></tr>
-<tr class="separator:a0874e7a8ebd1f1c3f19f221feb39f63b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ee9b86c53d3ef22aee3956939979d63"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value.html#a7ee9b86c53d3ef22aee3956939979d63">Type</a> = internal::StripUserType&lt; UserType &gt;</td></tr>
+<tr class="separator:a7ee9b86c53d3ef22aee3956939979d63"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a3e6b16d75c419bc04616e08444126214"><td class="memItemLeft" align="right" valign="top">static U &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value.html#a3e6b16d75c419bc04616e08444126214">read</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int n)</td></tr>
-<tr class="separator:a3e6b16d75c419bc04616e08444126214"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8bc80186f8c426b98df816cdaaacb148"><td class="memTemplParams" colspan="2">template&lt;typename... A&gt; </td></tr>
-<tr class="memitem:a8bc80186f8c426b98df816cdaaacb148"><td class="memTemplItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value.html#a8bc80186f8c426b98df816cdaaacb148">push</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, A &amp;&amp;...args)</td></tr>
-<tr class="separator:a8bc80186f8c426b98df816cdaaacb148"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeabaed6c7b97a0fbf8612c55904f6e12"><td class="memItemLeft" align="right" valign="top">static UserType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value.html#aeabaed6c7b97a0fbf8612c55904f6e12">read</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int n)</td></tr>
+<tr class="separator:aeabaed6c7b97a0fbf8612c55904f6e12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af278665a3bcf786421131652d3510564"><td class="memTemplParams" colspan="2">template&lt;typename... Args&gt; </td></tr>
+<tr class="memitem:af278665a3bcf786421131652d3510564"><td class="memTemplItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value.html#af278665a3bcf786421131652d3510564">push</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, Args &amp;&amp;...args)</td></tr>
+<tr class="separator:af278665a3bcf786421131652d3510564"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;typename U&gt;<br />
-struct luwra::Value&lt; U &gt;</h3>
+<div class="textblock"><h3>template&lt;typename UserType&gt;<br />
+struct luwra::Value&lt; UserType &gt;</h3>
 
 <p>User type </p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
-<a class="anchor" id="a0874e7a8ebd1f1c3f19f221feb39f63b"></a>
+<a class="anchor" id="a7ee9b86c53d3ef22aee3956939979d63"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename U&gt; </div>
+template&lt;typename UserType&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="structluwra_1_1Value.html">luwra::Value</a>&lt; U &gt;::<a class="el" href="structluwra_1_1Value.html#a0874e7a8ebd1f1c3f19f221feb39f63b">T</a> =  internal::StripUserType&lt;U&gt;</td>
+          <td class="memname">using <a class="el" href="structluwra_1_1Value.html">luwra::Value</a>&lt; UserType &gt;::<a class="el" href="structluwra_1_1Value.html#a7ee9b86c53d3ef22aee3956939979d63">Type</a> =  internal::StripUserType&lt;UserType&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -81,19 +79,19 @@ template&lt;typename U&gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a8bc80186f8c426b98df816cdaaacb148"></a>
+<a class="anchor" id="af278665a3bcf786421131652d3510564"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename U&gt; </div>
+template&lt;typename UserType&gt; </div>
 <div class="memtemplate">
-template&lt;typename... A&gt; </div>
+template&lt;typename... Args&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static size_t <a class="el" href="structluwra_1_1Value.html">luwra::Value</a>&lt; U &gt;::push </td>
+          <td class="memname">static size_t <a class="el" href="structluwra_1_1Value.html">luwra::Value</a>&lt; UserType &gt;::push </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *&#160;</td>
           <td class="paramname"><em>state</em>, </td>
@@ -101,7 +99,7 @@ template&lt;typename... A&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">A &amp;&amp;...&#160;</td>
+          <td class="paramtype">Args &amp;&amp;...&#160;</td>
           <td class="paramname"><em>args</em>&#160;</td>
         </tr>
         <tr>
@@ -128,17 +126,17 @@ template&lt;typename... A&gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a3e6b16d75c419bc04616e08444126214"></a>
+<a class="anchor" id="aeabaed6c7b97a0fbf8612c55904f6e12"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename U&gt; </div>
+template&lt;typename UserType&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static U&amp; <a class="el" href="structluwra_1_1Value.html">luwra::Value</a>&lt; U &gt;::read </td>
+          <td class="memname">static UserType&amp; <a class="el" href="structluwra_1_1Value.html">luwra::Value</a>&lt; UserType &gt;::read </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *&#160;</td>
           <td class="paramname"><em>state</em>, </td>
