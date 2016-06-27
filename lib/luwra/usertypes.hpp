@@ -47,13 +47,12 @@ namespace internal {
 	template <typename UserType>
 	struct UserTypeWrapper: UserTypeReg<StripUserType<UserType>> {
 		using Type = StripUserType<UserType>;
-		using Reg = UserTypeReg<Type>;
 
 		// Read the userdata instance of Type from the stack.
 		static inline
 		Type* check(State* state, int index) {
 			return static_cast<Type*>(
-				luaL_checkudata(state, index, Reg::name.c_str())
+				luaL_checkudata(state, index, UserTypeReg<Type>::name.c_str())
 			);
 		}
 
@@ -70,7 +69,7 @@ namespace internal {
 			return static_cast<int>(
 				push(
 					state,
-					Reg::name + "@" + std::to_string(uintptr_t(check(state, 1)))
+					UserTypeReg<Type>::name + "@" + std::to_string(uintptr_t(check(state, 1)))
 				)
 			);
 		}
