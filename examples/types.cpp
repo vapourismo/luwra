@@ -45,15 +45,15 @@ int main() {
 	state.loadStandardLibrary();
 
 	// Build stack
-	luwra::push(state, 'H');
-	luwra::push(state, 'i');
+	state.push('H');
+	state.push('i');
 
 	// apply function to stack values
 	luwra::apply(state, read_chars);
 	lua_pop(state, 2);
 
 	// Build stack again
-	luwra::push(state, 'Y', 'o');
+	state.push('Y', 'o');
 	luwra::apply(state, read_chars);
 
 	return 0;

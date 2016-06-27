@@ -22,16 +22,13 @@ int main() {
 	state.loadStandardLibrary();
 
 	// Register 'my_function_1'
-	auto wrapped_1 = LUWRA_WRAP(my_function_1);
-	state.set("my_function_1", wrapped_1);
+	state["my_function_1"] = LUWRA_WRAP(my_function_1);
 
 	// Register 'my_function_2'
-	auto wrapped_2 = LUWRA_WRAP(my_function_2);
-	state.set("my_function_2", wrapped_2);
+	state["my_function_2"] = LUWRA_WRAP(my_function_2);
 
 	// Register 'my_function_3'
-	auto wrapped_3 = LUWRA_WRAP(my_function_3);
-	state.set("my_function_3", wrapped_3);
+	state["my_function_3"] = LUWRA_WRAP(my_function_3);
 
 	// Load Lua code
 	int ret = state.runString(
@@ -49,7 +46,7 @@ int main() {
 
 	// Invoke the attached script
 	if (ret != LUA_OK) {
-		std::cerr << "An error occured: " << lua_tostring(state, -1) << std::endl;
+		std::cerr << "An error occured: " << state.read<std::string>(-1) << std::endl;
 		return 1;
 	}
 

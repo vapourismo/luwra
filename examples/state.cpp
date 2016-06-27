@@ -16,7 +16,7 @@ int main() {
 	);
 
 	if (r != LUA_OK) {
-		std::cerr << read<std::string>(state, -1) << std::endl;
+		std::cerr << state.read<std::string>(-1) << std::endl;
 		return 1;
 	}
 

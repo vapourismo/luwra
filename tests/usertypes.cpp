@@ -11,18 +11,18 @@ struct A {
 
 TEST_CASE("UserTypeRegistration") {
 	luwra::StateWrapper state;
-	luwra::registerUserType<A>(state);
+	state.registerUserType<A>();
 }
 
 TEST_CASE("UserTypeConstruction") {
 	luwra::StateWrapper state;
-	luwra::registerUserType<A(int)>(state, "A");
+	state.registerUserType<A(int)>("A");
 
 	// Construction
 	REQUIRE(state.runString("return A(73)") == 0);
 
 	// Check
-	A* instance = luwra::read<A*>(state, -1);
+	A* instance = state.read<A*>(-1);
 	REQUIRE(instance != nullptr);
 	REQUIRE(instance->a == 73);
 }
@@ -45,8 +45,7 @@ TEST_CASE("UserTypeFields") {
 	luwra::StateWrapper state;
 
 	// Registration
-	luwra::registerUserType<B>(
-		state,
+	state.registerUserType<B>(
 		{
 			LUWRA_MEMBER(B, n),
 			LUWRA_MEMBER(B, cn),
@@ -61,7 +60,7 @@ TEST_CASE("UserTypeFields") {
 
 	// Unqualified get
 	REQUIRE(state.runString("return value:n()") == 0);
-	REQUIRE(luwra::read<int>(state, -1) == value.n);
+	REQUIRE(state.read<int>(-1) == value.n);
 
 	// Unqualified set
 	REQUIRE(state.runString("value:n(42)") == 0);
@@ -69,7 +68,7 @@ TEST_CASE("UserTypeFields") {
 
 	// 'const'-qualified get
 	REQUIRE(state.runString("return value:cn()") == 0);
-	REQUIRE(luwra::read<int>(state, -1) == value.cn);
+	REQUIRE(state.read<int>(-1) == value.cn);
 
 	// 'const'-qualified set
 	REQUIRE(state.runString("value:cn(42)") == 0);
@@ -77,7 +76,7 @@ TEST_CASE("UserTypeFields") {
 
 	// 'volatile' get
 	REQUIRE(state.runString("return value:vn()") == 0);
-	REQUIRE(luwra::read<int>(state, -1) == value.vn);
+	REQUIRE(state.read<int>(-1) == value.vn);
 
 	// 'volatile' set
 	REQUIRE(state.runString("value:vn(42)") == 0);
@@ -85,7 +84,7 @@ TEST_CASE("UserTypeFields") {
 
 	// 'const volatile'-qualified get
 	REQUIRE(state.runString("return value:cvn()") == 0);
-	REQUIRE(luwra::read<int>(state, -1) == value.cvn);
+	REQUIRE(state.read<int>(-1) == value.cvn);
 
 	// 'const volatile'-qualified set
 	REQUIRE(state.runString("value:cvn(42)") == 0);
@@ -120,8 +119,7 @@ TEST_CASE("UserTypeMethods") {
 	luwra::StateWrapper state;
 
 	// Registration
-	luwra::registerUserType<C>(
-		state,
+	state.registerUserType<C>(
 		{
 			LUWRA_MEMBER(C, foo1),
 			LUWRA_MEMBER(C, foo2),
@@ -137,22 +135,22 @@ TEST_CASE("UserTypeMethods") {
 	// Unqualified method
 	REQUIRE(state.runString("return value:foo1(63)") == 0);
 	REQUIRE(value.prop == 1400);
-	REQUIRE(luwra::read<int>(state, -1) == value.prop);
+	REQUIRE(state.read<int>(-1) == value.prop);
 
 	// 'const'-qualified method
 	REQUIRE(state.runString("return value:foo2(44)") == 0);
 	REQUIRE(value.prop == 1400);
-	REQUIRE(luwra::read<int>(state, -1) == 1444);
+	REQUIRE(state.read<int>(-1) == 1444);
 
 	// 'volatile'-qualified method
 	REQUIRE(state.runString("return value:foo3(400)") == 0);
 	REQUIRE(value.prop == 1000);
-	REQUIRE(luwra::read<int>(state, -1) == value.prop);
+	REQUIRE(state.read<int>(-1) == value.prop);
 
 	// 'const volatile'-qualified method
 	REQUIRE(state.runString("return value:foo4(334)") == 0);
 	REQUIRE(value.prop == 1000);
-	REQUIRE(luwra::read<int>(state, -1) == 666);
+	REQUIRE(state.read<int>(-1) == 666);
 }
 
 TEST_CASE("UserTypeGarbageCollectionRef") {

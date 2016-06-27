@@ -6,7 +6,7 @@ TEST_CASE("NativeFunction<R>") {
 
 	REQUIRE(state.runString("return function (x, y) return x + y end") == LUA_OK);
 
-	auto fun = luwra::read<luwra::NativeFunction<int>>(state, -1);
+	auto fun = state.read<luwra::NativeFunction<int>>(-1);
 	REQUIRE(fun(13, 37) == 50);
 
 	luwra::NativeFunction<double> fun2 = fun;
@@ -18,7 +18,7 @@ TEST_CASE("NativeFunction<void>") {
 
 	REQUIRE(state.runString("return function (x, y) returnValue = x + y end") == LUA_OK);
 
-	auto fun = luwra::read<luwra::NativeFunction<void>>(state, -1);
+	auto fun = state.read<luwra::NativeFunction<void>>(-1);
 	fun(13, 37);
 
 	int returnValue = state.get<int>("returnValue");
@@ -30,7 +30,7 @@ TEST_CASE("function<R(A...)>") {
 
 	REQUIRE(state.runString("return function (x, y) return x + y end") == LUA_OK);
 
-	auto fun = luwra::read<std::function<int (int, int)>>(state, -1);
+	auto fun = state.read<std::function<int (int, int)>>(-1);
 	REQUIRE(fun(13, 37) == 50);
 }
 
@@ -39,9 +39,9 @@ TEST_CASE("function<void(A...)>") {
 
 	REQUIRE(state.runString("return function (x, y) returnValue = x + y end") == LUA_OK);
 
-	auto fun = luwra::read<std::function<void (int, int)>>(state, -1);
+	auto fun = state.read<std::function<void (int, int)>>(-1);
 	fun(13, 37);
 
-	int returnValue = state.get<int>("returnValue");
+	int returnValue = state["returnValue"];
 	REQUIRE(returnValue == 50);
 }

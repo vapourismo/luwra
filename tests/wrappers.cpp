@@ -13,8 +13,8 @@ static int dummy6(int a, int b) { return 1337 * a + b; }
 
 #define LUWRA_GW_TEST_PTRS(param, type) \
 	{ \
-		luwra::CFunction wrap_auto = LUWRA_WRAP(param); \
-		luwra::CFunction wrap_manual = &luwra::internal::Wrapper<type>::invoke<&param>; \
+		lua_CFunction wrap_auto = LUWRA_WRAP(param); \
+		lua_CFunction wrap_manual = &luwra::internal::Wrapper<type>::invoke<&param>; \
 		REQUIRE(wrap_auto != nullptr); \
 		REQUIRE(wrap_manual != nullptr); \
 		REQUIRE(wrap_auto == wrap_manual); \
@@ -28,7 +28,7 @@ static int dummy6(int a, int b) { return 1337 * a + b; }
 		int expected_result = dummy_void_result; \
 		 \
 		luwra::StateWrapper state; \
-		state.set("func", LUWRA_WRAP(func)); \
+		state["func"] = LUWRA_WRAP(func); \
 		 \
 		dummy_void_result = 0; \
 		REQUIRE(state.runString("func" #params) == LUA_OK); \
@@ -41,7 +41,7 @@ static int dummy6(int a, int b) { return 1337 * a + b; }
 		int expected_result = func params; \
 		\
 		luwra::StateWrapper state; \
-		state.set("func", LUWRA_WRAP(func)); \
+		state["func"] = LUWRA_WRAP(func); \
 		 \
 		REQUIRE(state.runString("return func" #params) == LUA_OK); \
 		int given_result = luwra::read<int>(state, -1); \
@@ -107,8 +107,8 @@ struct Dummy {
 		d1.meth params; \
 		 \
 		luwra::StateWrapper state; \
-		state.set("d2", Dummy()); \
-		state.set("meth", LUWRA_WRAP(__LUWRA_NS_RESOLVE(Dummy, meth))); \
+		state["d2"] = Dummy(); \
+		state["meth"] = LUWRA_WRAP_MEMBER(Dummy, meth); \
 		 \
 		Dummy& d2 = state.get<Dummy&>("d2"); \
 		 \
@@ -122,11 +122,11 @@ struct Dummy {
 		int expected_result = d1.meth params; \
 		 \
 		luwra::StateWrapper state; \
-		state.set("d2", Dummy()); \
-		state.set("meth", LUWRA_WRAP(__LUWRA_NS_RESOLVE(Dummy, meth))); \
+		state["d2"] = Dummy(); \
+		state["meth"] = LUWRA_WRAP_MEMBER(Dummy, meth); \
 		 \
 		REQUIRE(state.runString("return (function (...) return meth(d2, ...) end)" #params) == LUA_OK); \
-		int given_result = luwra::read<int>(state, -1); \
+		int given_result = state.read<int>(-1); \
 		REQUIRE(expected_result == given_result); \
 	}
 
@@ -190,28 +190,28 @@ TEST_CASE("Wrapper<const R T::*>") {
 	LUWRA_GW_TEST_PTRS(Dummy::const_field, const int (Dummy::*));
 
 	luwra::StateWrapper state;
-	state.set("dummy", Dummy(13, 37));
-	state.set("accessor", LUWRA_WRAP(Dummy::const_field));
+	state["dummy"] = Dummy(13, 37);
+	state["accessor"] = LUWRA_WRAP_MEMBER(Dummy, const_field);
 
 	Dummy& dummy = state.get<Dummy&>("dummy");
 	REQUIRE(dummy.const_field == 37);
 
 	REQUIRE(state.runString("return accessor(dummy)") == LUA_OK);
-	REQUIRE(luwra::read<int>(state, -1) == dummy.const_field);
+	REQUIRE(state.read<int>(-1) == dummy.const_field);
 }
 
 TEST_CASE("Wrapper<R T::*>") {
 	LUWRA_GW_TEST_PTRS(Dummy::field, int (Dummy::*));
 
 	luwra::StateWrapper state;
-	state.set("accessor", LUWRA_WRAP(Dummy::field));
-	state.set("dummy", Dummy(13, 37));
+	state["accessor"] = LUWRA_WRAP_MEMBER(Dummy, field);
+	state["dummy"] = Dummy(13, 37);
 
 	Dummy& dummy = state.get<Dummy&>("dummy");
 	REQUIRE(dummy.field == 13);
 
 	REQUIRE(state.runString("return accessor(dummy)") == LUA_OK);
-	REQUIRE(luwra::read<int>(state, -1) == dummy.field);
+	REQUIRE(state.read<int>(-1) == dummy.field);
 
 	REQUIRE(state.runString("accessor(dummy, 1337)") == LUA_OK);
 	REQUIRE(dummy.field == 1337);

@@ -34,8 +34,7 @@ int main() {
 	// Register our user type.
 	// This function also registers a garbage-collector hook and a string representation function.
 	// Both can be overwritten using the third parameter, which lets you add custom meta methods.
-	luwra::registerUserType<Point (double, double)>(
-		state,
+	state.registerUserType<Point (double, double)>(
 		// Constructor name
 		"Point",
 		// Methods which shall be availabe in the Lua user data, need to be declared here
@@ -78,7 +77,7 @@ int main() {
 
 	// Invoke the attached script
 	if (state.runString(code) != LUA_OK) {
-		std::cerr << "An error occured: " << luwra::read<std::string>(state, -1) << std::endl;
+		std::cerr << "An error occured: " << state.read<std::string>(-1) << std::endl;
 		return 1;
 	} else {
 		return 0;
