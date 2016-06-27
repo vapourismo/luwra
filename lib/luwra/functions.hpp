@@ -112,9 +112,9 @@ struct Value<NativeFunction<R>> {
 };
 
 template <typename R, typename... A>
-struct Value<std::function<R(A...)>> {
+struct Value<std::function<R (A...)>> {
 	static inline
-	std::function<R(A...)> read(State* state, int index) {
+	std::function<R (A...)> read(State* state, int index) {
 		return {Value<NativeFunction<R>>::read(state, index)};
 	}
 };

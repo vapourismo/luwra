@@ -38,7 +38,7 @@ namespace internal {
 		// This class will receive the argument types of MethodPointer.
 		template <typename... Args>
 		struct ArgumentsReceiver {
-			using MapSignature = Ret(Klass*, Args...);
+			using MapSignature = Ret (Klass*, Args...);
 
 			template <MethodPointer meth> static inline
 			Ret hook(Klass* parent, Args&&... args) {
@@ -144,20 +144,20 @@ namespace internal {
 	// specialization and subsequently passed to the function. The returned value will be pushed
 	// onto the stack.
 	template <typename Ret, typename... Args>
-	struct Wrapper<Ret(Args...)> {
+	struct Wrapper<Ret (Args...)> {
 		template <Ret (* fun)(Args...)> static inline
 		int invoke(State* state) {
 			return static_cast<int>(
-				map<Ret(Args...)>(state, fun)
+				map<Ret (Args...)>(state, fun)
 			);
 		}
 	};
 
-	// An alias for the `Ret(Args...)` specialization. It primarily exists because functions aren't
+	// An alias for the `Ret (Args...)` specialization. It primarily exists because functions aren't
 	// passable as values, instead they are referenced using a function pointer.
 	template <typename Ret, typename... Args>
 	struct Wrapper<Ret (*)(Args...)>:
-		Wrapper<Ret(Args...)> {};
+		Wrapper<Ret (Args...)> {};
 
 	// Wrap methods that expect `this` to be 'const volatile'-qualified.
 	template <typename Klasss, typename Ret, typename... Args>

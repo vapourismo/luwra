@@ -80,7 +80,7 @@ namespace internal {
 			static inline
 			int invoke(State* state) {
 				return static_cast<int>(
-					direct<size_t(Args...)>(
+					direct<size_t (Args...)>(
 						state,
 						&Value<Type>::template push<Args...>,
 						state

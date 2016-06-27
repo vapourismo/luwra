@@ -28,7 +28,7 @@ namespace internal {
 	};
 
 	template <typename R>
-	struct Layout<R()> {
+	struct Layout<R ()> {
 		using ReturnType = R;
 
 		template <typename F, typename... A> static inline
@@ -40,7 +40,7 @@ namespace internal {
 	};
 
 	template <typename R, typename T>
-	struct Layout<R(T)> {
+	struct Layout<R (T)> {
 		using ReturnType = R;
 
 		template <typename F, typename... A> static inline
@@ -53,12 +53,12 @@ namespace internal {
 	};
 
 	template <typename R, typename T1, typename... TR>
-	struct Layout<R(T1, TR...)> {
+	struct Layout<R (T1, TR...)> {
 		using ReturnType = R;
 
 		template <typename F, typename... A> static inline
 		R direct(State* state, int n, F&& hook, A&&... args) {
-			return Layout<R(TR...)>::direct(
+			return Layout<R (TR...)>::direct(
 				state,
 				n + 1,
 				std::forward<F>(hook),
@@ -140,10 +140,10 @@ namespace internal {
 	};
 
 	template <typename... A>
-	struct LayoutMapper<void(A...)> {
+	struct LayoutMapper<void (A...)> {
 		template <typename F, typename... X> static inline
 		size_t map(State* state, int n, F&& hook, X&&... args) {
-			direct<void(A...)>(
+			direct<void (A...)>(
 				state,
 				n,
 				std::forward<F>(hook),
@@ -154,12 +154,12 @@ namespace internal {
 	};
 
 	template <typename R, typename... A>
-	struct LayoutMapper<R(A...)> {
+	struct LayoutMapper<R (A...)> {
 		template <typename F, typename... X> static inline
 		size_t map(State* state, int n, F&& hook, X&&... args) {
 			return push(
 				state,
-				direct<R(A...)>(
+				direct<R (A...)>(
 					state,
 					n,
 					std::forward<F>(hook),

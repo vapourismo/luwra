@@ -19,7 +19,7 @@ namespace internal {
 
 	// Information about function signature
 	template <typename Ret, typename... Args>
-	struct CallableInfo<Ret(Args...)> {
+	struct CallableInfo<Ret (Args...)> {
 		// Args call to an instance would evaluate to this type
 		using ReturnType = Ret;
 
@@ -29,30 +29,30 @@ namespace internal {
 
 		// Pass the signature of this callable to another template
 		template <template <typename> class Target>
-		using RelaySignature = Target<Ret(Args...)>;
+		using RelaySignature = Target<Ret (Args...)>;
 	};
 
 	// Information about function pointers
 	template <typename Ret, typename... Args>
 	struct CallableInfo<Ret (*)(Args...)>:
-		CallableInfo<Ret(Args...)> {};
+		CallableInfo<Ret (Args...)> {};
 
 	// Information about method pointers
 	template <typename Klass, typename Ret, typename... Args>
 	struct CallableInfo<Ret (Klass::*)(Args...)>:
-		CallableInfo<Ret(Args...)> {};
+		CallableInfo<Ret (Args...)> {};
 
 	template <typename Klass, typename Ret, typename... Args>
 	struct CallableInfo<Ret (Klass::*)(Args...) const>:
-		CallableInfo<Ret(Args...)> {};
+		CallableInfo<Ret (Args...)> {};
 
 	template <typename Klass, typename Ret, typename... Args>
 	struct CallableInfo<Ret (Klass::*)(Args...) volatile>:
-		CallableInfo<Ret(Args...)> {};
+		CallableInfo<Ret (Args...)> {};
 
 	template <typename Klass, typename Ret, typename... Args>
 	struct CallableInfo<Ret (Klass::*)(Args...) const volatile>:
-		CallableInfo<Ret(Args...)> {};
+		CallableInfo<Ret (Args...)> {};
 
 	// Useful aliases
 	template <typename Callable>
