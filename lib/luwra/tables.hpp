@@ -17,10 +17,10 @@ namespace internal {
 	// This represents a "path" which will be resolved lazily. It is useful for chained table
 	// access. An access like 'table.field1.field2' would be represented similar to
 	// `Path<Path<Table, std::string>, std::string> table {{table, "field1"}, "field"}`.
-	template <typename P, typename K>
+	template <typename Parent, typename Key>
 	struct Path {
-		P parent;
-		K key;
+		Parent parent;
+		Key key;
 
 		// Read the value to which this path points to.
 		template <typename V> inline
@@ -54,11 +54,11 @@ namespace internal {
 	};
 }
 
-template <typename P, typename K>
-struct Value<internal::Path<P, K>> {
+template <typename Parent, typename Key>
+struct Value<internal::Path<Parent, Key>> {
 	// Push the value to which the path points onto the stack.
 	static inline
-	size_t push(State* state, const internal::Path<P, K>& accessor) {
+	size_t push(State* state, const internal::Path<Parent, Key>& accessor) {
 		size_t pushedParents = luwra::push(state, accessor.parent);
 		if (pushedParents > 1)
 			lua_pop(state, static_cast<int>(pushedParents - 1));
@@ -75,61 +75,61 @@ struct Value<internal::Path<P, K>> {
 };
 
 namespace internal {
-	template <typename A>
+	template <typename Accessor>
 	struct TableAccessor {
 		State* state;
-		A accessor;
+		Accessor accessor;
 
-		template <typename V> inline
-		V read() const && {
-			return accessor.template read<V>(state);
+		template <typename Type> inline
+		Type read() const && {
+			return accessor.template read<Type>(state);
 		}
 
-		template <typename V> inline
-		operator V() const && {
-			return accessor.template read<V>(state);
+		template <typename Type> inline
+		operator Type() const && {
+			return accessor.template read<Type>(state);
 		}
 
-		template <typename V> inline
-		const TableAccessor&& write(V&& value) const && {
-			accessor.write(state, std::forward<V>(value));
+		template <typename Type> inline
+		const TableAccessor&& write(Type&& value) const && {
+			accessor.write(state, std::forward<Type>(value));
 			return std::move(*this);
 		}
 
-		template <typename V> inline
-		const TableAccessor&& operator =(V&& value) const && {
-			accessor.write(state, std::forward<V>(value));
+		template <typename Type> inline
+		const TableAccessor&& operator =(Type&& value) const && {
+			accessor.write(state, std::forward<Type>(value));
 			return std::move(*this);
 		}
 
-		template <typename K> inline
-		TableAccessor<Path<A, K>> access(K&& subkey) const && {
-			return TableAccessor<Path<A, K>> {
+		template <typename Key> inline
+		TableAccessor<Path<Accessor, Key>> access(Key&& subkey) const && {
+			return TableAccessor<Path<Accessor, Key>> {
 				state,
-				Path<A, K> {
+				Path<Accessor, Key> {
 					accessor,
-					std::forward<K>(subkey)
+					std::forward<Key>(subkey)
 				}
 			};
 		}
 
-		template <typename K> inline
-		TableAccessor<Path<A, K>> operator [](K&& subkey) const && {
-			return TableAccessor<Path<A, K>> {
+		template <typename Key> inline
+		TableAccessor<Path<Accessor, Key>> operator [](Key&& subkey) const && {
+			return TableAccessor<Path<Accessor, Key>> {
 				state,
-				Path<A, K> {
+				Path<Accessor, Key> {
 					accessor,
-					std::forward<K>(subkey)
+					std::forward<Key>(subkey)
 				}
 			};
 		}
 	};
 }
 
-template <typename A>
-struct Value<internal::TableAccessor<A>> {
+template <typename Accessor>
+struct Value<internal::TableAccessor<Accessor>> {
 	static inline
-	size_t push(State* state, internal::TableAccessor<A>& ta) {
+	size_t push(State* state, internal::TableAccessor<Accessor>& ta) {
 		return luwra::push(state, ta.accessor);
 	}
 };
@@ -159,24 +159,24 @@ struct Table {
 		lua_pop(state, 1);
 	}
 
-	template <typename K> inline
-	internal::TableAccessor<internal::Path<const Reference&, K>> access(K&& key) const {
-		return internal::TableAccessor<internal::Path<const Reference&, K>> {
+	template <typename Key> inline
+	internal::TableAccessor<internal::Path<const Reference&, Key>> access(Key&& key) const {
+		return internal::TableAccessor<internal::Path<const Reference&, Key>> {
 			ref.impl->state,
-			internal::Path<const Reference&, K> {
+			internal::Path<const Reference&, Key> {
 				ref,
-				std::forward<K>(key)
+				std::forward<Key>(key)
 			}
 		};
 	}
 
-	template <typename K> inline
-	internal::TableAccessor<internal::Path<const Reference&, K>> operator [](K&& key) const {
-		return internal::TableAccessor<internal::Path<const Reference&, K>> {
+	template <typename Key> inline
+	internal::TableAccessor<internal::Path<const Reference&, Key>> operator [](Key&& key) const {
+		return internal::TableAccessor<internal::Path<const Reference&, Key>> {
 			ref.impl->state,
-			internal::Path<const Reference&, K> {
+			internal::Path<const Reference&, Key> {
 				ref,
-				std::forward<K>(key)
+				std::forward<Key>(key)
 			}
 		};
 	}
@@ -191,13 +191,13 @@ struct Table {
 		lua_pop(state, 1);
 	}
 
-	template <typename K> inline
-	bool has(K&& key) const {
+	template <typename Key> inline
+	bool has(Key&& key) const {
 		State* state = ref.impl->state;
 
 		push(state, ref);
 
-		size_t pushedKeys = push(state, std::forward<K>(key));
+		size_t pushedKeys = push(state, std::forward<Key>(key));
 		if (pushedKeys > 1)
 			lua_pop(state, static_cast<int>(pushedKeys - 1));
 
@@ -208,16 +208,16 @@ struct Table {
 		return !isNil;
 	}
 
-	template <typename V, typename K> inline
-	void set(K&& key, V&& value) const {
+	template <typename Type, typename Key> inline
+	void set(Key&& key, Type&& value) const {
 		State* state = ref.impl->state;
 		push(state, ref);
 
-		size_t pushedKeys = push(state, std::forward<K>(key));
+		size_t pushedKeys = push(state, std::forward<Key>(key));
 		if (pushedKeys > 1)
 			lua_pop(state, static_cast<int>(pushedKeys - 1));
 
-		size_t pushedValues = push(state, std::forward<V>(value));
+		size_t pushedValues = push(state, std::forward<Type>(value));
 		if (pushedValues > 1)
 			lua_pop(state, static_cast<int>(pushedValues - 1));
 
@@ -225,18 +225,18 @@ struct Table {
 		lua_pop(state, 1);
 	}
 
-	template <typename V, typename K> inline
-	V get(K&& key) const {
+	template <typename Type, typename Key> inline
+	Type get(Key&& key) const {
 		State* state = ref.impl->state;
 
 		push(state, ref);
 
-		size_t pushedKeys = push(state, std::forward<K>(key));
+		size_t pushedKeys = push(state, std::forward<Key>(key));
 		if (pushedKeys > 1)
 			lua_pop(state, static_cast<int>(pushedKeys - 1));
 
 		lua_rawget(state, -2);
-		V ret = read<V>(state, -1);
+		Type ret = read<Type>(state, -1);
 
 		lua_pop(state, 2);
 		return ret;
