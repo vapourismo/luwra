@@ -126,6 +126,14 @@ namespace internal {
 	};
 }
 
+template <typename A>
+struct Value<internal::TableAccessor<A>> {
+	static inline
+	size_t push(State* state, internal::TableAccessor<A>& ta) {
+		return luwra::push(state, ta.accessor);
+	}
+};
+
 struct Table {
 	Reference ref;
 
