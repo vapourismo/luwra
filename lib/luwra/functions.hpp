@@ -52,9 +52,9 @@ struct NativeFunction {
 	template <typename... A> inline
 	R operator ()(A&&... args) const {
 		ref.impl->push();
-		size_t numArgs = push(ref.impl->state, std::forward<A>(args)...);
+		push(ref.impl->state, std::forward<A>(args)...);
 
-		lua_call(ref.impl->state, static_cast<int>(numArgs), 1);
+		lua_call(ref.impl->state, sizeof...(A), 1);
 		R returnValue = read<R>(ref.impl->state, -1);
 
 		lua_pop(ref.impl->state, 1);
@@ -92,9 +92,9 @@ struct NativeFunction<void> {
 	template <typename... A> inline
 	void operator ()(A&&... args) const {
 		ref.impl->push();
-		size_t numArgs = push(ref.impl->state, std::forward<A>(args)...);
+		push(ref.impl->state, std::forward<A>(args)...);
 
-		lua_call(ref.impl->state, static_cast<int>(numArgs), 0);
+		lua_call(ref.impl->state, sizeof...(A), 0);
 	}
 };
 

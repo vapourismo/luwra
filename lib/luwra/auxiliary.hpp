@@ -119,13 +119,8 @@ void setFields(State* state, int index, const MemberMap& fields) {
 		index = lua_gettop(state) + (index + 1);
 
 	for (const auto& entry: fields) {
-		size_t pushedKeys = luwra::push(state, entry.first);
-		if (pushedKeys > 1)
-			lua_pop(state, static_cast<int>(pushedKeys - 1));
-
-		size_t pushedValues = luwra::push(state, entry.second);
-		if (pushedValues > 1)
-			lua_pop(state, static_cast<int>(pushedValues - 1));
+		push(state, entry.first);
+		push(state, entry.second);
 
 		lua_rawset(state, index);
 	}

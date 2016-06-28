@@ -305,10 +305,10 @@ struct Reference {
 	 */
 	template <typename T> inline
 	T read() const {
-		size_t pushed = impl->push();
+		impl->push();
 		T ret = Value<T>::read(impl->state, -1);
 
-		lua_pop(impl->state, pushed);
+		lua_pop(impl->state, 1);
 		return ret;
 	}
 
@@ -337,40 +337,40 @@ struct Value<Reference> {
 	}
 };
 
-namespace internal {
-	template <typename>
-	struct StackPusher;
+// namespace internal {
+// 	template <typename>
+// 	struct StackPusher;
 
-	template <size_t I>
-	struct StackPusher<IndexSequence<I>> {
-		template <typename... T> static inline
-		size_t push(State* state, const std::tuple<T...>& package) {
-			return luwra::push(state, std::get<I>(package));
-		}
-	};
+// 	template <size_t I>
+// 	struct StackPusher<IndexSequence<I>> {
+// 		template <typename... T> static inline
+// 		size_t push(State* state, const std::tuple<T...>& package) {
+// 			return luwra::push(state, std::get<I>(package));
+// 		}
+// 	};
 
-	template <size_t I, size_t... Is>
-	struct StackPusher<IndexSequence<I, Is...>> {
-		template <typename... T> static inline
-		size_t push(State* state, const std::tuple<T...>& package) {
-			return
-				StackPusher<IndexSequence<I>>::push(state, package) +
-				StackPusher<IndexSequence<Is...>>::push(state, package);
-		}
-	};
-}
+// 	template <size_t I, size_t... Is>
+// 	struct StackPusher<IndexSequence<I, Is...>> {
+// 		template <typename... T> static inline
+// 		size_t push(State* state, const std::tuple<T...>& package) {
+// 			return
+// 				StackPusher<IndexSequence<I>>::push(state, package) +
+// 				StackPusher<IndexSequence<Is...>>::push(state, package);
+// 		}
+// 	};
+// }
 
-/**
- * Allows you to use multiple return values.
- */
-template <typename... A>
-struct Value<std::tuple<A...>> {
-	static inline
-	size_t push(State* state, const std::tuple<A...>& value) {
-		using Seq = internal::MakeIndexSequence<sizeof...(A)>;
-		return internal::StackPusher<Seq>::push(state, value);
-	}
-};
+// /**
+//  * Allows you to use multiple return values.
+//  */
+// template <typename... A>
+// struct Value<std::tuple<A...>> {
+// 	static inline
+// 	size_t push(State* state, const std::tuple<A...>& value) {
+// 		using Seq = internal::MakeIndexSequence<sizeof...(A)>;
+// 		return internal::StackPusher<Seq>::push(state, value);
+// 	}
+// };
 
 /**
  * Fix specialization for const types.
@@ -449,10 +449,7 @@ struct Value<std::vector<T>> {
 
 		int size = static_cast<int>(vec.size());
 		for (int i = 0; i < size; i++) {
-			size_t pushedValues = luwra::push(state, vec[i]);
-			if (pushedValues > 1)
-				lua_pop(state, static_cast<int>(pushedValues - 1));
-
+			luwra::push(state, vec[i]);
 			lua_rawseti(state, -2, i + 1);
 		}
 
@@ -468,10 +465,7 @@ struct Value<std::list<T>> {
 
 		int i = 0;
 		for (const T& item: lst) {
-			size_t pushedValues = luwra::push(state, item);
-			if (pushedValues > 1)
-				lua_pop(state, static_cast<int>(pushedValues - 1));
-
+			luwra::push(state, item);
 			lua_rawseti(state, -2, ++i);
 		}
 
@@ -486,14 +480,8 @@ struct Value<std::map<K, V>> {
 		lua_createtable(state, 0, map.size());
 
 		for (const auto& entry: map) {
-			size_t pushedKeys = luwra::push(state, entry.first);
-			if (pushedKeys > 1)
-				lua_pop(state, static_cast<int>(pushedKeys - 1));
-
-			size_t pushedValues = luwra::push(state, entry.second);
-			if (pushedValues > 1)
-				lua_pop(state, static_cast<int>(pushedValues - 1));
-
+			luwra::push(state, entry.first);
+			luwra::push(state, entry.second);
 			lua_rawset(state, -3);
 		}
 

@@ -58,8 +58,8 @@
 TEST_CASE("Numbers") {
 	luwra::StateWrapper state;
 
-	REQUIRE(luwra::push(state, 1337) == 1);
-	REQUIRE(luwra::push(state, 13.37) == 1);
+	luwra::push(state, 1337);
+	luwra::push(state, 13.37);
 
 	REQUIRE(luwra::read<int>(state, -2) == 1337);
 	REQUIRE(luwra::read<float>(state, -1) == 13.37f);
@@ -75,8 +75,8 @@ TEST_CASE("Strings") {
 	REQUIRE(test_str == test_cstr);
 
 	// Push both strings
-	REQUIRE(luwra::push(state, test_cstr) == 1);
-	REQUIRE(luwra::push(state, test_str) == 1);
+	luwra::push(state, test_cstr);
+	luwra::push(state, test_str);
 
 	// They must be equal to Lua
 	REQUIRE(luwra::equal(state, -1, -2));
@@ -102,41 +102,41 @@ TEST_CASE("Strings") {
 	REQUIRE(l_str1   == l_str2);
 }
 
-TEST_CASE("Tuples") {
-	luwra::StateWrapper state;
+// TEST_CASE("Tuples") {
+// 	luwra::StateWrapper state;
 
-	int a = 13;
-	std::string b("Hello");
-	float c = 0.37;
+// 	int a = 13;
+// 	std::string b("Hello");
+// 	float c = 0.37;
 
-	// Push normal tuple
-	auto tuple = std::make_tuple(a, b, c);
-	REQUIRE(luwra::push(state, tuple) == 3);
+// 	// Push normal tuple
+// 	auto tuple = std::make_tuple(a, b, c);
+// 	REQUIRE(luwra::push(state, tuple) == 3);
 
-	REQUIRE(luwra::read<int>(state, -3) == a);
-	REQUIRE(luwra::read<std::string>(state, -2) == b);
-	REQUIRE(luwra::read<float>(state, -1) == c);
+// 	REQUIRE(luwra::read<int>(state, -3) == a);
+// 	REQUIRE(luwra::read<std::string>(state, -2) == b);
+// 	REQUIRE(luwra::read<float>(state, -1) == c);
 
-	// Push nested tuple
-	auto tuple_nested = std::make_tuple(a, b, c, tuple);
-	REQUIRE(luwra::push(state, tuple_nested) == 6);
+// 	// Push nested tuple
+// 	auto tuple_nested = std::make_tuple(a, b, c, tuple);
+// 	REQUIRE(luwra::push(state, tuple_nested) == 6);
 
-	REQUIRE(luwra::read<int>(state, -6) == a);
-	REQUIRE(luwra::read<std::string>(state, -5) == b);
-	REQUIRE(luwra::read<float>(state, -4) == c);
-	REQUIRE(luwra::read<int>(state, -3) == a);
-	REQUIRE(luwra::read<std::string>(state, -2) == b);
-	REQUIRE(luwra::read<float>(state, -1) == c);
+// 	REQUIRE(luwra::read<int>(state, -6) == a);
+// 	REQUIRE(luwra::read<std::string>(state, -5) == b);
+// 	REQUIRE(luwra::read<float>(state, -4) == c);
+// 	REQUIRE(luwra::read<int>(state, -3) == a);
+// 	REQUIRE(luwra::read<std::string>(state, -2) == b);
+// 	REQUIRE(luwra::read<float>(state, -1) == c);
 
-}
+// }
 
 TEST_CASE("Boolean") {
 	luwra::StateWrapper state;
 
-	REQUIRE(luwra::push(state, true) == 1);
+	luwra::push(state, true);
 	REQUIRE(luwra::read<bool>(state, -1) == true);
 
-	REQUIRE(luwra::push(state, false) == 1);
+	luwra::push(state, false);
 	REQUIRE(luwra::read<bool>(state, -1) == false);
 }
 
@@ -144,7 +144,7 @@ TEST_CASE("Pushable") {
 	luwra::StateWrapper state;
 
 	luwra::Pushable pushable(1337);
-	REQUIRE(luwra::push(state, pushable) == 1);
+	luwra::push(state, pushable);
 
 	REQUIRE(luwra::read<int>(state, -1) == 1337);
 }
@@ -154,7 +154,7 @@ TEST_CASE("Value<vector>") {
 	state.loadStandardLibrary();
 
 	std::vector<int> v {1, 2, 3, 4, 5};
-	REQUIRE(luwra::push(state, v) == 1);
+	luwra::push(state, v);
 
 	state["v"] = v;
 
@@ -172,7 +172,7 @@ TEST_CASE("Value<list>") {
 	state.loadStandardLibrary();
 
 	std::list<int> v {1, 2, 3, 4, 5};
-	REQUIRE(luwra::push(state, v) == 1);
+	luwra::push(state, v);
 
 	state["v"] = v;
 
@@ -192,7 +192,7 @@ TEST_CASE("Value<map>") {
 		{"hello", 13},
 		{37, "world"}
 	};
-	REQUIRE(luwra::push(state, v) == 1);
+	luwra::push(state, v);
 
 	state["v"] = v;
 

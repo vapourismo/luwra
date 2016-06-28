@@ -4,9 +4,9 @@
 TEST_CASE("equal") {
 	luwra::StateWrapper state;
 
-	REQUIRE(luwra::push(state, 1) == 1);
-	REQUIRE(luwra::push(state, 2) == 1);
-	REQUIRE(luwra::push(state, 1) == 1);
+	luwra::push(state, 1);
+	luwra::push(state, 2);
+	luwra::push(state, 1);
 
 	REQUIRE(!luwra::equal(state, -1, -2));
 	REQUIRE(!luwra::equal(state, -2, -1));

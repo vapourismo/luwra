@@ -8,7 +8,7 @@ TEST_CASE("Path<Table, string>") {
 
 	luwra::internal::Path<luwra::Table, std::string> path {state, "value"};
 
-	REQUIRE(state.push(path) == 1);
+	state.push(path);
 	REQUIRE(state.read<int>(-1) == 1337);
 	REQUIRE(path.read<int>(state) == 1337);
 
@@ -16,7 +16,7 @@ TEST_CASE("Path<Table, string>") {
 
 	path.write(state, 13.37);
 
-	REQUIRE(state.push(path) == 1);
+	state.push(path);
 	REQUIRE(state.read<double>(-1) == 13.37);
 	REQUIRE(path.read<double>(state) == 13.37);
 
@@ -29,7 +29,7 @@ TEST_CASE("Path<Reference, string>") {
 
 	luwra::internal::Path<luwra::Reference, std::string> path {state.ref, "value"};
 
-	REQUIRE(state.push(path) == 1);
+	state.push(path);
 	REQUIRE(state.read<int>(-1) == 1337);
 	REQUIRE(path.read<int>(state) == 1337);
 
@@ -37,7 +37,7 @@ TEST_CASE("Path<Reference, string>") {
 
 	path.write(state, 13.37);
 
-	REQUIRE(state.push(path) == 1);
+	state.push(path);
 	REQUIRE(state.read<double>(-1) == 13.37);
 	REQUIRE(path.read<double>(state) == 13.37);
 
@@ -56,7 +56,7 @@ TEST_CASE("Path<Path<Reference, string>, string>") {
 		std::string
 	> path {{state.ref, "value"}, "field"};
 
-	REQUIRE(state.push(path) == 1);
+	state.push(path);
 	REQUIRE(state.read<int>(-1) == 1337);
 	REQUIRE(path.read<int>(state) == 1337);
 
@@ -64,7 +64,7 @@ TEST_CASE("Path<Path<Reference, string>, string>") {
 
 	path.write(state, 13.37);
 
-	REQUIRE(state.push(path) == 1);
+	state.push(path);
 	REQUIRE(state.read<double>(-1) == 13.37);
 	REQUIRE(path.read<double>(state) == 13.37);
 

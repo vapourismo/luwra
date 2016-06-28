@@ -25,7 +25,7 @@ namespace internal {
 		// Read the value to which this path points to.
 		template <typename V> inline
 		V read(State* state) const {
-			luwra::push(state, *this);
+			push(state, *this);
 
 			V value = luwra::read<V>(state, -1);
 
@@ -36,17 +36,9 @@ namespace internal {
 		// Change the value to which this path points to.
 		template <typename V> inline
 		void write(State* state, V&& value) const {
-			size_t pushedParents = luwra::push(state, parent);
-			if (pushedParents > 1)
-				lua_pop(state, static_cast<int>(pushedParents - 1));
-
-			size_t pushedKeys = luwra::push(state, key);
-			if (pushedKeys > 1)
-				lua_pop(state, static_cast<int>(pushedKeys - 1));
-
-			size_t pushedValues = luwra::push(state, std::forward<V>(value));
-			if (pushedValues > 1)
-				lua_pop(state, static_cast<int>(pushedValues - 1));
+			push(state, parent);
+			push(state, key);
+			push(state, std::forward<V>(value));
 
 			lua_rawset(state, -3);
 			lua_pop(state, 1);
@@ -59,13 +51,8 @@ struct Value<internal::Path<Parent, Key>> {
 	// Push the value to which the path points onto the stack.
 	static inline
 	size_t push(State* state, const internal::Path<Parent, Key>& accessor) {
-		size_t pushedParents = luwra::push(state, accessor.parent);
-		if (pushedParents > 1)
-			lua_pop(state, static_cast<int>(pushedParents - 1));
-
-		size_t pushedKeys = luwra::push(state, accessor.key);
-		if (pushedKeys > 1)
-			lua_pop(state, static_cast<int>(pushedKeys - 1));
+		luwra::push(state, accessor.parent);
+		luwra::push(state, accessor.key);
 
 		lua_rawget(state, -2);
 		lua_remove(state, -2);
@@ -196,10 +183,7 @@ struct Table {
 		State* state = ref.impl->state;
 
 		push(state, ref);
-
-		size_t pushedKeys = push(state, std::forward<Key>(key));
-		if (pushedKeys > 1)
-			lua_pop(state, static_cast<int>(pushedKeys - 1));
+		push(state, std::forward<Key>(key));
 
 		lua_rawget(state, -2);
 		bool isNil = lua_isnil(state, -1);
@@ -212,14 +196,8 @@ struct Table {
 	void set(Key&& key, Type&& value) const {
 		State* state = ref.impl->state;
 		push(state, ref);
-
-		size_t pushedKeys = push(state, std::forward<Key>(key));
-		if (pushedKeys > 1)
-			lua_pop(state, static_cast<int>(pushedKeys - 1));
-
-		size_t pushedValues = push(state, std::forward<Type>(value));
-		if (pushedValues > 1)
-			lua_pop(state, static_cast<int>(pushedValues - 1));
+		push(state, std::forward<Key>(key));
+		push(state, std::forward<Type>(value));
 
 		lua_rawset(state, -3);
 		lua_pop(state, 1);
@@ -230,10 +208,7 @@ struct Table {
 		State* state = ref.impl->state;
 
 		push(state, ref);
-
-		size_t pushedKeys = push(state, std::forward<Key>(key));
-		if (pushedKeys > 1)
-			lua_pop(state, static_cast<int>(pushedKeys - 1));
+		push(state, std::forward<Key>(key));
 
 		lua_rawget(state, -2);
 		Type ret = read<Type>(state, -1);
