@@ -22,9 +22,21 @@ namespace internal {
 	template <typename T>
 	struct Layout {
 		static_assert(
-			sizeof(T) == -1,
+			sizeof(T*) == -1,
 			"Parameter to Layout is not a valid signature"
 		);
+	};
+
+	template <>
+	struct Layout<void ()> {
+		using ReturnType = void;
+
+		template <typename F, typename... A> static inline
+		void direct(State*, int, F&& hook, A&&... args) {
+			hook(
+				std::forward<A>(args)...
+			);
+		}
 	};
 
 	template <typename R>
@@ -35,6 +47,19 @@ namespace internal {
 		R direct(State*, int, F&& hook, A&&... args) {
 			return hook(
 				std::forward<A>(args)...
+			);
+		}
+	};
+
+	template <typename T>
+	struct Layout<void (T)> {
+		using ReturnType = void;
+
+		template <typename F, typename... A> static inline
+		void direct(State* state, int n, F&& hook, A&&... args) {
+			hook(
+				std::forward<A>(args)...,
+				Value<T>::read(state, n)
 			);
 		}
 	};
@@ -131,6 +156,50 @@ typename internal::CallableInfo<T>::ReturnType apply(State* state, T&& obj) {
 }
 
 namespace internal {
+	template <typename Type>
+	struct SpecialValuePusher;
+
+	template <typename>
+	struct TuplePusher;
+
+	template <size_t Index>
+	struct TuplePusher<IndexSequence<Index>> {
+		template <typename... Contents> static inline
+		size_t push(State* state, const std::tuple<Contents...>& package) {
+			return SpecialValuePusher<
+				typename std::tuple_element<Index, std::tuple<Contents...>>::type
+			>::push(state, std::get<Index>(package));
+		}
+	};
+
+	template <size_t Index, size_t... IndexPack>
+	struct TuplePusher<IndexSequence<Index, IndexPack...>> {
+		template <typename... Contents> static inline
+		size_t push(State* state, const std::tuple<Contents...>& package) {
+			return
+				TuplePusher<IndexSequence<Index>>::push(state, package) +
+				TuplePusher<IndexSequence<IndexPack...>>::push(state, package);
+		}
+	};
+
+	template <typename Type>
+	struct SpecialValuePusher {
+		template <typename... Args> static inline
+		size_t push(State* state, Args&&... args) {
+			Value<Type>::push(state, std::forward<Args>(args)...);
+			return 1;
+		}
+	};
+
+	template <typename... Contents>
+	struct SpecialValuePusher<std::tuple<Contents...>> {
+		static inline
+		size_t push(State* state, const std::tuple<Contents...>& value) {
+			using Seq = internal::MakeIndexSequence<sizeof...(Contents)>;
+			return TuplePusher<Seq>::push(state, value);
+		};
+	};
+
 	template <typename T>
 	struct LayoutMapper {
 		static_assert(
@@ -157,7 +226,7 @@ namespace internal {
 	struct LayoutMapper<R (A...)> {
 		template <typename F, typename... X> static inline
 		size_t map(State* state, int n, F&& hook, X&&... args) {
-			return push(
+			return SpecialValuePusher<R>::push(
 				state,
 				direct<R (A...)>(
 					state,

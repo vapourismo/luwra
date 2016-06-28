@@ -66,25 +66,24 @@ namespace internal {
 		// This converts the userdata in Lua to a string.
 		static inline
 		int stringify(State* state) {
-			return static_cast<int>(
-				push(
-					state,
-					UserTypeReg<Type>::name + "@" + std::to_string(uintptr_t(check(state, 1)))
-				)
+			push(
+				state,
+				UserTypeReg<Type>::name + "@" + std::to_string(uintptr_t(check(state, 1)))
 			);
+			return 1;
 		}
 
 		template <typename... Args>
 		struct ConstructorWrapper {
 			static inline
 			int invoke(State* state) {
-				return static_cast<int>(
-					direct<size_t (Args...)>(
-						state,
-						&Value<Type>::template push<Args...>,
-						state
-					)
+				direct<void (Args...)>(
+					state,
+					&Value<Type>::template push<Args...>,
+					state
 				);
+
+				return 1;
 			}
 		};
 	};

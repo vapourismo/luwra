@@ -5,14 +5,12 @@
 int main() {
 	luwra::StateWrapper state;
 
-	if (state.runString("return 'Hello World'") != LUA_OK) {
-		std::cerr << luwra::read<std::string>(state, -1) << std::endl;
-		return 1;
-	}
+	std::tuple<int, float, int> test(13, 13.37, 37);
+	luwra::internal::SpecialValuePusher<std::tuple<int, float, int>>::push(state, test);
 
-	for (size_t i = 0; i < 50000000; i++) {
-		std::string result = luwra::read<std::string>(state, -1);
-	}
+	std::cout << state.read<int>(-3) << std::endl
+	          << state.read<float>(-2) << std::endl
+	          << state.read<int>(-1) << std::endl;
 
 	return 0;
 }

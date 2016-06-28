@@ -50,14 +50,12 @@ template <typename Parent, typename Key>
 struct Value<internal::Path<Parent, Key>> {
 	// Push the value to which the path points onto the stack.
 	static inline
-	size_t push(State* state, const internal::Path<Parent, Key>& accessor) {
+	void push(State* state, const internal::Path<Parent, Key>& accessor) {
 		luwra::push(state, accessor.parent);
 		luwra::push(state, accessor.key);
 
 		lua_rawget(state, -2);
 		lua_remove(state, -2);
-
-		return 1;
 	}
 };
 
@@ -116,8 +114,8 @@ namespace internal {
 template <typename Accessor>
 struct Value<internal::TableAccessor<Accessor>> {
 	static inline
-	size_t push(State* state, internal::TableAccessor<Accessor>& ta) {
-		return luwra::push(state, ta.accessor);
+	void push(State* state, internal::TableAccessor<Accessor>& ta) {
+		luwra::push(state, ta.accessor);
 	}
 };
 
@@ -229,8 +227,8 @@ struct Value<Table> {
 	}
 
 	static inline
-	size_t push(State* state, const Table& value) {
-		return value.ref.impl->push(state);
+	void push(State* state, const Table& value) {
+		value.ref.impl->push(state);
 	}
 };
 

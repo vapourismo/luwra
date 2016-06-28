@@ -102,9 +102,8 @@ namespace internal {
 
 		template <const FieldType BaseKlass::* accessor> static inline
 		int invoke(State* state) {
-			return static_cast<int>(
-				push(state, read<Klass*>(state, 1)->*accessor)
-			);
+			push(state, read<Klass*>(state, 1)->*accessor);
+			return 1;
 		}
 	};
 
@@ -124,9 +123,8 @@ namespace internal {
 				read<Klass*>(state, 1)->*accessor = read<FieldType>(state, 2);
 				return 0;
 			} else {
-				return static_cast<int>(
-					push(state, read<Klass*>(state, 1)->*accessor)
-				);
+				push(state, read<Klass*>(state, 1)->*accessor);
+				return 1;
 			}
 		}
 	};

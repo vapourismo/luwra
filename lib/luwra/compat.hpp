@@ -12,13 +12,12 @@
 LUWRA_NS_BEGIN
 
 namespace internal {
-	template <size_t... Is>
+	template <size_t...>
 	struct IndexSequence {};
 
 	template <size_t I, size_t... Is>
-	struct MakeIndexSequenceImpl {
-		using type = typename MakeIndexSequenceImpl<I - 1, I - 1, Is...>::type;
-	};
+	struct MakeIndexSequenceImpl:
+		MakeIndexSequenceImpl<I - 1, I - 1, Is...> {};
 
 	template <size_t... Is>
 	struct MakeIndexSequenceImpl<0, Is...> {

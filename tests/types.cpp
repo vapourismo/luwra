@@ -102,33 +102,41 @@ TEST_CASE("Strings") {
 	REQUIRE(l_str1   == l_str2);
 }
 
-// TEST_CASE("Tuples") {
-// 	luwra::StateWrapper state;
+TEST_CASE("Tuples") {
+	luwra::StateWrapper state;
 
-// 	int a = 13;
-// 	std::string b("Hello");
-// 	float c = 0.37;
+	int a = 13;
+	std::string b("Hello");
+	float c = 0.37;
 
-// 	// Push normal tuple
-// 	auto tuple = std::make_tuple(a, b, c);
-// 	REQUIRE(luwra::push(state, tuple) == 3);
+	// Tuples aren't ordinarily pushable. But you can use them as return value.
+	size_t ret =
+		state.map<std::tuple<int, std::string, float>()>(
+			[&]() { return std::make_tuple(a, b, c); }
+		);
 
-// 	REQUIRE(luwra::read<int>(state, -3) == a);
-// 	REQUIRE(luwra::read<std::string>(state, -2) == b);
-// 	REQUIRE(luwra::read<float>(state, -1) == c);
+	REQUIRE(ret == 3);
+	REQUIRE(lua_gettop(state) == 3);
 
-// 	// Push nested tuple
-// 	auto tuple_nested = std::make_tuple(a, b, c, tuple);
-// 	REQUIRE(luwra::push(state, tuple_nested) == 6);
+	REQUIRE(state.read<int>(-3) == a);
+	REQUIRE(state.read<std::string>(-2) == b);
+	REQUIRE(state.read<float>(-1) == c);
 
-// 	REQUIRE(luwra::read<int>(state, -6) == a);
-// 	REQUIRE(luwra::read<std::string>(state, -5) == b);
-// 	REQUIRE(luwra::read<float>(state, -4) == c);
-// 	REQUIRE(luwra::read<int>(state, -3) == a);
-// 	REQUIRE(luwra::read<std::string>(state, -2) == b);
-// 	REQUIRE(luwra::read<float>(state, -1) == c);
+	ret =
+		state.map<std::tuple<int, std::string, float, std::tuple<int, std::string, float>>()>(
+			[&]() { return std::make_tuple(a, b, c, std::make_tuple(a, b, c)); }
+		);
 
-// }
+	REQUIRE(ret == 6);
+	REQUIRE(lua_gettop(state) == 9);
+
+	REQUIRE(luwra::read<int>(state, -6) == a);
+	REQUIRE(luwra::read<std::string>(state, -5) == b);
+	REQUIRE(luwra::read<float>(state, -4) == c);
+	REQUIRE(luwra::read<int>(state, -3) == a);
+	REQUIRE(luwra::read<std::string>(state, -2) == b);
+	REQUIRE(luwra::read<float>(state, -1) == c);
+}
 
 TEST_CASE("Boolean") {
 	luwra::StateWrapper state;

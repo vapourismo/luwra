@@ -106,8 +106,8 @@ struct Value<NativeFunction<R>> {
 	}
 
 	static inline
-	size_t push(State* state, const NativeFunction<R>& func) {
-		return Value<Reference>::push(state, func);
+	void push(State* state, const NativeFunction<R>& func) {
+		Value<Reference>::push(state, func);
 	}
 };
 
@@ -122,9 +122,8 @@ struct Value<std::function<R (A...)>> {
 template <>
 struct Value<CFunction> {
 	static inline
-	size_t push(State* state, CFunction fun) {
+	void push(State* state, CFunction fun) {
 		lua_pushcfunction(state, fun);
-		return 1;
 	}
 };
 

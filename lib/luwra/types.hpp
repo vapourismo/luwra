@@ -45,9 +45,8 @@ struct Value<std::nullptr_t> {
 	}
 
 	static inline
-	size_t push(State* state, std::nullptr_t) {
+	void push(State* state, std::nullptr_t) {
 		lua_pushnil(state);
-		return 1;
 	}
 };
 
@@ -64,19 +63,18 @@ struct Value<State*> {
  * Convenient wrapped for [Value<T>::push](@ref Value<T>::push).
  */
 template <typename T> static inline
-size_t push(State* state, T&& value) {
+void push(State* state, T&& value) {
 	using U = typename std::remove_cv<typename std::remove_reference<T>::type>::type;
-	return Value<U>::push(state, std::forward<T>(value));
+	Value<U>::push(state, std::forward<T>(value));
 }
 
 /**
  * Allows you to push multiple values at once.
  */
 template <typename T1, typename T2, typename... TR> static inline
-size_t push(State* state, T1&& value, T2&& head, TR&&... rest) {
-	return
-		push(state, std::forward<T1>(value)) +
-		push(state, std::forward<T2>(head), std::forward<TR>(rest)...);
+void push(State* state, T1&& value, T2&& head, TR&&... rest) {
+	push(state, std::forward<T1>(value));
+	push(state, std::forward<T2>(head), std::forward<TR>(rest)...);
 }
 
 /**
@@ -105,9 +103,8 @@ namespace internal {
 		}
 
 		static inline
-		size_t push(State* state, Integer value) {
+		void push(State* state, Integer value) {
 			lua_pushinteger(state, value);
-			return 1;
 		}
 	};
 
@@ -120,9 +117,8 @@ namespace internal {
 		}
 
 		static inline
-		size_t push(State* state, Number value) {
+		void push(State* state, Number value) {
 			lua_pushnumber(state, value);
-			return 1;
 		}
 	};
 
@@ -135,9 +131,8 @@ namespace internal {
 		}
 
 		static inline
-		size_t push(State* state, I value) {
+		void push(State* state, I value) {
 			NumericTransportValue<B>::push(state, static_cast<B>(value));
-			return 1;
 		}
 	};
 }
@@ -177,9 +172,8 @@ struct Value<const char*> {
 	}
 
 	static inline
-	size_t push(State* state, const char* value) {
+	void push(State* state, const char* value) {
 		lua_pushstring(state, value);
-		return 1;
 	}
 };
 
@@ -193,9 +187,8 @@ struct Value<std::string> {
 	}
 
 	static inline
-	size_t push(State* state, const std::string& value) {
+	void push(State* state, const std::string& value) {
 		lua_pushstring(state, value.c_str());
-		return 1;
 	}
 };
 
@@ -208,9 +201,8 @@ struct Value<bool> {
 	}
 
 	static inline
-	size_t push(State* state, bool value) {
+	void push(State* state, bool value) {
 		lua_pushboolean(state, static_cast<int>(value));
-		return 1;
 	}
 };
 
@@ -267,19 +259,16 @@ namespace internal {
 		// Small shortcut to make the `push`-implementations for `Table` and `Reference` consistent,
 		// since both use this struct internally.
 		inline
-		size_t push(State* targetState) const {
+		void push(State* targetState) const {
 			lua_rawgeti(state, LUA_REGISTRYINDEX, ref);
 
 			if (state != targetState)
 				lua_xmove(state, targetState, 1);
-
-			return 1;
 		}
 
 		inline
-		size_t push() const {
+		void push() const {
 			lua_rawgeti(state, LUA_REGISTRYINDEX, ref);
-			return 1;
 		}
 	};
 
@@ -332,45 +321,10 @@ struct Value<Reference> {
 	}
 
 	static inline
-	size_t push(State* state, const Reference& value) {
-		return value.impl->push(state);
+	void push(State* state, const Reference& value) {
+		value.impl->push(state);
 	}
 };
-
-// namespace internal {
-// 	template <typename>
-// 	struct StackPusher;
-
-// 	template <size_t I>
-// 	struct StackPusher<IndexSequence<I>> {
-// 		template <typename... T> static inline
-// 		size_t push(State* state, const std::tuple<T...>& package) {
-// 			return luwra::push(state, std::get<I>(package));
-// 		}
-// 	};
-
-// 	template <size_t I, size_t... Is>
-// 	struct StackPusher<IndexSequence<I, Is...>> {
-// 		template <typename... T> static inline
-// 		size_t push(State* state, const std::tuple<T...>& package) {
-// 			return
-// 				StackPusher<IndexSequence<I>>::push(state, package) +
-// 				StackPusher<IndexSequence<Is...>>::push(state, package);
-// 		}
-// 	};
-// }
-
-// /**
-//  * Allows you to use multiple return values.
-//  */
-// template <typename... A>
-// struct Value<std::tuple<A...>> {
-// 	static inline
-// 	size_t push(State* state, const std::tuple<A...>& value) {
-// 		using Seq = internal::MakeIndexSequence<sizeof...(A)>;
-// 		return internal::StackPusher<Seq>::push(state, value);
-// 	}
-// };
 
 /**
  * Fix specialization for const types.
@@ -399,7 +353,7 @@ struct Value<U&&>: Value<U> {};
 namespace internal {
 	struct PushableI {
 		virtual
-		size_t push(State* state) const = 0;
+		void push(State* state) const = 0;
 	};
 
 	template <typename T>
@@ -410,8 +364,8 @@ namespace internal {
 		PushableT(P&& value): value(std::forward<P>(value)) {}
 
 		virtual
-		size_t push(State* state) const {
-			return luwra::push(state, value);
+		void push(State* state) const {
+			luwra::push(state, value);
 		}
 	};
 }
@@ -436,15 +390,15 @@ struct Pushable {
 template <>
 struct Value<Pushable> {
 	static inline
-	size_t push(State* state, const Pushable& value) {
-		return value.interface->push(state);
+	void push(State* state, const Pushable& value) {
+		value.interface->push(state);
 	}
 };
 
 template <typename T>
 struct Value<std::vector<T>> {
 	static inline
-	size_t push(State* state, const std::vector<T>& vec) {
+	void push(State* state, const std::vector<T>& vec) {
 		lua_createtable(state, vec.size(), 0);
 
 		int size = static_cast<int>(vec.size());
@@ -452,15 +406,13 @@ struct Value<std::vector<T>> {
 			luwra::push(state, vec[i]);
 			lua_rawseti(state, -2, i + 1);
 		}
-
-		return 1;
 	}
 };
 
 template <typename T>
 struct Value<std::list<T>> {
 	static inline
-	size_t push(State* state, const std::list<T>& lst) {
+	void push(State* state, const std::list<T>& lst) {
 		lua_createtable(state, lst.size(), 0);
 
 		int i = 0;
@@ -468,15 +420,13 @@ struct Value<std::list<T>> {
 			luwra::push(state, item);
 			lua_rawseti(state, -2, ++i);
 		}
-
-		return 1;
 	}
 };
 
 template <typename K, typename V>
 struct Value<std::map<K, V>> {
 	static inline
-	size_t push(State* state, const std::map<K, V>& map) {
+	void push(State* state, const std::map<K, V>& map) {
 		lua_createtable(state, 0, map.size());
 
 		for (const auto& entry: map) {
@@ -484,8 +434,6 @@ struct Value<std::map<K, V>> {
 			luwra::push(state, entry.second);
 			lua_rawset(state, -3);
 		}
-
-		return 1;
 	}
 };
 

@@ -86,16 +86,16 @@ struct StateWrapper: Table {
 	 * See [luwra::push](@ref luwra::push).
 	 */
 	template <typename Type> inline
-	size_t push(Type&& value) const {
-		return luwra::push(state, std::forward<Type>(value));
+	void push(Type&& value) const {
+		luwra::push(state, std::forward<Type>(value));
 	}
 
 	/**
 	 * See [luwra::push](@ref luwra::push).
 	 */
 	template <typename... Types> inline
-	size_t push(Types&&... values) const {
-		return luwra::push(state, std::forward<Types>(values)...);
+	void push(Types&&... values) const {
+		luwra::push(state, std::forward<Types>(values)...);
 	}
 
 	/**
