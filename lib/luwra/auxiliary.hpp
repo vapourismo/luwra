@@ -47,9 +47,9 @@ void setMetatable(State* state, const char* name) {
  * \param name  Global name
  * \param value Global value
  */
-template <typename V> static inline
-void setGlobal(State* state, const char* name, V&& value) {
-	push(state, std::forward<V>(value));
+template <typename Type> static inline
+void setGlobal(State* state, const char* name, Type&& value) {
+	push(state, std::forward<Type>(value));
 	lua_setglobal(state, name);
 }
 
@@ -59,32 +59,32 @@ void setGlobal(State* state, const char* name, V&& value) {
  * \param name  Global name
  * \returns Value associated with the given name
  */
-template <typename V> static inline
-V getGlobal(State* state, const char* name) {
+template <typename Type> static inline
+Type getGlobal(State* state, const char* name) {
 	lua_getglobal(state, name);
 
-	V instance = read<V>(state, -1);
+	Type instance = read<Type>(state, -1);
 	lua_pop(state, 1);
 
 	return instance;
 }
 
 namespace internal {
-	template <typename K, typename V, typename... R>
+	template <typename Key, typename Type, typename... Pairs>
 	struct EntryPusher {
 		static inline
-		void push(State* state, int index, K&& key, V&& value, R&&... rest) {
-			EntryPusher<K, V>::push(state, index, std::forward<K>(key), std::forward<V>(value));
-			EntryPusher<R...>::push(state, index, std::forward<R>(rest)...);
+		void push(State* state, int index, Key&& key, Type&& value, Pairs&&... rest) {
+			EntryPusher<Key, Type>::push(state, index, std::forward<Key>(key), std::forward<Type>(value));
+			EntryPusher<Pairs...>::push(state, index, std::forward<Pairs>(rest)...);
 		}
 	};
 
-	template <typename K, typename V>
-	struct EntryPusher<K, V> {
+	template <typename Key, typename Type>
+	struct EntryPusher<Key, Type> {
 		static inline
-		void push(State* state, int index, K&& key, V&& value) {
-			luwra::push(state, std::forward<K>(key));
-			luwra::push(state, std::forward<V>(value));
+		void push(State* state, int index, Key&& key, Type&& value) {
+			luwra::push(state, std::forward<Key>(key));
+			luwra::push(state, std::forward<Type>(value));
 			lua_rawset(state, index < 0 ? index - 2 : index);
 		}
 	};
@@ -96,10 +96,10 @@ namespace internal {
  * \param index Table index
  * \param args  Key-value pairs
  */
-template <typename... R> static inline
-void setFields(State* state, int index, R&&... args) {
-	static_assert(sizeof...(R) % 2 == 0, "Field parameters must appear in pairs");
-	internal::EntryPusher<R...>::push(state, index, std::forward<R>(args)...);
+template <typename... Pairs> static inline
+void setFields(State* state, int index, Pairs&&... args) {
+	static_assert(sizeof...(Pairs) % 2 == 0, "Field parameters must appear in pairs");
+	internal::EntryPusher<Pairs...>::push(state, index, std::forward<Pairs>(args)...);
 }
 
 /**
@@ -129,15 +129,15 @@ void setFields(State* state, int index, const MemberMap& fields) {
 /**
  * Retrieve a field from a table.
  */
-template <typename V, typename K> static inline
-V getField(State* state, int index, K&& key) {
+template <typename Type, typename Key> static inline
+Type getField(State* state, int index, Key&& key) {
 	if (index < 0)
 		index = lua_gettop(state) + (index + 1);
 
-	push(state, std::forward<K>(key));
+	push(state, std::forward<Key>(key));
 	lua_rawget(state, index);
 
-	V value = read<V>(state, -1);
+	Type value = read<Type>(state, -1);
 	lua_pop(state, 1);
 
 	return value;

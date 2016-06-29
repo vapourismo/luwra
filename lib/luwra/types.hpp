@@ -32,7 +32,7 @@ using CFunction = lua_CFunction;
 /**
  * User type
  */
-template <typename T>
+template <typename Type>
 struct Value;
 
 // Nil
@@ -60,35 +60,35 @@ struct Value<State*> {
 };
 
 /**
- * Convenient wrapped for [Value<T>::push](@ref Value<T>::push).
+ * Convenient wrapped for [Value<Type>::push](@ref Value<Type>::push).
  */
-template <typename T> static inline
-void push(State* state, T&& value) {
-	Value<T>::push(state, std::forward<T>(value));
+template <typename Type> static inline
+void push(State* state, Type&& value) {
+	Value<Type>::push(state, std::forward<Type>(value));
 }
 
 /**
  * Allows you to push multiple values at once.
  */
-template <typename T1, typename T2, typename... TR> static inline
-void push(State* state, T1&& value, T2&& head, TR&&... rest) {
-	push(state, std::forward<T1>(value));
-	push(state, std::forward<T2>(head), std::forward<TR>(rest)...);
+template <typename First, typename Second, typename... Rest> static inline
+void push(State* state, First&& value, Second&& head, Rest&&... rest) {
+	push(state, std::forward<First>(value));
+	push(state, std::forward<Second>(head), std::forward<Rest>(rest)...);
 }
 
 /**
- * Convenient wrapper for [Value<T>::read](@ref Value<T>::read).
+ * Convenient wrapper for [Value<Type>::read](@ref Value<Type>::read).
  */
-template <typename T> static inline
-T read(State* state, int index) {
-	return Value<T>::read(state, index);
+template <typename Type> static inline
+Type read(State* state, int index) {
+	return Value<Type>::read(state, index);
 }
 
 namespace internal {
-	template <typename T>
+	template <typename Type>
 	struct NumericTransportValue {
 		static_assert(
-			sizeof(T) == -1,
+			sizeof(Type) == -1,
 			"Parameter to NumericTransportValue is not a numeric base type"
 		);
 	};
@@ -121,17 +121,17 @@ namespace internal {
 		}
 	};
 
-	// Base for `Value<I>` specializations which uses `B` as transport unit
-	template <typename I, typename B>
+	// Base for `Value<Type>` specializations which uses `Transport` as transport unit
+	template <typename Type, typename Transport>
 	struct NumericValueBase {
 		static inline
-		I read(State* state, int index) {
-			return static_cast<I>(NumericTransportValue<B>::read(state, index));
+		Type read(State* state, int index) {
+			return static_cast<Type>(NumericTransportValue<Transport>::read(state, index));
 		}
 
 		static inline
-		void push(State* state, I value) {
-			NumericTransportValue<B>::push(state, static_cast<B>(value));
+		void push(State* state, Type value) {
+			NumericTransportValue<Transport>::push(state, static_cast<Transport>(value));
 		}
 	};
 }
@@ -291,21 +291,21 @@ struct Reference {
 	/**
 	 * Read the referenced value.
 	 */
-	template <typename T> inline
-	T read() const {
+	template <typename Type> inline
+	Type read() const {
 		impl->push();
-		T ret = Value<T>::read(impl->state, -1);
+		Type ret = Value<Type>::read(impl->state, -1);
 
 		lua_pop(impl->state, 1);
 		return ret;
 	}
 
 	/**
-	 * Shortcut for `read<T>()`.
+	 * Shortcut for `read<Type>()`.
 	 */
-	template <typename T> inline
-	operator T() const {
-		return read<T>();
+	template <typename Type> inline
+	operator Type() const {
+		return read<Type>();
 	}
 };
 
@@ -328,32 +328,32 @@ struct Value<Reference> {
 /**
  * Fix specialization for const types.
  */
-template <typename T>
-struct Value<const T>: Value<T> {};
+template <typename Type>
+struct Value<const Type>: Value<Type> {};
 
 /**
  * Fix specialization for volatile types.
  */
-template <typename T>
-struct Value<volatile T>: Value<T> {};
+template <typename Type>
+struct Value<volatile Type>: Value<Type> {};
 
 /**
  * Fix specialization for const volatile types.
  */
-template <typename T>
-struct Value<const volatile T>: Value<T> {};
+template <typename Type>
+struct Value<const volatile Type>: Value<Type> {};
 
 /**
  * Fix specialization for lvalue reference types.
  */
-template <typename U>
-struct Value<U&>: Value<U> {};
+template <typename Type>
+struct Value<Type&>: Value<Type> {};
 
 /**
  * Fix specialization for rvalue reference types.
  */
-template <typename U>
-struct Value<U&&>: Value<U> {};
+template <typename Type>
+struct Value<Type&&>: Value<Type> {};
 
 namespace internal {
 	struct PushableI {
@@ -361,12 +361,12 @@ namespace internal {
 		void push(State* state) const = 0;
 	};
 
-	template <typename T>
+	template <typename Type>
 	struct PushableT: virtual PushableI {
-		T value;
+		Type value;
 
-		template <typename P> inline
-		PushableT(P&& value): value(std::forward<P>(value)) {}
+		template <typename Source> inline
+		PushableT(Source&& value): value(std::forward<Source>(value)) {}
 
 		virtual
 		void push(State* state) const {
@@ -381,9 +381,9 @@ namespace internal {
 struct Pushable {
 	std::shared_ptr<internal::PushableI> interface;
 
-	template <typename T> inline
-	Pushable(T&& value):
-		interface(new internal::PushableT<T>(std::forward<T>(value)))
+	template <typename Type> inline
+	Pushable(Type&& value):
+		interface(new internal::PushableT<Type>(std::forward<Type>(value)))
 	{}
 
 	inline
@@ -400,10 +400,10 @@ struct Value<Pushable> {
 	}
 };
 
-template <typename T>
-struct Value<std::vector<T>> {
+template <typename Type>
+struct Value<std::vector<Type>> {
 	static inline
-	void push(State* state, const std::vector<T>& vec) {
+	void push(State* state, const std::vector<Type>& vec) {
 		lua_createtable(state, vec.size(), 0);
 
 		int size = static_cast<int>(vec.size());
@@ -414,24 +414,24 @@ struct Value<std::vector<T>> {
 	}
 };
 
-template <typename T>
-struct Value<std::list<T>> {
+template <typename Type>
+struct Value<std::list<Type>> {
 	static inline
-	void push(State* state, const std::list<T>& lst) {
+	void push(State* state, const std::list<Type>& lst) {
 		lua_createtable(state, lst.size(), 0);
 
 		int i = 0;
-		for (const T& item: lst) {
+		for (const Type& item: lst) {
 			luwra::push(state, item);
 			lua_rawseti(state, -2, ++i);
 		}
 	}
 };
 
-template <typename K, typename V>
-struct Value<std::map<K, V>> {
+template <typename Key, typename Type>
+struct Value<std::map<Key, Type>> {
 	static inline
-	void push(State* state, const std::map<K, V>& map) {
+	void push(State* state, const std::map<Key, Type>& map) {
 		lua_createtable(state, 0, map.size());
 
 		for (const auto& entry: map) {

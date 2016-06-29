@@ -19,10 +19,10 @@
 LUWRA_NS_BEGIN
 
 namespace internal {
-	template <typename T>
+	template <typename Sig>
 	struct Layout {
 		static_assert(
-			sizeof(T) == -1,
+			sizeof(Sig) == -1,
 			"Parameter to Layout is not a valid signature"
 		);
 	};
@@ -31,64 +31,64 @@ namespace internal {
 	struct Layout<void ()> {
 		using ReturnType = void;
 
-		template <typename F, typename... A> static inline
-		void direct(State*, int, F&& hook, A&&... args) {
+		template <typename Callable, typename... Args> static inline
+		void direct(State*, int, Callable&& hook, Args&&... args) {
 			hook(
-				std::forward<A>(args)...
+				std::forward<Args>(args)...
 			);
 		}
 	};
 
-	template <typename R>
-	struct Layout<R ()> {
-		using ReturnType = R;
+	template <typename Ret>
+	struct Layout<Ret ()> {
+		using ReturnType = Ret;
 
-		template <typename F, typename... A> static inline
-		R direct(State*, int, F&& hook, A&&... args) {
+		template <typename Callable, typename... Args> static inline
+		Ret direct(State*, int, Callable&& hook, Args&&... args) {
 			return hook(
-				std::forward<A>(args)...
+				std::forward<Args>(args)...
 			);
 		}
 	};
 
-	template <typename T>
-	struct Layout<void (T)> {
+	template <typename Arg>
+	struct Layout<void (Arg)> {
 		using ReturnType = void;
 
-		template <typename F, typename... A> static inline
-		void direct(State* state, int n, F&& hook, A&&... args) {
+		template <typename Callable, typename... Args> static inline
+		void direct(State* state, int n, Callable&& hook, Args&&... args) {
 			hook(
-				std::forward<A>(args)...,
-				Value<T>::read(state, n)
+				std::forward<Args>(args)...,
+				Value<Arg>::read(state, n)
 			);
 		}
 	};
 
-	template <typename R, typename T>
-	struct Layout<R (T)> {
-		using ReturnType = R;
+	template <typename Ret, typename Arg>
+	struct Layout<Ret (Arg)> {
+		using ReturnType = Ret;
 
-		template <typename F, typename... A> static inline
-		R direct(State* state, int n, F&& hook, A&&... args) {
+		template <typename Callable, typename... Args> static inline
+		Ret direct(State* state, int n, Callable&& hook, Args&&... args) {
 			return hook(
-				std::forward<A>(args)...,
-				Value<T>::read(state, n)
+				std::forward<Args>(args)...,
+				Value<Arg>::read(state, n)
 			);
 		}
 	};
 
-	template <typename R, typename T1, typename... TR>
-	struct Layout<R (T1, TR...)> {
-		using ReturnType = R;
+	template <typename Ret, typename Head, typename... Tail>
+	struct Layout<Ret (Head, Tail...)> {
+		using ReturnType = Ret;
 
-		template <typename F, typename... A> static inline
-		R direct(State* state, int n, F&& hook, A&&... args) {
-			return Layout<R (TR...)>::direct(
+		template <typename Callable, typename... Args> static inline
+		Ret direct(State* state, int n, Callable&& hook, Args&&... args) {
+			return Layout<Ret (Tail...)>::direct(
 				state,
 				n + 1,
-				std::forward<F>(hook),
-				std::forward<A>(args)...,
-				Value<T1>::read(state, n)
+				std::forward<Callable>(hook),
+				std::forward<Args>(args)...,
+				Value<Head>::read(state, n)
 			);
 		}
 	};
@@ -97,30 +97,30 @@ namespace internal {
 /**
  * Retrieve values from the stack and invoke a `Callable` with them.
  *
- * \tparam S Signature in the form of `R(A...)` where `A` is a sequence of types, which shall be
- *           retrieved from the stack, and `R` the return type of `hook`
- * \tparam F An instance of `Callable` which accepts parameters `X..., A...` and returns `R`
- *           (this parameter should be inferable and can be omitted)
- * \tparam X Extra argument types
+ * \tparam Sig       Signature in the form of `R(A...)` where `A` is a sequence of types, which
+ *                   shall be retrieved from the stack, and `R` the return type of `func`
+ * \tparam Callable  An instance of `Callable` which accepts parameters `X..., A...` and returns `R`
+ *                   (this parameter should be inferable and can be omitted)
+ * \tparam ExtraArgs Extra argument types (can be omitted)
  *
  * \param state Lua state instance
  * \param pos   Index of the first value
- * \param hook  Callable value
- * \param args  Extra arguments which shall be be passed to `hook` before the stack values
+ * \param func  Callable value
+ * \param args  Extra arguments which shall be be passed to `func` before the stack values
  *
- * \returns Result of calling `hook`
+ * \returns Result of calling `func`
  */
 template <typename Sig, typename Callable, typename... ExtraArgs> static inline
 typename internal::Layout<Sig>::ReturnType direct(
 	State*         state,
 	int            pos,
-	Callable&&     hook,
+	Callable&&     func,
 	ExtraArgs&&... args
 ) {
 	return internal::Layout<Sig>::direct(
 		state,
 		pos,
-		std::forward<Callable>(hook),
+		std::forward<Callable>(func),
 		std::forward<ExtraArgs>(args)...
 	);
 }
@@ -218,39 +218,39 @@ namespace internal {
 		};
 	};
 
-	template <typename T>
+	template <typename Sig>
 	struct LayoutMapper {
 		static_assert(
-			sizeof(T) == -1,
+			sizeof(Sig) == -1,
 			"Parameter to LayoutMapper is not a valid signature"
 		);
 	};
 
-	template <typename... A>
-	struct LayoutMapper<void (A...)> {
-		template <typename F, typename... X> static inline
-		size_t map(State* state, int n, F&& hook, X&&... args) {
-			direct<void (A...)>(
+	template <typename... Args>
+	struct LayoutMapper<void (Args...)> {
+		template <typename Callable, typename... ExtraArgs> static inline
+		size_t map(State* state, int n, Callable&& hook, ExtraArgs&&... args) {
+			direct<void (Args...)>(
 				state,
 				n,
-				std::forward<F>(hook),
-				std::forward<X>(args)...
+				std::forward<Callable>(hook),
+				std::forward<ExtraArgs>(args)...
 			);
 			return 0;
 		}
 	};
 
-	template <typename R, typename... A>
-	struct LayoutMapper<R (A...)> {
-		template <typename F, typename... X> static inline
-		size_t map(State* state, int n, F&& hook, X&&... args) {
-			return SpecialValuePusher<R>::push(
+	template <typename Ret, typename... Args>
+	struct LayoutMapper<Ret (Args...)> {
+		template <typename Callable, typename... ExtraArgs> static inline
+		size_t map(State* state, int n, Callable&& hook, ExtraArgs&&... args) {
+			return SpecialValuePusher<Ret>::push(
 				state,
-				direct<R (A...)>(
+				direct<Ret (Args...)>(
 					state,
 					n,
-					std::forward<F>(hook),
-					std::forward<X>(args)...
+					std::forward<Callable>(hook),
+					std::forward<ExtraArgs>(args)...
 				)
 			);
 		}
@@ -261,13 +261,13 @@ namespace internal {
  * Similar to [direct](@ref direct) but pushes the result of the given `Callable` onto the stack.
  * \returns Number of values pushed
  */
-template <typename S, typename F, typename... A> static inline
-size_t map(State* state, int pos, F&& hook, A&&... args) {
-	return internal::LayoutMapper<S>::map(
+template <typename Sig, typename Callable, typename... Args> static inline
+size_t map(State* state, int pos, Callable&& hook, Args&&... args) {
+	return internal::LayoutMapper<Sig>::map(
 		state,
 		pos,
-		std::forward<F>(hook),
-		std::forward<A>(args)...
+		std::forward<Callable>(hook),
+		std::forward<Args>(args)...
 	);
 }
 

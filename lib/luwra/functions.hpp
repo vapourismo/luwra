@@ -19,7 +19,7 @@ LUWRA_NS_BEGIN
 /**
  * A callable native Lua function.
  */
-template <typename R>
+template <typename Ret>
 struct NativeFunction {
 	Reference ref;
 
@@ -33,29 +33,29 @@ struct NativeFunction {
 		ref(state, index)
 	{}
 
-	template <typename T> inline
-	NativeFunction(const NativeFunction<T>& other):
+	template <typename OtherRet> inline
+	NativeFunction(const NativeFunction<OtherRet>& other):
 		ref(other.ref)
 	{}
 
 	inline
-	R operator ()() const {
+	Ret operator ()() const {
 		ref.impl->push();
 
 		lua_call(ref.impl->state, 0, 1);
-		R returnValue = read<R>(ref.impl->state, -1);
+		Ret returnValue = read<Ret>(ref.impl->state, -1);
 
 		lua_pop(ref.impl->state, 1);
 		return returnValue;
 	}
 
-	template <typename... A> inline
-	R operator ()(A&&... args) const {
+	template <typename... Args> inline
+	Ret operator ()(Args&&... args) const {
 		ref.impl->push();
-		push(ref.impl->state, std::forward<A>(args)...);
+		push(ref.impl->state, std::forward<Args>(args)...);
 
-		lua_call(ref.impl->state, sizeof...(A), 1);
-		R returnValue = read<R>(ref.impl->state, -1);
+		lua_call(ref.impl->state, sizeof...(Args), 1);
+		Ret returnValue = read<Ret>(ref.impl->state, -1);
 
 		lua_pop(ref.impl->state, 1);
 		return returnValue;
@@ -89,33 +89,33 @@ struct NativeFunction<void> {
 		lua_call(ref.impl->state, 0, 0);
 	}
 
-	template <typename... A> inline
-	void operator ()(A&&... args) const {
+	template <typename... Args> inline
+	void operator ()(Args&&... args) const {
 		ref.impl->push();
-		push(ref.impl->state, std::forward<A>(args)...);
+		push(ref.impl->state, std::forward<Args>(args)...);
 
-		lua_call(ref.impl->state, sizeof...(A), 0);
+		lua_call(ref.impl->state, sizeof...(Args), 0);
 	}
 };
 
-template <typename R>
-struct Value<NativeFunction<R>> {
+template <typename Ret>
+struct Value<NativeFunction<Ret>> {
 	static inline
-	NativeFunction<R> read(State* state, int index) {
+	NativeFunction<Ret> read(State* state, int index) {
 		return {state, index};
 	}
 
 	static inline
-	void push(State* state, const NativeFunction<R>& func) {
+	void push(State* state, const NativeFunction<Ret>& func) {
 		Value<Reference>::push(state, func);
 	}
 };
 
-template <typename R, typename... A>
-struct Value<std::function<R (A...)>> {
+template <typename Ret, typename... Args>
+struct Value<std::function<Ret (Args...)>> {
 	static inline
-	std::function<R (A...)> read(State* state, int index) {
-		return {Value<NativeFunction<R>>::read(state, index)};
+	std::function<Ret (Args...)> read(State* state, int index) {
+		return {Value<NativeFunction<Ret>>::read(state, index)};
 	}
 };
 
