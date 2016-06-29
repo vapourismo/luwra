@@ -204,7 +204,7 @@ be an instance of the type which the wrapped field or method belongs to.</p>
 };
 </code></pre>
 
-<p>Wrapping field accessors and methods works almost identical to wrapping functions.</p>
+<p>Wrapping field accessors and methods works similar to wrapping functions.</p>
 <pre><code class="c++">lua_CFunction cfun_x     = LUWRA_WRAP_MEMBER(Point, x),
               cfun_y     = LUWRA_WRAP_MEMBER(Point, y),
               cfun_scale = LUWRA_WRAP_MEMBER(Point, scale);

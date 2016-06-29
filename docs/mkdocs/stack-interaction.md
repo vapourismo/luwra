@@ -23,15 +23,18 @@ const char*                            | yes      | yes      | string
 std::string                            | yes      | yes      | string
 std::nullptr_t                         | yes      | yes      | nil
 std::tuple&lt;T...&gt;                 | yes      | no       | *depends on the tuple contents*
-std::vector&lt;T&gt;                   | yes      | yes      | table
-std::list&lt;T&gt;                     | yes      | yes      | table
-std::map&lt;K, V&gt;                   | yes      | yes      | table
-[lua_CFunction][lua-cfunction]         | yes      | no       | function, table or userdata
-[NativeFunction][luwra-nativefunction] | yes      | yes      | function
+std::vector&lt;T&gt;                   | yes      | no       | table
+std::list&lt;T&gt;                     | yes      | no       | table
+std::map&lt;K, V&gt;                   | yes      | no       | table
+[lua_CFunction][lua-cfunction]         | yes      | no       | function
+[NativeFunction][luwra-nativefunction] | yes      | yes      | function, table or userdata
 [Table][luwra-table]                   | yes      | yes      | table
 
-**Note:** Some numeric types have a different size than their matching Lua type - they will be
+Some numeric types have a different size than their matching Lua type - they will be
 truncated during push or read operations.
+
+Tuple types are only pushable as return values from wrapped functions and `Callables` when used with
+[map][luwra-map].
 
 ## Extending supported types
 If you are missing a type that cannot be used as a [user type](/user-types), you can add a
@@ -48,13 +51,14 @@ namespace luwra {
 		}
 
 		static inline
-		size_t push(State* state, const T& value) {
+		void push(State* state, const T& value) {
 			// Push the given value on top of the stack
-			return /* Return how many values you have pushed onto the stack */;
 		}
 	};
 }
 ```
+
+Make sure you push only **1** value onto the stack, Luwra depends on this assumption.
 
 ## Pushing C++ values
 When pushing values onto the stack you can either use `Value<T>::push` or the more convenient
@@ -129,3 +133,4 @@ information.
 [luwra-value-push]: /reference/structluwra_1_1Value.html#aa376d68285606c206562b822e8187384
 [luwra-push]: /reference/namespaceluwra.html#ab6cf73d2416b43f1a90eb243a98cff5b
 [luwra-membermap]: /reference/namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a
+[luwra-map]: /reference/namespaceluwra.html#a9f24fc70cb48531cf1e3da6a3a741971

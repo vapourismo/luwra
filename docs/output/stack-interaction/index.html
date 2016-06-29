@@ -265,32 +265,32 @@ out of the box:</p>
 <tr>
 <td>std::vector&lt;T&gt;</td>
 <td>yes</td>
-<td>yes</td>
+<td>no</td>
 <td>table</td>
 </tr>
 <tr>
 <td>std::list&lt;T&gt;</td>
 <td>yes</td>
-<td>yes</td>
+<td>no</td>
 <td>table</td>
 </tr>
 <tr>
 <td>std::map&lt;K, V&gt;</td>
 <td>yes</td>
-<td>yes</td>
+<td>no</td>
 <td>table</td>
 </tr>
 <tr>
 <td><a href="http://www.lua.org/manual/5.3/manual.html#lua_CFunction">lua_CFunction</a></td>
 <td>yes</td>
 <td>no</td>
-<td>function, table or userdata</td>
+<td>function</td>
 </tr>
 <tr>
 <td><a href="../reference/structluwra_1_1NativeFunction.html">NativeFunction</a></td>
 <td>yes</td>
 <td>yes</td>
-<td>function</td>
+<td>function, table or userdata</td>
 </tr>
 <tr>
 <td><a href="../reference/structluwra_1_1Table.html">Table</a></td>
@@ -300,8 +300,10 @@ out of the box:</p>
 </tr>
 </tbody>
 </table>
-<p><strong>Note:</strong> Some numeric types have a different size than their matching Lua type - they will be
+<p>Some numeric types have a different size than their matching Lua type - they will be
 truncated during push or read operations.</p>
+<p>Tuple types are only pushable as return values from wrapped functions and <code>Callables</code> when used with
+<a href="../reference/namespaceluwra.html#a9f24fc70cb48531cf1e3da6a3a741971">map</a>.</p>
 <h2 id="extending-supported-types">Extending supported types</h2>
 <p>If you are missing a type that cannot be used as a <a href="../user-types">user type</a>, you can add a
 specialization of <a href="../reference/structluwra_1_1Value.html">Value</a>. All you need to do is modify the following snippet for your
@@ -315,14 +317,14 @@ type <code>T</code>.</p>
         }
 
         static inline
-        size_t push(State* state, const T&amp; value) {
+        void push(State* state, const T&amp; value) {
             // Push the given value on top of the stack
-            return /* Return how many values you have pushed onto the stack */;
         }
     };
 }
 </code></pre>
 
+<p>Make sure you push only <strong>1</strong> value onto the stack, Luwra depends on this assumption.</p>
 <h2 id="pushing-c-values">Pushing C++ values</h2>
 <p>When pushing values onto the stack you can either use <code>Value&lt;T&gt;::push</code> or the more convenient
 <a href="../reference/namespaceluwra.html#ab6cf73d2416b43f1a90eb243a98cff5b">push</a>.</p>

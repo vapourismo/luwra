@@ -84,7 +84,7 @@ struct Point {
 };
 ```
 
-Wrapping field accessors and methods works almost identical to wrapping functions.
+Wrapping field accessors and methods works similar to wrapping functions.
 
 ```c++
 lua_CFunction cfun_x     = LUWRA_WRAP_MEMBER(Point, x),

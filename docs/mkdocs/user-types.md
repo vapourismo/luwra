@@ -189,7 +189,7 @@ LUWRA_DEF_REGISTRY_NAME(MyUserType, "MyUserType")
 
 This method will not prefix the registry name with the value of `LUWRA_REGISTRY_PREFIX`.
 The `LUWRA_DEF_REGISTRY_NAME` macro has to be used at the root namespace, using it inside a
-namespace scope will have not effect.
+namespace scope will have no effect.
 
 [luwra-registerusertype]: /reference/namespaceluwra.html#acc685345fabe835a7f8323e7098e39f6
 [luwra-registerusertype-2]: /reference/namespaceluwra.html#a0a744cd63bf0d4f611a62b8a56df714e
