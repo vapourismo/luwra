@@ -64,7 +64,6 @@ struct Value<State*> {
  */
 template <typename T> static inline
 void push(State* state, T&& value) {
-	// using U = typename std::remove_cv<typename std::remove_reference<T>::type>::type;
 	Value<T>::push(state, std::forward<T>(value));
 }
 
