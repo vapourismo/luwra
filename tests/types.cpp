@@ -9,99 +9,139 @@
 #include <list>
 #include <initializer_list>
 
-// Numbers are royally fucked. They might or might not be stored in a floating-point number, which
-// makes testing for integer limits pointless.
-//
-// template <typename I>
-// struct NumericTest {
-// 	static
-// 	void test(lua_State* state) {
-// 		const I max_value = std::numeric_limits<I>::max();
-// 		const I min_value = std::numeric_limits<I>::lowest();
-// 		const I avg_value = (max_value + min_value) / 2;
+#include <iostream>
+#include <memory>
 
-// 		// Largest value
-// 		CHECK((luwra::push(state, max_value) == 1));
-// 		CHECK((luwra::read<I>(state, -1) == max_value));
+struct A {
+	std::unique_ptr<size_t> copyCounter;
+	std::unique_ptr<size_t> moveCounter;
 
-// 		// Lowest value
-// 		CHECK((luwra::push(state, min_value) == 1));
-// 		CHECK((luwra::read<I>(state, -1) == min_value));
+	A():
+		copyCounter(new size_t(0)),
+		moveCounter(new size_t(0))
+	{}
 
-// 		// Average value
-// 		CHECK((luwra::push(state, avg_value) == 1));
-// 		CHECK((luwra::read<I>(state, -1) == avg_value));
-// 	}
-// };
+	A(const A& a):
+		copyCounter(new size_t(0)),
+		moveCounter(new size_t(0))
+	 {
+		(*a.copyCounter)++;
+	}
 
-// TEST_CASE("NumberLimits") {
-// 	luwra::StateWrapper state;
+	A(A&& a):
+		copyCounter(new size_t(0)),
+		moveCounter(new size_t(0))
+	 {
+		(*a.moveCounter)++;
+	}
+};
 
-// 	// Integer-based types
-// 	NumericTest<signed char>::test(state);
-// 	NumericTest<unsigned char>::test(state);
-// 	NumericTest<signed short>::test(state);
-// 	NumericTest<unsigned short>::test(state);
-// 	NumericTest<signed int>::test(state);
-// 	NumericTest<unsigned int>::test(state);
-// 	NumericTest<signed long int>::test(state);
-// 	NumericTest<unsigned long int>::test(state);
-// 	NumericTest<signed long long int>::test(state);
-// 	NumericTest<unsigned long long int>::test(state);
-
-// 	// Number-based types
-// 	NumericTest<float>::test(state);
-// 	NumericTest<double>::test(state);
-// 	NumericTest<long double>::test(state);
-// }
-
-TEST_CASE("Numbers") {
+TEST_CASE("push") {
 	luwra::StateWrapper state;
 
-	luwra::push(state, 1337);
-	luwra::push(state, 13.37);
+	SECTION("perfect forwarding") {
+		A onlyCopy;
+		luwra::push(state, onlyCopy);
+		REQUIRE(*onlyCopy.copyCounter == 1);
+		REQUIRE(*onlyCopy.moveCounter == 0);
 
-	REQUIRE(luwra::read<int>(state, -2) == 1337);
-	REQUIRE(luwra::read<float>(state, -1) == 13.37f);
+		A onlyMove;
+		luwra::push(state, std::move(onlyMove));
+		REQUIRE(*onlyMove.copyCounter == 0);
+		REQUIRE(*onlyMove.moveCounter == 1);
+	}
 }
 
-TEST_CASE("Strings") {
+TEST_CASE("Value<nullptr_t>") {
 	luwra::StateWrapper state;
 
-	const char* test_cstr = "Luwra Test String";
-	std::string test_str(test_cstr);
+	SECTION("read") {
+		lua_pushnil(state);
+		REQUIRE(luwra::read<std::nullptr_t>(state, -1) == nullptr);
+	}
 
-	// Safety first
-	REQUIRE(test_str == test_cstr);
-
-	// Push both strings
-	luwra::push(state, test_cstr);
-	luwra::push(state, test_str);
-
-	// They must be equal to Lua
-	REQUIRE(luwra::equal(state, -1, -2));
-
-	// Extraction as C string must not change the string's value
-	const char* l_cstr1 = luwra::read<const char*>(state, -1);
-	const char* l_cstr2 = luwra::read<const char*>(state, -2);
-
-	REQUIRE(std::strcmp(test_cstr,        l_cstr1) == 0);
-	REQUIRE(std::strcmp(test_cstr,        l_cstr2) == 0);
-	REQUIRE(std::strcmp(test_str.c_str(), l_cstr1) == 0);
-	REQUIRE(std::strcmp(test_str.c_str(), l_cstr2) == 0);
-	REQUIRE(std::strcmp(l_cstr1,          l_cstr2) == 0);
-
-	// Extraction as C++ string must not change the string's value
-	std::string l_str1 = luwra::read<std::string>(state, -1);
-	std::string l_str2 = luwra::read<std::string>(state, -2);
-
-	REQUIRE(l_str1   == test_cstr);
-	REQUIRE(l_str2   == test_cstr);
-	REQUIRE(test_str == l_str1);
-	REQUIRE(test_str == l_str2);
-	REQUIRE(l_str1   == l_str2);
+	SECTION("push") {
+		luwra::push(state, nullptr);
+		REQUIRE(lua_type(state, -1) == LUA_TNIL);
+		REQUIRE(luwra::read<std::nullptr_t>(state, -1) == nullptr);
+	}
 }
 
+TEST_CASE("Value<State*>") {
+	luwra::StateWrapper state;
+
+	SECTION("read") {
+		luwra::State* thread = lua_newthread(state);
+		REQUIRE(luwra::read<luwra::State*>(state, -1) == thread);
+	}
+}
+
+TEST_CASE("Value<Integer>") {
+	luwra::StateWrapper state;
+	luwra::Integer value = 1337;
+
+	SECTION("read") {
+		lua_pushinteger(state, value);
+		REQUIRE(luwra::read<luwra::Integer>(state, -1) == value);
+	}
+
+	SECTION("push") {
+		luwra::push(state, value);
+		REQUIRE(lua_type(state, -1) == LUA_TNUMBER);
+		REQUIRE(luwra::read<luwra::Integer>(state, -1) == value);
+	}
+}
+
+TEST_CASE("Value<Number>") {
+	luwra::StateWrapper state;
+	luwra::Number value = 13.37;
+
+	SECTION("read") {
+		lua_pushnumber(state, value);
+		REQUIRE(luwra::read<luwra::Number>(state, -1) == value);
+	}
+
+	SECTION("push") {
+		luwra::push(state, value);
+		REQUIRE(lua_type(state, -1) == LUA_TNUMBER);
+		REQUIRE(luwra::read<luwra::Number>(state, -1) == value);
+	}
+}
+
+TEST_CASE("Value<const char*>") {
+	luwra::StateWrapper state;
+	const char* value = "Hello World";
+
+	SECTION("read") {
+		lua_pushstring(state, value);
+		REQUIRE(strcmp(luwra::read<const char*>(state, -1), value) == 0);
+	}
+
+	SECTION("push") {
+		luwra::push(state, value);
+		REQUIRE(lua_type(state, -1) == LUA_TSTRING);
+		REQUIRE(strcmp(luwra::read<const char*>(state, -1), value) == 0);
+	}
+}
+
+TEST_CASE("Value<string>") {
+	luwra::StateWrapper state;
+	std::string value("Hello World");
+
+	SECTION("read") {
+		lua_pushstring(state, value.c_str());
+		REQUIRE(luwra::read<std::string>(state, -1) == value);
+	}
+
+	SECTION("push") {
+		luwra::push(state, value);
+		REQUIRE(lua_type(state, -1) == LUA_TSTRING);
+		REQUIRE(luwra::read<std::string>(state, -1) == value);
+	}
+}
+
+
+// TODO: Move this somewhere else.
 TEST_CASE("Tuples") {
 	luwra::StateWrapper state;
 
@@ -138,14 +178,23 @@ TEST_CASE("Tuples") {
 	REQUIRE(luwra::read<float>(state, -1) == c);
 }
 
-TEST_CASE("Boolean") {
+TEST_CASE("Value<bool>") {
 	luwra::StateWrapper state;
 
-	luwra::push(state, true);
-	REQUIRE(luwra::read<bool>(state, -1) == true);
+	for (int i = 0; i < 2; i++) {
+		bool value = i == 1;
 
-	luwra::push(state, false);
-	REQUIRE(luwra::read<bool>(state, -1) == false);
+		SECTION("read") {
+			lua_pushboolean(state, value);
+			REQUIRE(luwra::read<bool>(state, -1) == value);
+		}
+
+		SECTION("push") {
+			luwra::push(state, value);
+			REQUIRE(lua_type(state, -1) == LUA_TBOOLEAN);
+			REQUIRE(luwra::read<bool>(state, -1) == value);
+		}
+	}
 }
 
 TEST_CASE("Pushable") {
