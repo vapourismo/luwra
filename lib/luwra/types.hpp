@@ -64,8 +64,8 @@ struct Value<State*> {
  */
 template <typename T> static inline
 void push(State* state, T&& value) {
-	using U = typename std::remove_cv<typename std::remove_reference<T>::type>::type;
-	Value<U>::push(state, std::forward<T>(value));
+	// using U = typename std::remove_cv<typename std::remove_reference<T>::type>::type;
+	Value<T>::push(state, std::forward<T>(value));
 }
 
 /**
@@ -337,6 +337,12 @@ struct Value<const T>: Value<T> {};
  */
 template <typename T>
 struct Value<volatile T>: Value<T> {};
+
+/**
+ * Fix specialization for const volatile types.
+ */
+template <typename T>
+struct Value<const volatile T>: Value<T> {};
 
 /**
  * Fix specialization for lvalue reference types.
