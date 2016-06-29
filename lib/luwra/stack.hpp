@@ -159,8 +159,13 @@ namespace internal {
 	template <typename Type>
 	struct SpecialValuePusher;
 
-	template <typename>
-	struct TuplePusher;
+	template <typename Seq>
+	struct TuplePusher {
+		static_assert(
+			sizeof(Seq) == -1,
+			"Template parameter to TuplePusher is not an IndexSequence"
+		);
+	};
 
 	template <size_t Index>
 	struct TuplePusher<IndexSequence<Index>> {
