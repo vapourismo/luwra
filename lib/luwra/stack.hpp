@@ -22,7 +22,7 @@ namespace internal {
 	template <typename T>
 	struct Layout {
 		static_assert(
-			sizeof(T*) == -1,
+			sizeof(T) == -1,
 			"Parameter to Layout is not a valid signature"
 		);
 	};

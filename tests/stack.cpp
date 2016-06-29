@@ -16,6 +16,11 @@ void test_function_3(int) {
 
 }
 
+static
+void test_function_4(int, int) {
+
+}
+
 TEST_CASE("StackInteraction") {
 	luwra::StateWrapper state;
 
@@ -25,6 +30,7 @@ TEST_CASE("StackInteraction") {
 
 	// Redundant function
 	luwra::apply(state, test_function_3);
+	luwra::apply(state, test_function_4);
 
 	// Absolute index
 	REQUIRE(luwra::apply(state, test_function_1) == -1);
