@@ -79,6 +79,7 @@ namespace internal {
 			int invoke(State* state) {
 				direct<void (Args...)>(
 					state,
+					1,
 					&Value<Type>::template push<Args...>,
 					state
 				);

@@ -124,34 +124,11 @@ struct StateWrapper: Table {
 	}
 
 	/**
-	 * See [luwra::direct](@ref luwra::direct).
-	 */
-	template <typename Sig, typename Callable, typename... ExtraArgs> inline
-	typename internal::Layout<Sig>::ReturnType direct(
-		Callable&&     hook,
-		ExtraArgs&&... args
-	) const {
-		return luwra::direct<Sig>(
-			state,
-			std::forward<Callable>(hook),
-			std::forward<ExtraArgs>(args)...
-		);
-	}
-
-	/**
 	 * See [luwra::apply](@ref luwra::apply).
 	 */
 	template <typename Callable> inline
 	typename internal::CallableInfo<Callable>::ReturnType apply(int pos, Callable&& obj) const {
 		return luwra::apply(state, pos, std::forward<Callable>(obj));
-	}
-
-	/**
-	 * See [luwra::apply](@ref luwra::apply).
-	 */
-	template <typename Callable> inline
-	typename internal::CallableInfo<Callable>::ReturnType apply(Callable&& obj) const {
-		return luwra::apply(state, std::forward<Callable>(obj));
 	}
 
 	/**
@@ -162,18 +139,6 @@ struct StateWrapper: Table {
 		return luwra::map<Sig>(
 			state,
 			pos,
-			std::forward<Callable>(hook),
-			std::forward<ExtraArgs>(args)...
-		);
-	}
-
-	/**
-	 * See [luwra::map](@ref luwra::map).
-	 */
-	template <typename Sig, typename Callable, typename... ExtraArgs> inline
-	size_t map(Callable&& hook,	ExtraArgs&&... args) const {
-		return luwra::map<Sig>(
-			state,
 			std::forward<Callable>(hook),
 			std::forward<ExtraArgs>(args)...
 		);

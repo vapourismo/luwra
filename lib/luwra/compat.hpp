@@ -9,6 +9,8 @@
 
 #include "common.hpp"
 
+#include <type_traits>
+
 LUWRA_NS_BEGIN
 
 namespace internal {
@@ -26,6 +28,9 @@ namespace internal {
 
 	template <size_t I>
 	using MakeIndexSequence = typename MakeIndexSequenceImpl<I>::type;
+
+	template <bool value>
+	using BoolConstant = std::integral_constant<bool, value>;
 }
 
 LUWRA_NS_END

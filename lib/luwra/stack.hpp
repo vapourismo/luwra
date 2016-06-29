@@ -110,27 +110,27 @@ namespace internal {
  *
  * \returns Result of calling `hook`
  */
-template <typename S, typename F, typename... X> static inline
-typename internal::Layout<S>::ReturnType direct(State* state, int pos, F&& hook, X&&... args) {
-	return internal::Layout<S>::direct(
+template <typename Sig, typename Callable, typename... ExtraArgs> static inline
+typename internal::Layout<Sig>::ReturnType direct(
+	State*         state,
+	int            pos,
+	Callable&&     hook,
+	ExtraArgs&&... args
+) {
+	return internal::Layout<Sig>::direct(
 		state,
 		pos,
-		std::forward<F>(hook),
-		std::forward<X>(args)...
+		std::forward<Callable>(hook),
+		std::forward<ExtraArgs>(args)...
 	);
 }
 
-/**
- * Same as `direct(state, 1, hook)`.
- */
-template <typename S, typename F, typename... A> static inline
-typename internal::Layout<S>::ReturnType direct(State* state, F&& hook, A&&... args) {
-	return internal::Layout<S>::direct(
-		state,
-		1,
-		std::forward<F>(hook),
-		std::forward<A>(args)...
-	);
+namespace internal {
+	template <typename Ret>
+	struct ApplyLayout {
+		template <typename... Args>
+		using Type = Layout<Ret (Args...)>;
+	};
 }
 
 /**
@@ -138,21 +138,34 @@ typename internal::Layout<S>::ReturnType direct(State* state, F&& hook, A&&... a
  * `Callable`. It allows you to omit the template parameters since the compiler is able to infer the
  * parameter and return types.
  */
-template <typename T> static inline
-typename internal::CallableInfo<T>::ReturnType apply(State* state, int pos, T&& obj) {
-	return internal::CallableInfo<T>::template RelaySignature<internal::Layout>::direct(
+template <typename Callable, typename... ExtraArgs> static inline
+typename internal::CallableInfo<Callable>::ReturnType apply(
+	State*         state,
+	int            pos,
+	Callable&&     func,
+	ExtraArgs&&... args
+) {
+	using ExtraArgList = internal::TypeList<ExtraArgs...>;
+	using CallableArgList = typename internal::CallableInfo<Callable>::ArgumentTypeList;
+
+	static_assert(
+		internal::IsPrefixOf<
+			std::is_convertible,
+			ExtraArgList,
+			CallableArgList
+		>::value,
+		"Given extra arguments cannot be passed to the provided Callable"
+	);
+
+	using StackTypeList = internal::DropFromTypeList<sizeof...(ExtraArgs), CallableArgList>;
+	using ReturnType = typename internal::CallableInfo<Callable>::ReturnType;
+
+	return StackTypeList::template RelayTypes<internal::ApplyLayout<ReturnType>::template Type>::direct(
 		state,
 		pos,
-		std::forward<T>(obj)
+		std::forward<Callable>(func),
+		std::forward<ExtraArgs>(args)...
 	);
-}
-
-/**
- * Same as `apply(state, 1, obj)`.
- */
-template <typename T> static inline
-typename internal::CallableInfo<T>::ReturnType apply(State* state, T&& obj) {
-	return apply(state, 1, std::forward<T>(obj));
 }
 
 namespace internal {
@@ -253,19 +266,6 @@ size_t map(State* state, int pos, F&& hook, A&&... args) {
 	return internal::LayoutMapper<S>::map(
 		state,
 		pos,
-		std::forward<F>(hook),
-		std::forward<A>(args)...
-	);
-}
-
-/**
- * Same as `map(state, 1, hook)`.
- */
-template <typename S, typename F, typename... A> static inline
-size_t map(State* state, F&& hook, A&&... args) {
-	return internal::LayoutMapper<S>::map(
-		state,
-		1,
 		std::forward<F>(hook),
 		std::forward<A>(args)...
 	);

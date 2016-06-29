@@ -29,15 +29,13 @@ TEST_CASE("StackInteraction") {
 	luwra::push(state, 4);
 
 	// Redundant function
-	luwra::apply(state, test_function_3);
-	luwra::apply(state, test_function_4);
+	luwra::apply(state, 1, test_function_3);
+	luwra::apply(state, 1, test_function_4);
 
 	// Absolute index
-	REQUIRE(luwra::apply(state, test_function_1) == -1);
 	REQUIRE(luwra::apply(state, 1, test_function_1) == -1);
-	REQUIRE(luwra::apply(state, [](int a, int b) -> int { return a - b; }) == -1);
+	REQUIRE(luwra::apply(state, 1, [](int a, int b) -> int { return a - b; }) == -1);
 	REQUIRE(luwra::apply(state, 2, [](int a, int b) -> int { return a + b; }) == 6);
-	REQUIRE(luwra::apply(state, test_function_2) == 9);
 	REQUIRE(luwra::apply(state, 1, test_function_2) == 9);
 
 	// Relative index

@@ -112,7 +112,7 @@ TEST_CASE("Tuples") {
 	// Tuples aren't ordinarily pushable. But you can use them as return value.
 	size_t ret =
 		state.map<std::tuple<int, std::string, float>()>(
-			[&]() { return std::make_tuple(a, b, c); }
+			1, [&]() { return std::make_tuple(a, b, c); }
 		);
 
 	REQUIRE(ret == 3);
@@ -124,7 +124,7 @@ TEST_CASE("Tuples") {
 
 	ret =
 		state.map<std::tuple<int, std::string, float, std::tuple<int, std::string, float>>()>(
-			[&]() { return std::make_tuple(a, b, c, std::make_tuple(a, b, c)); }
+			1, [&]() { return std::make_tuple(a, b, c, std::make_tuple(a, b, c)); }
 		);
 
 	REQUIRE(ret == 6);

@@ -53,7 +53,7 @@ namespace internal {
 		template <MethodPointer meth> static inline
 		int invoke(State* state) {
 			return static_cast<int>(
-				map<typename Receiver::MapSignature>(state, Receiver::template hook<meth>)
+				map<typename Receiver::MapSignature>(state, 1, &Receiver::template hook<meth>)
 			);
 		}
 	};
@@ -146,7 +146,7 @@ namespace internal {
 		template <Ret (* fun)(Args...)> static inline
 		int invoke(State* state) {
 			return static_cast<int>(
-				map<Ret (Args...)>(state, fun)
+				map<Ret (Args...)>(state, 1, fun)
 			);
 		}
 	};

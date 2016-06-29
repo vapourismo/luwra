@@ -23,7 +23,7 @@ int main() {
 
 	// ... which is a little cumbersome. Instead we might apply a fitting function to our stack.
 	std::cout << "(a + b) * c = "
-	          << state.apply(sum3)
+	          << state.apply(1, sum3)
 	          << std::endl;
 
 	return 0;
