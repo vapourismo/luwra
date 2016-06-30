@@ -10,77 +10,13 @@
 #include "common.hpp"
 #include "internal/common.hpp"
 #include "internal/types.hpp"
-#include "internal/typelist.hpp"
 #include "internal/indexsequence.hpp"
+#include "internal/typelist.hpp"
+#include "internal/callableinfo.hpp"
 
 LUWRA_NS_BEGIN
 
 namespace internal {
-	// Information about function objects
-	template <typename Klass>
-	struct CallableInfo:
-		CallableInfo<decltype(&Klass::operator ())> {};
-
-	// Information about function signature
-	template <typename Ret, typename... Args>
-	struct CallableInfo<Ret (Args...)> {
-		// A call to an instance would evaluate to this type
-		using ReturnType = Ret;
-
-		// Parameter type list
-		using ArgumentTypeList = TypeList<Args...>;
-
-		// Pass the template parameter pack to another template
-		template <template <typename...> class Target>
-		using RelayArguments = Target<Args...>;
-
-		// Callable signature
-		using Signature = Ret (Args...);
-
-		// Pass the signature of this callable to another template
-		template <template <typename> class Target>
-		using RelaySignature = Target<Signature>;
-	};
-
-	// Information about function pointers
-	template <typename Ret, typename... Args>
-	struct CallableInfo<Ret (*)(Args...)>:
-		CallableInfo<Ret (Args...)> {};
-
-	// Information about method pointers
-	template <typename Klass, typename Ret, typename... Args>
-	struct CallableInfo<Ret (Klass::*)(Args...)>:
-		CallableInfo<Ret (Args...)> {};
-
-	template <typename Klass, typename Ret, typename... Args>
-	struct CallableInfo<Ret (Klass::*)(Args...) const>:
-		CallableInfo<Ret (Args...)> {};
-
-	template <typename Klass, typename Ret, typename... Args>
-	struct CallableInfo<Ret (Klass::*)(Args...) volatile>:
-		CallableInfo<Ret (Args...)> {};
-
-	template <typename Klass, typename Ret, typename... Args>
-	struct CallableInfo<Ret (Klass::*)(Args...) const volatile>:
-		CallableInfo<Ret (Args...)> {};
-
-	// Useful aliases
-	template <typename Callable>
-	struct CallableInfo<const Callable>:
-		CallableInfo<Callable> {};
-
-	template <typename Callable>
-	struct CallableInfo<volatile Callable>:
-		CallableInfo<Callable> {};
-
-	template <typename Callable>
-	struct CallableInfo<Callable&>:
-		CallableInfo<Callable> {};
-
-	template <typename Callable>
-	struct CallableInfo<Callable&&>:
-		CallableInfo<Callable> {};
-
 	template <typename T>
 	struct MemberInfo {
 		static_assert(sizeof(T) == -1, "Template parameter to MemberInfo is not a member type");

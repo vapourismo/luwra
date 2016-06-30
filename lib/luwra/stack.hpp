@@ -125,14 +125,6 @@ typename internal::Layout<Sig>::ReturnType direct(
 	);
 }
 
-namespace internal {
-	template <typename Ret>
-	struct ApplyLayout {
-		template <typename... Args>
-		using Type = Layout<Ret (Args...)>;
-	};
-}
-
 /**
  * A version of [direct](@ref direct) which tries to infer the stack layout from the given
  * `Callable`. It allows you to omit the template parameters since the compiler is able to infer the
@@ -146,7 +138,7 @@ typename internal::CallableInfo<Callable>::ReturnType apply(
 	ExtraArgs&&... args
 ) {
 	using ExtraArgList = internal::TypeList<ExtraArgs...>;
-	using CallableArgList = typename internal::CallableInfo<Callable>::ArgumentTypeList;
+	using CallableArgList = typename internal::CallableInfo<Callable>::Arguments;
 
 	static_assert(
 		internal::IsPrefixOf<
