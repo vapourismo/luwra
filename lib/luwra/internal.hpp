@@ -12,7 +12,6 @@
 #include "internal/types.hpp"
 #include "internal/indexsequence.hpp"
 #include "internal/typelist.hpp"
-#include "internal/callableinfo.hpp"
 
 LUWRA_NS_BEGIN
 
