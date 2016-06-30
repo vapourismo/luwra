@@ -1,8 +1,10 @@
 #include <luwra.hpp>
 #include <iostream>
 
+using namespace luwra::internal;
+
 int main() {
-	std::cout << std::is_convertible<double, int>::value << std::endl;
+	using T = typename experimental::_DropTypes<1, int, int>::Result;
 
 	return 0;
 }

@@ -8,7 +8,6 @@
 #define LUWRA_TYPES_H_
 
 #include "common.hpp"
-#include "compat.hpp"
 
 #include <utility>
 #include <tuple>

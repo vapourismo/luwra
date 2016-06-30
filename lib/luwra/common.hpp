@@ -27,4 +27,16 @@ extern "C" {
 #define LUWRA_VERSION_MINOR 3
 #define LUWRA_VERSION_PATCH 1
 
+// LUA_OK does not exist in Lua 5.1 and earlier
+#ifndef LUA_OK
+	#define LUA_OK 0
+#endif
+
+// Because VS C++
+#ifdef _MSC_VER
+	#define __LUWRA_NS_RESOLVE(a, b) a::##b
+#else
+	#define __LUWRA_NS_RESOLVE(a, b) a::b
+#endif
+
 #endif

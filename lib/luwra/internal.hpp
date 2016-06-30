@@ -8,52 +8,14 @@
 #define LUWRA_INTERNAL_H_
 
 #include "common.hpp"
-#include "compat.hpp"
+#include "internal/common.hpp"
+#include "internal/types.hpp"
+#include "internal/typelist.hpp"
+#include "internal/indexsequence.hpp"
 
 LUWRA_NS_BEGIN
 
 namespace internal {
-	// Container for a list of types
-	template <typename... Types>
-	struct TypeList {
-		// Add types to the type list
-		template <typename... OtherTypes>
-		using AddTypes = TypeList<Types..., OtherTypes...>;
-
-		// Pass type list to a template
-		template <template <typename...> class Receiver>
-		using RelayTypes = Receiver<Types...>;
-
-		// Construct a signature
-		template <typename Ret>
-		using ConstructSignature = Ret (Types...);
-	};
-
-	// Concat two TypeLists
-	template <typename Left, typename Right>
-	using ConcatTypeList =
-		typename Right::template RelayTypes<Left::template AddTypes>;
-
-	template <typename Seq, typename List>
-	struct _DropFromTypeList {
-		static_assert(
-			sizeof(List) == -1,
-			"Template parameters to _DropFromTypeList are invalid"
-		);
-	};
-
-	template <typename... Types>
-	struct _DropFromTypeList<IndexSequence<>, TypeList<Types...>> {
-		using Result = TypeList<Types...>;
-	};
-
-	template <size_t Index, size_t... IndexTail, typename Head, typename... Tail>
-	struct _DropFromTypeList<IndexSequence<Index, IndexTail...>, TypeList<Head, Tail...>>:
-		_DropFromTypeList<IndexSequence<IndexTail...>, TypeList<Tail...>> {};
-
-	template <size_t N, typename List>
-	using DropFromTypeList = typename _DropFromTypeList<MakeIndexSequence<N>, List>::Result;
-
 	// Information about function objects
 	template <typename Klass>
 	struct CallableInfo:

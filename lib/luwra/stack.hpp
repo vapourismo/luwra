@@ -157,9 +157,13 @@ typename internal::CallableInfo<Callable>::ReturnType apply(
 		"Given extra arguments cannot be passed to the provided Callable"
 	);
 
-	using StackTypeList = internal::DropFromTypeList<sizeof...(ExtraArgs), CallableArgList>;
+	using StackTypeList = typename CallableArgList::template Drop<sizeof...(ExtraArgs)>;
 	using ReturnType = typename internal::CallableInfo<Callable>::ReturnType;
-	using Sig = typename StackTypeList::template ConstructSignature<ReturnType>;
+
+	using Sig =
+		typename StackTypeList::template Relay<
+			internal::With<ReturnType>::template ConstructSignature
+		>;
 
 	return internal::Layout<Sig>::direct(
 		state,
