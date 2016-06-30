@@ -16,38 +16,6 @@
 LUWRA_NS_BEGIN
 
 namespace internal {
-	template <typename T>
-	struct MemberInfo {
-		static_assert(sizeof(T) == -1, "Template parameter to MemberInfo is not a member type");
-	};
-
-	// Information about methods
-	template <typename Klass, typename Ret, typename... Args>
-	struct MemberInfo<Ret (Klass::*)(Args...)>:
-		CallableInfo<Ret (Klass::*)(Args...)>
-	{
-		using MemberOf = Klass;
-	};
-
-	template <typename Klass, typename Ret, typename... Args>
-	struct MemberInfo<Ret (Klass::*)(Args...) const>:
-		MemberInfo<Ret (Klass::*)(Args...)> {};
-
-	template <typename Klass, typename Ret, typename... Args>
-	struct MemberInfo<Ret (Klass::*)(Args...) volatile>:
-		MemberInfo<Ret (Klass::*)(Args...)> {};
-
-	template <typename Klass, typename Ret, typename... Args>
-	struct MemberInfo<Ret (Klass::*)(Args...) const volatile>:
-		MemberInfo<Ret (Klass::*)(Args...)> {};
-
-	// Information about fields
-	template <typename Klass, typename Field>
-	struct MemberInfo<Field Klass::*> {
-		using MemberOf = Klass;
-		using FieldType = Field;
-	};
-
 	// Check whether
 	template <
 		template <typename, typename> class,

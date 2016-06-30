@@ -188,3 +188,28 @@ TEST_CASE("CallableInfo") {
 		REQUIRE((std::is_same<Result9, Expected9>::value));
 	}
 }
+
+TEST_CASE("MemberInfo") {
+	using Subject1 = char (A::*)(short, int);
+	using Subject2 = int A::*;
+
+	SECTION("MemberOf") {
+		using Result1 = MemberInfo<Subject1>::MemberOf;
+		using Expected1 = A;
+
+		REQUIRE((std::is_same<Result1, Expected1>::value));
+
+		using Result2 = MemberInfo<Subject2>::MemberOf;
+		using Expected2 = A;
+
+		REQUIRE((std::is_same<Result2, Expected2>::value));
+
+	}
+
+	SECTION("FieldType") {
+		using Result2 = MemberInfo<Subject2>::FieldType;
+		using Expected2 = int;
+
+		REQUIRE((std::is_same<Result2, Expected2>::value));
+	}
+}

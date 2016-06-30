@@ -92,6 +92,70 @@ template <typename Callable>
 struct CallableInfo<Callable&&>:
 	CallableInfo<Callable> {};
 
+// Catch usage error.
+template <typename T>
+struct MemberInfo {
+	static_assert(
+		sizeof(T) == -1,
+		"Template parameter to MemberInfo is not a member type"
+	);
+};
+
+// Method pointer
+template <typename Klass, typename Ret, typename... Args>
+struct MemberInfo<Ret (Klass::*)(Args...)>:
+	CallableInfo<Ret (Klass::*)(Args...)>
+{
+	using MemberOf = Klass;
+};
+
+// Method pointer on const-qualified this
+template <typename Klass, typename Ret, typename... Args>
+struct MemberInfo<Ret (Klass::*)(Args...) const>:
+	MemberInfo<Ret (Klass::*)(Args...)> {};
+
+// Method pointer on volatile-qualified this
+template <typename Klass, typename Ret, typename... Args>
+struct MemberInfo<Ret (Klass::*)(Args...) volatile>:
+	MemberInfo<Ret (Klass::*)(Args...)> {};
+
+// Method pointer on const-volatile-qualified this
+template <typename Klass, typename Ret, typename... Args>
+struct MemberInfo<Ret (Klass::*)(Args...) const volatile>:
+	MemberInfo<Ret (Klass::*)(Args...)> {};
+
+// Field accessor
+template <typename Klass, typename Field>
+struct MemberInfo<Field Klass::*> {
+	using MemberOf = Klass;
+	using FieldType = Field;
+};
+
+// Remove const qualification
+template <typename Member>
+struct MemberInfo<const Member>:
+	MemberInfo<Member> {};
+
+// Remove volatile qualification
+template <typename Member>
+struct MemberInfo<volatile Member>:
+	MemberInfo<Member> {};
+
+// Remove const-volatile qualification
+template <typename Member>
+struct MemberInfo<const volatile Member>:
+	MemberInfo<Member> {};
+
+// Remove lvalue reference
+template <typename Member>
+struct MemberInfo<Member&>:
+	MemberInfo<Member> {};
+
+// Remove rvalue reference
+template <typename Member>
+struct MemberInfo<Member&&>:
+	MemberInfo<Member> {};
+
 LUWRA_INTERNAL_NS_END
 
 #endif
