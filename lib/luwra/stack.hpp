@@ -159,8 +159,9 @@ typename internal::CallableInfo<Callable>::ReturnType apply(
 
 	using StackTypeList = internal::DropFromTypeList<sizeof...(ExtraArgs), CallableArgList>;
 	using ReturnType = typename internal::CallableInfo<Callable>::ReturnType;
+	using Sig = typename StackTypeList::template ConstructSignature<ReturnType>;
 
-	return StackTypeList::template RelayTypes<internal::ApplyLayout<ReturnType>::template Type>::direct(
+	return internal::Layout<Sig>::direct(
 		state,
 		pos,
 		std::forward<Callable>(func),

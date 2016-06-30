@@ -23,6 +23,10 @@ namespace internal {
 		// Pass type list to a template
 		template <template <typename...> class Receiver>
 		using RelayTypes = Receiver<Types...>;
+
+		// Construct a signature
+		template <typename Ret>
+		using ConstructSignature = Ret (Types...);
 	};
 
 	// Concat two TypeLists
