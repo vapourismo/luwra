@@ -63,4 +63,20 @@ TEST_CASE("TypeList") {
 
 		REQUIRE((std::is_same<Result2, Expected2>::value));
 	}
+
+	SECTION("PrefixOf") {
+		using Subject1 = TypeList<>;
+		using Subject2 = TypeList<char, short>;
+
+		REQUIRE((Subject1::PrefixOf<std::is_same, Subject1>::value));
+		REQUIRE((Subject2::PrefixOf<std::is_same, Subject2>::value));
+
+		REQUIRE((Subject1::PrefixOf<std::is_same, Subject2>::value));
+		REQUIRE(!(Subject2::PrefixOf<std::is_same, Subject1>::value));
+
+		using Subject3 = TypeList<char, short, int>;
+
+		REQUIRE((Subject2::PrefixOf<std::is_same, Subject3>::value));
+		REQUIRE(!(Subject3::PrefixOf<std::is_same, Subject2>::value));
+	}
 }
