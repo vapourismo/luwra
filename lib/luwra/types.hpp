@@ -338,32 +338,6 @@ size_t pushReturn(State* state, First&& first, Second&& second, Rest&&... rest) 
 		pushReturn(state, std::forward<Second>(second), std::forward<Rest>(rest)...);
 }
 
-namespace internal {
-	template <typename Seq, typename...>
-	struct _TuplePusher {
-		static_assert(
-			sizeof(Seq) == -1,
-			"Invalid template parameters to _TuplePusher"
-		);
-	};
-
-	template <size_t... Indices, typename... Contents>
-	struct _TuplePusher<IndexSequence<Indices...>, Contents...> {
-		static inline
-		size_t push(State* state, const std::tuple<Contents...>& value) {
-			return pushReturn(state, std::get<Indices>(value)...);
-		}
-	};
-
-	template <typename... Contents>
-	using TuplePusher = _TuplePusher<MakeIndexSequence<sizeof...(Contents)>, Contents...>;
-}
-
-/// Enables `std::tuple` as return type
-template <typename... Contents>
-struct ReturnValue<std::tuple<Contents...>>:
-	internal::TuplePusher<Contents...> {};
-
 LUWRA_NS_END
 
 #endif
