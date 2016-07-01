@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>Luwra: lib/luwra/state.hpp File Reference</title>
+<title>Luwra: lib/luwra/types/pushable.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -43,23 +43,29 @@
   </div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_97aefd0d527b934f1d99a682da8fe6a9.html">lib</a></li><li class="navelem"><a class="el" href="dir_0c08cc706f99ea0bd47182628fe36830.html">luwra</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_97aefd0d527b934f1d99a682da8fe6a9.html">lib</a></li><li class="navelem"><a class="el" href="dir_0c08cc706f99ea0bd47182628fe36830.html">luwra</a></li><li class="navelem"><a class="el" href="dir_78ae290fdc6ac5a07688b3c6bc2d63d0.html">types</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#typedef-members">Typedefs</a>  </div>
   <div class="headertitle">
-<div class="title">state.hpp File Reference</div>  </div>
+<div class="title">pushable.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1StateWrapper.html">luwra::StateWrapper</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wrapper for a Lua state.  <a href="structluwra_1_1StateWrapper.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Pushable.html">luwra::Pushable</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Arbitrary pushable value.  <a href="structluwra_1_1Pushable.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1PushableI.html">luwra::internal::PushableI</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1PushableT.html">luwra::internal::PushableT&lt; Type &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value_3_01Pushable_01_4.html">luwra::Value&lt; Pushable &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
@@ -69,11 +75,10 @@ Namespaces</h2></td></tr>
 <tr class="memitem:namespaceluwra_1_1internal"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceluwra_1_1internal.html">luwra::internal</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:a2658bf12f697c6eb6af69f43dd6a100d"><td class="memItemLeft" align="right" valign="top">Table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceluwra_1_1internal.html#a2658bf12f697c6eb6af69f43dd6a100d">luwra::internal::getGlobalsTable</a> (State *state)</td></tr>
-<tr class="memdesc:a2658bf12f697c6eb6af69f43dd6a100d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the table responsible for the global namespace.  <a href="namespaceluwra_1_1internal.html#a2658bf12f697c6eb6af69f43dd6a100d">More...</a><br /></td></tr>
-<tr class="separator:a2658bf12f697c6eb6af69f43dd6a100d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:ab5e9471e607baa1fea6df2529bd253cf"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceluwra_1_1internal.html#ab5e9471e607baa1fea6df2529bd253cf">luwra::internal::SharedPushableImpl</a> = std::shared_ptr&lt; PushableI &gt;</td></tr>
+<tr class="separator:ab5e9471e607baa1fea6df2529bd253cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
