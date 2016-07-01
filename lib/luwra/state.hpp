@@ -93,9 +93,14 @@ struct StateWrapper: Table {
 	/**
 	 * See [luwra::push](@ref luwra::push).
 	 */
-	template <typename... Types> inline
-	void push(Types&&... values) const {
-		luwra::push(state, std::forward<Types>(values)...);
+	template <typename First, typename Second, typename... Rest> inline
+	void push(First&& first, Second&& second, Rest&&... rest) const {
+		luwra::push(
+			state,
+			std::forward<First>(first),
+			std::forward<Second>(second),
+			std::forward<Rest>(rest)...
+		);
 	}
 
 	/**
