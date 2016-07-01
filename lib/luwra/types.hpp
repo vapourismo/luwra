@@ -238,51 +238,6 @@ struct Value<char[N]>: Value<const char*> {};
 template <size_t N>
 struct Value<const char[N]>: Value<const char*> {};
 
-/// Enables pushing for `std::vector` assuming `Type` is also pushable
-template <typename Type>
-struct Value<std::vector<Type>> {
-	static inline
-	void push(State* state, const std::vector<Type>& vec) {
-		lua_createtable(state, vec.size(), 0);
-
-		int size = static_cast<int>(vec.size());
-		for (int i = 0; i < size; i++) {
-			luwra::push(state, vec[i]);
-			lua_rawseti(state, -2, i + 1);
-		}
-	}
-};
-
-/// Enables pushing for `std::list` assuming `Type` is pushable
-template <typename Type>
-struct Value<std::list<Type>> {
-	static inline
-	void push(State* state, const std::list<Type>& lst) {
-		lua_createtable(state, lst.size(), 0);
-
-		int i = 0;
-		for (const Type& item: lst) {
-			luwra::push(state, item);
-			lua_rawseti(state, -2, ++i);
-		}
-	}
-};
-
-/// Enables pushing for `std::map` assuming `Key` and `Type` are pushable
-template <typename Key, typename Type>
-struct Value<std::map<Key, Type>> {
-	static inline
-	void push(State* state, const std::map<Key, Type>& map) {
-		lua_createtable(state, 0, map.size());
-
-		for (const auto& entry: map) {
-			luwra::push(state, entry.first);
-			luwra::push(state, entry.second);
-			lua_rawset(state, -3);
-		}
-	}
-};
-
 /// A version of @ref Value for pushing return values onto the stack. @ref ReturnValue inherits
 /// `push` implementations from @ref Value.
 template <typename Type>
