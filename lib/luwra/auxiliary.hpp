@@ -66,36 +66,54 @@ Type getGlobal(State* state, const char* name) {
 	return instance;
 }
 
-namespace internal {
-	template <typename Key, typename Type, typename... Pairs>
-	struct EntryPusher {
-		static inline
-		void push(State* state, int index, Key&& key, Type&& value, Pairs&&... rest) {
-			EntryPusher<Key, Type>::push(state, index, std::forward<Key>(key), std::forward<Type>(value));
-			EntryPusher<Pairs...>::push(state, index, std::forward<Pairs>(rest)...);
-		}
-	};
-
-	template <typename Key, typename Type>
-	struct EntryPusher<Key, Type> {
-		static inline
-		void push(State* state, int index, Key&& key, Type&& value) {
-			luwra::push(state, std::forward<Key>(key));
-			luwra::push(state, std::forward<Type>(value));
-			lua_rawset(state, index < 0 ? index - 2 : index);
-		}
-	};
+/// Set the field of a table.
+///
+/// \param state Lua state
+/// \param index Index of the table
+/// \param key   Key
+/// \param value Value
+template <typename Key, typename Type> inline
+void setFields(State* state, int index, Key&& key, Type&& value) {
+	push(state, std::forward<Key>(key));
+	push(state, std::forward<Type>(value));
+	lua_rawset(state, index < 0 ? index - 2 : index);
 }
 
 /// Set multiple fields at once. Allows you to provide multiple key-value pairs.
 ///
-/// \param state Lua state
-/// \param index Table index
-/// \param args  Key-value pairs
-template <typename... Pairs> inline
-void setFields(State* state, int index, Pairs&&... args) {
+/// \param state  Lua state
+/// \param index  Index of the table
+/// \param key1   First key
+/// \param value1 First value
+/// \param key2   Second key
+/// \param value2 Second value
+/// \param rest   Rest of the key-value pairs
+template <
+	typename Key1,
+	typename Type1,
+	typename Key2,
+	typename Type2,
+	typename... Pairs
+> inline
+void setFields(
+	State*     state,
+	int        index,
+	Key1&&     key1,
+	Type1&&    value1,
+	Key2&&     key2,
+	Type2&&    value2,
+	Pairs&&... rest
+) {
 	static_assert(sizeof...(Pairs) % 2 == 0, "Field parameters must appear in pairs");
-	internal::EntryPusher<Pairs...>::push(state, index, std::forward<Pairs>(args)...);
+
+	setFields(state, index, std::forward<Key1>(key1), std::forward<Type1>(value1));
+	setFields(
+		state,
+		index,
+		std::forward<Key2>(key2),
+		std::forward<Type2>(value2),
+		std::forward<Pairs>(rest)...
+	);
 }
 
 /// Map of members
