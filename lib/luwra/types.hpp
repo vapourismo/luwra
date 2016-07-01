@@ -79,7 +79,7 @@ void push(State* state, First&& value, Second&& head, Rest&&... rest) {
  * Convenient wrapper for [Value<Type>::read](@ref Value<Type>::read).
  */
 template <typename Type> static inline
-Type read(State* state, int index) {
+auto read(State* state, int index) -> decltype(Value<Type>::read(state, index)) {
 	return Value<Type>::read(state, index);
 }
 

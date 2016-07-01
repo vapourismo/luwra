@@ -77,7 +77,7 @@ namespace internal {
 		struct ConstructorWrapper {
 			static inline
 			int invoke(State* state) {
-				direct<void (Args...)>(
+				apply(
 					state,
 					1,
 					&Value<Type>::template push<Args...>,

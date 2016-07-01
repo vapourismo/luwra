@@ -9,7 +9,7 @@ int main() {
 	push(state, 37.13);
 	push(state, 13.37);
 
-	mapi(state, 1, [](double a, double b, double c) {
+	map(state, 1, [](double a, double b, double c) {
 		return a + b + c;
 	}, -0.5);
 

@@ -107,23 +107,6 @@ struct StateWrapper: Table {
 	}
 
 	/**
-	 * See [luwra::direct](@ref luwra::direct).
-	 */
-	template <typename Sig, typename Callable, typename... ExtraArgs> inline
-	typename internal::Layout<Sig>::ReturnType direct(
-		int            pos,
-		Callable&&     hook,
-		ExtraArgs&&... args
-	) const {
-		return luwra::direct<Sig>(
-			state,
-			pos,
-			std::forward<Callable>(hook),
-			std::forward<ExtraArgs>(args)...
-		);
-	}
-
-	/**
 	 * See [luwra::apply](@ref luwra::apply).
 	 */
 	template <typename Callable> inline
@@ -134,9 +117,9 @@ struct StateWrapper: Table {
 	/**
 	 * See [luwra::map](@ref luwra::map).
 	 */
-	template <typename Sig, typename Callable, typename... ExtraArgs> inline
+	template <typename Callable, typename... ExtraArgs> inline
 	size_t map(int pos, Callable&& hook, ExtraArgs&&... args) const {
-		return luwra::map<Sig>(
+		return luwra::map(
 			state,
 			pos,
 			std::forward<Callable>(hook),

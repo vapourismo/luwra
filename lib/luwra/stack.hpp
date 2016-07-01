@@ -20,113 +20,6 @@
 LUWRA_NS_BEGIN
 
 namespace internal {
-	template <typename Sig>
-	struct Layout {
-		static_assert(
-			sizeof(Sig) == -1,
-			"Parameter to Layout is not a valid signature"
-		);
-	};
-
-	template <>
-	struct Layout<void ()> {
-		using ReturnType = void;
-
-		template <typename Callable, typename... Args> static inline
-		void direct(State*, int, Callable&& hook, Args&&... args) {
-			hook(
-				std::forward<Args>(args)...
-			);
-		}
-	};
-
-	template <typename Ret>
-	struct Layout<Ret ()> {
-		using ReturnType = Ret;
-
-		template <typename Callable, typename... Args> static inline
-		Ret direct(State*, int, Callable&& hook, Args&&... args) {
-			return hook(
-				std::forward<Args>(args)...
-			);
-		}
-	};
-
-	template <typename Arg>
-	struct Layout<void (Arg)> {
-		using ReturnType = void;
-
-		template <typename Callable, typename... Args> static inline
-		void direct(State* state, int n, Callable&& hook, Args&&... args) {
-			hook(
-				std::forward<Args>(args)...,
-				Value<Arg>::read(state, n)
-			);
-		}
-	};
-
-	template <typename Ret, typename Arg>
-	struct Layout<Ret (Arg)> {
-		using ReturnType = Ret;
-
-		template <typename Callable, typename... Args> static inline
-		Ret direct(State* state, int n, Callable&& hook, Args&&... args) {
-			return hook(
-				std::forward<Args>(args)...,
-				Value<Arg>::read(state, n)
-			);
-		}
-	};
-
-	template <typename Ret, typename Head, typename... Tail>
-	struct Layout<Ret (Head, Tail...)> {
-		using ReturnType = Ret;
-
-		template <typename Callable, typename... Args> static inline
-		Ret direct(State* state, int n, Callable&& hook, Args&&... args) {
-			return Layout<Ret (Tail...)>::direct(
-				state,
-				n + 1,
-				std::forward<Callable>(hook),
-				std::forward<Args>(args)...,
-				Value<Head>::read(state, n)
-			);
-		}
-	};
-}
-
-/**
- * Retrieve values from the stack and invoke a `Callable` with them.
- *
- * \tparam Sig       Signature in the form of `R(A...)` where `A` is a sequence of types, which
- *                   shall be retrieved from the stack, and `R` the return type of `func`
- * \tparam Callable  An instance of `Callable` which accepts parameters `X..., A...` and returns `R`
- *                   (this parameter should be inferable and can be omitted)
- * \tparam ExtraArgs Extra argument types (can be omitted)
- *
- * \param state Lua state instance
- * \param pos   Index of the first value
- * \param func  Callable value
- * \param args  Extra arguments which shall be be passed to `func` before the stack values
- *
- * \returns Result of calling `func`
- */
-template <typename Sig, typename Callable, typename... ExtraArgs> static inline
-typename internal::Layout<Sig>::ReturnType direct(
-	State*         state,
-	int            pos,
-	Callable&&     func,
-	ExtraArgs&&... args
-) {
-	return internal::Layout<Sig>::direct(
-		state,
-		pos,
-		std::forward<Callable>(func),
-		std::forward<ExtraArgs>(args)...
-	);
-}
-
-namespace internal {
 	// Catch usage error.
 	template <typename Seq, typename...>
 	struct _StackWalker {
@@ -153,9 +46,7 @@ namespace internal {
 }
 
 /**
- * A version of [direct](@ref direct) which tries to infer the stack layout from the given
- * `Callable`. It allows you to omit the template parameters since the compiler is able to infer the
- * parameter and return types.
+ *
  */
 template <typename Callable, typename... ExtraArgs> static inline
 internal::ReturnTypeOf<Callable> apply(
@@ -236,72 +127,48 @@ namespace internal {
 		};
 	};
 
-	template <typename Sig>
-	struct LayoutMapper {
-		static_assert(
-			sizeof(Sig) == -1,
-			"Parameter to LayoutMapper is not a valid signature"
-		);
-	};
-
-	template <typename... Args>
-	struct LayoutMapper<void (Args...)> {
+	template <typename>
+	struct StackMapper {
 		template <typename Callable, typename... ExtraArgs> static inline
-		size_t map(State* state, int n, Callable&& hook, ExtraArgs&&... args) {
-			direct<void (Args...)>(
+		size_t map(State* state, int pos, Callable&& func, ExtraArgs&&... args) {
+			return SpecialValuePusher<ReturnTypeOf<Callable>>::push(
 				state,
-				n,
-				std::forward<Callable>(hook),
-				std::forward<ExtraArgs>(args)...
-			);
-			return 0;
-		}
-	};
-
-	template <typename Ret, typename... Args>
-	struct LayoutMapper<Ret (Args...)> {
-		template <typename Callable, typename... ExtraArgs> static inline
-		size_t map(State* state, int n, Callable&& hook, ExtraArgs&&... args) {
-			return SpecialValuePusher<Ret>::push(
-				state,
-				direct<Ret (Args...)>(
+				apply(
 					state,
-					n,
-					std::forward<Callable>(hook),
+					pos,
+					std::forward<Callable>(func),
 					std::forward<ExtraArgs>(args)...
 				)
 			);
 		}
 	};
-}
 
-/**
- * Similar to [direct](@ref direct) but pushes the result of the given `Callable` onto the stack.
- * \returns Number of values pushed
- */
-template <typename Sig, typename Callable, typename... Args> static inline
-size_t map(State* state, int pos, Callable&& hook, Args&&... args) {
-	return internal::LayoutMapper<Sig>::map(
-		state,
-		pos,
-		std::forward<Callable>(hook),
-		std::forward<Args>(args)...
-	);
+	template <>
+	struct StackMapper<void> {
+		template <typename Callable, typename... ExtraArgs> static inline
+		size_t map(State* state, int pos, Callable&& func, ExtraArgs&&... args) {
+			apply(
+				state,
+				pos,
+				std::forward<Callable>(func),
+				std::forward<ExtraArgs>(args)...
+			);
+
+			return 0;
+		}
+	};
 }
 
 /**
  *
  */
-template <typename Callable, typename... Args> static inline
-size_t mapi(State* state, int pos, Callable&& func, Args&&... args) {
-	return internal::SpecialValuePusher<internal::ReturnTypeOf<Callable>>::push(
+template <typename Callable, typename... ExtraArgs> static inline
+size_t map(State* state, int pos, Callable&& func, ExtraArgs&&... args) {
+	return internal::StackMapper<internal::ReturnTypeOf<Callable>>::map(
 		state,
-		apply(
-			state,
-			pos,
-			std::forward<Callable>(func),
-			std::forward<Args>(args)...
-		)
+		pos,
+		std::forward<Callable>(func),
+		std::forward<ExtraArgs>(args)...
 	);
 }
 
