@@ -8,6 +8,7 @@
 #define LUWRA_TYPES_H_
 
 #include "common.hpp"
+#include "internal/indexsequence.hpp"
 
 #include <utility>
 #include <tuple>
@@ -31,32 +32,38 @@ using CFunction = lua_CFunction;
 /**
  * User type
  */
-template <typename Type>
+template <typename UserType>
 struct Value;
 
-// Nil
-template <>
-struct Value<std::nullptr_t> {
-	static inline
-	std::nullptr_t read(State* state, int n) {
-		luaL_checktype(state, n, LUA_TNIL);
-		return nullptr;
-	}
+/**
+ * Fix specialization for const types.
+ */
+template <typename Type>
+struct Value<const Type>: Value<Type> {};
 
-	static inline
-	void push(State* state, std::nullptr_t) {
-		lua_pushnil(state);
-	}
-};
+/**
+ * Fix specialization for volatile types.
+ */
+template <typename Type>
+struct Value<volatile Type>: Value<Type> {};
 
-template <>
-struct Value<State*> {
-	static inline
-	State* read(State* state, int n) {
-		luaL_checktype(state, n, LUA_TTHREAD);
-		return lua_tothread(state, n);
-	}
-};
+/**
+ * Fix specialization for const volatile types.
+ */
+template <typename Type>
+struct Value<const volatile Type>: Value<Type> {};
+
+/**
+ * Fix specialization for lvalue reference types.
+ */
+template <typename Type>
+struct Value<Type&>: Value<Type> {};
+
+/**
+ * Fix specialization for rvalue reference types.
+ */
+template <typename Type>
+struct Value<Type&&>: Value<Type> {};
 
 /**
  * Convenient wrapped for [Value<Type>::push](@ref Value<Type>::push).
@@ -82,6 +89,35 @@ template <typename Type> static inline
 auto read(State* state, int index) -> decltype(Value<Type>::read(state, index)) {
 	return Value<Type>::read(state, index);
 }
+
+/**
+ * Nil
+ */
+template <>
+struct Value<std::nullptr_t> {
+	static inline
+	std::nullptr_t read(State* state, int n) {
+		luaL_checktype(state, n, LUA_TNIL);
+		return nullptr;
+	}
+
+	static inline
+	void push(State* state, std::nullptr_t) {
+		lua_pushnil(state);
+	}
+};
+
+/**
+ * Lua thread
+ */
+template <>
+struct Value<State*> {
+	static inline
+	State* read(State* state, int n) {
+		luaL_checktype(state, n, LUA_TTHREAD);
+		return lua_tothread(state, n);
+	}
+};
 
 namespace internal {
 	template <typename Type>
@@ -324,36 +360,6 @@ struct Value<Reference> {
 	}
 };
 
-/**
- * Fix specialization for const types.
- */
-template <typename Type>
-struct Value<const Type>: Value<Type> {};
-
-/**
- * Fix specialization for volatile types.
- */
-template <typename Type>
-struct Value<volatile Type>: Value<Type> {};
-
-/**
- * Fix specialization for const volatile types.
- */
-template <typename Type>
-struct Value<const volatile Type>: Value<Type> {};
-
-/**
- * Fix specialization for lvalue reference types.
- */
-template <typename Type>
-struct Value<Type&>: Value<Type> {};
-
-/**
- * Fix specialization for rvalue reference types.
- */
-template <typename Type>
-struct Value<Type&&>: Value<Type> {};
-
 namespace internal {
 	struct PushableI {
 		virtual
@@ -438,6 +444,92 @@ struct Value<std::map<Key, Type>> {
 			luwra::push(state, entry.second);
 			lua_rawset(state, -3);
 		}
+	}
+};
+
+template <typename Type>
+struct ReturnValue {
+	template <typename... Args> static inline
+	size_t push(State* state, Args&&... args) {
+		Value<Type>::push(state, std::forward<Args>(args)...);
+		return 1;
+	}
+};
+
+/**
+ * Fix specialization for const types.
+ */
+template <typename Type>
+struct ReturnValue<const Type>: ReturnValue<Type> {};
+
+/**
+ * Fix specialization for volatile types.
+ */
+template <typename Type>
+struct ReturnValue<volatile Type>: ReturnValue<Type> {};
+
+/**
+ * Fix specialization for const volatile types.
+ */
+template <typename Type>
+struct ReturnValue<const volatile Type>: ReturnValue<Type> {};
+
+/**
+ * Fix specialization for lvalue reference types.
+ */
+template <typename Type>
+struct ReturnValue<Type&>: ReturnValue<Type> {};
+
+/**
+ * Fix specialization for rvalue reference types.
+ */
+template <typename Type>
+struct ReturnValue<Type&&>: ReturnValue<Type> {};
+
+/**
+ *
+ */
+template <typename Type> inline
+size_t pushReturn(State* state, Type&& value) {
+	return ReturnValue<Type>::push(state, std::forward<Type>(value));
+}
+
+/**
+ *
+ */
+template <typename First, typename Second, typename... Rest> inline
+size_t pushReturn(State* state, First&& first, Second&& second, Rest&&... rest) {
+	return
+		pushReturn(state, std::forward<First>(first)) +
+		pushReturn(state, std::forward<Second>(second), std::forward<Rest>(rest)...);
+}
+
+namespace internal {
+	template <typename Seq, typename...>
+	struct _TuplePusher {
+		static_assert(
+			sizeof(Seq) == -1,
+			"Invalid template parameters to _TuplePusher"
+		);
+	};
+
+	template <size_t... Indices, typename... Contents>
+	struct _TuplePusher<IndexSequence<Indices...>, Contents...> {
+		static inline
+		size_t push(State* state, const std::tuple<Contents...>& value) {
+			return pushReturn(state, std::get<Indices>(value)...);
+		}
+	};
+
+	template <typename... Contents>
+	using TuplePusher = _TuplePusher<MakeIndexSequence<sizeof...(Contents)>, Contents...>;
+}
+
+template <typename... Contents>
+struct ReturnValue<std::tuple<Contents...>> {
+	static inline
+	size_t push(State* state, const std::tuple<Contents...>& value) {
+		return internal::TuplePusher<Contents...>::push(state, value);
 	}
 };
 

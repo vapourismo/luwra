@@ -78,60 +78,11 @@ internal::ReturnTypeOf<Callable> apply(
 }
 
 namespace internal {
-	template <typename Type>
-	struct SpecialValuePusher;
-
-	template <typename Seq>
-	struct TuplePusher {
-		static_assert(
-			sizeof(Seq) == -1,
-			"Template parameter to TuplePusher is not an IndexSequence"
-		);
-	};
-
-	template <size_t Index>
-	struct TuplePusher<IndexSequence<Index>> {
-		template <typename... Contents> static inline
-		size_t push(State* state, const std::tuple<Contents...>& package) {
-			return SpecialValuePusher<
-				typename std::tuple_element<Index, std::tuple<Contents...>>::type
-			>::push(state, std::get<Index>(package));
-		}
-	};
-
-	template <size_t Index, size_t... IndexPack>
-	struct TuplePusher<IndexSequence<Index, IndexPack...>> {
-		template <typename... Contents> static inline
-		size_t push(State* state, const std::tuple<Contents...>& package) {
-			return
-				TuplePusher<IndexSequence<Index>>::push(state, package) +
-				TuplePusher<IndexSequence<IndexPack...>>::push(state, package);
-		}
-	};
-
-	template <typename Type>
-	struct SpecialValuePusher {
-		template <typename... Args> static inline
-		size_t push(State* state, Args&&... args) {
-			Value<Type>::push(state, std::forward<Args>(args)...);
-			return 1;
-		}
-	};
-
-	template <typename... Contents>
-	struct SpecialValuePusher<std::tuple<Contents...>> {
-		static inline
-		size_t push(State* state, const std::tuple<Contents...>& value) {
-			using Seq = internal::MakeIndexSequence<sizeof...(Contents)>;
-			return TuplePusher<Seq>::push(state, value);
-		};
-	};
-
 	template <typename>
 	struct StackMapper {
 		template <typename Callable, typename... ExtraArgs> static inline
 		size_t map(State* state, int pos, Callable&& func, ExtraArgs&&... args) {
-			return SpecialValuePusher<ReturnTypeOf<Callable>>::push(
+			return pushReturn(
 				state,
 				apply(
 					state,
