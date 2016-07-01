@@ -4,13 +4,13 @@
  * Copyright (C) 2015, Ole Krüger <ole@vprsm.de>
  */
 
-#ifndef LUWRA_FUNCTIONS_H_
-#define LUWRA_FUNCTIONS_H_
+#ifndef LUWRA_TYPES_FUNCTION_H_
+#define LUWRA_TYPES_FUNCTION_H_
 
-#include "common.hpp"
-#include "values.hpp"
-#include "types/reference.hpp"
-#include "stack.hpp"
+#include "../common.hpp"
+#include "../values.hpp"
+#include "../stack.hpp"
+#include "reference.hpp"
 
 #include <utility>
 #include <functional>
@@ -21,24 +21,24 @@ LUWRA_NS_BEGIN
 ///
 /// \tparam Ret Expected return type
 template <typename Ret>
-struct NativeFunction {
+struct Function {
 	Reference ref;
 
 	/// Create from reference.
 	inline
-	NativeFunction(const Reference& ref):
+	Function(const Reference& ref):
 		ref(ref)
 	{}
 
 	/// Create from function on the stack.
 	inline
-	NativeFunction(State* state, int index):
+	Function(State* state, int index):
 		ref(state, index)
 	{}
 
-	/// Convert from an existing @ref NativeFunction.
+	/// Convert from an existing @ref Function.
 	template <typename OtherRet> inline
-	NativeFunction(const NativeFunction<OtherRet>& other):
+	Function(const Function<OtherRet>& other):
 		ref(other.ref)
 	{}
 
@@ -70,18 +70,18 @@ struct NativeFunction {
 
 /// A callable Lua function without a return value.
 template <>
-struct NativeFunction<void> {
+struct Function<void> {
 	Reference ref;
 
 	/// Create from reference.
 	inline
-	NativeFunction(const Reference& ref):
+	Function(const Reference& ref):
 		ref(ref)
 	{}
 
 	/// Create from function on the stack.
 	inline
-	NativeFunction(State* state, int index):
+	Function(State* state, int index):
 		ref(state, index)
 	{
 		int type = lua_type(state, index);
@@ -108,14 +108,14 @@ struct NativeFunction<void> {
 
 /// Enables reading/pushing Lua functions
 template <typename Ret>
-struct Value<NativeFunction<Ret>> {
+struct Value<Function<Ret>> {
 	static inline
-	NativeFunction<Ret> read(State* state, int index) {
+	Function<Ret> read(State* state, int index) {
 		return {state, index};
 	}
 
 	static inline
-	void push(State* state, const NativeFunction<Ret>& func) {
+	void push(State* state, const Function<Ret>& func) {
 		luwra::push(state, func.ref);
 	}
 };
@@ -125,7 +125,7 @@ template <typename Ret, typename... Args>
 struct Value<std::function<Ret (Args...)>> {
 	static inline
 	std::function<Ret (Args...)> read(State* state, int index) {
-		return {Value<NativeFunction<Ret>>::read(state, index)};
+		return {Value<Function<Ret>>::read(state, index)};
 	}
 };
 

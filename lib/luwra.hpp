@@ -9,9 +9,9 @@
 
 #include "luwra/auxiliary.hpp"
 #include "luwra/common.hpp"
-#include "luwra/functions.hpp"
 #include "luwra/stack.hpp"
 #include "luwra/state.hpp"
+#include "luwra/types/function.hpp"
 #include "luwra/types/pushable.hpp"
 #include "luwra/types/reference.hpp"
 #include "luwra/types/stl.hpp"
