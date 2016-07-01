@@ -9,7 +9,10 @@
 
 #include "../common.hpp"
 #include "../auxiliary.hpp"
+#include "../stack.hpp"
 #include "reference.hpp"
+
+#include <utility>
 
 LUWRA_NS_BEGIN
 

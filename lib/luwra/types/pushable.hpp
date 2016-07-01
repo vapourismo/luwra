@@ -9,6 +9,7 @@
 
 #include "../common.hpp"
 #include "../types.hpp"
+#include "../stack.hpp"
 
 #include <utility>
 #include <memory>

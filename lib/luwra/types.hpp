@@ -48,37 +48,6 @@ struct Value<Type&>: Value<Type> {};
 template <typename Type>
 struct Value<Type&&>: Value<Type> {};
 
-/// Push a value onto the stack.
-///
-/// \param state Lua state
-/// \param value To be pushed
-template <typename Type> inline
-void push(State* state, Type&& value) {
-	Value<Type>::push(state, std::forward<Type>(value));
-}
-
-/// Push two or more values onto the stack.
-///
-/// \param state  Lua state
-/// \param first  First value
-/// \param second Second value
-/// \param rest   Remaining values
-template <typename First, typename Second, typename... Rest> inline
-void push(State* state, First&& first, Second&& second, Rest&&... rest) {
-	push(state, std::forward<First>(first));
-	push(state, std::forward<Second>(second), std::forward<Rest>(rest)...);
-}
-
-/// Read a value off the stack.
-///
-/// \tparam Type  Type of targeted value
-/// \param  state Lua state
-/// \param  index Position of the value on the stack
-template <typename Type> inline
-auto read(State* state, int index) -> decltype(Value<Type>::read(state, index)) {
-	return Value<Type>::read(state, index);
-}
-
 /// Enables reading/pushing `nil`
 template <>
 struct Value<std::nullptr_t> {
@@ -268,30 +237,6 @@ struct ReturnValue<Type&>: ReturnValue<Type> {};
 /// Alias for `ReturnValue<Type>`
 template <typename Type>
 struct ReturnValue<Type&&>: ReturnValue<Type> {};
-
-/// Push a return value onto the stack.
-///
-/// \param state Lua state
-/// \param value Return value
-/// \returns Number of Lua values that have been pushed onto the stack
-template <typename Type> inline
-size_t pushReturn(State* state, Type&& value) {
-	return ReturnValue<Type>::push(state, std::forward<Type>(value));
-}
-
-/// Push multiple return values onto the stack.
-///
-/// \param state   Lua state
-/// \param first   First return value
-/// \param second  Second return value
-/// \param rest    More return values
-/// \returns Number of Lua values that have been pushed onto the stack
-template <typename First, typename Second, typename... Rest> inline
-size_t pushReturn(State* state, First&& first, Second&& second, Rest&&... rest) {
-	return
-		pushReturn(state, std::forward<First>(first)) +
-		pushReturn(state, std::forward<Second>(second), std::forward<Rest>(rest)...);
-}
 
 LUWRA_NS_END
 
