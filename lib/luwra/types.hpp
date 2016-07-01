@@ -504,7 +504,7 @@ size_t pushReturn(State* state, Type&& value) {
  * \param state   Lua state
  * \param first   First return value
  * \param second  Second return value
- * \param rest... More return values
+ * \param rest    More return values
  * \returns Number of Lua values that have been pushed onto the stack
  */
 template <typename First, typename Second, typename... Rest> inline
