@@ -46,9 +46,45 @@ namespace internal {
 }
 
 /**
+ * \brief Retrieve values from the stack in order to invoke a `Callable` with them.
  *
+ * \param state Lua state
+ * \param pos   Index of the first stack value
+ * \param func  A `Callable`
+ * \param args  Extra arguments passed to `func` before the stack values
+ * \returns Result of calling `func`
+ *
+ * Invoke `func` with `args...` followed by the values retrieved from the stack.
+ *
+ * Example 1:
+ *
+ * ```
+ *   double sum(double a, double b) {
+ *       return a + b;
+ *   }
+ *
+ *   // ...
+ *
+ *   push(state, 37.13);
+ *   push(state, 13.37);
+ *
+ *   // All parameters are extracted from the stack.
+ *   double result = apply(state, 1, sum);
+ * ```
+ *
+ * Example 2:
+ *
+ * ```
+ *   push(state, 37.13);
+ *   push(state, 13.37);
+ *
+ *   // Only parameters 'b' and 'c' are extracted from the stack.
+ *   double result = apply(state, 1, [](double a, double b, double c) {
+ *       return a + b + c;
+ *   }, -0.5);
+ * ```
  */
-template <typename Callable, typename... ExtraArgs> static inline
+template <typename Callable, typename... ExtraArgs> inline
 internal::ReturnTypeOf<Callable> apply(
 	State*         state,
 	int            pos,
@@ -111,9 +147,18 @@ namespace internal {
 }
 
 /**
+ * \brief Retrieve values from the stack in order to invoke a `Callable` with them, then push the
+ *        result onto the stack.
  *
+ * \param state Lua state
+ * \param pos   Index of the first stack value
+ * \param func  A `Callable`
+ * \param args  Extra arguments passed to `func` before the stack values
+ * \returns Number of return values push onto stack
+ *
+ * Works similar to [apply](@ref apply). This function pushes the result of `func` onto the stack.
  */
-template <typename Callable, typename... ExtraArgs> static inline
+template <typename Callable, typename... ExtraArgs> inline
 size_t map(State* state, int pos, Callable&& func, ExtraArgs&&... args) {
 	return internal::StackMapper<internal::ReturnTypeOf<Callable>>::map(
 		state,
