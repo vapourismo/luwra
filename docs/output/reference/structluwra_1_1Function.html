@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>Luwra: luwra::NativeFunction&lt; Ret &gt; Struct Template Reference</title>
+<title>Luwra: luwra::Function&lt; Ret &gt; Struct Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -45,50 +45,50 @@
   </div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="namespaceluwra.html">luwra</a></li><li class="navelem"><a class="el" href="structluwra_1_1NativeFunction.html">NativeFunction</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespaceluwra.html">luwra</a></li><li class="navelem"><a class="el" href="structluwra_1_1Function.html">Function</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="structluwra_1_1NativeFunction-members.html">List of all members</a>  </div>
+<a href="structluwra_1_1Function-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">luwra::NativeFunction&lt; Ret &gt; Struct Template Reference</div>  </div>
+<div class="title">luwra::Function&lt; Ret &gt; Struct Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
 <p>A callable Lua function.  
- <a href="structluwra_1_1NativeFunction.html#details">More...</a></p>
+ <a href="structluwra_1_1Function.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a1f8c8971fd4abd7b19d7648c0afb6713"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1NativeFunction.html#a1f8c8971fd4abd7b19d7648c0afb6713">NativeFunction</a> (const <a class="el" href="structluwra_1_1Reference.html">Reference</a> &amp;<a class="el" href="structluwra_1_1NativeFunction.html#aa88e58b3ac058c624ba5838ff28070d1">ref</a>)</td></tr>
-<tr class="memdesc:a1f8c8971fd4abd7b19d7648c0afb6713"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create from reference.  <a href="#a1f8c8971fd4abd7b19d7648c0afb6713">More...</a><br /></td></tr>
-<tr class="separator:a1f8c8971fd4abd7b19d7648c0afb6713"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0630d7efa229033ec2822d1a90a6e58"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1NativeFunction.html#af0630d7efa229033ec2822d1a90a6e58">NativeFunction</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int index)</td></tr>
-<tr class="memdesc:af0630d7efa229033ec2822d1a90a6e58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create from function on the stack.  <a href="#af0630d7efa229033ec2822d1a90a6e58">More...</a><br /></td></tr>
-<tr class="separator:af0630d7efa229033ec2822d1a90a6e58"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad772afae31f4304448ea207348a154b4"><td class="memTemplParams" colspan="2">template&lt;typename OtherRet &gt; </td></tr>
-<tr class="memitem:ad772afae31f4304448ea207348a154b4"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structluwra_1_1NativeFunction.html#ad772afae31f4304448ea207348a154b4">NativeFunction</a> (const <a class="el" href="structluwra_1_1NativeFunction.html">NativeFunction</a>&lt; OtherRet &gt; &amp;other)</td></tr>
-<tr class="memdesc:ad772afae31f4304448ea207348a154b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert from an existing <a class="el" href="structluwra_1_1NativeFunction.html">NativeFunction</a>.  <a href="#ad772afae31f4304448ea207348a154b4">More...</a><br /></td></tr>
-<tr class="separator:ad772afae31f4304448ea207348a154b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae50cc188a1ee924c9b0607269e77c78c"><td class="memItemLeft" align="right" valign="top">Ret&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1NativeFunction.html#ae50cc188a1ee924c9b0607269e77c78c">operator()</a> () const </td></tr>
-<tr class="memdesc:ae50cc188a1ee924c9b0607269e77c78c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke the function with no arguments.  <a href="#ae50cc188a1ee924c9b0607269e77c78c">More...</a><br /></td></tr>
-<tr class="separator:ae50cc188a1ee924c9b0607269e77c78c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4ba0ba0161a9cd771ffb1d1e22821ad7"><td class="memTemplParams" colspan="2">template&lt;typename... Args&gt; </td></tr>
-<tr class="memitem:a4ba0ba0161a9cd771ffb1d1e22821ad7"><td class="memTemplItemLeft" align="right" valign="top">Ret&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structluwra_1_1NativeFunction.html#a4ba0ba0161a9cd771ffb1d1e22821ad7">operator()</a> (Args &amp;&amp;...args) const </td></tr>
-<tr class="memdesc:a4ba0ba0161a9cd771ffb1d1e22821ad7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke the function with arguments.  <a href="#a4ba0ba0161a9cd771ffb1d1e22821ad7">More...</a><br /></td></tr>
-<tr class="separator:a4ba0ba0161a9cd771ffb1d1e22821ad7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26ea5bd299efd0db59f8b16a464f4db9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Function.html#a26ea5bd299efd0db59f8b16a464f4db9">Function</a> (const <a class="el" href="structluwra_1_1Reference.html">Reference</a> &amp;<a class="el" href="structluwra_1_1Function.html#af9be56cc4b17f0f105481f2fa30da6cc">ref</a>)</td></tr>
+<tr class="memdesc:a26ea5bd299efd0db59f8b16a464f4db9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create from reference.  <a href="#a26ea5bd299efd0db59f8b16a464f4db9">More...</a><br /></td></tr>
+<tr class="separator:a26ea5bd299efd0db59f8b16a464f4db9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9626a42a85dc77fd4140b030eb8778bf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Function.html#a9626a42a85dc77fd4140b030eb8778bf">Function</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int index)</td></tr>
+<tr class="memdesc:a9626a42a85dc77fd4140b030eb8778bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create from function on the stack.  <a href="#a9626a42a85dc77fd4140b030eb8778bf">More...</a><br /></td></tr>
+<tr class="separator:a9626a42a85dc77fd4140b030eb8778bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb337484b6dea928044c108b486203fd"><td class="memTemplParams" colspan="2">template&lt;typename OtherRet &gt; </td></tr>
+<tr class="memitem:acb337484b6dea928044c108b486203fd"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structluwra_1_1Function.html#acb337484b6dea928044c108b486203fd">Function</a> (const <a class="el" href="structluwra_1_1Function.html">Function</a>&lt; OtherRet &gt; &amp;other)</td></tr>
+<tr class="memdesc:acb337484b6dea928044c108b486203fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert from an existing <a class="el" href="structluwra_1_1Function.html">Function</a>.  <a href="#acb337484b6dea928044c108b486203fd">More...</a><br /></td></tr>
+<tr class="separator:acb337484b6dea928044c108b486203fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88f7a81cd14996ed375cc71ed17c7d78"><td class="memItemLeft" align="right" valign="top">Ret&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Function.html#a88f7a81cd14996ed375cc71ed17c7d78">operator()</a> () const </td></tr>
+<tr class="memdesc:a88f7a81cd14996ed375cc71ed17c7d78"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke the function with no arguments.  <a href="#a88f7a81cd14996ed375cc71ed17c7d78">More...</a><br /></td></tr>
+<tr class="separator:a88f7a81cd14996ed375cc71ed17c7d78"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac44ab8d9653fe751002799110e707b95"><td class="memTemplParams" colspan="2">template&lt;typename... Args&gt; </td></tr>
+<tr class="memitem:ac44ab8d9653fe751002799110e707b95"><td class="memTemplItemLeft" align="right" valign="top">Ret&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structluwra_1_1Function.html#ac44ab8d9653fe751002799110e707b95">operator()</a> (Args &amp;&amp;...args) const </td></tr>
+<tr class="memdesc:ac44ab8d9653fe751002799110e707b95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke the function with arguments.  <a href="#ac44ab8d9653fe751002799110e707b95">More...</a><br /></td></tr>
+<tr class="separator:ac44ab8d9653fe751002799110e707b95"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:aa88e58b3ac058c624ba5838ff28070d1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structluwra_1_1Reference.html">Reference</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1NativeFunction.html#aa88e58b3ac058c624ba5838ff28070d1">ref</a></td></tr>
-<tr class="separator:aa88e58b3ac058c624ba5838ff28070d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9be56cc4b17f0f105481f2fa30da6cc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structluwra_1_1Reference.html">Reference</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Function.html#af9be56cc4b17f0f105481f2fa30da6cc">ref</a></td></tr>
+<tr class="separator:af9be56cc4b17f0f105481f2fa30da6cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;typename Ret&gt;<br />
-struct luwra::NativeFunction&lt; Ret &gt;</h3>
+struct luwra::Function&lt; Ret &gt;</h3>
 
 <p>A callable Lua function. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
@@ -98,7 +98,7 @@ struct luwra::NativeFunction&lt; Ret &gt;</h3>
   </dd>
 </dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a1f8c8971fd4abd7b19d7648c0afb6713"></a>
+<a class="anchor" id="a26ea5bd299efd0db59f8b16a464f4db9"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -108,7 +108,7 @@ template&lt;typename Ret &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structluwra_1_1NativeFunction.html">luwra::NativeFunction</a>&lt; Ret &gt;::<a class="el" href="structluwra_1_1NativeFunction.html">NativeFunction</a> </td>
+          <td class="memname"><a class="el" href="structluwra_1_1Function.html">luwra::Function</a>&lt; Ret &gt;::<a class="el" href="structluwra_1_1Function.html">Function</a> </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structluwra_1_1Reference.html">Reference</a> &amp;&#160;</td>
           <td class="paramname"><em>ref</em></td><td>)</td>
@@ -126,7 +126,7 @@ template&lt;typename Ret &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="af0630d7efa229033ec2822d1a90a6e58"></a>
+<a class="anchor" id="a9626a42a85dc77fd4140b030eb8778bf"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -136,7 +136,7 @@ template&lt;typename Ret &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structluwra_1_1NativeFunction.html">luwra::NativeFunction</a>&lt; Ret &gt;::<a class="el" href="structluwra_1_1NativeFunction.html">NativeFunction</a> </td>
+          <td class="memname"><a class="el" href="structluwra_1_1Function.html">luwra::Function</a>&lt; Ret &gt;::<a class="el" href="structluwra_1_1Function.html">Function</a> </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *&#160;</td>
           <td class="paramname"><em>state</em>, </td>
@@ -164,7 +164,7 @@ template&lt;typename Ret &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="ad772afae31f4304448ea207348a154b4"></a>
+<a class="anchor" id="acb337484b6dea928044c108b486203fd"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -176,9 +176,9 @@ template&lt;typename OtherRet &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structluwra_1_1NativeFunction.html">luwra::NativeFunction</a>&lt; Ret &gt;::<a class="el" href="structluwra_1_1NativeFunction.html">NativeFunction</a> </td>
+          <td class="memname"><a class="el" href="structluwra_1_1Function.html">luwra::Function</a>&lt; Ret &gt;::<a class="el" href="structluwra_1_1Function.html">Function</a> </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structluwra_1_1NativeFunction.html">NativeFunction</a>&lt; OtherRet &gt; &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structluwra_1_1Function.html">Function</a>&lt; OtherRet &gt; &amp;&#160;</td>
           <td class="paramname"><em>other</em></td><td>)</td>
           <td></td>
         </tr>
@@ -190,12 +190,12 @@ template&lt;typename OtherRet &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Convert from an existing <a class="el" href="structluwra_1_1NativeFunction.html">NativeFunction</a>. </p>
+<p>Convert from an existing <a class="el" href="structluwra_1_1Function.html">Function</a>. </p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="ae50cc188a1ee924c9b0607269e77c78c"></a>
+<a class="anchor" id="a88f7a81cd14996ed375cc71ed17c7d78"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -205,7 +205,7 @@ template&lt;typename Ret &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Ret <a class="el" href="structluwra_1_1NativeFunction.html">luwra::NativeFunction</a>&lt; Ret &gt;::operator() </td>
+          <td class="memname">Ret <a class="el" href="structluwra_1_1Function.html">luwra::Function</a>&lt; Ret &gt;::operator() </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -222,7 +222,7 @@ template&lt;typename Ret &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a4ba0ba0161a9cd771ffb1d1e22821ad7"></a>
+<a class="anchor" id="ac44ab8d9653fe751002799110e707b95"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -234,7 +234,7 @@ template&lt;typename... Args&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Ret <a class="el" href="structluwra_1_1NativeFunction.html">luwra::NativeFunction</a>&lt; Ret &gt;::operator() </td>
+          <td class="memname">Ret <a class="el" href="structluwra_1_1Function.html">luwra::Function</a>&lt; Ret &gt;::operator() </td>
           <td>(</td>
           <td class="paramtype">Args &amp;&amp;...&#160;</td>
           <td class="paramname"><em>args</em></td><td>)</td>
@@ -253,14 +253,14 @@ template&lt;typename... Args&gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a class="anchor" id="aa88e58b3ac058c624ba5838ff28070d1"></a>
+<a class="anchor" id="af9be56cc4b17f0f105481f2fa30da6cc"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename Ret &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structluwra_1_1Reference.html">Reference</a> <a class="el" href="structluwra_1_1NativeFunction.html">luwra::NativeFunction</a>&lt; Ret &gt;::ref</td>
+          <td class="memname"><a class="el" href="structluwra_1_1Reference.html">Reference</a> <a class="el" href="structluwra_1_1Function.html">luwra::Function</a>&lt; Ret &gt;::ref</td>
         </tr>
       </table>
 </div><div class="memdoc">

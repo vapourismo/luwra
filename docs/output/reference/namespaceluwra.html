@@ -60,11 +60,11 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1NativeFunction.html">NativeFunction</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A callable Lua function.  <a href="structluwra_1_1NativeFunction.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Function.html">Function</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A callable Lua function.  <a href="structluwra_1_1Function.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1NativeFunction_3_01void_01_4.html">NativeFunction&lt; void &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A callable Lua function without a return value.  <a href="structluwra_1_1NativeFunction_3_01void_01_4.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Function_3_01void_01_4.html">Function&lt; void &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A callable Lua function without a return value.  <a href="structluwra_1_1Function_3_01void_01_4.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Pushable.html">Pushable</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Arbitrary pushable value.  <a href="structluwra_1_1Pushable.html#details">More...</a><br /></td></tr>
@@ -130,14 +130,14 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value_3_01float_01_4.html">Value&lt; float &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value_3_01Function_3_01Ret_01_4_01_4.html">Value&lt; Function&lt; Ret &gt; &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables reading/pushing Lua functions.  <a href="structluwra_1_1Value_3_01Function_3_01Ret_01_4_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value_3_01internal_1_1Path_3_01Parent_00_01Key_01_4_01_4.html">Value&lt; internal::Path&lt; Parent, Key &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value_3_01internal_1_1TableAccessor_3_01Accessor_01_4_01_4.html">Value&lt; internal::TableAccessor&lt; Accessor &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value_3_01long_01double_01_4.html">Value&lt; long double &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value_3_01NativeFunction_3_01Ret_01_4_01_4.html">Value&lt; NativeFunction&lt; Ret &gt; &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables reading/pushing Lua functions.  <a href="structluwra_1_1Value_3_01NativeFunction_3_01Ret_01_4_01_4.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value_3_01Pushable_01_4.html">Value&lt; Pushable &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -268,10 +268,14 @@ Functions</h2></td></tr>
 <tr class="memitem:a161cc8a95717a4cdff5cd424ca66b070"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a161cc8a95717a4cdff5cd424ca66b070">registerUserType</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, const char *ctor_name, const <a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a> &amp;methods=<a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a>(), const <a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a> &amp;meta_methods=<a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a>())</td></tr>
 <tr class="memdesc:a161cc8a95717a4cdff5cd424ca66b070"><td class="mdescLeft">&#160;</td><td class="mdescRight">Same as the other <code>registerUserType</code> but registers the constructor as well. The template parameter is a signature <code>UserType(Args...)</code> where <code>UserType</code> is the user type and <code>Args...</code> its constructor parameters types.  <a href="#a161cc8a95717a4cdff5cd424ca66b070">More...</a><br /></td></tr>
 <tr class="separator:a161cc8a95717a4cdff5cd424ca66b070"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a296a1059d0a2f65d886289e421b073e8"><td class="memTemplParams" colspan="2">template&lt;typename... Pairs&gt; </td></tr>
-<tr class="memitem:a296a1059d0a2f65d886289e421b073e8"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a296a1059d0a2f65d886289e421b073e8">setFields</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int index, Pairs &amp;&amp;...args)</td></tr>
-<tr class="memdesc:a296a1059d0a2f65d886289e421b073e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set multiple fields at once. Allows you to provide multiple key-value pairs.  <a href="#a296a1059d0a2f65d886289e421b073e8">More...</a><br /></td></tr>
-<tr class="separator:a296a1059d0a2f65d886289e421b073e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a40554a02ee6d215fbec44b14fd9e13"><td class="memTemplParams" colspan="2">template&lt;typename Key , typename Type &gt; </td></tr>
+<tr class="memitem:a5a40554a02ee6d215fbec44b14fd9e13"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a5a40554a02ee6d215fbec44b14fd9e13">setFields</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int index, Key &amp;&amp;key, Type &amp;&amp;value)</td></tr>
+<tr class="memdesc:a5a40554a02ee6d215fbec44b14fd9e13"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the field of a table.  <a href="#a5a40554a02ee6d215fbec44b14fd9e13">More...</a><br /></td></tr>
+<tr class="separator:a5a40554a02ee6d215fbec44b14fd9e13"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaab858c2610ccbdd82284bd39d49de86"><td class="memTemplParams" colspan="2">template&lt;typename Key1 , typename Type1 , typename Key2 , typename Type2 , typename... Pairs&gt; </td></tr>
+<tr class="memitem:aaab858c2610ccbdd82284bd39d49de86"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#aaab858c2610ccbdd82284bd39d49de86">setFields</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int index, Key1 &amp;&amp;key1, Type1 &amp;&amp;value1, Key2 &amp;&amp;key2, Type2 &amp;&amp;value2, Pairs &amp;&amp;...rest)</td></tr>
+<tr class="memdesc:aaab858c2610ccbdd82284bd39d49de86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set multiple fields at once. Allows you to provide multiple key-value pairs.  <a href="#aaab858c2610ccbdd82284bd39d49de86">More...</a><br /></td></tr>
+<tr class="separator:aaab858c2610ccbdd82284bd39d49de86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae888fbcbbf08d2b6998759ed7a028207"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#ae888fbcbbf08d2b6998759ed7a028207">setFields</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int index, const <a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a> &amp;fields)</td></tr>
 <tr class="memdesc:ae888fbcbbf08d2b6998759ed7a028207"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply key-value pairs to a table.  <a href="#ae888fbcbbf08d2b6998759ed7a028207">More...</a><br /></td></tr>
 <tr class="separator:ae888fbcbbf08d2b6998759ed7a028207"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1028,11 +1032,11 @@ template&lt;typename Sig &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a296a1059d0a2f65d886289e421b073e8"></a>
+<a class="anchor" id="a5a40554a02ee6d215fbec44b14fd9e13"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename... Pairs&gt; </div>
+template&lt;typename Key , typename Type &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -1052,8 +1056,91 @@ template&lt;typename... Pairs&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">Key &amp;&amp;&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Type &amp;&amp;&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set the field of a table. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">state</td><td>Lua state </td></tr>
+    <tr><td class="paramname">index</td><td>Index of the table </td></tr>
+    <tr><td class="paramname">key</td><td>Key </td></tr>
+    <tr><td class="paramname">value</td><td><a class="el" href="structluwra_1_1Value.html" title="Enables reading and pushing the type UserType. ">Value</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="aaab858c2610ccbdd82284bd39d49de86"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Key1 , typename Type1 , typename Key2 , typename Type2 , typename... Pairs&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void luwra::setFields </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *&#160;</td>
+          <td class="paramname"><em>state</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Key1 &amp;&amp;&#160;</td>
+          <td class="paramname"><em>key1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Type1 &amp;&amp;&#160;</td>
+          <td class="paramname"><em>value1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Key2 &amp;&amp;&#160;</td>
+          <td class="paramname"><em>key2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Type2 &amp;&amp;&#160;</td>
+          <td class="paramname"><em>value2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">Pairs &amp;&amp;...&#160;</td>
-          <td class="paramname"><em>args</em>&#160;</td>
+          <td class="paramname"><em>rest</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1072,8 +1159,12 @@ template&lt;typename... Pairs&gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">state</td><td>Lua state </td></tr>
-    <tr><td class="paramname">index</td><td><a class="el" href="structluwra_1_1Table.html" title="Lua table. ">Table</a> index </td></tr>
-    <tr><td class="paramname">args</td><td>Key-value pairs </td></tr>
+    <tr><td class="paramname">index</td><td>Index of the table </td></tr>
+    <tr><td class="paramname">key1</td><td>First key </td></tr>
+    <tr><td class="paramname">value1</td><td>First value </td></tr>
+    <tr><td class="paramname">key2</td><td>Second key </td></tr>
+    <tr><td class="paramname">value2</td><td>Second value </td></tr>
+    <tr><td class="paramname">rest</td><td>Rest of the key-value pairs </td></tr>
   </table>
   </dd>
 </dl>
