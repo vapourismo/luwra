@@ -119,31 +119,37 @@ struct Value<internal::TableAccessor<Accessor>> {
 	}
 };
 
+/// Lua table
 struct Table {
 	Reference ref;
 
+	/// Create from reference.
 	Table(const Reference& ref):
 		ref(ref)
 	{}
 
+	/// Create from table on the stack.
 	Table(State* state, int index):
 		ref(state, index, true)
 	{
 		luaL_checktype(state, index, LUA_TTABLE);
 	}
 
+	/// Create a new table.
 	Table(State* state):
 		Table(state, (lua_newtable(state), -1))
 	{
 		lua_pop(state, 1);
 	}
 
+	/// Create a new table with the given fields.
 	Table(State* state, const MemberMap& fields):
 		Table(state, (luwra::push(state, fields), -1))
 	{
 		lua_pop(state, 1);
 	}
 
+	/// Access a field of the table.
 	template <typename Key> inline
 	internal::TableAccessor<internal::Path<const Reference&, Key>> access(Key&& key) const {
 		return internal::TableAccessor<internal::Path<const Reference&, Key>> {
@@ -155,17 +161,13 @@ struct Table {
 		};
 	}
 
+	/// Alias for @ref access;
 	template <typename Key> inline
 	internal::TableAccessor<internal::Path<const Reference&, Key>> operator [](Key&& key) const {
-		return internal::TableAccessor<internal::Path<const Reference&, Key>> {
-			ref.impl->state,
-			internal::Path<const Reference&, Key> {
-				ref,
-				std::forward<Key>(key)
-			}
-		};
+		return access(std::forward<Key>(key));
 	}
 
+	/// Update the fields.
 	inline
 	void update(const MemberMap& fields) const {
 		State* state = ref.impl->state;
@@ -176,6 +178,7 @@ struct Table {
 		lua_pop(state, 1);
 	}
 
+	/// Check if the value associated with a key is not `nil`.
 	template <typename Key> inline
 	bool has(Key&& key) const {
 		State* state = ref.impl->state;
@@ -190,6 +193,7 @@ struct Table {
 		return !isNil;
 	}
 
+	/// Update a field.
 	template <typename Type, typename Key> inline
 	void set(Key&& key, Type&& value) const {
 		State* state = ref.impl->state;
@@ -201,6 +205,7 @@ struct Table {
 		lua_pop(state, 1);
 	}
 
+	/// Retrieve the value of a field.
 	template <typename Type, typename Key> inline
 	Type get(Key&& key) const {
 		State* state = ref.impl->state;
@@ -216,9 +221,7 @@ struct Table {
 	}
 };
 
-/**
- * See [Table](@ref Table).
- */
+/// Enables reading/pushing tables
 template <>
 struct Value<Table> {
 	static inline
@@ -232,12 +235,8 @@ struct Value<Table> {
 	}
 };
 
-/**
- * Retrieve the table containing all global values.
- * \param state Lua state
- * \returns Reference to the globals table.
- */
-static inline
+/// Retrieve the table responsible for the global namespace.
+inline
 Table getGlobalsTable(State* state) {
 #if LUA_VERSION_NUM <= 501
 	return {{state, internal::referenceValue(state, LUA_GLOBALSINDEX), false}};

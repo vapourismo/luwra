@@ -90,16 +90,16 @@ namespace internal {
 	};
 }
 
-/**
- * Construct a user type value on the stack.
- * \note Instances created using this specialization are allocated and constructed as full user
- *       data types in Lua. The default garbage-collecting hook will destruct the user type,
- *       once it has been marked.
- * \param state Lua state
- * \param args  Constructor arguments
- * \returns Reference to the constructed value
- */
-template <typename UserType, typename... Args> static inline
+/// Construct a user type value on the stack.
+///
+/// \note Instances created using this specialization are allocated and constructed as full user
+///       data types in Lua. The default garbage-collecting hook will destruct the user type,
+///       once it has been marked.
+///
+/// \param state Lua state
+/// \param args  Constructor arguments
+/// \returns Reference to the constructed value
+template <typename UserType, typename... Args> inline
 internal::StripUserType<UserType>& construct(State* state, Args&&... args) {
 	using Wrapper = internal::UserTypeWrapper<UserType>;
 	using Type = typename Wrapper::Type;
@@ -120,86 +120,77 @@ internal::StripUserType<UserType>& construct(State* state, Args&&... args) {
 	return *value;
 }
 
-/**
- * User type
- */
+/// Enables reading and pushing the type `UserType`.
 template <typename UserType>
 struct Value {
 	using Type = internal::StripUserType<UserType>;
 
-	/**
-	 * Reference a user type value on the stack.
-	 * \param state Lua state
-	 * \param n     Stack index
-	 * \returns Reference to the user type value
-	 */
+	/// Reference a user type value on the stack.
+	///
+	/// \param state Lua state
+	/// \param n     Stack index
+	/// \returns Reference to the user type value
 	static inline
 	UserType& read(State* state, int n) {
 		// Type is unqualified, therefore conversion from Type& to UserType& is allowed
 		return *internal::UserTypeWrapper<Type>::check(state, n);
 	}
 
-	/**
-	 * Construct a user type value on the stack.
-	 * \note Instances created using this specialization are allocated and constructed as full user
-	 *       data types in Lua. The default garbage-collecting hook will destruct the user type,
-	 *       once it has been marked.
-	 * \param state Lua state
-	 * \param args  Constructor arguments
-	 * \returns Number of values that have been pushed onto the stack
-	 */
+	/// Construct a user type value on the stack.
+	///
+	/// \note Instances created using this specialization are allocated and constructed as full user
+	///       data types in Lua. The default garbage-collecting hook will destruct the user type,
+	///       once it has been marked.
+	///
+	/// \param state Lua state
+	/// \param args  Constructor arguments
+	/// \returns Number of values that have been pushed onto the stack
 	template <typename... Args> static inline
 	void push(State* state, Args&&... args) {
 		construct<Type>(state, std::forward<Args>(args)...);
 	}
 };
 
-/**
- * User type
- */
+/// Enables reading and pushing the arbitrary type `UserType`.
 template <typename UserType>
 struct Value<UserType*> {
 	using Type = internal::StripUserType<UserType>;
 
-	/**
-	 * Reference a user type value on the stack.
-	 * \param state Lua state
-	 * \param n     Stack index
-	 * \returns Pointer to the user type value.
-	 */
+	/// Reference a user type value on the stack.
+	///
+	/// \param state Lua state
+	/// \param n     Stack index
+	/// \returns Pointer to the user type value.
 	static inline
 	UserType* read(State* state, int n) {
 		// Type is unqualified, therefore conversion from Type* to UserType* is allowed
 		return internal::UserTypeWrapper<Type>::check(state, n);
 	}
 
-	/**
-	 * Copy a value onto the stack. This function behaves exactly as if you would call
-	 * `Value<UserType>::push(state, *ptr)`.
-	 * \param state Lua state
-	 * \param ptr   Pointer to the value
-	 * \returns Number of values that have been pushed
-	 */
+	/// Copy a value onto the stack. This function behaves exactly as if you would call
+	///
+	/// `Value<UserType>::push(state, *ptr)`.
+	/// \param state Lua state
+	/// \param ptr   Pointer to the value
+	/// \returns Number of values that have been pushed
 	static inline
 	void push(State* state, const UserType* ptr) {
 		Value<UserType>::push(state, *ptr);
 	}
 };
 
-/**
- * Register the metatable for user type `UserType`. This function allows you to register methods
- * which are shared across all instances of this type.
- *
- * By default a garbage-collector hook and string representation function are added as meta methods.
- * Both can be overwritten.
- *
- * \tparam UserType User type struct or class
- *
- * \param state        Lua state
- * \param methods      Map of methods
- * \param meta_methods Map of meta methods
- */
-template <typename UserType> static inline
+/// Register the metatable for user type `UserType`. This function allows you to register methods
+/// which are shared across all instances of this type.
+///
+/// By default a garbage-collector hook and string representation function are added as meta methods.
+/// Both can be overwritten.
+///
+/// \tparam UserType User type struct or class
+///
+/// \param state        Lua state
+/// \param methods      Map of methods
+/// \param meta_methods Map of meta methods
+template <typename UserType> inline
 void registerUserType(
 	State* state,
 	const MemberMap& methods = MemberMap(),
@@ -224,12 +215,10 @@ void registerUserType(
 	lua_pop(state, -1);
 }
 
-/**
- * Same as the other `registerUserType` but registers the constructor as well. The template
- * parameter is a signature `UserType(Args...)` where `UserType` is the user type and `Args...` its
- * constructor parameters types.
- */
-template <typename Sig> static inline
+/// Same as the other `registerUserType` but registers the constructor as well. The template
+/// parameter is a signature `UserType(Args...)` where `UserType` is the user type and `Args...` its
+/// constructor parameters types.
+template <typename Sig> inline
 void registerUserType(
 	State* state,
 	const char* ctor_name,
@@ -256,27 +245,23 @@ void registerUserType(
 
 LUWRA_NS_END
 
-/**
- * Generate a user type member manifest. This is basically any type which can be constructed using a
- * string and a `lua_CFunction`. For example `std::pair<Pushable, Pushable>`.
- */
+/// Generate a user type member manifest. This is basically any type which can be constructed using a
+/// string and a `lua_CFunction`. For example `std::pair<Pushable, Pushable>`.
 #define LUWRA_MEMBER(type, name) \
 	{#name, LUWRA_WRAP_MEMBER(type, name)}
 
-/**
- * Generate a `lua_CFunction` wrapper for a constructor.
- * \param type Type to instantiate
- * \param ...  Constructor parameter types
- * \return Wrapped function as `lua_CFunction`
- */
+/// Generate a `lua_CFunction` wrapper for a constructor.
+///
+/// \param type Type to instantiate
+/// \param ...  Constructor parameter types
+/// \return Wrapped function as `lua_CFunction`
 #define LUWRA_WRAP_CONSTRUCTOR(type, ...) \
 	(&luwra::internal::UserTypeWrapper<luwra::internal::StripUserType<type>>::ConstructorWrapper<__VA_ARGS__>::invoke)
 
-/**
- * Define the registry name for a user type.
- * \param type    User type
- * \param regname Registry name
- */
+/// Define the registry name for a user type.
+///
+/// \param type    User type
+/// \param regname Registry name
 #define LUWRA_DEF_REGISTRY_NAME(type, regname) \
 	LUWRA_NS_BEGIN \
 	namespace internal { \

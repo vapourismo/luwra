@@ -32,6 +32,7 @@
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
     </ul>
   </div>
   <div id="navrow2" class="tabs2">
@@ -56,6 +57,9 @@
 <div class="title">luwra::Value&lt; UserType * &gt; Struct Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Enables reading and pushing the arbitrary type <code>UserType</code>.  
+ <a href="structluwra_1_1Value_3_01UserType_01_5_01_4.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
@@ -64,16 +68,18 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a19400256e9ec96c16b289bb5e5808d51"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value_3_01UserType_01_5_01_4.html#a19400256e9ec96c16b289bb5e5808d51">push</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, const UserType *ptr)</td></tr>
+<tr class="memdesc:a19400256e9ec96c16b289bb5e5808d51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy a value onto the stack. This function behaves exactly as if you would call.  <a href="#a19400256e9ec96c16b289bb5e5808d51">More...</a><br /></td></tr>
+<tr class="separator:a19400256e9ec96c16b289bb5e5808d51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a00f4764b4016dc778c7b6612e8377673"><td class="memItemLeft" align="right" valign="top">static UserType *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value_3_01UserType_01_5_01_4.html#a00f4764b4016dc778c7b6612e8377673">read</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int n)</td></tr>
+<tr class="memdesc:a00f4764b4016dc778c7b6612e8377673"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structluwra_1_1Reference.html" title="Reference to a Lua value. ">Reference</a> a user type value on the stack.  <a href="#a00f4764b4016dc778c7b6612e8377673">More...</a><br /></td></tr>
 <tr class="separator:a00f4764b4016dc778c7b6612e8377673"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a28de4c5edf550e21127e1fe2d8a95a71"><td class="memItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value_3_01UserType_01_5_01_4.html#a28de4c5edf550e21127e1fe2d8a95a71">push</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, const UserType *ptr)</td></tr>
-<tr class="separator:a28de4c5edf550e21127e1fe2d8a95a71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;typename UserType&gt;<br />
 struct luwra::Value&lt; UserType * &gt;</h3>
 
-<p>User type </p>
+<p>Enables reading and pushing the arbitrary type <code>UserType</code>. </p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a class="anchor" id="aac8fbe42023361ed5aac444bd1457cc1"></a>
 <div class="memitem">
@@ -90,7 +96,7 @@ template&lt;typename UserType &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a28de4c5edf550e21127e1fe2d8a95a71"></a>
+<a class="anchor" id="a19400256e9ec96c16b289bb5e5808d51"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -100,7 +106,7 @@ template&lt;typename UserType &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static size_t <a class="el" href="structluwra_1_1Value.html">luwra::Value</a>&lt; UserType * &gt;::push </td>
+          <td class="memname">static void <a class="el" href="structluwra_1_1Value.html">luwra::Value</a>&lt; UserType * &gt;::push </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *&#160;</td>
           <td class="paramname"><em>state</em>, </td>
@@ -123,7 +129,9 @@ template&lt;typename UserType &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Copy a value onto the stack. This function behaves exactly as if you would call <code><a class="el" href="structluwra_1_1Value.html">Value</a>&lt;UserType&gt;::push(state, *ptr)</code>. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Copy a value onto the stack. This function behaves exactly as if you would call. </p>
+<p><code><a class="el" href="structluwra_1_1Value.html" title="Enables reading and pushing the type UserType. ">Value</a>&lt;UserType&gt;::push(state, *ptr)</code>. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">state</td><td>Lua state </td></tr>
     <tr><td class="paramname">ptr</td><td>Pointer to the value </td></tr>
@@ -167,7 +175,9 @@ template&lt;typename UserType &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p><a class="el" href="structluwra_1_1Reference.html">Reference</a> a user type value on the stack. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p><a class="el" href="structluwra_1_1Reference.html" title="Reference to a Lua value. ">Reference</a> a user type value on the stack. </p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">state</td><td>Lua state </td></tr>
     <tr><td class="paramname">n</td><td>Stack index </td></tr>

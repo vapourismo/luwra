@@ -16,28 +16,32 @@
 
 LUWRA_NS_BEGIN
 
-/**
- * A callable native Lua function.
- */
+/// A callable Lua function.
+///
+/// \tparam Ret Expected return type
 template <typename Ret>
 struct NativeFunction {
 	Reference ref;
 
+	/// Create from reference.
 	inline
 	NativeFunction(const Reference& ref):
 		ref(ref)
 	{}
 
+	/// Create from function on the stack.
 	inline
 	NativeFunction(State* state, int index):
 		ref(state, index)
 	{}
 
+	/// Convert from an existing @ref NativeFunction.
 	template <typename OtherRet> inline
 	NativeFunction(const NativeFunction<OtherRet>& other):
 		ref(other.ref)
 	{}
 
+	/// Invoke the function with no arguments.
 	inline
 	Ret operator ()() const {
 		ref.impl->push();
@@ -49,6 +53,7 @@ struct NativeFunction {
 		return returnValue;
 	}
 
+	/// Invoke the function with arguments.
 	template <typename... Args> inline
 	Ret operator ()(Args&&... args) const {
 		ref.impl->push();
@@ -62,18 +67,18 @@ struct NativeFunction {
 	}
 };
 
-/**
- * A callable native Lua function.
- */
+/// A callable Lua function without a return value.
 template <>
 struct NativeFunction<void> {
 	Reference ref;
 
+	/// Create from reference.
 	inline
 	NativeFunction(const Reference& ref):
 		ref(ref)
 	{}
 
+	/// Create from function on the stack.
 	inline
 	NativeFunction(State* state, int index):
 		ref(state, index)
@@ -83,12 +88,14 @@ struct NativeFunction<void> {
 			luaL_argerror(state, index, "Expected table, userdata or function");
 	}
 
+	/// Invoke the function with no arguments.
 	inline
 	void operator ()() const {
 		ref.impl->push();
 		lua_call(ref.impl->state, 0, 0);
 	}
 
+	/// Invoke the function with arguments.
 	template <typename... Args> inline
 	void operator ()(Args&&... args) const {
 		ref.impl->push();
@@ -98,6 +105,7 @@ struct NativeFunction<void> {
 	}
 };
 
+/// Enables reading/pushing Lua functions
 template <typename Ret>
 struct Value<NativeFunction<Ret>> {
 	static inline
@@ -111,6 +119,7 @@ struct Value<NativeFunction<Ret>> {
 	}
 };
 
+/// Enables reading Lua functions as `std::function`
 template <typename Ret, typename... Args>
 struct Value<std::function<Ret (Args...)>> {
 	static inline
@@ -119,6 +128,7 @@ struct Value<std::function<Ret (Args...)>> {
 	}
 };
 
+/// Enables pushing for C functions
 template <>
 struct Value<CFunction> {
 	static inline

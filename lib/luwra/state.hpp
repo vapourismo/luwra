@@ -16,16 +16,12 @@
 
 LUWRA_NS_BEGIN
 
-/**
- * Wrapper for a Lua state
- */
+/// Wrapper for a Lua state
 struct StateWrapper: Table {
 	State* state;
 	bool close_state;
 
-	/**
-	 * Operate on a foreign state instance.
-	 */
+	/// Operate on a foreign state instance.
 	inline
 	StateWrapper(State* state):
 		Table(getGlobalsTable(state)),
@@ -33,9 +29,7 @@ struct StateWrapper: Table {
 		close_state(false)
 	{}
 
-	/**
-	 * Create a new Lua state.
-	 */
+	/// Create a new Lua state.
 	inline
 	StateWrapper():
 		Table(getGlobalsTable(luaL_newstate())),
@@ -49,19 +43,19 @@ struct StateWrapper: Table {
 			lua_close(state);
 	}
 
+	/// Convert to `lua_State`.
 	inline
 	operator State*() const {
 		return state;
 	}
 
+	/// Load all built-in libraries.
 	inline
 	void loadStandardLibrary() const {
 		luaL_openlibs(state);
 	}
 
-	/**
-	 * See [luwra::registerUserType](@ref luwra::registerUserType).
-	 */
+	/// See [luwra::registerUserType](@ref luwra::registerUserType).
 	template <typename Sig> inline
 	void registerUserType(
 		const char* ctor_name,
@@ -71,9 +65,7 @@ struct StateWrapper: Table {
 		luwra::registerUserType<Sig>(state, ctor_name, methods, meta_methods);
 	}
 
-	/**
-	 * See [luwra::registerUserType](@ref luwra::registerUserType).
-	 */
+	/// See [luwra::registerUserType](@ref luwra::registerUserType).
 	template <typename UserType> inline
 	void registerUserType(
 		const MemberMap& methods = MemberMap(),
@@ -82,17 +74,13 @@ struct StateWrapper: Table {
 		luwra::registerUserType<UserType>(state, methods, meta_methods);
 	}
 
-	/**
-	 * See [luwra::push](@ref luwra::push).
-	 */
+	/// See [luwra::push](@ref luwra::push).
 	template <typename Type> inline
 	void push(Type&& value) const {
 		luwra::push(state, std::forward<Type>(value));
 	}
 
-	/**
-	 * See [luwra::push](@ref luwra::push).
-	 */
+	/// See [luwra::push](@ref luwra::push).
 	template <typename First, typename Second, typename... Rest> inline
 	void push(First&& first, Second&& second, Rest&&... rest) const {
 		luwra::push(
@@ -103,17 +91,13 @@ struct StateWrapper: Table {
 		);
 	}
 
-	/**
-	 * See [luwra::read](@ref luwra::read).
-	 */
+	/// See [luwra::read](@ref luwra::read).
 	template <typename Type> inline
 	Type read(int index) const {
 		return luwra::read<Type>(state, index);
 	}
 
-	/**
-	 * See [luwra::apply](@ref luwra::apply).
-	 */
+	/// See [luwra::apply](@ref luwra::apply).
 	template <typename Callable, typename... ExtraArgs> inline
 	typename internal::CallableInfo<Callable>::ReturnType apply(
 		int            pos,
@@ -128,9 +112,7 @@ struct StateWrapper: Table {
 		);
 	}
 
-	/**
-	 * See [luwra::map](@ref luwra::map).
-	 */
+	/// See [luwra::map](@ref luwra::map).
 	template <typename Callable, typename... ExtraArgs> inline
 	size_t map(int pos, Callable&& func, ExtraArgs&&... args) const {
 		return luwra::map(
@@ -141,31 +123,23 @@ struct StateWrapper: Table {
 		);
 	}
 
-	/**
-	 * See [luwra::equal](@ref luwra::equal).
-	 */
+	/// See [luwra::equal](@ref luwra::equal).
 	bool equal(int index1, int index2) const {
 		return luwra::equal(state, index1, index2);
 	}
 
-	/**
-	 * See [luwra::setMetatable](@ref luwra::setMetatable).
-	 */
+	/// See [luwra::setMetatable](@ref luwra::setMetatable).
 	void setMetatable(const char* name) const {
 		luwra::setMetatable(state, name);
 	}
 
-	/**
-	 * Execute a piece of code.
-	 */
+	/// Execute a piece of code.
 	inline
 	int runString(const char* code) const {
 		return luaL_dostring(state, code);
 	}
 
-	/**
-	 * Execute a file.
-	 */
+	/// Execute a file.
 	inline
 	int runFile(const char* filepath) const {
 		return luaL_dofile(state, filepath);

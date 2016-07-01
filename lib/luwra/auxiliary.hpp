@@ -15,13 +15,12 @@
 
 LUWRA_NS_BEGIN
 
-/**
- * Check if two values are equal.
- * \param state  Lua state
- * \param index1 Index of left-hand side value
- * \param index2 Index of right-hand side value
- */
-static inline
+/// Check if two values are equal.
+///
+/// \param state  Lua state
+/// \param index1 Index of left-hand side value
+/// \param index2 Index of right-hand side value
+inline
 bool equal(State* state, int index1, int index2) {
 #if LUA_VERSION_NUM <= 501
 	return lua_equal(state, index1, index2) == 1;
@@ -30,36 +29,33 @@ bool equal(State* state, int index1, int index2) {
 #endif
 }
 
-/**
- * Set a registered metatable for the value on top of the stack.
- * \param state Lua state
- * \param name  Metatable name
- */
-static inline
+/// Set a registered metatable for the table on top of the stack.
+///
+/// \param state Lua state
+/// \param name  Metatable name
+inline
 void setMetatable(State* state, const char* name) {
 	luaL_newmetatable(state, name);
 	lua_setmetatable(state, -2);
 }
 
-/**
- * Register a value as a global.
- * \param state Lua state
- * \param name  Global name
- * \param value Global value
- */
-template <typename Type> static inline
+/// Register a value in the global namespace.
+///
+/// \param state Lua state
+/// \param name  Global name
+/// \param value Global value
+template <typename Type> inline
 void setGlobal(State* state, const char* name, Type&& value) {
 	push(state, std::forward<Type>(value));
 	lua_setglobal(state, name);
 }
 
-/**
- * Retrieve a global value.
- * \param state Lua state
- * \param name  Global name
- * \returns Value associated with the given name
- */
-template <typename Type> static inline
+/// Retrieve a value from the global namespace.
+///
+/// \param state Lua state
+/// \param name  Global name
+/// \returns Value associated with the given name
+template <typename Type> inline
 Type getGlobal(State* state, const char* name) {
 	lua_getglobal(state, name);
 
@@ -90,30 +86,26 @@ namespace internal {
 	};
 }
 
-/**
- * Set multiple fields at once. Allows you to provide multiple key-value pairs.
- * \param state Lua state
- * \param index Table index
- * \param args  Key-value pairs
- */
-template <typename... Pairs> static inline
+/// Set multiple fields at once. Allows you to provide multiple key-value pairs.
+///
+/// \param state Lua state
+/// \param index Table index
+/// \param args  Key-value pairs
+template <typename... Pairs> inline
 void setFields(State* state, int index, Pairs&&... args) {
 	static_assert(sizeof...(Pairs) % 2 == 0, "Field parameters must appear in pairs");
 	internal::EntryPusher<Pairs...>::push(state, index, std::forward<Pairs>(args)...);
 }
 
-/**
- * Map of members
- */
+/// Map of members
 using MemberMap = std::map<Pushable, Pushable>;
 
-/**
- * Apply key-value pairs to a table.
- * \param state  Lua state
- * \param index  Table index
- * \param fields Table fields
- */
-static inline
+/// Apply key-value pairs to a table.
+///
+/// \param state  Lua state
+/// \param index  Table index
+/// \param fields Table fields
+inline
 void setFields(State* state, int index, const MemberMap& fields) {
 	if (index < 0)
 		index = lua_gettop(state) + (index + 1);
@@ -126,10 +118,8 @@ void setFields(State* state, int index, const MemberMap& fields) {
 	}
 }
 
-/**
- * Retrieve a field from a table.
- */
-template <typename Type, typename Key> static inline
+/// Retrieve a field from a table.
+template <typename Type, typename Key> inline
 Type getField(State* state, int index, Key&& key) {
 	if (index < 0)
 		index = lua_gettop(state) + (index + 1);

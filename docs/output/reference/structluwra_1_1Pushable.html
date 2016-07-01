@@ -32,6 +32,7 @@
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
     </ul>
   </div>
   <div id="navrow2" class="tabs2">
@@ -56,22 +57,26 @@
 <div class="title">luwra::Pushable Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Arbitrary pushable value.  
+ <a href="structluwra_1_1Pushable.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a28765b42c6ceb83c3209f1890f9c6041"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Pushable.html#a28765b42c6ceb83c3209f1890f9c6041">operator&lt;</a> (const <a class="el" href="structluwra_1_1Pushable.html">Pushable</a> &amp;other) const </td></tr>
+<tr class="separator:a28765b42c6ceb83c3209f1890f9c6041"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc89dbdd1b4523fbf56aab98a55bd3c5"><td class="memTemplParams" colspan="2">template&lt;typename Type &gt; </td></tr>
 <tr class="memitem:abc89dbdd1b4523fbf56aab98a55bd3c5"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structluwra_1_1Pushable.html#abc89dbdd1b4523fbf56aab98a55bd3c5">Pushable</a> (Type &amp;&amp;value)</td></tr>
 <tr class="separator:abc89dbdd1b4523fbf56aab98a55bd3c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a28765b42c6ceb83c3209f1890f9c6041"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Pushable.html#a28765b42c6ceb83c3209f1890f9c6041">operator&lt;</a> (const <a class="el" href="structluwra_1_1Pushable.html">Pushable</a> &amp;other) const </td></tr>
-<tr class="separator:a28765b42c6ceb83c3209f1890f9c6041"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:ad2c33823a3d441505c5e7f106d29f037"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; internal::PushableI &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Pushable.html#ad2c33823a3d441505c5e7f106d29f037">interface</a></td></tr>
-<tr class="separator:ad2c33823a3d441505c5e7f106d29f037"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a900fc393e150689b35055654596a5707"><td class="memItemLeft" align="right" valign="top">const internal::SharedPushableImpl&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Pushable.html#a900fc393e150689b35055654596a5707">interface</a></td></tr>
+<tr class="separator:a900fc393e150689b35055654596a5707"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A value which may be pushed onto the stack. </p>
+<div class="textblock"><p>Arbitrary pushable value. </p>
+<p>This class is implicitly constructible using any type. One can use this class with STL containers in order to achieve pushable mixed-type containers. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="abc89dbdd1b4523fbf56aab98a55bd3c5"></a>
 <div class="memitem">
@@ -125,12 +130,12 @@ template&lt;typename Type &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a class="anchor" id="ad2c33823a3d441505c5e7f106d29f037"></a>
+<a class="anchor" id="a900fc393e150689b35055654596a5707"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::shared_ptr&lt;internal::PushableI&gt; luwra::Pushable::interface</td>
+          <td class="memname">const internal::SharedPushableImpl luwra::Pushable::interface</td>
         </tr>
       </table>
 </div><div class="memdoc">

@@ -185,17 +185,13 @@ namespace internal {
 
 LUWRA_NS_END
 
-/**
- * Generate a `lua_CFunction` wrapper for a field, method or function.
- * \returns Wrapped entity as `lua_CFunction`
- */
+/// Generate a `lua_CFunction` wrapper for a field, method or function.
+/// \returns Wrapped entity as `lua_CFunction`
 #define LUWRA_WRAP(entity) \
 	(&luwra::internal::Wrapper<decltype(&entity)>::template invoke<&entity>)
 
-/**
- * Same as `LUWRA_WRAP` but specifically for members of a class. It is imperative that you use this
- * macro instead of `LUWRA_WRAP` when working with inherited members.
- */
+/// Same as `LUWRA_WRAP` but specifically for members of a class. It is imperative that you use this
+/// macro instead of `LUWRA_WRAP` when working with inherited members.
 #define LUWRA_WRAP_MEMBER(base, name) \
 	(&luwra::internal::MemberWrapper<decltype(&__LUWRA_NS_RESOLVE(base, name)), base>::template invoke<&__LUWRA_NS_RESOLVE(base, name)>)
 

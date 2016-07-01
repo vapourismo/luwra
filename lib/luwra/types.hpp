@@ -23,76 +23,66 @@
 
 LUWRA_NS_BEGIN
 
-/* Lua types */
 using Integer = lua_Integer;
 using Number = lua_Number;
 using State = lua_State;
 using CFunction = lua_CFunction;
 
-/**
- * User type
- */
 template <typename UserType>
 struct Value;
 
-/**
- * Fix specialization for const types.
- */
+/// Alias for @ref Value<Type>
 template <typename Type>
 struct Value<const Type>: Value<Type> {};
 
-/**
- * Fix specialization for volatile types.
- */
+/// Alias for @ref Value<Type>
 template <typename Type>
 struct Value<volatile Type>: Value<Type> {};
 
-/**
- * Fix specialization for const volatile types.
- */
+/// Alias for @ref Value<Type>
 template <typename Type>
 struct Value<const volatile Type>: Value<Type> {};
 
-/**
- * Fix specialization for lvalue reference types.
- */
+/// Alias for @ref Value<Type>
 template <typename Type>
 struct Value<Type&>: Value<Type> {};
 
-/**
- * Fix specialization for rvalue reference types.
- */
+/// Alias for @ref Value<Type>
 template <typename Type>
 struct Value<Type&&>: Value<Type> {};
 
-/**
- * Convenient wrapped for [Value<Type>::push](@ref Value<Type>::push).
- */
-template <typename Type> static inline
+/// Push a value onto the stack.
+///
+/// \param state Lua state
+/// \param value To be pushed
+template <typename Type> inline
 void push(State* state, Type&& value) {
 	Value<Type>::push(state, std::forward<Type>(value));
 }
 
-/**
- * Allows you to push multiple values at once.
- */
-template <typename First, typename Second, typename... Rest> static inline
-void push(State* state, First&& value, Second&& head, Rest&&... rest) {
-	push(state, std::forward<First>(value));
-	push(state, std::forward<Second>(head), std::forward<Rest>(rest)...);
+/// Push two or more values onto the stack.
+///
+/// \param state  Lua state
+/// \param first  First value
+/// \param second Second value
+/// \param rest   Remaining values
+template <typename First, typename Second, typename... Rest> inline
+void push(State* state, First&& first, Second&& second, Rest&&... rest) {
+	push(state, std::forward<First>(first));
+	push(state, std::forward<Second>(second), std::forward<Rest>(rest)...);
 }
 
-/**
- * Convenient wrapper for [Value<Type>::read](@ref Value<Type>::read).
- */
-template <typename Type> static inline
+/// Read a value off the stack.
+///
+/// \tparam Type  Type of targeted value
+/// \param  state Lua state
+/// \param  index Position of the value on the stack
+template <typename Type> inline
 auto read(State* state, int index) -> decltype(Value<Type>::read(state, index)) {
 	return Value<Type>::read(state, index);
 }
 
-/**
- * Nil
- */
+/// Enables reading/pushing `nil`
 template <>
 struct Value<std::nullptr_t> {
 	static inline
@@ -107,9 +97,7 @@ struct Value<std::nullptr_t> {
 	}
 };
 
-/**
- * Lua thread
- */
+/// Enables reading Lua threads
 template <>
 struct Value<State*> {
 	static inline
@@ -171,9 +159,7 @@ namespace internal {
 	};
 }
 
-/**
- * Define an integral type which will be transported via `base`.
- */
+// Define an integral type which will be transported via `base`.
 #define LUWRA_DEF_NUMERIC(base, type) \
 	template <> \
 	struct Value<type>: internal::NumericValueBase<type, base> {};
@@ -195,9 +181,10 @@ LUWRA_DEF_NUMERIC(Integer, unsigned long int)
 LUWRA_DEF_NUMERIC(Integer, signed   long long int)
 LUWRA_DEF_NUMERIC(Integer, unsigned long long int)
 
-// Do not export these macros
+// Do not export this macros
 #undef LUWRA_DEF_NUMERIC
 
+/// Enables reading/pushing strings as C strings
 template <>
 struct Value<const char*> {
 	static inline
@@ -211,6 +198,7 @@ struct Value<const char*> {
 	}
 };
 
+/// Enables reading/pushing string as `std::string`.
 template <>
 struct Value<std::string> {
 	static inline
@@ -226,6 +214,7 @@ struct Value<std::string> {
 	}
 };
 
+/// Enables reading/pushing booleans
 template <>
 struct Value<bool> {
 	static inline
@@ -240,13 +229,17 @@ struct Value<bool> {
 	}
 };
 
-// Alias for string literals
-template <size_t n>
-struct Value<char[n]>: Value<const char*> {};
+/// Alias for @ref Value<const char*>
+template <>
+struct Value<char*>: Value<const char*> {};
 
-// Alias for const string literals
-template <size_t n>
-struct Value<const char[n]>: Value<const char*> {};
+/// Alias for @ref Value<const char*>
+template <size_t N>
+struct Value<char[N]>: Value<const char*> {};
+
+/// Alias for @ref Value<const char*>
+template <size_t N>
+struct Value<const char[N]>: Value<const char*> {};
 
 namespace internal {
 	// Create reference the value pointed to by `index`. Does not remove the referenced value.
@@ -309,23 +302,21 @@ namespace internal {
 	using SharedReferenceImpl = std::shared_ptr<const internal::ReferenceImpl>;
 }
 
-/**
- * Reference to an arbitrary value.
- */
+/// Reference to a Lua value
 struct Reference {
 	const internal::SharedReferenceImpl impl;
 
-	/**
-	 * Create a reference to the value at the given index.
-	 */
+	/// Create a reference to the value at the given index.
+	///
+	/// \param state      Lua state
+	/// \param indexOrRef Index or reference identifier
+	/// \param isIndex    Is `indexOrRef` an index?
 	inline
 	Reference(State* state, int indexOrRef = -1, bool isIndex = true):
 		impl(std::make_shared<internal::ReferenceImpl>(state, indexOrRef, isIndex))
 	{}
 
-	/**
-	 * Read the referenced value.
-	 */
+	/// Read the referenced value.
 	template <typename Type> inline
 	Type read() const {
 		impl->push();
@@ -335,18 +326,14 @@ struct Reference {
 		return ret;
 	}
 
-	/**
-	 * Shortcut for `read<Type>()`.
-	 */
+	/// Shortcut for @ref read.
 	template <typename Type> inline
 	operator Type() const {
 		return read<Type>();
 	}
 };
 
-/**
- * See [Reference](@ref Reference).
- */
+/// Enables referencing/dereferencing values
 template <>
 struct Value<Reference> {
 	static inline
@@ -378,19 +365,23 @@ namespace internal {
 			luwra::push(state, value);
 		}
 	};
+
+	using SharedPushableImpl = std::shared_ptr<PushableI>;
 }
 
-/**
- * A value which may be pushed onto the stack.
- */
+/// Arbitrary pushable value
+///
+/// This class is implicitly constructible using any type. One can use this class with STL
+/// containers in order to achieve pushable mixed-type containers.
 struct Pushable {
-	std::shared_ptr<internal::PushableI> interface;
+	const internal::SharedPushableImpl interface;
 
 	template <typename Type> inline
 	Pushable(Type&& value):
 		interface(new internal::PushableT<Type>(std::forward<Type>(value)))
 	{}
 
+	// Used in ordered STL containers
 	inline
 	bool operator <(const Pushable& other) const {
 		return interface < other.interface;
@@ -405,6 +396,7 @@ struct Value<Pushable> {
 	}
 };
 
+/// Enables pushing for `std::vector` assuming `Type` is also pushable
 template <typename Type>
 struct Value<std::vector<Type>> {
 	static inline
@@ -419,6 +411,7 @@ struct Value<std::vector<Type>> {
 	}
 };
 
+/// Enables pushing for `std::list` assuming `Type` is pushable
 template <typename Type>
 struct Value<std::list<Type>> {
 	static inline
@@ -433,6 +426,7 @@ struct Value<std::list<Type>> {
 	}
 };
 
+/// Enables pushing for `std::map` assuming `Key` and `Type` are pushable
 template <typename Key, typename Type>
 struct Value<std::map<Key, Type>> {
 	static inline
@@ -447,6 +441,8 @@ struct Value<std::map<Key, Type>> {
 	}
 };
 
+/// A version of @ref Value for pushing return values onto the stack. @ref ReturnValue inherits
+/// `push` implementations from @ref Value.
 template <typename Type>
 struct ReturnValue {
 	template <typename... Args> static inline
@@ -456,57 +452,43 @@ struct ReturnValue {
 	}
 };
 
-/**
- * Fix specialization for const types.
- */
+/// Alias for `ReturnValue<Type>`
 template <typename Type>
 struct ReturnValue<const Type>: ReturnValue<Type> {};
 
-/**
- * Fix specialization for volatile types.
- */
+/// Alias for `ReturnValue<Type>`
 template <typename Type>
 struct ReturnValue<volatile Type>: ReturnValue<Type> {};
 
-/**
- * Fix specialization for const volatile types.
- */
+/// Alias for `ReturnValue<Type>`
 template <typename Type>
 struct ReturnValue<const volatile Type>: ReturnValue<Type> {};
 
-/**
- * Fix specialization for lvalue reference types.
- */
+/// Alias for `ReturnValue<Type>`
 template <typename Type>
 struct ReturnValue<Type&>: ReturnValue<Type> {};
 
-/**
- * Fix specialization for rvalue reference types.
- */
+/// Alias for `ReturnValue<Type>`
 template <typename Type>
 struct ReturnValue<Type&&>: ReturnValue<Type> {};
 
-/**
- * Push a return value onto the stack.
- *
- * \param state Lua state
- * \param value Return value
- * \returns Number of Lua values that have been pushed onto the stack
- */
+/// Push a return value onto the stack.
+///
+/// \param state Lua state
+/// \param value Return value
+/// \returns Number of Lua values that have been pushed onto the stack
 template <typename Type> inline
 size_t pushReturn(State* state, Type&& value) {
 	return ReturnValue<Type>::push(state, std::forward<Type>(value));
 }
 
-/**
- * Push multiple return values onto the stack.
- *
- * \param state   Lua state
- * \param first   First return value
- * \param second  Second return value
- * \param rest    More return values
- * \returns Number of Lua values that have been pushed onto the stack
- */
+/// Push multiple return values onto the stack.
+///
+/// \param state   Lua state
+/// \param first   First return value
+/// \param second  Second return value
+/// \param rest    More return values
+/// \returns Number of Lua values that have been pushed onto the stack
 template <typename First, typename Second, typename... Rest> inline
 size_t pushReturn(State* state, First&& first, Second&& second, Rest&&... rest) {
 	return
@@ -535,6 +517,7 @@ namespace internal {
 	using TuplePusher = _TuplePusher<MakeIndexSequence<sizeof...(Contents)>, Contents...>;
 }
 
+/// Enables `std::tuple` as return type
 template <typename... Contents>
 struct ReturnValue<std::tuple<Contents...>>:
 	internal::TuplePusher<Contents...> {};
