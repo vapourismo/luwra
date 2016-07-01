@@ -11,12 +11,7 @@
 #include "internal/indexsequence.hpp"
 
 #include <utility>
-#include <memory>
 #include <string>
-#include <vector>
-#include <tuple>
-#include <list>
-#include <map>
 
 LUWRA_NS_BEGIN
 

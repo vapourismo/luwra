@@ -10,6 +10,8 @@
 #include "../common.hpp"
 #include "../types.hpp"
 
+#include <memory>
+
 LUWRA_NS_BEGIN
 
 namespace internal {

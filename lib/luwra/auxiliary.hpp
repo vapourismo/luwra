@@ -8,11 +8,11 @@
 #define LUWRA_AUXILIARY_H_
 
 #include "common.hpp"
-#include "types.hpp"
 #include "types/pushable.hpp"
+#include "stack.hpp"
 
-#include <vector>
 #include <utility>
+#include <map>
 
 LUWRA_NS_BEGIN
 

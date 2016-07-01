@@ -9,9 +9,10 @@
 
 #include "common.hpp"
 #include "types.hpp"
+#include "types/reference.hpp"
 #include "stack.hpp"
-#include "usertypes.hpp"
 
+#include <utility>
 #include <functional>
 
 LUWRA_NS_BEGIN
@@ -115,7 +116,7 @@ struct Value<NativeFunction<Ret>> {
 
 	static inline
 	void push(State* state, const NativeFunction<Ret>& func) {
-		Value<Reference>::push(state, func);
+		luwra::push(state, func.ref);
 	}
 };
 

@@ -12,10 +12,7 @@
 #include "internal/typelist.hpp"
 #include "internal/types.hpp"
 
-#include <cassert>
 #include <utility>
-#include <functional>
-#include <string>
 
 LUWRA_NS_BEGIN
 

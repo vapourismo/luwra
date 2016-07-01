@@ -12,7 +12,7 @@
 #include "stack.hpp"
 #include "auxiliary.hpp"
 
-#include <map>
+#include <utility>
 #include <string>
 
 LUWRA_NS_BEGIN
@@ -167,9 +167,8 @@ struct Value<UserType*> {
 		return internal::UserTypeWrapper<Type>::check(state, n);
 	}
 
-	/// Copy a value onto the stack. This function behaves exactly as if you would call
+	/// Copy a value onto the stack.
 	///
-	/// `Value<UserType>::push(state, *ptr)`.
 	/// \param state Lua state
 	/// \param ptr   Pointer to the value
 	/// \returns Number of values that have been pushed
