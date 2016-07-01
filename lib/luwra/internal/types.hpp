@@ -92,6 +92,15 @@ template <typename Callable>
 struct CallableInfo<Callable&&>:
 	CallableInfo<Callable> {};
 
+template <typename Callable>
+using ReturnTypeOf = typename CallableInfo<Callable>::ReturnType;
+
+template <typename Callable>
+using ArgumentsOf = typename CallableInfo<Callable>::Arguments;
+
+template <typename Callable>
+using SignatureOf = typename CallableInfo<Callable>::Signature;
+
 // Catch usage error.
 template <typename T>
 struct MemberInfo {
