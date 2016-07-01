@@ -536,12 +536,8 @@ namespace internal {
 }
 
 template <typename... Contents>
-struct ReturnValue<std::tuple<Contents...>> {
-	static inline
-	size_t push(State* state, const std::tuple<Contents...>& value) {
-		return internal::TuplePusher<Contents...>::push(state, value);
-	}
-};
+struct ReturnValue<std::tuple<Contents...>>:
+	internal::TuplePusher<Contents...> {};
 
 LUWRA_NS_END
 
