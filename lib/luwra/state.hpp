@@ -109,20 +109,29 @@ struct StateWrapper: Table {
 	/**
 	 * See [luwra::apply](@ref luwra::apply).
 	 */
-	template <typename Callable> inline
-	typename internal::CallableInfo<Callable>::ReturnType apply(int pos, Callable&& obj) const {
-		return luwra::apply(state, pos, std::forward<Callable>(obj));
+	template <typename Callable, typename... ExtraArgs> inline
+	typename internal::CallableInfo<Callable>::ReturnType apply(
+		int            pos,
+		Callable&&     func,
+		ExtraArgs&&... args
+	) const {
+		return luwra::apply(
+			state,
+			pos,
+			std::forward<Callable>(func),
+			std::forward<ExtraArgs>(args)...
+		);
 	}
 
 	/**
 	 * See [luwra::map](@ref luwra::map).
 	 */
 	template <typename Callable, typename... ExtraArgs> inline
-	size_t map(int pos, Callable&& hook, ExtraArgs&&... args) const {
+	size_t map(int pos, Callable&& func, ExtraArgs&&... args) const {
 		return luwra::map(
 			state,
 			pos,
-			std::forward<Callable>(hook),
+			std::forward<Callable>(func),
 			std::forward<ExtraArgs>(args)...
 		);
 	}
