@@ -8,7 +8,7 @@
 #define LUWRA_TYPES_STL_H_
 
 #include "../common.hpp"
-#include "../types.hpp"
+#include "../values.hpp"
 #include "../stack.hpp"
 #include "../internal/indexsequence.hpp"
 

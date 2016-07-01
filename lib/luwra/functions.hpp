@@ -8,7 +8,7 @@
 #define LUWRA_FUNCTIONS_H_
 
 #include "common.hpp"
-#include "types.hpp"
+#include "values.hpp"
 #include "types/reference.hpp"
 #include "stack.hpp"
 

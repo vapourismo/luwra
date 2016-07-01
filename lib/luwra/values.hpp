@@ -4,8 +4,8 @@
  * Copyright (C) 2015, Ole Krüger <ole@vprsm.de>
  */
 
-#ifndef LUWRA_TYPES_H_
-#define LUWRA_TYPES_H_
+#ifndef LUWRA_VALUES_H_
+#define LUWRA_VALUES_H_
 
 #include "common.hpp"
 #include "internal/indexsequence.hpp"

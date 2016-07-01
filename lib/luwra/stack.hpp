@@ -8,7 +8,7 @@
 #define LUWRA_STACK_H_
 
 #include "common.hpp"
-#include "types.hpp"
+#include "values.hpp"
 #include "internal/typelist.hpp"
 #include "internal/types.hpp"
 

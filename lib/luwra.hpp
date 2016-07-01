@@ -12,12 +12,12 @@
 #include "luwra/functions.hpp"
 #include "luwra/stack.hpp"
 #include "luwra/state.hpp"
-#include "luwra/types.hpp"
 #include "luwra/types/pushable.hpp"
 #include "luwra/types/reference.hpp"
 #include "luwra/types/stl.hpp"
 #include "luwra/types/table.hpp"
 #include "luwra/usertypes.hpp"
+#include "luwra/values.hpp"
 #include "luwra/wrappers.hpp"
 
 #endif

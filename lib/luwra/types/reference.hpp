@@ -8,7 +8,7 @@
 #define LUWRA_TYPES_REFERENCE_H_
 
 #include "../common.hpp"
-#include "../types.hpp"
+#include "../values.hpp"
 
 #include <memory>
 
