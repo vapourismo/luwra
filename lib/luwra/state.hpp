@@ -9,12 +9,23 @@
 
 #include "common.hpp"
 #include "auxiliary.hpp"
-#include "tables.hpp"
+#include "types/table.hpp"
 
-#include <string>
 #include <utility>
 
 LUWRA_NS_BEGIN
+
+namespace internal {
+	/// Retrieve the table responsible for the global namespace.
+	inline
+	Table getGlobalsTable(State* state) {
+		#if LUA_VERSION_NUM <= 501
+			return {{state, internal::referenceValue(state, LUA_GLOBALSINDEX), false}};
+		#else
+			return {{state, LUA_RIDX_GLOBALS, false}};
+		#endif
+	}
+}
 
 /// Wrapper for a Lua state
 struct StateWrapper: Table {
@@ -24,7 +35,7 @@ struct StateWrapper: Table {
 	/// Operate on a foreign state instance.
 	inline
 	StateWrapper(State* state):
-		Table(getGlobalsTable(state)),
+		Table(internal::getGlobalsTable(state)),
 		state(state),
 		close_state(false)
 	{}
@@ -32,7 +43,7 @@ struct StateWrapper: Table {
 	/// Create a new Lua state.
 	inline
 	StateWrapper():
-		Table(getGlobalsTable(luaL_newstate())),
+		Table(internal::getGlobalsTable(luaL_newstate())),
 		state(ref.impl->state),
 		close_state(true)
 	{}

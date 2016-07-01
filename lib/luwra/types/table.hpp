@@ -4,12 +4,12 @@
  * Copyright (C) 2016, Ole Krüger <ole@vprsm.de>
  */
 
-#ifndef LUWRA_TABLES_H_
-#define LUWRA_TABLES_H_
+#ifndef LUWRA_TYPES_TABLE_H_
+#define LUWRA_TYPES_TABLE_H_
 
-#include "common.hpp"
-#include "types.hpp"
-#include "auxiliary.hpp"
+#include "../common.hpp"
+#include "../auxiliary.hpp"
+#include "reference.hpp"
 
 LUWRA_NS_BEGIN
 
@@ -234,16 +234,6 @@ struct Value<Table> {
 		value.ref.impl->push(state);
 	}
 };
-
-/// Retrieve the table responsible for the global namespace.
-inline
-Table getGlobalsTable(State* state) {
-#if LUA_VERSION_NUM <= 501
-	return {{state, internal::referenceValue(state, LUA_GLOBALSINDEX), false}};
-#else
-	return {{state, LUA_RIDX_GLOBALS, false}};
-#endif
-}
 
 LUWRA_NS_END
 
