@@ -32,6 +32,7 @@
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
     </ul>
   </div>
   <div id="navrow2" class="tabs2">
@@ -56,17 +57,24 @@
 <div class="title">luwra::NativeFunction&lt; void &gt; Struct Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>A callable Lua function without a return value.  
+ <a href="structluwra_1_1NativeFunction_3_01void_01_4.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a6c8d2de8e17430fee1805f6e46805fdd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1NativeFunction_3_01void_01_4.html#a6c8d2de8e17430fee1805f6e46805fdd">NativeFunction</a> (const <a class="el" href="structluwra_1_1Reference.html">Reference</a> &amp;<a class="el" href="structluwra_1_1NativeFunction_3_01void_01_4.html#ae7410fa66f3efc09fd5d27f0d1188e54">ref</a>)</td></tr>
+<tr class="memdesc:a6c8d2de8e17430fee1805f6e46805fdd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create from reference.  <a href="#a6c8d2de8e17430fee1805f6e46805fdd">More...</a><br /></td></tr>
 <tr class="separator:a6c8d2de8e17430fee1805f6e46805fdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab48036a688b99904adac5071d681bf4c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1NativeFunction_3_01void_01_4.html#ab48036a688b99904adac5071d681bf4c">NativeFunction</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int index)</td></tr>
+<tr class="memdesc:ab48036a688b99904adac5071d681bf4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create from function on the stack.  <a href="#ab48036a688b99904adac5071d681bf4c">More...</a><br /></td></tr>
 <tr class="separator:ab48036a688b99904adac5071d681bf4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a453d0b1b6caaf1a11b90a84f7aa902d8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1NativeFunction_3_01void_01_4.html#a453d0b1b6caaf1a11b90a84f7aa902d8">operator()</a> () const </td></tr>
+<tr class="memdesc:a453d0b1b6caaf1a11b90a84f7aa902d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke the function with no arguments.  <a href="#a453d0b1b6caaf1a11b90a84f7aa902d8">More...</a><br /></td></tr>
 <tr class="separator:a453d0b1b6caaf1a11b90a84f7aa902d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad7979a71366affdedd9965db675255e5"><td class="memTemplParams" colspan="2">template&lt;typename... Args&gt; </td></tr>
 <tr class="memitem:ad7979a71366affdedd9965db675255e5"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structluwra_1_1NativeFunction_3_01void_01_4.html#ad7979a71366affdedd9965db675255e5">operator()</a> (Args &amp;&amp;...args) const </td></tr>
+<tr class="memdesc:ad7979a71366affdedd9965db675255e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke the function with arguments.  <a href="#ad7979a71366affdedd9965db675255e5">More...</a><br /></td></tr>
 <tr class="separator:ad7979a71366affdedd9965db675255e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -78,7 +86,7 @@ Public Attributes</h2></td></tr>
 <div class="textblock"><h3>template&lt;&gt;<br />
 struct luwra::NativeFunction&lt; void &gt;</h3>
 
-<p>A callable native Lua function. </p>
+<p>A callable Lua function without a return value. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a6c8d2de8e17430fee1805f6e46805fdd"></a>
 <div class="memitem">
@@ -101,6 +109,8 @@ struct luwra::NativeFunction&lt; void &gt;</h3>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Create from reference. </p>
 
 </div>
 </div>
@@ -136,6 +146,8 @@ struct luwra::NativeFunction&lt; void &gt;</h3>
 </table>
 </div><div class="memdoc">
 
+<p>Create from function on the stack. </p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
@@ -159,6 +171,8 @@ struct luwra::NativeFunction&lt; void &gt;</h3>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Invoke the function with no arguments. </p>
 
 </div>
 </div>
@@ -185,6 +199,8 @@ template&lt;typename... Args&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Invoke the function with arguments. </p>
 
 </div>
 </div>

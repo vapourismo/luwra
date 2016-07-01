@@ -32,6 +32,7 @@
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
     </ul>
   </div>
   <div id="navrow2" class="tabs2">
@@ -56,6 +57,9 @@
 <div class="title">luwra::Value&lt; UserType &gt; Struct Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Enables reading and pushing the type <code>UserType</code>.  
+ <a href="structluwra_1_1Value.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
@@ -64,17 +68,19 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
+<tr class="memitem:ad73e638bad804b22afdc5e9ed8501831"><td class="memTemplParams" colspan="2">template&lt;typename... Args&gt; </td></tr>
+<tr class="memitem:ad73e638bad804b22afdc5e9ed8501831"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value.html#ad73e638bad804b22afdc5e9ed8501831">push</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, Args &amp;&amp;...args)</td></tr>
+<tr class="memdesc:ad73e638bad804b22afdc5e9ed8501831"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a user type value on the stack.  <a href="#ad73e638bad804b22afdc5e9ed8501831">More...</a><br /></td></tr>
+<tr class="separator:ad73e638bad804b22afdc5e9ed8501831"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeabaed6c7b97a0fbf8612c55904f6e12"><td class="memItemLeft" align="right" valign="top">static UserType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value.html#aeabaed6c7b97a0fbf8612c55904f6e12">read</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int n)</td></tr>
+<tr class="memdesc:aeabaed6c7b97a0fbf8612c55904f6e12"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structluwra_1_1Reference.html" title="Reference to a Lua value. ">Reference</a> a user type value on the stack.  <a href="#aeabaed6c7b97a0fbf8612c55904f6e12">More...</a><br /></td></tr>
 <tr class="separator:aeabaed6c7b97a0fbf8612c55904f6e12"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af278665a3bcf786421131652d3510564"><td class="memTemplParams" colspan="2">template&lt;typename... Args&gt; </td></tr>
-<tr class="memitem:af278665a3bcf786421131652d3510564"><td class="memTemplItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value.html#af278665a3bcf786421131652d3510564">push</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, Args &amp;&amp;...args)</td></tr>
-<tr class="separator:af278665a3bcf786421131652d3510564"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;typename UserType&gt;<br />
 struct luwra::Value&lt; UserType &gt;</h3>
 
-<p>User type </p>
+<p>Enables reading and pushing the type <code>UserType</code>. </p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a class="anchor" id="a7ee9b86c53d3ef22aee3956939979d63"></a>
 <div class="memitem">
@@ -91,7 +97,7 @@ template&lt;typename UserType&gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="af278665a3bcf786421131652d3510564"></a>
+<a class="anchor" id="ad73e638bad804b22afdc5e9ed8501831"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -103,7 +109,7 @@ template&lt;typename... Args&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static size_t <a class="el" href="structluwra_1_1Value.html">luwra::Value</a>&lt; UserType &gt;::push </td>
+          <td class="memname">static void <a class="el" href="structluwra_1_1Value.html">luwra::Value</a>&lt; UserType &gt;::push </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *&#160;</td>
           <td class="paramname"><em>state</em>, </td>
@@ -126,7 +132,9 @@ template&lt;typename... Args&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Construct a user type value on the stack. </p><dl class="section note"><dt>Note</dt><dd>Instances created using this specialization are allocated and constructed as full user data types in Lua. The default garbage-collecting hook will destruct the user type, once it has been marked. </dd></dl>
+
+<p>Construct a user type value on the stack. </p>
+<dl class="section note"><dt>Note</dt><dd>Instances created using this specialization are allocated and constructed as full user data types in Lua. The default garbage-collecting hook will destruct the user type, once it has been marked.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">state</td><td>Lua state </td></tr>
@@ -171,14 +179,16 @@ template&lt;typename UserType&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p><a class="el" href="structluwra_1_1Reference.html">Reference</a> a user type value on the stack. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p><a class="el" href="structluwra_1_1Reference.html" title="Reference to a Lua value. ">Reference</a> a user type value on the stack. </p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">state</td><td>Lua state </td></tr>
     <tr><td class="paramname">n</td><td>Stack index </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structluwra_1_1Reference.html">Reference</a> to the user type value </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structluwra_1_1Reference.html" title="Reference to a Lua value. ">Reference</a> to the user type value </dd></dl>
 
 </div>
 </div>
