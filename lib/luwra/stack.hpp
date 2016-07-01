@@ -126,20 +126,46 @@ typename internal::Layout<Sig>::ReturnType direct(
 	);
 }
 
+namespace internal {
+	// Catch usage error.
+	template <typename Seq, typename...>
+	struct _StackWalker {
+		static_assert(
+			sizeof(Seq) == -1,
+			"Invalid template parameters to _StackWalker"
+		);
+	};
+
+	// Collect values from the stack and call a Callable with them.
+	template <size_t... Indices, typename... Types>
+	struct _StackWalker<IndexSequence<Indices...>, Types...> {
+		template <typename Callable, typename... Args> static inline
+		ReturnTypeOf<Callable> walk(State* state, int pos, Callable&& func, Args&&... args) {
+			return func(
+				std::forward<Args>(args)...,
+				luwra::read<Types>(state, pos + Indices)...
+			);
+		}
+	};
+
+	template <typename... Types>
+	using StackWalker = _StackWalker<MakeIndexSequence<sizeof...(Types)>, Types...>;
+}
+
 /**
  * A version of [direct](@ref direct) which tries to infer the stack layout from the given
  * `Callable`. It allows you to omit the template parameters since the compiler is able to infer the
  * parameter and return types.
  */
 template <typename Callable, typename... ExtraArgs> static inline
-typename internal::CallableInfo<Callable>::ReturnType apply(
+internal::ReturnTypeOf<Callable> apply(
 	State*         state,
 	int            pos,
 	Callable&&     func,
 	ExtraArgs&&... args
 ) {
 	using ExtraArgList = internal::TypeList<ExtraArgs...>;
-	using CallableArgList = typename internal::CallableInfo<Callable>::Arguments;
+	using CallableArgList = internal::ArgumentsOf<Callable>;
 
 	static_assert(
 		ExtraArgList::template PrefixOf<
@@ -149,15 +175,10 @@ typename internal::CallableInfo<Callable>::ReturnType apply(
 		"Given extra arguments cannot be passed to the provided Callable"
 	);
 
-	using StackTypeList = typename CallableArgList::template Drop<sizeof...(ExtraArgs)>;
-	using ReturnType = typename internal::CallableInfo<Callable>::ReturnType;
+	using StackArgList = typename CallableArgList::template Drop<sizeof...(ExtraArgs)>;
+	using Walker = typename StackArgList::template Relay<internal::StackWalker>;
 
-	using Sig =
-		typename StackTypeList::template Relay<
-			internal::With<ReturnType>::template ConstructSignature
-		>;
-
-	return internal::Layout<Sig>::direct(
+	return Walker::walk(
 		state,
 		pos,
 		std::forward<Callable>(func),

@@ -15,3 +15,14 @@ TEST_CASE("MakeIndexSequence") {
 
 	REQUIRE((std::is_same<Result2, Expected2>::value));
 }
+
+TEST_CASE("IndexSequence") {
+	using Subject1 = IndexSequence<0, 1, 2, 3>;
+
+	SECTION("OffsetBy") {
+		using Result1 = Subject1::OffsetBy<1>;
+		using Expected1 = IndexSequence<1, 2, 3, 4>;
+
+		REQUIRE((std::is_same<Result1, Expected1>::value));
+	}
+}
