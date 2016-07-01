@@ -32,6 +32,47 @@ template <size_t Index, size_t... IndexTail, typename Head, typename... Tail>
 struct _DropFromList<IndexSequence<Index, IndexTail...>, Head, Tail...>:
 	_DropFromList<IndexSequence<IndexTail...>, Tail...> {};
 
+// Usage error, default to false.
+template <
+	template <typename, typename> class,
+	typename,
+	typename
+>
+struct _PrefixOf:
+	BoolConstant<false> {};
+
+// Empty prefix is a valid prefix for anything.
+template <
+	template <typename, typename> class Compare,
+	typename... Types
+>
+struct _PrefixOf<Compare, TypeList<>, TypeList<Types...>>:
+	BoolConstant<true> {};
+
+// // Match single prefix.
+// template <
+// 	template <typename, typename> class Compare,
+// 	typename Prefix,
+// 	typename Base,
+// 	typename... BaseTail
+// >
+// struct _PrefixOf<Compare, TypeList<Prefix>, TypeList<Base, BaseTail...>>:
+// 	Compare<Prefix, Base> {};
+
+// Iterate through prefix TypeList and check each.
+template <
+	template <typename, typename> class Compare,
+	typename Prefix,
+	typename... PrefixTail,
+	typename Base,
+	typename... BaseTail
+>
+struct _PrefixOf<Compare, TypeList<Prefix, PrefixTail...>, TypeList<Base, BaseTail...>>:
+	BoolConstant<
+		Compare<Prefix, Base>::value &&
+		_PrefixOf<Compare, TypeList<PrefixTail...>, TypeList<BaseTail...>>::value
+	> {};
+
 // Exchanging more than one template parameter pack can be cumbersome. This template helps to
 // simplify this by containing the type list within its own template parameters. One can extract the
 // types by matching against this template's parameters.
@@ -53,6 +94,11 @@ struct TypeList {
 	// Create a new TypeList which unifies the types contained in this and another TypeList.
 	template <typename Other>
 	using Append = typename Other::template Relay<TypeList<Types...>::template Add>;
+
+	// Check if this TypeList is a prefix to another. Use the given template to compare types within
+	// the TypeLists.
+	template <template <typename, typename> class Compare, typename Other>
+	using PrefixOf = _PrefixOf<Compare, TypeList<Types...>, Other>;
 };
 
 LUWRA_INTERNAL_NS_END

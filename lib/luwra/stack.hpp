@@ -9,7 +9,8 @@
 
 #include "common.hpp"
 #include "types.hpp"
-#include "internal.hpp"
+#include "internal/typelist.hpp"
+#include "internal/types.hpp"
 
 #include <cassert>
 #include <utility>
@@ -141,9 +142,8 @@ typename internal::CallableInfo<Callable>::ReturnType apply(
 	using CallableArgList = typename internal::CallableInfo<Callable>::Arguments;
 
 	static_assert(
-		internal::IsPrefixOf<
+		ExtraArgList::template PrefixOf<
 			std::is_convertible,
-			ExtraArgList,
 			CallableArgList
 		>::value,
 		"Given extra arguments cannot be passed to the provided Callable"

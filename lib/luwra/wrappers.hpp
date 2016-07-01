@@ -8,7 +8,7 @@
 #define LUWRA_WRAPPERS_H_
 
 #include "common.hpp"
-#include "internal.hpp"
+#include "internal/types.hpp"
 #include "types.hpp"
 #include "stack.hpp"
 
