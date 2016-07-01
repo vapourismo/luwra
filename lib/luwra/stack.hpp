@@ -289,6 +289,22 @@ size_t map(State* state, int pos, Callable&& hook, Args&&... args) {
 	);
 }
 
+/**
+ *
+ */
+template <typename Callable, typename... Args> static inline
+size_t mapi(State* state, int pos, Callable&& func, Args&&... args) {
+	return internal::SpecialValuePusher<internal::ReturnTypeOf<Callable>>::push(
+		state,
+		apply(
+			state,
+			pos,
+			std::forward<Callable>(func),
+			std::forward<Args>(args)...
+		)
+	);
+}
+
 LUWRA_NS_END
 
 #endif

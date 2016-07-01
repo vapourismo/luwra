@@ -9,11 +9,11 @@ int main() {
 	push(state, 37.13);
 	push(state, 13.37);
 
-	double r = apply(state, 1, [](double a, double b) {
-		return a + b;
-	});
+	mapi(state, 1, [](double a, double b, double c) {
+		return a + b + c;
+	}, -0.5);
 
-	std::cout << r << std::endl;
+	std::cout << read<double>(state, -1) << std::endl;
 
 	return 0;
 }
