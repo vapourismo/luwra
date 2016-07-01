@@ -149,9 +149,8 @@ struct Value {
 	 * \returns Number of values that have been pushed onto the stack
 	 */
 	template <typename... Args> static inline
-	size_t push(State* state, Args&&... args) {
+	void push(State* state, Args&&... args) {
 		construct<Type>(state, std::forward<Args>(args)...);
-		return 1;
 	}
 };
 
@@ -182,8 +181,8 @@ struct Value<UserType*> {
 	 * \returns Number of values that have been pushed
 	 */
 	static inline
-	size_t push(State* state, const UserType* ptr) {
-		return Value<UserType>::push(state, *ptr);
+	void push(State* state, const UserType* ptr) {
+		Value<UserType>::push(state, *ptr);
 	}
 };
 
