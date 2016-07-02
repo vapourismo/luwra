@@ -64,6 +64,8 @@ namespace {
 	struct B {
 		int x;
 
+		B(int x): x(x) {}
+
 		bool operator ==(const B& other) const {
 			return x == other.x;
 		}
