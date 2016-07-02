@@ -12,46 +12,6 @@
 #include <iostream>
 #include <memory>
 
-struct A {
-	std::unique_ptr<size_t> copyCounter;
-	std::unique_ptr<size_t> moveCounter;
-
-	A():
-		copyCounter(new size_t(0)),
-		moveCounter(new size_t(0))
-	{}
-
-	A(const A& a):
-		copyCounter(new size_t(0)),
-		moveCounter(new size_t(0))
-	 {
-		(*a.copyCounter)++;
-	}
-
-	A(A&& a):
-		copyCounter(new size_t(0)),
-		moveCounter(new size_t(0))
-	 {
-		(*a.moveCounter)++;
-	}
-};
-
-TEST_CASE("push") {
-	luwra::StateWrapper state;
-
-	SECTION("perfect forwarding") {
-		A onlyCopy;
-		luwra::push(state, onlyCopy);
-		REQUIRE(*onlyCopy.copyCounter == 1);
-		REQUIRE(*onlyCopy.moveCounter == 0);
-
-		A onlyMove;
-		luwra::push(state, std::move(onlyMove));
-		REQUIRE(*onlyMove.copyCounter == 0);
-		REQUIRE(*onlyMove.moveCounter == 1);
-	}
-}
-
 TEST_CASE("Value<nullptr_t>") {
 	luwra::StateWrapper state;
 
