@@ -89,6 +89,12 @@ struct Function<void> {
 			luaL_argerror(state, index, "Expected table, userdata or function");
 	}
 
+	/// Convert from an existing @ref Function.
+	template <typename OtherRet> inline
+	Function(const Function<OtherRet>& other):
+		ref(other.ref)
+	{}
+
 	/// Invoke the function with no arguments.
 	inline
 	void operator ()() const {
