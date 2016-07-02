@@ -63,6 +63,31 @@ struct Value<State*> {
 	}
 };
 
+/// Enables reading/pushing light data
+template <>
+struct Value<void*> {
+	static inline
+	void* read(State* state, int n) {
+		luaL_checktype(state, n, LUA_TLIGHTUSERDATA);
+		return lua_touserdata(state, n);
+	}
+
+	static inline
+	void push(State* state, void* data) {
+		lua_pushlightuserdata(state, data);
+	}
+};
+
+/// Enables reading constant light data
+template <>
+struct Value<const void*> {
+	static inline
+	const void* read(State* state, int n) {
+		luaL_checktype(state, n, LUA_TLIGHTUSERDATA);
+		return lua_touserdata(state, n);
+	}
+};
+
 namespace internal {
 	template <typename Type>
 	struct NumericTransportValue {
