@@ -68,10 +68,10 @@ Classes</h2></td></tr>
 Public Types</h2></td></tr>
 <tr class="memitem:aa98dd18091e93ff97ed394bfe43c19f2"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1MemberMethodImpl.html#aa98dd18091e93ff97ed394bfe43c19f2">BaseKlass</a> = typename <a class="el" href="structluwra_1_1internal_1_1MemberInfo.html">MemberInfo</a>&lt; MethodPointer &gt;::MemberOf</td></tr>
 <tr class="separator:aa98dd18091e93ff97ed394bfe43c19f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a92b0ffe6264a40701ef304762d5cd744"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1MemberMethodImpl.html#a92b0ffe6264a40701ef304762d5cd744">Receiver</a> = typename <a class="el" href="structluwra_1_1internal_1_1CallableInfo.html">CallableInfo</a>&lt; MethodPointer &gt;::template RelayArguments&lt; <a class="el" href="structluwra_1_1internal_1_1MemberMethodImpl_1_1ArgumentsReceiver.html">ArgumentsReceiver</a> &gt;</td></tr>
-<tr class="separator:a92b0ffe6264a40701ef304762d5cd744"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9e9577caef8e808ad56be5e409db7be0"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1MemberMethodImpl.html#a9e9577caef8e808ad56be5e409db7be0">Ret</a> = typename <a class="el" href="structluwra_1_1internal_1_1CallableInfo.html">CallableInfo</a>&lt; MethodPointer &gt;::ReturnType</td></tr>
-<tr class="separator:a9e9577caef8e808ad56be5e409db7be0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f5e56058c97e3dac8dc0f200975b166"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1MemberMethodImpl.html#a7f5e56058c97e3dac8dc0f200975b166">Receiver</a> = typename <a class="el" href="namespaceluwra_1_1internal.html#a103861b7ae25ed140c3215e748c2a196">ArgumentsOf</a>&lt; MethodPointer &gt;::template Relay&lt; <a class="el" href="structluwra_1_1internal_1_1MemberMethodImpl_1_1ArgumentsReceiver.html">ArgumentsReceiver</a> &gt;</td></tr>
+<tr class="separator:a7f5e56058c97e3dac8dc0f200975b166"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7bf0bb2560557989b33499f7db14e977"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1MemberMethodImpl.html#a7bf0bb2560557989b33499f7db14e977">Ret</a> = <a class="el" href="namespaceluwra_1_1internal.html#a31e5629825804ab15dfbb60d5571ace9">ReturnTypeOf</a>&lt; MethodPointer &gt;</td></tr>
+<tr class="separator:a7bf0bb2560557989b33499f7db14e977"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -94,28 +94,28 @@ template&lt;typename MethodPointer, typename Klass = typename MemberInfo&lt;Meth
 
 </div>
 </div>
-<a class="anchor" id="a92b0ffe6264a40701ef304762d5cd744"></a>
+<a class="anchor" id="a7f5e56058c97e3dac8dc0f200975b166"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename MethodPointer, typename Klass = typename MemberInfo&lt;MethodPointer&gt;::MemberOf&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="structluwra_1_1internal_1_1MemberMethodImpl.html">luwra::internal::MemberMethodImpl</a>&lt; MethodPointer, Klass &gt;::<a class="el" href="structluwra_1_1internal_1_1MemberMethodImpl.html#a92b0ffe6264a40701ef304762d5cd744">Receiver</a> =  typename <a class="el" href="structluwra_1_1internal_1_1CallableInfo.html">CallableInfo</a>&lt;MethodPointer&gt;::template RelayArguments&lt;<a class="el" href="structluwra_1_1internal_1_1MemberMethodImpl_1_1ArgumentsReceiver.html">ArgumentsReceiver</a>&gt;</td>
+          <td class="memname">using <a class="el" href="structluwra_1_1internal_1_1MemberMethodImpl.html">luwra::internal::MemberMethodImpl</a>&lt; MethodPointer, Klass &gt;::<a class="el" href="structluwra_1_1internal_1_1MemberMethodImpl.html#a7f5e56058c97e3dac8dc0f200975b166">Receiver</a> =  typename <a class="el" href="namespaceluwra_1_1internal.html#a103861b7ae25ed140c3215e748c2a196">ArgumentsOf</a>&lt;MethodPointer&gt;::template Relay&lt;<a class="el" href="structluwra_1_1internal_1_1MemberMethodImpl_1_1ArgumentsReceiver.html">ArgumentsReceiver</a>&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a class="anchor" id="a9e9577caef8e808ad56be5e409db7be0"></a>
+<a class="anchor" id="a7bf0bb2560557989b33499f7db14e977"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename MethodPointer, typename Klass = typename MemberInfo&lt;MethodPointer&gt;::MemberOf&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="structluwra_1_1internal_1_1MemberMethodImpl.html">luwra::internal::MemberMethodImpl</a>&lt; MethodPointer, Klass &gt;::<a class="el" href="structluwra_1_1internal_1_1MemberMethodImpl.html#a9e9577caef8e808ad56be5e409db7be0">Ret</a> =  typename <a class="el" href="structluwra_1_1internal_1_1CallableInfo.html">CallableInfo</a>&lt;MethodPointer&gt;::ReturnType</td>
+          <td class="memname">using <a class="el" href="structluwra_1_1internal_1_1MemberMethodImpl.html">luwra::internal::MemberMethodImpl</a>&lt; MethodPointer, Klass &gt;::<a class="el" href="structluwra_1_1internal_1_1MemberMethodImpl.html#a7bf0bb2560557989b33499f7db14e977">Ret</a> =  <a class="el" href="namespaceluwra_1_1internal.html#a31e5629825804ab15dfbb60d5571ace9">ReturnTypeOf</a>&lt;MethodPointer&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
