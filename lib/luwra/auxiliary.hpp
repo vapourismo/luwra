@@ -30,6 +30,32 @@ bool equal(State* state, int index1, int index2) {
 #endif
 }
 
+/// Check if 0 ore more values are equal.
+///
+/// \param state   Lua state
+/// \param indices Indices of values to compare
+inline
+bool equal(State* state, const std::initializer_list<int>& indices) {
+	auto it = indices.begin();
+	auto end = indices.end();
+
+	if (it == end)
+		return true;
+
+	int cmp_index = *it++;
+
+	while (it != end) {
+		int index = *it++;
+
+		if (!equal(state, cmp_index, index))
+			return false;
+
+		cmp_index = index;
+	}
+
+	return true;
+}
+
 /// Set a registered metatable for the table on top of the stack.
 ///
 /// \param state Lua state
