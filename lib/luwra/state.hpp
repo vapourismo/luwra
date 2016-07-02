@@ -112,7 +112,7 @@ struct StateWrapper: Table {
 
 	/// See [luwra::apply](@ref luwra::apply).
 	template <typename Callable, typename... ExtraArgs> inline
-	typename internal::CallableInfo<Callable>::ReturnType apply(
+	internal::ReturnTypeOf<Callable> apply(
 		int            pos,
 		Callable&&     func,
 		ExtraArgs&&... args

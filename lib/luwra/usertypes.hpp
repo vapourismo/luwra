@@ -224,17 +224,14 @@ void registerUserType(
 	const MemberMap& methods = MemberMap(),
 	const MemberMap& meta_methods = MemberMap()
 ) {
-	using UserType =
-		typename internal::StripUserType<
-			typename internal::CallableInfo<Sig>::ReturnType
-		>;
+	using UserType = internal::StripUserType<internal::ReturnTypeOf<Sig>>;
 
 	registerUserType<UserType>(state, methods, meta_methods);
 
 	setGlobal(
 		state,
 		ctor_name,
-		&internal::CallableInfo<Sig>::template RelayArguments<
+		&internal::ArgumentsOf<Sig>::template Relay<
 			// Relay parameter type list to this template and return the resulting type, which is
 			// internal::UserTypeWrapper<UserType>::ConstructorWrapper<Args...>.
 			internal::UserTypeWrapper<UserType>::template ConstructorWrapper

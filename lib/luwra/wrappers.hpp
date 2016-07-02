@@ -34,7 +34,7 @@ namespace internal {
 			"Instances of MethodPointer are not part of Klass"
 		);
 
-		using Ret = typename CallableInfo<MethodPointer>::ReturnType;
+		using Ret = ReturnTypeOf<MethodPointer>;
 
 		// This class will receive the argument types of MethodPointer.
 		template <typename... Args>
@@ -49,7 +49,7 @@ namespace internal {
 
 		// Relay argument types in order to find the appropriate MapSignature and hook function.
 		using Receiver =
-			typename CallableInfo<MethodPointer>::template RelayArguments<ArgumentsReceiver>;
+			typename ArgumentsOf<MethodPointer>::template Relay<ArgumentsReceiver>;
 
 		template <MethodPointer meth> static inline
 		int invoke(State* state) {
