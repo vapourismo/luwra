@@ -104,6 +104,13 @@ struct StateWrapper: Table {
 		);
 	}
 
+	/// See [luwra::push](@ref luwra::push).
+	template <typename Type> inline
+	const StateWrapper& operator <<(Type&& value) const {
+		push(std::forward<Type>(value));
+		return *this;
+	}
+
 	/// See [luwra::read](@ref luwra::read).
 	template <typename Type> inline
 	Type read(int index) const {
