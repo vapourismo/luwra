@@ -213,5 +213,32 @@ TEST_CASE("apply") {
 }
 
 TEST_CASE("map") {
+	luwra::StateWrapper state;
 
+	// 'map' almost exclusively relies on 'apply', therefore we shall only test if return values
+	// work properly.
+
+	SECTION("with one return value") {
+		REQUIRE(luwra::map(state, 1, []() {
+			return 13;
+		}) == 1);
+
+		REQUIRE(lua_gettop(state) == 1);
+		REQUIRE(luwra::read<int>(state, -1) == 13);
+	}
+
+	SECTION("with multiple return value") {
+		REQUIRE(luwra::map(state, 1, []() {
+			return std::make_tuple(13, 37);
+		}) == 2);
+
+		REQUIRE(lua_gettop(state) == 2);
+		REQUIRE(luwra::read<int>(state, -2) == 13);
+		REQUIRE(luwra::read<int>(state, -1) == 37);
+	}
+
+	SECTION("without return value") {
+		REQUIRE(luwra::map(state, 1, [](){}) == 0);
+		REQUIRE(lua_gettop(state) == 0);
+	}
 }
