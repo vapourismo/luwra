@@ -49,16 +49,6 @@ template <
 struct _PrefixOf<Compare, TypeList<>, TypeList<Types...>>:
 	BoolConstant<true> {};
 
-// // Match single prefix.
-// template <
-// 	template <typename, typename> class Compare,
-// 	typename Prefix,
-// 	typename Base,
-// 	typename... BaseTail
-// >
-// struct _PrefixOf<Compare, TypeList<Prefix>, TypeList<Base, BaseTail...>>:
-// 	Compare<Prefix, Base> {};
-
 // Iterate through prefix TypeList and check each.
 template <
 	template <typename, typename> class Compare,
@@ -71,6 +61,35 @@ struct _PrefixOf<Compare, TypeList<Prefix, PrefixTail...>, TypeList<Base, BaseTa
 	BoolConstant<
 		Compare<Prefix, Base>::value &&
 		_PrefixOf<Compare, TypeList<PrefixTail...>, TypeList<BaseTail...>>::value
+	> {};
+
+// Match two types
+template <
+	template <typename, typename> class Compare,
+	typename Left,
+	typename Right
+>
+struct _Match:
+	Compare<Left, Right> {};
+
+// Match two empty TypeLists
+template <template <typename, typename> class Compare>
+struct _Match<Compare, TypeList<>, TypeList<>>:
+	BoolConstant<true> {};
+
+// Match non-empty TypeLists
+template <
+	template <typename, typename> class Compare,
+	typename Left,
+	typename... LeftTail,
+	typename Right,
+	typename... RightTail
+>
+struct _Match<Compare, TypeList<Left, LeftTail...>, TypeList<Right, RightTail...>>:
+	BoolConstant<
+		sizeof...(LeftTail) == sizeof...(RightTail) &&
+		Compare<Left, Right>::value &&
+		_Match<Compare, TypeList<LeftTail...>, TypeList<RightTail...>>::value
 	> {};
 
 // Exchanging more than one template parameter pack can be cumbersome. This template helps to
@@ -99,6 +118,10 @@ struct TypeList {
 	// the TypeLists.
 	template <template <typename, typename> class Compare, typename Other>
 	using PrefixOf = _PrefixOf<Compare, TypeList<Types...>, Other>;
+
+	// Match with another TypeList.
+	template <template <typename, typename> class Compare, typename Other>
+	using Match = _Match<Compare, TypeList<Types...>, Other>;
 };
 
 LUWRA_INTERNAL_NS_END

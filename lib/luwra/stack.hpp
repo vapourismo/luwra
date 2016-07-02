@@ -95,6 +95,9 @@ namespace internal {
 
 	template <typename... Types>
 	using StackWalker = _StackWalker<MakeIndexSequence<sizeof...(Types)>, Types...>;
+
+	template <typename... Types>
+	using ReadResults = TypeList<ReturnTypeOf<decltype(read<Types>)>...>;
 }
 
 /// Retrieve values from the stack in order to invoke a `Callable` with them.
@@ -144,6 +147,7 @@ internal::ReturnTypeOf<Callable> apply(
 	using ExtraArgList = internal::TypeList<ExtraArgs...>;
 	using CallableArgList = internal::ArgumentsOf<Callable>;
 
+	// Make sure the extra arguments can be passed to 'func'.
 	static_assert(
 		ExtraArgList::template PrefixOf<
 			std::is_convertible,
@@ -153,6 +157,17 @@ internal::ReturnTypeOf<Callable> apply(
 	);
 
 	using StackArgList = typename CallableArgList::template Drop<sizeof...(ExtraArgs)>;
+	using ReadArgList = typename StackArgList::template Relay<internal::ReadResults>;
+
+	// Make sure that the results of 'read' operations match the required stack parameter types.
+	static_assert(
+		ReadArgList::template Match<
+			std::is_convertible,
+			StackArgList
+		>::value,
+		"Given Callable expects values to be extracted in ways that are not possible"
+	);
+
 	using Walker = typename StackArgList::template Relay<internal::StackWalker>;
 
 	return Walker::walk(
