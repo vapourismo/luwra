@@ -39,4 +39,14 @@ extern "C" {
 	#define __LUWRA_NS_RESOLVE(a, b) a::b
 #endif
 
+LUWRA_NS_BEGIN
+
+// Lua aliases
+using Integer = lua_Integer;
+using Number = lua_Number;
+using State = lua_State;
+using CFunction = lua_CFunction;
+
+LUWRA_NS_END
+
 #endif

@@ -15,11 +15,6 @@
 
 LUWRA_NS_BEGIN
 
-using Integer = lua_Integer;
-using Number = lua_Number;
-using State = lua_State;
-using CFunction = lua_CFunction;
-
 template <typename UserType>
 struct Value;
 
