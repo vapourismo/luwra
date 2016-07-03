@@ -12,6 +12,7 @@
 #include "../stack.hpp"
 #include "../internal/indexsequence.hpp"
 
+#include <utility>
 #include <tuple>
 #include <vector>
 #include <list>
@@ -89,6 +90,15 @@ namespace internal {
 template <typename... Contents>
 struct ReturnValue<std::tuple<Contents...>>:
 	internal::TuplePusher<Contents...> {};
+
+/// Enables `std::pair` as return type
+template <typename First, typename Second>
+struct ReturnValue<std::pair<First, Second>> {
+	static inline
+	size_t push(State* state, const std::pair<First, Second>& value) {
+		return pushReturn(state, value.first, value.second);
+	}
+};
 
 LUWRA_NS_END
 
