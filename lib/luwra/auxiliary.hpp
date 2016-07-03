@@ -79,6 +79,8 @@ void setGlobal(State* state, const char* name, Type&& value) {
 
 /// Retrieve a value from the global namespace.
 ///
+/// \tparam Type Expected type of the value
+///
 /// \param state Lua state
 /// \param name  Global name
 template <typename Type> inline
@@ -163,6 +165,12 @@ void setFields(State* state, int index, const MemberMap& fields) {
 }
 
 /// Retrieve a field from a table.
+///
+/// \tparam Type Expected type of the value
+///
+/// \param state Lua state
+/// \param index Index of the table
+/// \param key   Key value
 template <typename Type, typename Key> inline
 Type getField(State* state, int index, Key&& key) {
 	if (index < 0)

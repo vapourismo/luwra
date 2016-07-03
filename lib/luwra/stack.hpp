@@ -116,9 +116,8 @@ namespace internal {
 ///   double sum(double a, double b) {
 ///       return a + b;
 ///   }
-///
-///   // ...
-///
+/// ```
+/// ```
 ///   push(state, 37.13);
 ///   push(state, 13.37);
 ///

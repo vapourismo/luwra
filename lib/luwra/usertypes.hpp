@@ -100,7 +100,7 @@ namespace internal {
 ///
 /// Creates a full userdata which holds an instance of the user type. A metatable that is specific
 /// to `UserType` will be attached to the userdata. You can manage the metatable with
-/// @ref registerUserType.
+/// @ref registerUserType<UserType>.
 ///
 /// Example:
 ///
@@ -108,13 +108,12 @@ namespace internal {
 ///   struct A {
 ///       A(const char* a, int b);
 ///   };
-///
-///   // ...
-///
-///   construct<A>(state, "Hello World", 11);
+/// ```
+/// ```
+///   A& a = construct<A>(state, "Hello World", 11);
 /// ```
 template <typename UserType, typename... Args> inline
-internal::StripUserType<UserType>& construct(State* state, Args&&... args) {
+UserType& construct(State* state, Args&&... args) {
 	using Wrapper = internal::UserTypeWrapper<UserType>;
 	using Type = typename Wrapper::Type;
 
@@ -147,7 +146,7 @@ struct Value {
 		return *internal::UserTypeWrapper<UserType>::check(state, index);
 	}
 
-	/// Identical to @ref construct.
+	/// Identical to @ref construct<UserType>.
 	template <typename... Args> static inline
 	void push(State* state, Args&&... args) {
 		construct<UserType>(state, std::forward<Args>(args)...);
@@ -180,12 +179,14 @@ struct Value<UserType*> {
 /// Register the metatable for a user type. This function allows you to register properties which
 /// are shared across all instances of the user type.
 ///
+/// \tparam UserType Type for which the metatable will be registered
+///
 /// \param state Lua state
 /// \param props Properties of the user type
 /// \param meta  Meta methods of the user type
 ///
-/// By default a garbage-collector hook and string representation function are added as meta methods.
-/// Both can be overwritten.
+/// By default, a garbage-collector hook and string representation function are added as meta
+/// methods. Both can be overwritten.
 ///
 /// Example:
 ///
@@ -236,7 +237,7 @@ struct Value<UserType*> {
 /// ```
 template <typename UserType> inline
 void registerUserType(
-	State* state,
+	State*           state,
 	const MemberMap& props = MemberMap(),
 	const MemberMap& meta = MemberMap()
 ) {
@@ -271,8 +272,8 @@ void registerUserType(
 /// \param meta      Meta methods
 template <typename Sig> inline
 void registerUserType(
-	State* state,
-	const char* ctor_name,
+	State*           state,
+	const char*      ctor_name,
 	const MemberMap& props = MemberMap(),
 	const MemberMap& meta = MemberMap()
 ) {
