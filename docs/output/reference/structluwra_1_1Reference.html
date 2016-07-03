@@ -58,25 +58,30 @@
 </div><!--header-->
 <div class="contents">
 
-<p>Reference to a Lua value  
+<p>Reference cell which contains a Lua value  
  <a href="structluwra_1_1Reference.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a79c34ca4214661e85f33854dcf2d509d"><td class="memTemplParams" colspan="2">template&lt;typename Type &gt; </td></tr>
 <tr class="memitem:a79c34ca4214661e85f33854dcf2d509d"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structluwra_1_1Reference.html#a79c34ca4214661e85f33854dcf2d509d">operator Type</a> () const </td></tr>
-<tr class="memdesc:a79c34ca4214661e85f33854dcf2d509d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shortcut for <a class="el" href="structluwra_1_1Reference.html#a23df7d01c19295e9cc2e0105bffa156a">read&lt;Type&gt;</a>.  <a href="#a79c34ca4214661e85f33854dcf2d509d">More...</a><br /></td></tr>
+<tr class="memdesc:a79c34ca4214661e85f33854dcf2d509d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for <a class="el" href="structluwra_1_1Reference.html#a23df7d01c19295e9cc2e0105bffa156a">read&lt;Type&gt;</a>  <a href="#a79c34ca4214661e85f33854dcf2d509d">More...</a><br /></td></tr>
 <tr class="separator:a79c34ca4214661e85f33854dcf2d509d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a2799c2dbb7e7ec0b3ea4afe9620ea2"><td class="memTemplParams" colspan="2">template&lt;typename Type &gt; </td></tr>
+<tr class="memitem:a0a2799c2dbb7e7ec0b3ea4afe9620ea2"><td class="memTemplItemLeft" align="right" valign="top">const <a class="el" href="structluwra_1_1Reference.html">Reference</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structluwra_1_1Reference.html#a0a2799c2dbb7e7ec0b3ea4afe9620ea2">operator=</a> (Type &amp;&amp;value) const </td></tr>
+<tr class="memdesc:a0a2799c2dbb7e7ec0b3ea4afe9620ea2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for <a class="el" href="structluwra_1_1Reference.html#aede00c683cfebf554708be72d2505279">write</a>.  <a href="#a0a2799c2dbb7e7ec0b3ea4afe9620ea2">More...</a><br /></td></tr>
+<tr class="separator:a0a2799c2dbb7e7ec0b3ea4afe9620ea2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23df7d01c19295e9cc2e0105bffa156a"><td class="memTemplParams" colspan="2">template&lt;typename Type &gt; </td></tr>
 <tr class="memitem:a23df7d01c19295e9cc2e0105bffa156a"><td class="memTemplItemLeft" align="right" valign="top">Type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structluwra_1_1Reference.html#a23df7d01c19295e9cc2e0105bffa156a">read</a> () const </td></tr>
-<tr class="memdesc:a23df7d01c19295e9cc2e0105bffa156a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the referenced value.  <a href="#a23df7d01c19295e9cc2e0105bffa156a">More...</a><br /></td></tr>
+<tr class="memdesc:a23df7d01c19295e9cc2e0105bffa156a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the cell's value.  <a href="#a23df7d01c19295e9cc2e0105bffa156a">More...</a><br /></td></tr>
 <tr class="separator:a23df7d01c19295e9cc2e0105bffa156a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a57355c2fcd62e60d189c57b0060cc153"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Reference.html#a57355c2fcd62e60d189c57b0060cc153">Reference</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int indexOrRef=-1, bool isIndex=true)</td></tr>
-<tr class="memdesc:a57355c2fcd62e60d189c57b0060cc153"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a reference to the value at the given index or reference identifier. The value will not be removed.  <a href="#a57355c2fcd62e60d189c57b0060cc153">More...</a><br /></td></tr>
+<tr class="memdesc:a57355c2fcd62e60d189c57b0060cc153"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy the value at the given index or reference into a new reference cell. The value will not be removed.  <a href="#a57355c2fcd62e60d189c57b0060cc153">More...</a><br /></td></tr>
 <tr class="separator:a57355c2fcd62e60d189c57b0060cc153"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a447bdcf255ea67ffccc062a67910c4c8"><td class="memTemplParams" colspan="2">template&lt;typename Type &gt; </td></tr>
-<tr class="memitem:a447bdcf255ea67ffccc062a67910c4c8"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structluwra_1_1Reference.html#a447bdcf255ea67ffccc062a67910c4c8">write</a> (Type &amp;&amp;value) const </td></tr>
-<tr class="separator:a447bdcf255ea67ffccc062a67910c4c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aede00c683cfebf554708be72d2505279"><td class="memTemplParams" colspan="2">template&lt;typename Type &gt; </td></tr>
+<tr class="memitem:aede00c683cfebf554708be72d2505279"><td class="memTemplItemLeft" align="right" valign="top">const <a class="el" href="structluwra_1_1Reference.html">Reference</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structluwra_1_1Reference.html#aede00c683cfebf554708be72d2505279">write</a> (Type &amp;&amp;value) const </td></tr>
+<tr class="memdesc:aede00c683cfebf554708be72d2505279"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the cell's value.  <a href="#aede00c683cfebf554708be72d2505279">More...</a><br /></td></tr>
+<tr class="separator:aede00c683cfebf554708be72d2505279"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -84,7 +89,7 @@ Public Attributes</h2></td></tr>
 <tr class="separator:aab7b0d5abad93dfae819d41853d93dd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Reference to a Lua value </p>
+<div class="textblock"><p>Reference cell which contains a Lua value </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a57355c2fcd62e60d189c57b0060cc153"></a>
 <div class="memitem">
@@ -124,7 +129,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Create a reference to the value at the given index or reference identifier. The value will not be removed. </p>
+<p>Copy the value at the given index or reference into a new reference cell. The value will not be removed. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">state</td><td>Lua state </td></tr>
@@ -160,7 +165,35 @@ template&lt;typename Type &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Shortcut for <a class="el" href="structluwra_1_1Reference.html#a23df7d01c19295e9cc2e0105bffa156a">read&lt;Type&gt;</a>. </p>
+<p>Alias for <a class="el" href="structluwra_1_1Reference.html#a23df7d01c19295e9cc2e0105bffa156a">read&lt;Type&gt;</a> </p>
+
+</div>
+</div>
+<a class="anchor" id="a0a2799c2dbb7e7ec0b3ea4afe9620ea2"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Type &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structluwra_1_1Reference.html">Reference</a>&amp; luwra::Reference::operator= </td>
+          <td>(</td>
+          <td class="paramtype">Type &amp;&amp;&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Alias for <a class="el" href="structluwra_1_1Reference.html#aede00c683cfebf554708be72d2505279">write</a>. </p>
 
 </div>
 </div>
@@ -187,7 +220,7 @@ template&lt;typename Type &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Read the referenced value. </p>
+<p>Read the cell's value. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Type</td><td>The expected type </td></tr>
@@ -197,7 +230,7 @@ template&lt;typename Type &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a447bdcf255ea67ffccc062a67910c4c8"></a>
+<a class="anchor" id="aede00c683cfebf554708be72d2505279"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -207,7 +240,7 @@ template&lt;typename Type &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void luwra::Reference::write </td>
+          <td class="memname">const <a class="el" href="structluwra_1_1Reference.html">Reference</a>&amp; luwra::Reference::write </td>
           <td>(</td>
           <td class="paramtype">Type &amp;&amp;&#160;</td>
           <td class="paramname"><em>value</em></td><td>)</td>
@@ -220,6 +253,8 @@ template&lt;typename Type &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Set the cell's value. </p>
 
 </div>
 </div>

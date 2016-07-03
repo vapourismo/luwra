@@ -70,7 +70,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Arbitrary pushable value.  <a href="structluwra_1_1Pushable.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Reference.html">Reference</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to a Lua value  <a href="structluwra_1_1Reference.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference cell which contains a Lua value  <a href="structluwra_1_1Reference.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1ReturnValue.html">ReturnValue</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A version of <a class="el" href="structluwra_1_1Value.html">Value</a> for pushing return values onto the stack. <a class="el" href="structluwra_1_1ReturnValue.html">ReturnValue</a> inherits <code>push</code> implementations from <a class="el" href="structluwra_1_1Value.html">Value</a>.  <a href="structluwra_1_1ReturnValue.html#details">More...</a><br /></td></tr>
@@ -100,7 +100,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wrapper for a Lua state.  <a href="structluwra_1_1StateWrapper.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Table.html">Table</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides the means to modify Lua tables.  <a href="structluwra_1_1Table.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lua table.  <a href="structluwra_1_1Table.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value.html">Value</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables reading/pushing for an arbitrary type.  <a href="structluwra_1_1Value.html#details">More...</a><br /></td></tr>
@@ -218,6 +218,7 @@ Typedefs</h2></td></tr>
 <tr class="memitem:afd2d98882f58f8b2afdb49c3ada78659"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#afd2d98882f58f8b2afdb49c3ada78659">Integer</a> = lua_Integer</td></tr>
 <tr class="separator:afd2d98882f58f8b2afdb49c3ada78659"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2e12e40b973f0f56cb9a1dc91bef882a"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a> = std::map&lt; <a class="el" href="structluwra_1_1Pushable.html">Pushable</a>, <a class="el" href="structluwra_1_1Pushable.html">Pushable</a> &gt;</td></tr>
+<tr class="memdesc:a2e12e40b973f0f56cb9a1dc91bef882a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows mixed-type map of members.  <a href="#a2e12e40b973f0f56cb9a1dc91bef882a">More...</a><br /></td></tr>
 <tr class="separator:a2e12e40b973f0f56cb9a1dc91bef882a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae4dc6c1079fe75220ee055a00a49a3c1"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#ae4dc6c1079fe75220ee055a00a49a3c1">Number</a> = lua_Number</td></tr>
 <tr class="separator:ae4dc6c1079fe75220ee055a00a49a3c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -334,6 +335,9 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Allows mixed-type map of members. </p>
+<p>Example:</p>
+<div class="fragment"><div class="line"><a class="code" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a" title="Allows mixed-type map of members. ">MemberMap</a> members {</div><div class="line">    {<span class="stringliteral">&quot;foo&quot;</span>, 13.37},</div><div class="line">    {1, <span class="stringliteral">&quot;bar&quot;</span>},</div><div class="line">    {2, <span class="stringliteral">&quot;baz&quot;</span>}</div><div class="line">};</div></div><!-- fragment --> 
 </div>
 </div>
 <a class="anchor" id="ae4dc6c1079fe75220ee055a00a49a3c1"></a>

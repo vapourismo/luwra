@@ -113,6 +113,9 @@ namespace internal {
 			};
 		}
 	};
+
+	template <typename Parent, typename Key>
+	using TableAccessorPath = TableAccessor<Path<Parent, Key>>;
 }
 
 template <typename Accessor>
@@ -153,10 +156,30 @@ struct Table {
 		lua_pop(state, 1);
 	}
 
-	/// Access a field of the table.
+	/// Identical to @ref operator[].
 	template <typename Key> inline
-	internal::TableAccessor<internal::Path<const Reference&, Key>> access(Key&& key) const {
-		return internal::TableAccessor<internal::Path<const Reference&, Key>> {
+	const internal::TableAccessorPath<const Reference&, Key> access(Key&& key) const {
+		return operator [](std::forward<Key>(key));
+	}
+
+	/// Create an accessor to a field of the table.
+	///
+	/// Example:
+	///
+	/// ```
+	///   // Retrieve the value of a field.
+	///   int value = table["fieldName"];
+	///
+	///   // Update the value of a field.
+	///   table["fieldName"] = 13.37;
+	///
+	///   // Accessor nesting is also possible, assuming the field 'fieldName' is a table aswell.
+	///   table["fieldName"]["nestedFieldName"] = 1337;
+	///   int value = table["fieldName"]["nestedFieldName"];
+	/// ```
+	template <typename Key> inline
+	const internal::TableAccessorPath<const Reference&, Key> operator [](Key&& key) const {
+		return internal::TableAccessorPath<const Reference&, Key> {
 			ref.impl->state,
 			internal::Path<const Reference&, Key> {
 				ref,
@@ -165,13 +188,7 @@ struct Table {
 		};
 	}
 
-	/// Alias for @ref access
-	template <typename Key> inline
-	internal::TableAccessor<internal::Path<const Reference&, Key>> operator [](Key&& key) const {
-		return access(std::forward<Key>(key));
-	}
-
-	/// Update the fields.
+	/// Update the table using the given map of members.
 	inline
 	void update(const MemberMap& fields) const {
 		State* state = ref.impl->state;

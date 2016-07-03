@@ -143,6 +143,17 @@ void setFields(
 	);
 }
 
+/// Allows mixed-type map of members.
+///
+/// Example:
+///
+/// ```
+///   MemberMap members {
+///       {"foo", 13.37},
+///       {1, "bar"},
+///       {2, "baz"}
+///   };
+/// ```
 using MemberMap = std::map<Pushable, Pushable>;
 
 /// Apply key-value pairs to a table.
