@@ -30,7 +30,7 @@ bool equal(State* state, int index1, int index2) {
 #endif
 }
 
-/// Check if 0 ore more values are equal.
+/// Check if 0 or more values are equal.
 ///
 /// \param state   Lua state
 /// \param indices Indices of values to compare
@@ -81,7 +81,6 @@ void setGlobal(State* state, const char* name, Type&& value) {
 ///
 /// \param state Lua state
 /// \param name  Global name
-/// \returns Value associated with the given name
 template <typename Type> inline
 Type getGlobal(State* state, const char* name) {
 	lua_getglobal(state, name);
@@ -97,7 +96,7 @@ Type getGlobal(State* state, const char* name) {
 /// \param state Lua state
 /// \param index Index of the table
 /// \param key   Key
-/// \param value Value
+/// \param value %Value
 template <typename Key, typename Type> inline
 void setFields(State* state, int index, Key&& key, Type&& value) {
 	push(state, std::forward<Key>(key));
@@ -148,8 +147,8 @@ using MemberMap = std::map<Pushable, Pushable>;
 /// Apply key-value pairs to a table.
 ///
 /// \param state  Lua state
-/// \param index  Table index
-/// \param fields Table fields
+/// \param index  %Table index
+/// \param fields %Table fields
 inline
 void setFields(State* state, int index, const MemberMap& fields) {
 	if (index < 0)

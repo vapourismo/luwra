@@ -92,13 +92,27 @@ namespace internal {
 
 /// Construct a user type value on the stack.
 ///
-/// \note Instances created using this specialization are allocated and constructed as full user
-///       data types in Lua. The default garbage-collecting hook will destruct the user type,
-///       once it has been marked.
+/// \tparam UserType Type which you would like to construct
 ///
 /// \param state Lua state
 /// \param args  Constructor arguments
-/// \returns Reference to the constructed value
+/// \returns %Reference to the constructed value
+///
+/// Creates a full userdata which holds an instance of the user type. A metatable that is specific
+/// to `UserType` will be attached to the userdata. You can manage the metatable with
+/// @ref registerUserType.
+///
+/// Example:
+///
+/// ```
+///   struct A {
+///       A(const char* a, int b);
+///   };
+///
+///   // ...
+///
+///   construct<A>(state, "Hello World", 11);
+/// ```
 template <typename UserType, typename... Args> inline
 internal::StripUserType<UserType>& construct(State* state, Args&&... args) {
 	using Wrapper = internal::UserTypeWrapper<UserType>;
@@ -120,113 +134,151 @@ internal::StripUserType<UserType>& construct(State* state, Args&&... args) {
 	return *value;
 }
 
-/// Enables reading and pushing the type `UserType`.
+/// Enables reading/pushing for an arbitrary type.
 template <typename UserType>
 struct Value {
-	using Type = internal::StripUserType<UserType>;
-
-	/// Reference a user type value on the stack.
+	/// Get a reference to a user type value on the stack.
 	///
 	/// \param state Lua state
-	/// \param n     Stack index
-	/// \returns Reference to the user type value
+	/// \param index Index of the value on the stack
+	/// \returns A reference to the user type value
 	static inline
-	UserType& read(State* state, int n) {
-		// Type is unqualified, therefore conversion from Type& to UserType& is allowed
-		return *internal::UserTypeWrapper<Type>::check(state, n);
+	UserType& read(State* state, int index) {
+		return *internal::UserTypeWrapper<UserType>::check(state, index);
 	}
 
-	/// Construct a user type value on the stack.
-	///
-	/// \note Instances created using this specialization are allocated and constructed as full user
-	///       data types in Lua. The default garbage-collecting hook will destruct the user type,
-	///       once it has been marked.
-	///
-	/// \param state Lua state
-	/// \param args  Constructor arguments
-	/// \returns Number of values that have been pushed onto the stack
+	/// Identical to @ref construct.
 	template <typename... Args> static inline
 	void push(State* state, Args&&... args) {
-		construct<Type>(state, std::forward<Args>(args)...);
+		construct<UserType>(state, std::forward<Args>(args)...);
 	}
 };
 
 /// Enables reading and pushing the arbitrary type `UserType`.
 template <typename UserType>
 struct Value<UserType*> {
-	using Type = internal::StripUserType<UserType>;
-
-	/// Reference a user type value on the stack.
+	/// Get a pointer to a user type value on the stack.
 	///
 	/// \param state Lua state
-	/// \param n     Stack index
-	/// \returns Pointer to the user type value.
+	/// \param index Index of the value on the stack
+	/// \returns A pointer to the user type value.
 	static inline
-	UserType* read(State* state, int n) {
-		// Type is unqualified, therefore conversion from Type* to UserType* is allowed
-		return internal::UserTypeWrapper<Type>::check(state, n);
+	UserType* read(State* state, int index) {
+		return internal::UserTypeWrapper<UserType>::check(state, index);
 	}
 
-	/// Copy a value onto the stack.
+	/// Copy a user type value onto the stack. Uses @ref construct to invoke the copy constructor.
 	///
 	/// \param state Lua state
 	/// \param ptr   Pointer to the value
-	/// \returns Number of values that have been pushed
 	static inline
 	void push(State* state, const UserType* ptr) {
-		Value<UserType>::push(state, *ptr);
+		construct<UserType>(state, *ptr);
 	}
 };
 
-/// Register the metatable for user type `UserType`. This function allows you to register methods
-/// which are shared across all instances of this type.
+/// Register the metatable for a user type. This function allows you to register properties which
+/// are shared across all instances of the user type.
+///
+/// \param state Lua state
+/// \param props Properties of the user type
+/// \param meta  Meta methods of the user type
 ///
 /// By default a garbage-collector hook and string representation function are added as meta methods.
 /// Both can be overwritten.
 ///
-/// \tparam UserType User type struct or class
+/// Example:
 ///
-/// \param state        Lua state
-/// \param methods      Map of methods
-/// \param meta_methods Map of meta methods
+/// ```
+///   struct A {
+///       int foo;
+///
+///       A(int x);
+///
+///       void bar();
+///
+///       A __add(const A& x);
+///   };
+/// ```
+/// ```
+///   // Register the meta table
+///   registerUserType<A>(
+///       state,
+///       {
+///           LUWRA_MEMBER(A, foo),
+///           LUWRA_MEMBER(A, bar)
+///       },
+///       {
+///           LUWRA_MEMBER(A, __add)
+///       }
+///   );
+///
+///   // Register the constructor in the global namespace
+///   setGlobal(state, "A", LUWRA_WRAP_CONSTRUCTOR(A, int));
+/// ```
+///
+/// in Lua
+///
+/// ```
+///   local x = A(13)
+///
+///   -- Retrieve 'foo'
+///   x:foo()
+///
+///   -- Update 'foo'
+///   x:foo(37)
+///
+///   -- Call 'bar'
+///   x:bar()
+///
+///   -- Use meta method '__add'
+///   local y = x + A(-16)
+/// ```
 template <typename UserType> inline
 void registerUserType(
 	State* state,
-	const MemberMap& methods = MemberMap(),
-	const MemberMap& meta_methods = MemberMap()
+	const MemberMap& props = MemberMap(),
+	const MemberMap& meta = MemberMap()
 ) {
 	using Wrapper = internal::UserTypeWrapper<UserType>;
 
 	// Setup an appropriate metatable name
 	luaL_newmetatable(state, Wrapper::name.c_str());
 
-	// Insert methods
+	// Set fields of the metatable
 	setFields(state, -1,
-		"__index",    methods,
+		"__index",    props,
 		"__gc",       &Wrapper::destruct,
 		"__tostring", &Wrapper::stringify
 	);
 
 	// Insert meta methods
-	setFields(state, -1, meta_methods);
+	setFields(state, -1, meta);
 
 	// Pop metatable off the stack
 	lua_pop(state, -1);
 }
 
-/// Same as the other `registerUserType` but registers the constructor as well. The template
-/// parameter is a signature `UserType(Args...)` where `UserType` is the user type and `Args...` its
-/// constructor parameters types.
+/// Same as the other @ref registerUserType but registers a constructor in the global namespace.
+///
+/// \tparam Sig A signature in the form of `UserType(CtorArgs...)` where `UserType` is the user type
+///             for which you would like to register the metatable and `CtorArgs...` the parameter
+///             types of the constructor.
+///
+/// \param state     Lua state
+/// \param ctor_name Constructor name
+/// \param props     Properties
+/// \param meta      Meta methods
 template <typename Sig> inline
 void registerUserType(
 	State* state,
 	const char* ctor_name,
-	const MemberMap& methods = MemberMap(),
-	const MemberMap& meta_methods = MemberMap()
+	const MemberMap& props = MemberMap(),
+	const MemberMap& meta = MemberMap()
 ) {
 	using UserType = internal::StripUserType<internal::ReturnTypeOf<Sig>>;
 
-	registerUserType<UserType>(state, methods, meta_methods);
+	registerUserType<UserType>(state, props, meta);
 
 	setGlobal(
 		state,
@@ -241,8 +293,26 @@ void registerUserType(
 
 LUWRA_NS_END
 
-/// Generate a user type member manifest. This is basically any type which can be constructed using a
-/// string and a `lua_CFunction`. For example `std::pair<Pushable, Pushable>`.
+/// Generate a user type member manifest. This is basically any type which can be constructed using
+/// a string and a `lua_CFunction`. For example `std::pair<Pushable, Pushable>`.
+///
+/// \param type User type
+/// \param name Member name
+///
+/// Example:
+///
+/// ```
+///   struct A {
+///       void foo();
+///   };
+///
+///   // ...
+///
+///   // LUWRA_MEMBER(A, foo) == {"foo", LUWRA_WRAP_MEMBER(A, foo)}
+///   MemberMap members {
+///       LUWRA_MEMBER(A, foo)
+///   };
+/// ```
 #define LUWRA_MEMBER(type, name) \
 	{#name, LUWRA_WRAP_MEMBER(type, name)}
 
@@ -250,11 +320,29 @@ LUWRA_NS_END
 ///
 /// \param type Type to instantiate
 /// \param ...  Constructor parameter types
-/// \return Wrapped function as `lua_CFunction`
+///
+/// Example:
+///
+/// ```
+///   struct A {
+///       A(const char* a, int b);
+///   };
+///
+///   // ...
+///
+///   lua_CFunction ctor = LUWRA_WRAP_CONSTRUCTOR(A, const char*, int);
+///   setGlobal(state, "A", ctor);
+/// ```
+///
+/// in Lua
+///
+/// ```
+///   local a = A("Hello World", 11)
+/// ```
 #define LUWRA_WRAP_CONSTRUCTOR(type, ...) \
-	(&luwra::internal::UserTypeWrapper<luwra::internal::StripUserType<type>>::ConstructorWrapper<__VA_ARGS__>::invoke)
+	(&luwra::internal::UserTypeWrapper<ype>::ConstructorWrapper<__VA_ARGS__>::invoke)
 
-/// Define the registry name for a user type.
+/// Define the registry name for a user type. This macro has to be used outside of any namespace.
 ///
 /// \param type    User type
 /// \param regname Registry name

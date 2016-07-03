@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>Luwra: luwra::Value&lt; std::vector&lt; Type &gt; &gt; Struct Template Reference</title>
+<title>Luwra: luwra::ReturnValue&lt; std::pair&lt; First, Second &gt; &gt; Struct Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -45,43 +45,43 @@
   </div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="namespaceluwra.html">luwra</a></li><li class="navelem"><a class="el" href="structluwra_1_1Value_3_01std_1_1vector_3_01Type_01_4_01_4.html">Value&lt; std::vector&lt; Type &gt; &gt;</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespaceluwra.html">luwra</a></li><li class="navelem"><a class="el" href="structluwra_1_1ReturnValue_3_01std_1_1pair_3_01First_00_01Second_01_4_01_4.html">ReturnValue&lt; std::pair&lt; First, Second &gt; &gt;</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
-<a href="structluwra_1_1Value_3_01std_1_1vector_3_01Type_01_4_01_4-members.html">List of all members</a>  </div>
+<a href="structluwra_1_1ReturnValue_3_01std_1_1pair_3_01First_00_01Second_01_4_01_4-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">luwra::Value&lt; std::vector&lt; Type &gt; &gt; Struct Template Reference</div>  </div>
+<div class="title">luwra::ReturnValue&lt; std::pair&lt; First, Second &gt; &gt; Struct Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Enables pushing for <code>std::vector</code> assuming <code>Type</code> is also pushable.  
- <a href="structluwra_1_1Value_3_01std_1_1vector_3_01Type_01_4_01_4.html#details">More...</a></p>
+<p>Enables <code>std::pair</code> as return type.  
+ <a href="structluwra_1_1ReturnValue_3_01std_1_1pair_3_01First_00_01Second_01_4_01_4.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:afe08fd8a091c2c4e221fd696eaf753d7"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value_3_01std_1_1vector_3_01Type_01_4_01_4.html#afe08fd8a091c2c4e221fd696eaf753d7">push</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, const std::vector&lt; Type &gt; &amp;vec)</td></tr>
-<tr class="separator:afe08fd8a091c2c4e221fd696eaf753d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17f17b9910e2f3768ad1f55555f807fb"><td class="memItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1ReturnValue_3_01std_1_1pair_3_01First_00_01Second_01_4_01_4.html#a17f17b9910e2f3768ad1f55555f807fb">push</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, const std::pair&lt; First, Second &gt; &amp;value)</td></tr>
+<tr class="separator:a17f17b9910e2f3768ad1f55555f807fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;typename Type&gt;<br />
-struct luwra::Value&lt; std::vector&lt; Type &gt; &gt;</h3>
+<div class="textblock"><h3>template&lt;typename First, typename Second&gt;<br />
+struct luwra::ReturnValue&lt; std::pair&lt; First, Second &gt; &gt;</h3>
 
-<p>Enables pushing for <code>std::vector</code> assuming <code>Type</code> is also pushable. </p>
+<p>Enables <code>std::pair</code> as return type. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="afe08fd8a091c2c4e221fd696eaf753d7"></a>
+<a class="anchor" id="a17f17b9910e2f3768ad1f55555f807fb"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Type &gt; </div>
+template&lt;typename First , typename Second &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static void <a class="el" href="structluwra_1_1Value.html">luwra::Value</a>&lt; std::vector&lt; Type &gt; &gt;::push </td>
+          <td class="memname">static size_t <a class="el" href="structluwra_1_1ReturnValue.html">luwra::ReturnValue</a>&lt; std::pair&lt; First, Second &gt; &gt;::push </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *&#160;</td>
           <td class="paramname"><em>state</em>, </td>
@@ -89,8 +89,8 @@ template&lt;typename Type &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::vector&lt; Type &gt; &amp;&#160;</td>
-          <td class="paramname"><em>vec</em>&#160;</td>
+          <td class="paramtype">const std::pair&lt; First, Second &gt; &amp;&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
         </tr>
         <tr>
           <td></td>

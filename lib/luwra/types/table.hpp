@@ -164,7 +164,7 @@ struct Table {
 		};
 	}
 
-	/// Alias for @ref access;
+	/// Alias for @ref access
 	template <typename Key> inline
 	internal::TableAccessor<internal::Path<const Reference&, Key>> operator [](Key&& key) const {
 		return access(std::forward<Key>(key));

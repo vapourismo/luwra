@@ -218,7 +218,7 @@ namespace internal {
 /// \param pos   Index of the first stack value
 /// \param func  A `Callable`
 /// \param args  Extra arguments passed to `func` before the stack values
-/// \returns Number of return values push onto stack
+/// \returns Number of return values pushed onto the stack
 ///
 /// Works similar to [apply](@ref apply). This function pushes the result of `func` onto the stack.
 template <typename Callable, typename... ExtraArgs> inline

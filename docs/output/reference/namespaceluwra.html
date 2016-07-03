@@ -81,6 +81,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1ReturnValue_3_01const_01volatile_01Type_01_4.html">ReturnValue&lt; const volatile Type &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for <code><a class="el" href="structluwra_1_1ReturnValue.html" title="A version of Value for pushing return values onto the stack. ReturnValue inherits push implementation...">ReturnValue</a>&lt;Type&gt;</code>  <a href="structluwra_1_1ReturnValue_3_01const_01volatile_01Type_01_4.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1ReturnValue_3_01std_1_1pair_3_01First_00_01Second_01_4_01_4.html">ReturnValue&lt; std::pair&lt; First, Second &gt; &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables <code>std::pair</code> as return type.  <a href="structluwra_1_1ReturnValue_3_01std_1_1pair_3_01First_00_01Second_01_4_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1ReturnValue_3_01std_1_1tuple_3_01Contents_8_8_8_01_4_01_4.html">ReturnValue&lt; std::tuple&lt; Contents... &gt; &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables <code>std::tuple</code> as return type.  <a href="structluwra_1_1ReturnValue_3_01std_1_1tuple_3_01Contents_8_8_8_01_4_01_4.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -100,7 +103,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lua table.  <a href="structluwra_1_1Table.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value.html">Value</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables reading and pushing the type <code>UserType</code>.  <a href="structluwra_1_1Value.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables reading/pushing for an arbitrary type.  <a href="structluwra_1_1Value.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value_3_01bool_01_4.html">Value&lt; bool &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables reading/pushing booleans.  <a href="structluwra_1_1Value_3_01bool_01_4.html#details">More...</a><br /></td></tr>
@@ -234,6 +237,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ade0a5882c43740f0a88a42dcb76cccce"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#ade0a5882c43740f0a88a42dcb76cccce">equal</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int index1, int index2)</td></tr>
 <tr class="memdesc:ade0a5882c43740f0a88a42dcb76cccce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if two values are equal.  <a href="#ade0a5882c43740f0a88a42dcb76cccce">More...</a><br /></td></tr>
 <tr class="separator:ade0a5882c43740f0a88a42dcb76cccce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24e0c550b7fc84ac7d61bd359f2b921a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a24e0c550b7fc84ac7d61bd359f2b921a">equal</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, const std::initializer_list&lt; int &gt; &amp;indices)</td></tr>
+<tr class="memdesc:a24e0c550b7fc84ac7d61bd359f2b921a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if 0 or more values are equal.  <a href="#a24e0c550b7fc84ac7d61bd359f2b921a">More...</a><br /></td></tr>
+<tr class="separator:a24e0c550b7fc84ac7d61bd359f2b921a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ea9807d2bf5f9d4063c81b61dcac1d0"><td class="memTemplParams" colspan="2">template&lt;typename Type , typename Key &gt; </td></tr>
 <tr class="memitem:a4ea9807d2bf5f9d4063c81b61dcac1d0"><td class="memTemplItemLeft" align="right" valign="top">Type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a4ea9807d2bf5f9d4063c81b61dcac1d0">getField</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int index, Key &amp;&amp;key)</td></tr>
 <tr class="memdesc:a4ea9807d2bf5f9d4063c81b61dcac1d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve a field from a table.  <a href="#a4ea9807d2bf5f9d4063c81b61dcac1d0">More...</a><br /></td></tr>
@@ -266,14 +272,14 @@ Functions</h2></td></tr>
 <tr class="memitem:a3c459338d5baea22fc1ea7f6184ae14d"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a3c459338d5baea22fc1ea7f6184ae14d">read</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int index) -&gt; decltype(<a class="el" href="structluwra_1_1Value.html">Value</a>&lt; Type &gt;::read(state, index))</td></tr>
 <tr class="memdesc:a3c459338d5baea22fc1ea7f6184ae14d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a value off the stack.  <a href="#a3c459338d5baea22fc1ea7f6184ae14d">More...</a><br /></td></tr>
 <tr class="separator:a3c459338d5baea22fc1ea7f6184ae14d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a606cc60dea4408c6cdfae41598cd1795"><td class="memTemplParams" colspan="2">template&lt;typename UserType &gt; </td></tr>
-<tr class="memitem:a606cc60dea4408c6cdfae41598cd1795"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a606cc60dea4408c6cdfae41598cd1795">registerUserType</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, const <a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a> &amp;methods=<a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a>(), const <a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a> &amp;meta_methods=<a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a>())</td></tr>
-<tr class="memdesc:a606cc60dea4408c6cdfae41598cd1795"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register the metatable for user type <code>UserType</code>. This function allows you to register methods which are shared across all instances of this type.  <a href="#a606cc60dea4408c6cdfae41598cd1795">More...</a><br /></td></tr>
-<tr class="separator:a606cc60dea4408c6cdfae41598cd1795"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a161cc8a95717a4cdff5cd424ca66b070"><td class="memTemplParams" colspan="2">template&lt;typename Sig &gt; </td></tr>
-<tr class="memitem:a161cc8a95717a4cdff5cd424ca66b070"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a161cc8a95717a4cdff5cd424ca66b070">registerUserType</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, const char *ctor_name, const <a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a> &amp;methods=<a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a>(), const <a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a> &amp;meta_methods=<a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a>())</td></tr>
-<tr class="memdesc:a161cc8a95717a4cdff5cd424ca66b070"><td class="mdescLeft">&#160;</td><td class="mdescRight">Same as the other <code>registerUserType</code> but registers the constructor as well. The template parameter is a signature <code>UserType(Args...)</code> where <code>UserType</code> is the user type and <code>Args...</code> its constructor parameters types.  <a href="#a161cc8a95717a4cdff5cd424ca66b070">More...</a><br /></td></tr>
-<tr class="separator:a161cc8a95717a4cdff5cd424ca66b070"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0eb06735b4dcd8d26173cf609260673b"><td class="memTemplParams" colspan="2">template&lt;typename UserType &gt; </td></tr>
+<tr class="memitem:a0eb06735b4dcd8d26173cf609260673b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a0eb06735b4dcd8d26173cf609260673b">registerUserType</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, const <a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a> &amp;props=<a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a>(), const <a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a> &amp;meta=<a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a>())</td></tr>
+<tr class="memdesc:a0eb06735b4dcd8d26173cf609260673b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register the metatable for a user type. This function allows you to register properties which are shared across all instances of the user type.  <a href="#a0eb06735b4dcd8d26173cf609260673b">More...</a><br /></td></tr>
+<tr class="separator:a0eb06735b4dcd8d26173cf609260673b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06485564f429e1c3f8b42df78fac917c"><td class="memTemplParams" colspan="2">template&lt;typename Sig &gt; </td></tr>
+<tr class="memitem:a06485564f429e1c3f8b42df78fac917c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a06485564f429e1c3f8b42df78fac917c">registerUserType</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, const char *ctor_name, const <a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a> &amp;props=<a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a>(), const <a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a> &amp;meta=<a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a>())</td></tr>
+<tr class="memdesc:a06485564f429e1c3f8b42df78fac917c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Same as the other <a class="el" href="namespaceluwra.html#a0eb06735b4dcd8d26173cf609260673b">registerUserType</a> but registers a constructor in the global namespace.  <a href="#a06485564f429e1c3f8b42df78fac917c">More...</a><br /></td></tr>
+<tr class="separator:a06485564f429e1c3f8b42df78fac917c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5a40554a02ee6d215fbec44b14fd9e13"><td class="memTemplParams" colspan="2">template&lt;typename Key , typename Type &gt; </td></tr>
 <tr class="memitem:a5a40554a02ee6d215fbec44b14fd9e13"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a5a40554a02ee6d215fbec44b14fd9e13">setFields</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int index, Key &amp;&amp;key, Type &amp;&amp;value)</td></tr>
 <tr class="memdesc:a5a40554a02ee6d215fbec44b14fd9e13"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the field of a table.  <a href="#a5a40554a02ee6d215fbec44b14fd9e13">More...</a><br /></td></tr>
@@ -455,7 +461,12 @@ template&lt;typename UserType , typename... Args&gt; </div>
 </div><div class="memdoc">
 
 <p>Construct a user type value on the stack. </p>
-<dl class="section note"><dt>Note</dt><dd>Instances created using this specialization are allocated and constructed as full user data types in Lua. The default garbage-collecting hook will destruct the user type, once it has been marked.</dd></dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">UserType</td><td>Type which you would like to construct</td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">state</td><td>Lua state </td></tr>
@@ -463,8 +474,10 @@ template&lt;typename UserType , typename... Args&gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structluwra_1_1Reference.html" title="Reference to a Lua value. ">Reference</a> to the constructed value </dd></dl>
-
+<dl class="section return"><dt>Returns</dt><dd>Reference to the constructed value</dd></dl>
+<p>Creates a full userdata which holds an instance of the user type. A metatable that is specific to <code>UserType</code> will be attached to the userdata. You can manage the metatable with <a class="el" href="namespaceluwra.html#a0eb06735b4dcd8d26173cf609260673b">registerUserType</a>.</p>
+<p>Example:</p>
+<div class="fragment"><div class="line"><span class="keyword">struct </span>A {</div><div class="line">    A(<span class="keyword">const</span> <span class="keywordtype">char</span>* a, <span class="keywordtype">int</span> b);</div><div class="line">};</div><div class="line"></div><div class="line"><span class="comment">// ...</span></div><div class="line"></div><div class="line">construct&lt;A&gt;(state, <span class="stringliteral">&quot;Hello World&quot;</span>, 11);</div></div><!-- fragment --> 
 </div>
 </div>
 <a class="anchor" id="ade0a5882c43740f0a88a42dcb76cccce"></a>
@@ -511,6 +524,49 @@ template&lt;typename UserType , typename... Args&gt; </div>
     <tr><td class="paramname">state</td><td>Lua state </td></tr>
     <tr><td class="paramname">index1</td><td>Index of left-hand side value </td></tr>
     <tr><td class="paramname">index2</td><td>Index of right-hand side value </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a24e0c550b7fc84ac7d61bd359f2b921a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool luwra::equal </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *&#160;</td>
+          <td class="paramname"><em>state</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::initializer_list&lt; int &gt; &amp;&#160;</td>
+          <td class="paramname"><em>indices</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Check if 0 or more values are equal. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">state</td><td>Lua state </td></tr>
+    <tr><td class="paramname">indices</td><td>Indices of values to compare </td></tr>
   </table>
   </dd>
 </dl>
@@ -603,7 +659,6 @@ template&lt;typename Type &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structluwra_1_1Value.html" title="Enables reading and pushing the type UserType. ">Value</a> associated with the given name </dd></dl>
 
 </div>
 </div>
@@ -663,7 +718,7 @@ template&lt;typename Callable , typename... ExtraArgs&gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Number of return values push onto stack</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Number of return values pushed onto the stack</dd></dl>
 <p>Works similar to <a class="el" href="namespaceluwra.html#aa9fee091aaa7a0073108054e316ffb28">apply</a>. This function pushes the result of <code>func</code> onto the stack. </p>
 
 </div>
@@ -929,7 +984,7 @@ template&lt;typename Type &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a606cc60dea4408c6cdfae41598cd1795"></a>
+<a class="anchor" id="a0eb06735b4dcd8d26173cf609260673b"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -948,13 +1003,13 @@ template&lt;typename UserType &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a> &amp;&#160;</td>
-          <td class="paramname"><em>methods</em> = <code><a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a>()</code>, </td>
+          <td class="paramname"><em>props</em> = <code><a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a>()</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a> &amp;&#160;</td>
-          <td class="paramname"><em>meta_methods</em> = <code><a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a>()</code>&#160;</td>
+          <td class="paramname"><em>meta</em> = <code><a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a>()</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -969,26 +1024,22 @@ template&lt;typename UserType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Register the metatable for user type <code>UserType</code>. This function allows you to register methods which are shared across all instances of this type. </p>
-<p>By default a garbage-collector hook and string representation function are added as meta methods. Both can be overwritten.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">UserType</td><td>User type struct or class</td></tr>
-  </table>
-  </dd>
-</dl>
+<p>Register the metatable for a user type. This function allows you to register properties which are shared across all instances of the user type. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">state</td><td>Lua state </td></tr>
-    <tr><td class="paramname">methods</td><td>Map of methods </td></tr>
-    <tr><td class="paramname">meta_methods</td><td>Map of meta methods </td></tr>
+    <tr><td class="paramname">props</td><td>Properties of the user type </td></tr>
+    <tr><td class="paramname">meta</td><td>Meta methods of the user type</td></tr>
   </table>
   </dd>
 </dl>
-
+<p>By default a garbage-collector hook and string representation function are added as meta methods. Both can be overwritten.</p>
+<p>Example:</p>
+<div class="fragment"><div class="line"><span class="keyword">struct </span>A {</div><div class="line">    <span class="keywordtype">int</span> foo;</div><div class="line"></div><div class="line">    A(<span class="keywordtype">int</span> x);</div><div class="line"></div><div class="line">    <span class="keywordtype">void</span> bar();</div><div class="line"></div><div class="line">    A __add(<span class="keyword">const</span> A&amp; x);</div><div class="line">};</div></div><!-- fragment --> <div class="fragment"><div class="line"><span class="comment">// Register the meta table</span></div><div class="line">registerUserType&lt;A&gt;(</div><div class="line">    state,</div><div class="line">    {</div><div class="line">        <a class="code" href="usertypes_8hpp.html#a6fb730cf9446ba2b6164dde982e73a26" title="Generate a user type member manifest. This is basically any type which can be constructed using a str...">LUWRA_MEMBER</a>(A, foo),</div><div class="line">        <a class="code" href="usertypes_8hpp.html#a6fb730cf9446ba2b6164dde982e73a26" title="Generate a user type member manifest. This is basically any type which can be constructed using a str...">LUWRA_MEMBER</a>(A, bar)</div><div class="line">    },</div><div class="line">    {</div><div class="line">        <a class="code" href="usertypes_8hpp.html#a6fb730cf9446ba2b6164dde982e73a26" title="Generate a user type member manifest. This is basically any type which can be constructed using a str...">LUWRA_MEMBER</a>(A, __add)</div><div class="line">    }</div><div class="line">);</div><div class="line"></div><div class="line"><span class="comment">// Register the constructor in the global namespace</span></div><div class="line"><a class="code" href="namespaceluwra.html#a2deb00eb307dab348feb69bedf20e673" title="Register a value in the global namespace. ">setGlobal</a>(state, <span class="stringliteral">&quot;A&quot;</span>, <a class="code" href="usertypes_8hpp.html#a48be8524421441d4c19e8bbc8d355df1" title="Generate a lua_CFunction wrapper for a constructor. ">LUWRA_WRAP_CONSTRUCTOR</a>(A, <span class="keywordtype">int</span>));</div></div><!-- fragment --><p>in Lua</p>
+<div class="fragment"><div class="line">local x = A(13)</div><div class="line"></div><div class="line">-- Retrieve <span class="stringliteral">&#39;foo&#39;</span></div><div class="line">x:foo()</div><div class="line"></div><div class="line">-- Update <span class="stringliteral">&#39;foo&#39;</span></div><div class="line">x:foo(37)</div><div class="line"></div><div class="line">-- Call <span class="stringliteral">&#39;bar&#39;</span></div><div class="line">x:bar()</div><div class="line"></div><div class="line">-- Use meta method <span class="stringliteral">&#39;__add&#39;</span></div><div class="line">local y = x + A(-16)</div></div><!-- fragment --> 
 </div>
 </div>
-<a class="anchor" id="a161cc8a95717a4cdff5cd424ca66b070"></a>
+<a class="anchor" id="a06485564f429e1c3f8b42df78fac917c"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -1013,13 +1064,13 @@ template&lt;typename Sig &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a> &amp;&#160;</td>
-          <td class="paramname"><em>methods</em> = <code><a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a>()</code>, </td>
+          <td class="paramname"><em>props</em> = <code><a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a>()</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a> &amp;&#160;</td>
-          <td class="paramname"><em>meta_methods</em> = <code><a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a>()</code>&#160;</td>
+          <td class="paramname"><em>meta</em> = <code><a class="el" href="namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a">MemberMap</a>()</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1034,7 +1085,22 @@ template&lt;typename Sig &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Same as the other <code>registerUserType</code> but registers the constructor as well. The template parameter is a signature <code>UserType(Args...)</code> where <code>UserType</code> is the user type and <code>Args...</code> its constructor parameters types. </p>
+<p>Same as the other <a class="el" href="namespaceluwra.html#a0eb06735b4dcd8d26173cf609260673b">registerUserType</a> but registers a constructor in the global namespace. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Sig</td><td>A signature in the form of <code>UserType(CtorArgs...)</code> where <code>UserType</code> is the user type for which you would like to register the metatable and <code>CtorArgs...</code> the parameter types of the constructor.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">state</td><td>Lua state </td></tr>
+    <tr><td class="paramname">ctor_name</td><td>Constructor name </td></tr>
+    <tr><td class="paramname">props</td><td>Properties </td></tr>
+    <tr><td class="paramname">meta</td><td>Meta methods </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -1090,7 +1156,7 @@ template&lt;typename Key , typename Type &gt; </div>
     <tr><td class="paramname">state</td><td>Lua state </td></tr>
     <tr><td class="paramname">index</td><td>Index of the table </td></tr>
     <tr><td class="paramname">key</td><td>Key </td></tr>
-    <tr><td class="paramname">value</td><td><a class="el" href="structluwra_1_1Value.html" title="Enables reading and pushing the type UserType. ">Value</a> </td></tr>
+    <tr><td class="paramname">value</td><td>Value </td></tr>
   </table>
   </dd>
 </dl>
@@ -1219,8 +1285,8 @@ template&lt;typename Key1 , typename Type1 , typename Key2 , typename Type2 , ty
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">state</td><td>Lua state </td></tr>
-    <tr><td class="paramname">index</td><td><a class="el" href="structluwra_1_1Table.html" title="Lua table. ">Table</a> index </td></tr>
-    <tr><td class="paramname">fields</td><td><a class="el" href="structluwra_1_1Table.html" title="Lua table. ">Table</a> fields </td></tr>
+    <tr><td class="paramname">index</td><td>Table index </td></tr>
+    <tr><td class="paramname">fields</td><td>Table fields </td></tr>
   </table>
   </dd>
 </dl>

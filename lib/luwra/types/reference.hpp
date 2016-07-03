@@ -99,7 +99,7 @@ struct Reference {
 		return ret;
 	}
 
-	/// Shortcut for @ref read.
+	/// Shortcut for @ref read<Type>.
 	template <typename Type> inline
 	operator Type() const {
 		return read<Type>();
