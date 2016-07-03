@@ -28,11 +28,13 @@ namespace internal {
 		// Read the value to which this path points to.
 		template <typename V> inline
 		V read(State* state) const {
-			push(state, *this);
+			push(state, parent);
+			push(state, key);
+			lua_rawget(state, -2);
 
 			V value = luwra::read<V>(state, -1);
 
-			lua_pop(state, 1);
+			lua_pop(state, 2);
 			return value;
 		}
 
@@ -51,7 +53,6 @@ namespace internal {
 
 template <typename Parent, typename Key>
 struct Value<internal::Path<Parent, Key>> {
-	// Push the value to which the path points onto the stack.
 	static inline
 	void push(State* state, const internal::Path<Parent, Key>& accessor) {
 		luwra::push(state, accessor.parent);
@@ -91,7 +92,7 @@ namespace internal {
 		}
 
 		template <typename Key> inline
-		TableAccessor<Path<Accessor, Key>> access(Key&& subkey) const && {
+		const TableAccessor<Path<Accessor, Key>> access(Key&& subkey) const && {
 			return TableAccessor<Path<Accessor, Key>> {
 				state,
 				Path<Accessor, Key> {
@@ -102,7 +103,7 @@ namespace internal {
 		}
 
 		template <typename Key> inline
-		TableAccessor<Path<Accessor, Key>> operator [](Key&& subkey) const && {
+		const TableAccessor<Path<Accessor, Key>> operator [](Key&& subkey) const && {
 			return TableAccessor<Path<Accessor, Key>> {
 				state,
 				Path<Accessor, Key> {
@@ -117,7 +118,7 @@ namespace internal {
 template <typename Accessor>
 struct Value<internal::TableAccessor<Accessor>> {
 	static inline
-	void push(State* state, internal::TableAccessor<Accessor>& ta) {
+	void push(State* state, const internal::TableAccessor<Accessor>& ta) {
 		luwra::push(state, ta.accessor);
 	}
 };
