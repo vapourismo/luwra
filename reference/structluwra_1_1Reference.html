@@ -58,7 +58,7 @@
 </div><!--header-->
 <div class="contents">
 
-<p><a class="el" href="structluwra_1_1Reference.html" title="Reference to a Lua value. ">Reference</a> to a Lua value.  
+<p>Reference to a Lua value  
  <a href="structluwra_1_1Reference.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -72,8 +72,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a23df7d01c19295e9cc2e0105bffa156a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the referenced value.  <a href="#a23df7d01c19295e9cc2e0105bffa156a">More...</a><br /></td></tr>
 <tr class="separator:a23df7d01c19295e9cc2e0105bffa156a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a57355c2fcd62e60d189c57b0060cc153"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Reference.html#a57355c2fcd62e60d189c57b0060cc153">Reference</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int indexOrRef=-1, bool isIndex=true)</td></tr>
-<tr class="memdesc:a57355c2fcd62e60d189c57b0060cc153"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a reference to the value at the given index.  <a href="#a57355c2fcd62e60d189c57b0060cc153">More...</a><br /></td></tr>
+<tr class="memdesc:a57355c2fcd62e60d189c57b0060cc153"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a reference to the value at the given index or reference identifier. The value will not be removed.  <a href="#a57355c2fcd62e60d189c57b0060cc153">More...</a><br /></td></tr>
 <tr class="separator:a57355c2fcd62e60d189c57b0060cc153"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a447bdcf255ea67ffccc062a67910c4c8"><td class="memTemplParams" colspan="2">template&lt;typename Type &gt; </td></tr>
+<tr class="memitem:a447bdcf255ea67ffccc062a67910c4c8"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structluwra_1_1Reference.html#a447bdcf255ea67ffccc062a67910c4c8">write</a> (Type &amp;&amp;value) const </td></tr>
+<tr class="separator:a447bdcf255ea67ffccc062a67910c4c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -81,7 +84,7 @@ Public Attributes</h2></td></tr>
 <tr class="separator:aab7b0d5abad93dfae819d41853d93dd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p><a class="el" href="structluwra_1_1Reference.html" title="Reference to a Lua value. ">Reference</a> to a Lua value. </p>
+<div class="textblock"><p>Reference to a Lua value </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a57355c2fcd62e60d189c57b0060cc153"></a>
 <div class="memitem">
@@ -121,7 +124,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Create a reference to the value at the given index. </p>
+<p>Create a reference to the value at the given index or reference identifier. The value will not be removed. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">state</td><td>Lua state </td></tr>
@@ -185,6 +188,38 @@ template&lt;typename Type &gt; </div>
 </div><div class="memdoc">
 
 <p>Read the referenced value. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Type</td><td>The expected type </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a447bdcf255ea67ffccc062a67910c4c8"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Type &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void luwra::Reference::write </td>
+          <td>(</td>
+          <td class="paramtype">Type &amp;&amp;&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>

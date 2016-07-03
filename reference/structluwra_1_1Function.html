@@ -58,7 +58,7 @@
 </div><!--header-->
 <div class="contents">
 
-<p>A callable Lua function.  
+<p>A callable Lua value.  
  <a href="structluwra_1_1Function.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -67,30 +67,31 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a26ea5bd299efd0db59f8b16a464f4db9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create from reference.  <a href="#a26ea5bd299efd0db59f8b16a464f4db9">More...</a><br /></td></tr>
 <tr class="separator:a26ea5bd299efd0db59f8b16a464f4db9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9626a42a85dc77fd4140b030eb8778bf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Function.html#a9626a42a85dc77fd4140b030eb8778bf">Function</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int index)</td></tr>
-<tr class="memdesc:a9626a42a85dc77fd4140b030eb8778bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create from function on the stack.  <a href="#a9626a42a85dc77fd4140b030eb8778bf">More...</a><br /></td></tr>
+<tr class="memdesc:a9626a42a85dc77fd4140b030eb8778bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create from callable on the stack.  <a href="#a9626a42a85dc77fd4140b030eb8778bf">More...</a><br /></td></tr>
 <tr class="separator:a9626a42a85dc77fd4140b030eb8778bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb337484b6dea928044c108b486203fd"><td class="memTemplParams" colspan="2">template&lt;typename OtherRet &gt; </td></tr>
 <tr class="memitem:acb337484b6dea928044c108b486203fd"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structluwra_1_1Function.html#acb337484b6dea928044c108b486203fd">Function</a> (const <a class="el" href="structluwra_1_1Function.html">Function</a>&lt; OtherRet &gt; &amp;other)</td></tr>
 <tr class="memdesc:acb337484b6dea928044c108b486203fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert from an existing <a class="el" href="structluwra_1_1Function.html">Function</a>.  <a href="#acb337484b6dea928044c108b486203fd">More...</a><br /></td></tr>
 <tr class="separator:acb337484b6dea928044c108b486203fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a88f7a81cd14996ed375cc71ed17c7d78"><td class="memItemLeft" align="right" valign="top">Ret&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Function.html#a88f7a81cd14996ed375cc71ed17c7d78">operator()</a> () const </td></tr>
-<tr class="memdesc:a88f7a81cd14996ed375cc71ed17c7d78"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke the function with no arguments.  <a href="#a88f7a81cd14996ed375cc71ed17c7d78">More...</a><br /></td></tr>
+<tr class="memdesc:a88f7a81cd14996ed375cc71ed17c7d78"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke the callable without arguments.  <a href="#a88f7a81cd14996ed375cc71ed17c7d78">More...</a><br /></td></tr>
 <tr class="separator:a88f7a81cd14996ed375cc71ed17c7d78"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac44ab8d9653fe751002799110e707b95"><td class="memTemplParams" colspan="2">template&lt;typename... Args&gt; </td></tr>
 <tr class="memitem:ac44ab8d9653fe751002799110e707b95"><td class="memTemplItemLeft" align="right" valign="top">Ret&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structluwra_1_1Function.html#ac44ab8d9653fe751002799110e707b95">operator()</a> (Args &amp;&amp;...args) const </td></tr>
-<tr class="memdesc:ac44ab8d9653fe751002799110e707b95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke the function with arguments.  <a href="#ac44ab8d9653fe751002799110e707b95">More...</a><br /></td></tr>
+<tr class="memdesc:ac44ab8d9653fe751002799110e707b95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke the callable with arguments.  <a href="#ac44ab8d9653fe751002799110e707b95">More...</a><br /></td></tr>
 <tr class="separator:ac44ab8d9653fe751002799110e707b95"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:af9be56cc4b17f0f105481f2fa30da6cc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structluwra_1_1Reference.html">Reference</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Function.html#af9be56cc4b17f0f105481f2fa30da6cc">ref</a></td></tr>
+<tr class="memdesc:af9be56cc4b17f0f105481f2fa30da6cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal reference to the Lua value.  <a href="#af9be56cc4b17f0f105481f2fa30da6cc">More...</a><br /></td></tr>
 <tr class="separator:af9be56cc4b17f0f105481f2fa30da6cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;typename Ret&gt;<br />
 struct luwra::Function&lt; Ret &gt;</h3>
 
-<p>A callable Lua function. </p>
+<p>A callable Lua value. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Ret</td><td>Expected return type </td></tr>
@@ -160,7 +161,7 @@ template&lt;typename Ret &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Create from function on the stack. </p>
+<p>Create from callable on the stack. </p>
 
 </div>
 </div>
@@ -218,7 +219,7 @@ template&lt;typename Ret &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Invoke the function with no arguments. </p>
+<p>Invoke the callable without arguments. </p>
 
 </div>
 </div>
@@ -248,7 +249,7 @@ template&lt;typename... Args&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Invoke the function with arguments. </p>
+<p>Invoke the callable with arguments. </p>
 
 </div>
 </div>
@@ -264,6 +265,8 @@ template&lt;typename Ret &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Internal reference to the Lua value. </p>
 
 </div>
 </div>
