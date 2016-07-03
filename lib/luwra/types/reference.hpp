@@ -56,38 +56,27 @@ namespace internal {
 			if (ref >= 0 && autoUnref) luaL_unref(state, LUA_REGISTRYINDEX, ref);
 		}
 
+		// Push the referenced value onto the stack.
 		inline
 		void push() const {
 			lua_rawgeti(state, LUA_REGISTRYINDEX, ref);
 		}
 
-		// Small shortcut to make the `push`-implementations for `Table` and `Reference` consistent,
-		// since both use this struct internally.
+		// Reset the referenced value.
 		inline
-		void push(State* targetState) const {
-			push();
-
-			if (state != targetState)
-				lua_xmove(state, targetState, 1);
-		}
-
-		inline
-		void update(State* sourceState) const {
-			if (state != sourceState)
-				lua_xmove(sourceState, state, 1);
-
-			lua_rawseti()
+		void update() const {
+			lua_rawseti(state, LUA_REGISTRYINDEX, ref);
 		}
 	};
 
 	using SharedReferenceImpl = std::shared_ptr<const internal::ReferenceImpl>;
 }
 
-/// %Reference to a Lua value
+/// %Reference cell which contains a Lua value
 struct Reference {
 	const internal::SharedReferenceImpl impl;
 
-	/// Create a reference to the value at the given index or reference identifier.
+	/// Copy the value at the given index or reference into a new reference cell.
 	/// The value will not be removed.
 	///
 	/// \param state      Lua state
@@ -98,7 +87,7 @@ struct Reference {
 		impl(std::make_shared<internal::ReferenceImpl>(state, indexOrRef, isIndex))
 	{}
 
-	/// Read the referenced value.
+	/// Read the cell's value.
 	///
 	/// \tparam Type The expected type
 	template <typename Type> inline
@@ -110,16 +99,24 @@ struct Reference {
 		return ret;
 	}
 
-	/// Shortcut for @ref read<Type>.
+	/// Alias for @ref read<Type>
 	template <typename Type> inline
 	operator Type() const {
 		return read<Type>();
 	}
 
-	///
+	/// Set the cell's value.
 	template <typename Type> inline
-	void write(Type&& value) const {
+	const Reference& write(Type&& value) const {
+		push(impl->state, std::forward<Type>(value));
+		impl->update();
+		return *this;
+	}
 
+	/// Alias for @ref write
+	template <typename Type> inline
+	const Reference& operator =(Type&& value) const {
+		return write(std::forward<Type>(value));
 	}
 };
 
@@ -133,7 +130,10 @@ struct Value<Reference> {
 
 	static inline
 	void push(State* state, const Reference& value) {
-		value.impl->push(state);
+		value.impl->push();
+
+		if (value.impl->state != state)
+			lua_xmove(value.impl->state, state, 1);
 	}
 };
 
