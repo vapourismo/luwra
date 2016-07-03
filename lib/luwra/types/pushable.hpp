@@ -57,6 +57,7 @@ struct Pushable {
 	}
 };
 
+/// Enables pushing for `Pushables`
 template <>
 struct Value<Pushable> {
 	static inline

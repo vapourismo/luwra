@@ -56,30 +56,39 @@ namespace internal {
 			if (ref >= 0 && autoUnref) luaL_unref(state, LUA_REGISTRYINDEX, ref);
 		}
 
+		inline
+		void push() const {
+			lua_rawgeti(state, LUA_REGISTRYINDEX, ref);
+		}
+
 		// Small shortcut to make the `push`-implementations for `Table` and `Reference` consistent,
 		// since both use this struct internally.
 		inline
 		void push(State* targetState) const {
-			lua_rawgeti(state, LUA_REGISTRYINDEX, ref);
+			push();
 
 			if (state != targetState)
 				lua_xmove(state, targetState, 1);
 		}
 
 		inline
-		void push() const {
-			lua_rawgeti(state, LUA_REGISTRYINDEX, ref);
+		void update(State* sourceState) const {
+			if (state != sourceState)
+				lua_xmove(sourceState, state, 1);
+
+			lua_rawseti()
 		}
 	};
 
 	using SharedReferenceImpl = std::shared_ptr<const internal::ReferenceImpl>;
 }
 
-/// Reference to a Lua value
+/// %Reference to a Lua value
 struct Reference {
 	const internal::SharedReferenceImpl impl;
 
-	/// Create a reference to the value at the given index.
+	/// Create a reference to the value at the given index or reference identifier.
+	/// The value will not be removed.
 	///
 	/// \param state      Lua state
 	/// \param indexOrRef Index or reference identifier
@@ -90,6 +99,8 @@ struct Reference {
 	{}
 
 	/// Read the referenced value.
+	///
+	/// \tparam Type The expected type
 	template <typename Type> inline
 	Type read() const {
 		impl->push();
@@ -103,6 +114,12 @@ struct Reference {
 	template <typename Type> inline
 	operator Type() const {
 		return read<Type>();
+	}
+
+	///
+	template <typename Type> inline
+	void write(Type&& value) const {
+
 	}
 };
 

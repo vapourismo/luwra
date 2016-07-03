@@ -17,11 +17,12 @@
 
 LUWRA_NS_BEGIN
 
-/// A callable Lua function.
+/// A callable Lua value.
 ///
 /// \tparam Ret Expected return type
 template <typename Ret>
 struct Function {
+	/// Internal reference to the Lua value
 	Reference ref;
 
 	/// Create from reference.
@@ -30,56 +31,7 @@ struct Function {
 		ref(ref)
 	{}
 
-	/// Create from function on the stack.
-	inline
-	Function(State* state, int index):
-		ref(state, index)
-	{}
-
-	/// Convert from an existing @ref Function.
-	template <typename OtherRet> inline
-	Function(const Function<OtherRet>& other):
-		ref(other.ref)
-	{}
-
-	/// Invoke the function with no arguments.
-	inline
-	Ret operator ()() const {
-		ref.impl->push();
-
-		lua_call(ref.impl->state, 0, 1);
-		Ret returnValue = read<Ret>(ref.impl->state, -1);
-
-		lua_pop(ref.impl->state, 1);
-		return returnValue;
-	}
-
-	/// Invoke the function with arguments.
-	template <typename... Args> inline
-	Ret operator ()(Args&&... args) const {
-		ref.impl->push();
-		push(ref.impl->state, std::forward<Args>(args)...);
-
-		lua_call(ref.impl->state, sizeof...(Args), 1);
-		Ret returnValue = read<Ret>(ref.impl->state, -1);
-
-		lua_pop(ref.impl->state, 1);
-		return returnValue;
-	}
-};
-
-/// A callable Lua function without a return value.
-template <>
-struct Function<void> {
-	Reference ref;
-
-	/// Create from reference.
-	inline
-	Function(const Reference& ref):
-		ref(ref)
-	{}
-
-	/// Create from function on the stack.
+	/// Create from callable on the stack.
 	inline
 	Function(State* state, int index):
 		ref(state, index)
@@ -95,14 +47,68 @@ struct Function<void> {
 		ref(other.ref)
 	{}
 
-	/// Invoke the function with no arguments.
+	/// Invoke the callable without arguments.
+	inline
+	Ret operator ()() const {
+		ref.impl->push();
+
+		lua_call(ref.impl->state, 0, 1);
+		Ret returnValue = read<Ret>(ref.impl->state, -1);
+
+		lua_pop(ref.impl->state, 1);
+		return returnValue;
+	}
+
+	/// Invoke the callable with arguments.
+	template <typename... Args> inline
+	Ret operator ()(Args&&... args) const {
+		ref.impl->push();
+		push(ref.impl->state, std::forward<Args>(args)...);
+
+		lua_call(ref.impl->state, sizeof...(Args), 1);
+		Ret returnValue = read<Ret>(ref.impl->state, -1);
+
+		lua_pop(ref.impl->state, 1);
+		return returnValue;
+	}
+};
+
+/// A callable Lua value without a return value.
+template <>
+struct Function<void> {
+	/// Internal reference to the Lua value
+	Reference ref;
+
+	/// Create from reference.
+	inline
+	Function(const Reference& ref):
+		ref(ref)
+	{}
+
+	/// Create from callable on the stack.
+	inline
+	Function(State* state, int index):
+		ref(state, index)
+	{
+		int type = lua_type(state, index);
+		if (type != LUA_TTABLE && type != LUA_TUSERDATA && type != LUA_TFUNCTION)
+			luaL_argerror(state, index, "Expected table, userdata or function");
+	}
+
+	/// Convert from an existing @ref Function.
+	template <typename OtherRet> inline
+	Function(const Function<OtherRet>& other):
+		ref(other.ref)
+	{}
+
+	/// Invoke the callable without arguments.
 	inline
 	void operator ()() const {
 		ref.impl->push();
 		lua_call(ref.impl->state, 0, 0);
 	}
 
-	/// Invoke the function with arguments.
+	/// Invoke the callable with arguments.
 	template <typename... Args> inline
 	void operator ()(Args&&... args) const {
 		ref.impl->push();

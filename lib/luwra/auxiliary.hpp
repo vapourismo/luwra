@@ -143,7 +143,6 @@ void setFields(
 	);
 }
 
-/// Map of members
 using MemberMap = std::map<Pushable, Pushable>;
 
 /// Apply key-value pairs to a table.
