@@ -176,6 +176,9 @@
 <li>operator&lt;()
 : <a class="el" href="structluwra_1_1Pushable.html#a28765b42c6ceb83c3209f1890f9c6041">luwra::Pushable</a>
 </li>
+<li>operator&lt;&lt;()
+: <a class="el" href="structluwra_1_1StateWrapper.html#aea67c9ad0c61379c1750e5c56efbae69">luwra::StateWrapper</a>
+</li>
 <li>operator=()
 : <a class="el" href="structluwra_1_1internal_1_1ReferenceImpl.html#a630f438110ef900d2614bf1d87f7accc">luwra::internal::ReferenceImpl</a>
 , <a class="el" href="structluwra_1_1internal_1_1TableAccessor.html#a5125caf27dd7a4b1129b9212d451ed7c">luwra::internal::TableAccessor&lt; Accessor &gt;</a>
@@ -189,7 +192,7 @@
 
 <h3><a class="anchor" id="index_p"></a>- p -</h3><ul>
 <li>push()
-: <a class="el" href="structluwra_1_1internal_1_1__TuplePusher_3_01IndexSequence_3_01Indices_8_8_8_01_4_00_01Contents_8_8_8_01_4.html#af2e061754544903422c512f569dfd19f">luwra::internal::_TuplePusher&lt; IndexSequence&lt; Indices... &gt;, Contents... &gt;</a>
+: <a class="el" href="structluwra_1_1internal_1_1__TuplePusher_1_1Pusher.html#a180c7a92fe6e8297ad1528e02393686b">luwra::internal::_TuplePusher&lt; Contents &gt;::Pusher&lt; Indices &gt;</a>
 , <a class="el" href="structluwra_1_1internal_1_1NumericTransportValue_3_01Integer_01_4.html#a932734df23c492cc6267fd45ac80df71">luwra::internal::NumericTransportValue&lt; Integer &gt;</a>
 , <a class="el" href="structluwra_1_1internal_1_1NumericTransportValue_3_01Number_01_4.html#a04cfaf3236fc6e1388d3f677014c90d2">luwra::internal::NumericTransportValue&lt; Number &gt;</a>
 , <a class="el" href="structluwra_1_1internal_1_1NumericValueBase.html#aa65d0a6efef7e293b376e722b95a7247">luwra::internal::NumericValueBase&lt; Type, Transport &gt;</a>
@@ -197,6 +200,7 @@
 , <a class="el" href="structluwra_1_1internal_1_1PushableT.html#a320832213fb1f448eb2f7cd6d98e2139">luwra::internal::PushableT&lt; Type &gt;</a>
 , <a class="el" href="structluwra_1_1internal_1_1ReferenceImpl.html#af500eb64b1e07069c2389300a95b7adb">luwra::internal::ReferenceImpl</a>
 , <a class="el" href="structluwra_1_1ReturnValue.html#a967ab45b44cd28c309acb39278af419a">luwra::ReturnValue&lt; Type &gt;</a>
+, <a class="el" href="structluwra_1_1ReturnValue_3_01std_1_1pair_3_01First_00_01Second_01_4_01_4.html#a17f17b9910e2f3768ad1f55555f807fb">luwra::ReturnValue&lt; std::pair&lt; First, Second &gt; &gt;</a>
 , <a class="el" href="structluwra_1_1StateWrapper.html#a4c62de0aff38311fedfd4674d210688b">luwra::StateWrapper</a>
 , <a class="el" href="structluwra_1_1Value.html#ad73e638bad804b22afdc5e9ed8501831">luwra::Value&lt; UserType &gt;</a>
 , <a class="el" href="structluwra_1_1Value_3_01bool_01_4.html#a7be1861e59dbccd736f0726b53d4c489">luwra::Value&lt; bool &gt;</a>
@@ -234,7 +238,7 @@
 , <a class="el" href="structluwra_1_1internal_1_1TableAccessor.html#afd3d5697fcd5dfc23a9e9919e5e183e3">luwra::internal::TableAccessor&lt; Accessor &gt;</a>
 , <a class="el" href="structluwra_1_1Reference.html#a23df7d01c19295e9cc2e0105bffa156a">luwra::Reference</a>
 , <a class="el" href="structluwra_1_1StateWrapper.html#a6dc6469188239b80947d10309e382c19">luwra::StateWrapper</a>
-, <a class="el" href="structluwra_1_1Value.html#aeabaed6c7b97a0fbf8612c55904f6e12">luwra::Value&lt; UserType &gt;</a>
+, <a class="el" href="structluwra_1_1Value.html#acd8d7630cafb71e012c44948542e84b0">luwra::Value&lt; UserType &gt;</a>
 , <a class="el" href="structluwra_1_1Value_3_01bool_01_4.html#aeb26d3b2929e1e3d5d7fc0ea83fc0c2d">luwra::Value&lt; bool &gt;</a>
 , <a class="el" href="structluwra_1_1Value_3_01const_01char_01_5_01_4.html#aa0d49a4e0e2f100b0fe122a44b255121">luwra::Value&lt; const char * &gt;</a>
 , <a class="el" href="structluwra_1_1Value_3_01const_01void_01_5_01_4.html#a12673a07b43f5a1bdc1015aab027690c">luwra::Value&lt; const void * &gt;</a>
@@ -245,7 +249,7 @@
 , <a class="el" href="structluwra_1_1Value_3_01std_1_1nullptr__t_01_4.html#a1a7bba83cd98afa2a54eac6467a36ad8">luwra::Value&lt; std::nullptr_t &gt;</a>
 , <a class="el" href="structluwra_1_1Value_3_01std_1_1string_01_4.html#acb280c3a6aeb44f949fc8a21174dbcbe">luwra::Value&lt; std::string &gt;</a>
 , <a class="el" href="structluwra_1_1Value_3_01Table_01_4.html#af17f2f16983017d9be6678b046e8b135">luwra::Value&lt; Table &gt;</a>
-, <a class="el" href="structluwra_1_1Value_3_01UserType_01_5_01_4.html#a00f4764b4016dc778c7b6612e8377673">luwra::Value&lt; UserType * &gt;</a>
+, <a class="el" href="structluwra_1_1Value_3_01UserType_01_5_01_4.html#aad2a2c0833f2efd8ab5d14f75da930d7">luwra::Value&lt; UserType * &gt;</a>
 , <a class="el" href="structluwra_1_1Value_3_01void_01_5_01_4.html#ac1e6d1dd8b2f2ad180814287dc1ddf5c">luwra::Value&lt; void * &gt;</a>
 </li>
 <li>Reference()

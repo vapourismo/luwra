@@ -58,9 +58,12 @@
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1__TuplePusher.html">luwra::internal::_TuplePusher&lt; Seq,... &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1__TuplePusher.html">luwra::internal::_TuplePusher&lt; Contents &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1__TuplePusher_3_01IndexSequence_3_01Indices_8_8_8_01_4_00_01Contents_8_8_8_01_4.html">luwra::internal::_TuplePusher&lt; IndexSequence&lt; Indices... &gt;, Contents... &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1__TuplePusher_1_1Pusher.html">luwra::internal::_TuplePusher&lt; Contents &gt;::Pusher&lt; Indices &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1ReturnValue_3_01std_1_1pair_3_01First_00_01Second_01_4_01_4.html">luwra::ReturnValue&lt; std::pair&lt; First, Second &gt; &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables <code>std::pair</code> as return type.  <a href="structluwra_1_1ReturnValue_3_01std_1_1pair_3_01First_00_01Second_01_4_01_4.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1ReturnValue_3_01std_1_1tuple_3_01Contents_8_8_8_01_4_01_4.html">luwra::ReturnValue&lt; std::tuple&lt; Contents... &gt; &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables <code>std::tuple</code> as return type.  <a href="structluwra_1_1ReturnValue_3_01std_1_1tuple_3_01Contents_8_8_8_01_4_01_4.html#details">More...</a><br /></td></tr>
@@ -84,9 +87,9 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:aab3d0e81e8aef561f2c503d1ae2ab474"><td class="memTemplParams" colspan="2">template&lt;typename... Contents&gt; </td></tr>
-<tr class="memitem:aab3d0e81e8aef561f2c503d1ae2ab474"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra_1_1internal.html#aab3d0e81e8aef561f2c503d1ae2ab474">luwra::internal::TuplePusher</a> = _TuplePusher&lt; MakeIndexSequence&lt; sizeof...(Contents)&gt;, Contents... &gt;</td></tr>
-<tr class="separator:aab3d0e81e8aef561f2c503d1ae2ab474"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae39e7309eabc0fdbff4fa6837a6134c0"><td class="memTemplParams" colspan="2">template&lt;typename... Contents&gt; </td></tr>
+<tr class="memitem:ae39e7309eabc0fdbff4fa6837a6134c0"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra_1_1internal.html#ae39e7309eabc0fdbff4fa6837a6134c0">luwra::internal::TuplePusher</a> = typename MakeIndexSequence&lt; sizeof...(Contents)&gt;::template Relay&lt; _TuplePusher&lt; Contents... &gt;::template Pusher &gt;</td></tr>
+<tr class="separator:ae39e7309eabc0fdbff4fa6837a6134c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

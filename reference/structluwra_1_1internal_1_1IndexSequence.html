@@ -62,6 +62,9 @@ Public Types</h2></td></tr>
 <tr class="memitem:a26dc979f92fa7be1842e85d266c3e9a2"><td class="memTemplParams" colspan="2">template&lt;size_t Offset&gt; </td></tr>
 <tr class="memitem:a26dc979f92fa7be1842e85d266c3e9a2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1IndexSequence.html#a26dc979f92fa7be1842e85d266c3e9a2">OffsetBy</a> = <a class="el" href="structluwra_1_1internal_1_1IndexSequence.html">IndexSequence</a>&lt;(Seq+Offset)... &gt;</td></tr>
 <tr class="separator:a26dc979f92fa7be1842e85d266c3e9a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af620d243af31e75cd6fb68c854e9d532"><td class="memTemplParams" colspan="2">template&lt;template&lt; size_t... &gt; class Receiver&gt; </td></tr>
+<tr class="memitem:af620d243af31e75cd6fb68c854e9d532"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1IndexSequence.html#af620d243af31e75cd6fb68c854e9d532">Relay</a> = Receiver&lt; Seq... &gt;</td></tr>
+<tr class="separator:af620d243af31e75cd6fb68c854e9d532"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Typedef Documentation</h2>
 <a class="anchor" id="a26dc979f92fa7be1842e85d266c3e9a2"></a>
@@ -74,6 +77,22 @@ template&lt;size_t Offset&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">using <a class="el" href="structluwra_1_1internal_1_1IndexSequence.html">luwra::internal::IndexSequence</a>&lt; Seq &gt;::<a class="el" href="structluwra_1_1internal_1_1IndexSequence.html#a26dc979f92fa7be1842e85d266c3e9a2">OffsetBy</a> =  <a class="el" href="structluwra_1_1internal_1_1IndexSequence.html">IndexSequence</a>&lt;(Seq + Offset)...&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="af620d243af31e75cd6fb68c854e9d532"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;size_t... Seq&gt; </div>
+<div class="memtemplate">
+template&lt;template&lt; size_t... &gt; class Receiver&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structluwra_1_1internal_1_1IndexSequence.html">luwra::internal::IndexSequence</a>&lt; Seq &gt;::<a class="el" href="structluwra_1_1internal_1_1IndexSequence.html#af620d243af31e75cd6fb68c854e9d532">Relay</a> =  Receiver&lt;Seq...&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">

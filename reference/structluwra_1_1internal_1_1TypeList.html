@@ -68,6 +68,9 @@ Public Types</h2></td></tr>
 <tr class="memitem:ac13a3a310ccfcf67f4c5682691899dcc"><td class="memTemplParams" colspan="2">template&lt;size_t N&gt; </td></tr>
 <tr class="memitem:ac13a3a310ccfcf67f4c5682691899dcc"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1TypeList.html#ac13a3a310ccfcf67f4c5682691899dcc">Drop</a> = typename <a class="el" href="structluwra_1_1internal_1_1__DropFromList.html">_DropFromList</a>&lt; <a class="el" href="namespaceluwra_1_1internal.html#a8de59a6bc341c81546d0643d04667837">MakeIndexSequence</a>&lt; N &gt;, Types... &gt;::Result</td></tr>
 <tr class="separator:ac13a3a310ccfcf67f4c5682691899dcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a670e742df1e0f137756d4885c104ccf3"><td class="memTemplParams" colspan="2">template&lt;template&lt; typename, typename &gt; class Compare, typename Other &gt; </td></tr>
+<tr class="memitem:a670e742df1e0f137756d4885c104ccf3"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1TypeList.html#a670e742df1e0f137756d4885c104ccf3">Match</a> = <a class="el" href="structluwra_1_1internal_1_1__Match.html">_Match</a>&lt; Compare, <a class="el" href="structluwra_1_1internal_1_1TypeList.html">TypeList</a>&lt; Types... &gt;, Other &gt;</td></tr>
+<tr class="separator:a670e742df1e0f137756d4885c104ccf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afba95bb94a881c82b8355d74f03e1241"><td class="memTemplParams" colspan="2">template&lt;template&lt; typename, typename &gt; class Compare, typename Other &gt; </td></tr>
 <tr class="memitem:afba95bb94a881c82b8355d74f03e1241"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1TypeList.html#afba95bb94a881c82b8355d74f03e1241">PrefixOf</a> = <a class="el" href="structluwra_1_1internal_1_1__PrefixOf.html">_PrefixOf</a>&lt; Compare, <a class="el" href="structluwra_1_1internal_1_1TypeList.html">TypeList</a>&lt; Types... &gt;, Other &gt;</td></tr>
 <tr class="separator:afba95bb94a881c82b8355d74f03e1241"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -118,6 +121,22 @@ template&lt;size_t N&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">using <a class="el" href="structluwra_1_1internal_1_1TypeList.html">luwra::internal::TypeList</a>&lt; Types &gt;::<a class="el" href="structluwra_1_1internal_1_1TypeList.html#ac13a3a310ccfcf67f4c5682691899dcc">Drop</a> =  typename <a class="el" href="structluwra_1_1internal_1_1__DropFromList.html">_DropFromList</a>&lt;<a class="el" href="namespaceluwra_1_1internal.html#a8de59a6bc341c81546d0643d04667837">MakeIndexSequence</a>&lt;N&gt;, Types...&gt;::Result</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a670e742df1e0f137756d4885c104ccf3"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename... Types&gt; </div>
+<div class="memtemplate">
+template&lt;template&lt; typename, typename &gt; class Compare, typename Other &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structluwra_1_1internal_1_1TypeList.html">luwra::internal::TypeList</a>&lt; Types &gt;::<a class="el" href="structluwra_1_1internal_1_1TypeList.html#a670e742df1e0f137756d4885c104ccf3">Match</a> =  <a class="el" href="structluwra_1_1internal_1_1__Match.html">_Match</a>&lt;Compare, <a class="el" href="structluwra_1_1internal_1_1TypeList.html">TypeList</a>&lt;Types...&gt;, Other&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">

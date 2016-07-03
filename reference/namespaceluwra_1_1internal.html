@@ -68,6 +68,12 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1__MakeIndexSequence_3_010_00_01Indices_8_8_8_01_4.html">_MakeIndexSequence&lt; 0, Indices... &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1__Match.html">_Match</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1__Match_3_01Compare_00_01TypeList_3_01Left_00_01LeftTail_8_8_8_01_4_0500cb820fd41ca83101ccd36587253c5.html">_Match&lt; Compare, TypeList&lt; Left, LeftTail... &gt;, TypeList&lt; Right, RightTail... &gt; &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1__Match_3_01Compare_00_01TypeList_3_4_00_01TypeList_3_4_01_4.html">_Match&lt; Compare, TypeList&lt;&gt;, TypeList&lt;&gt; &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1__PrefixOf.html">_PrefixOf</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1__PrefixOf_3_01Compare_00_01TypeList_3_01Prefix_00_01PrefixTail_8_8_8c555b374b101e7a015b8c366d2c54d65.html">_PrefixOf&lt; Compare, TypeList&lt; Prefix, PrefixTail... &gt;, TypeList&lt; Base, BaseTail... &gt; &gt;</a></td></tr>
@@ -79,8 +85,6 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1__StackWalker_3_01IndexSequence_3_01Indices_8_8_8_01_4_00_01Types_8_8_8_01_4.html">_StackWalker&lt; IndexSequence&lt; Indices... &gt;, Types... &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1__TuplePusher.html">_TuplePusher</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1__TuplePusher_3_01IndexSequence_3_01Indices_8_8_8_01_4_00_01Contents_8_8_8_01_4.html">_TuplePusher&lt; IndexSequence&lt; Indices... &gt;, Contents... &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1CallableInfo.html">CallableInfo</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -204,6 +208,9 @@ Typedefs</h2></td></tr>
 <tr class="memitem:a8de59a6bc341c81546d0643d04667837"><td class="memTemplParams" colspan="2">template&lt;size_t Count&gt; </td></tr>
 <tr class="memitem:a8de59a6bc341c81546d0643d04667837"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra_1_1internal.html#a8de59a6bc341c81546d0643d04667837">MakeIndexSequence</a> = typename <a class="el" href="structluwra_1_1internal_1_1__MakeIndexSequence.html">_MakeIndexSequence</a>&lt; Count &gt;::Result</td></tr>
 <tr class="separator:a8de59a6bc341c81546d0643d04667837"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7df1317add8d6af6bf597d249e204a7f"><td class="memTemplParams" colspan="2">template&lt;typename... Types&gt; </td></tr>
+<tr class="memitem:a7df1317add8d6af6bf597d249e204a7f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra_1_1internal.html#a7df1317add8d6af6bf597d249e204a7f">ReadResults</a> = <a class="el" href="structluwra_1_1internal_1_1TypeList.html">TypeList</a>&lt; <a class="el" href="namespaceluwra_1_1internal.html#a31e5629825804ab15dfbb60d5571ace9">ReturnTypeOf</a>&lt; decltype(<a class="el" href="namespaceluwra.html#a3c459338d5baea22fc1ea7f6184ae14d">read</a>&lt; Types &gt;)&gt;... &gt;</td></tr>
+<tr class="separator:a7df1317add8d6af6bf597d249e204a7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31e5629825804ab15dfbb60d5571ace9"><td class="memTemplParams" colspan="2">template&lt;typename Callable &gt; </td></tr>
 <tr class="memitem:a31e5629825804ab15dfbb60d5571ace9"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra_1_1internal.html#a31e5629825804ab15dfbb60d5571ace9">ReturnTypeOf</a> = typename <a class="el" href="structluwra_1_1internal_1_1CallableInfo.html">CallableInfo</a>&lt; Callable &gt;::ReturnType</td></tr>
 <tr class="separator:a31e5629825804ab15dfbb60d5571ace9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -220,9 +227,9 @@ Typedefs</h2></td></tr>
 <tr class="memitem:a8b83302eb1191090c2fd3398c8dbc13c"><td class="memTemplParams" colspan="2">template&lt;typename UserType &gt; </td></tr>
 <tr class="memitem:a8b83302eb1191090c2fd3398c8dbc13c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra_1_1internal.html#a8b83302eb1191090c2fd3398c8dbc13c">StripUserType</a> = typename std::remove_cv&lt; UserType &gt;::type</td></tr>
 <tr class="separator:a8b83302eb1191090c2fd3398c8dbc13c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab3d0e81e8aef561f2c503d1ae2ab474"><td class="memTemplParams" colspan="2">template&lt;typename... Contents&gt; </td></tr>
-<tr class="memitem:aab3d0e81e8aef561f2c503d1ae2ab474"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra_1_1internal.html#aab3d0e81e8aef561f2c503d1ae2ab474">TuplePusher</a> = <a class="el" href="structluwra_1_1internal_1_1__TuplePusher.html">_TuplePusher</a>&lt; <a class="el" href="namespaceluwra_1_1internal.html#a8de59a6bc341c81546d0643d04667837">MakeIndexSequence</a>&lt; sizeof...(Contents)&gt;, Contents... &gt;</td></tr>
-<tr class="separator:aab3d0e81e8aef561f2c503d1ae2ab474"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae39e7309eabc0fdbff4fa6837a6134c0"><td class="memTemplParams" colspan="2">template&lt;typename... Contents&gt; </td></tr>
+<tr class="memitem:ae39e7309eabc0fdbff4fa6837a6134c0"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra_1_1internal.html#ae39e7309eabc0fdbff4fa6837a6134c0">TuplePusher</a> = typename <a class="el" href="namespaceluwra_1_1internal.html#a8de59a6bc341c81546d0643d04667837">MakeIndexSequence</a>&lt; sizeof...(Contents)&gt;::template Relay&lt; <a class="el" href="structluwra_1_1internal_1_1__TuplePusher.html">_TuplePusher</a>&lt; Contents... &gt;::template Pusher &gt;</td></tr>
+<tr class="separator:ae39e7309eabc0fdbff4fa6837a6134c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -269,6 +276,20 @@ template&lt;size_t Count&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">using <a class="el" href="namespaceluwra_1_1internal.html#a8de59a6bc341c81546d0643d04667837">luwra::internal::MakeIndexSequence</a> = typedef typename <a class="el" href="structluwra_1_1internal_1_1__MakeIndexSequence.html">_MakeIndexSequence</a>&lt;Count&gt;::Result</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a7df1317add8d6af6bf597d249e204a7f"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename... Types&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespaceluwra_1_1internal.html#a7df1317add8d6af6bf597d249e204a7f">luwra::internal::ReadResults</a> = typedef <a class="el" href="structluwra_1_1internal_1_1TypeList.html">TypeList</a>&lt;<a class="el" href="namespaceluwra_1_1internal.html#a31e5629825804ab15dfbb60d5571ace9">ReturnTypeOf</a>&lt;decltype(<a class="el" href="namespaceluwra.html#a3c459338d5baea22fc1ea7f6184ae14d">read</a>&lt;Types&gt;)&gt;...&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -355,14 +376,14 @@ template&lt;typename UserType &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="aab3d0e81e8aef561f2c503d1ae2ab474"></a>
+<a class="anchor" id="ae39e7309eabc0fdbff4fa6837a6134c0"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename... Contents&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="namespaceluwra_1_1internal.html#aab3d0e81e8aef561f2c503d1ae2ab474">luwra::internal::TuplePusher</a> = typedef <a class="el" href="structluwra_1_1internal_1_1__TuplePusher.html">_TuplePusher</a>&lt;<a class="el" href="namespaceluwra_1_1internal.html#a8de59a6bc341c81546d0643d04667837">MakeIndexSequence</a>&lt;sizeof...(Contents)&gt;, Contents...&gt;</td>
+          <td class="memname">using <a class="el" href="namespaceluwra_1_1internal.html#ae39e7309eabc0fdbff4fa6837a6134c0">luwra::internal::TuplePusher</a> = typedef typename <a class="el" href="namespaceluwra_1_1internal.html#a8de59a6bc341c81546d0643d04667837">MakeIndexSequence</a>&lt;sizeof...(Contents)&gt;::template Relay&lt; <a class="el" href="structluwra_1_1internal_1_1__TuplePusher.html">_TuplePusher</a>&lt;Contents...&gt;::template Pusher &gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
