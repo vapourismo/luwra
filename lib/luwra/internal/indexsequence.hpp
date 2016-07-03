@@ -16,6 +16,9 @@ template <size_t... Seq>
 struct IndexSequence {
 	template <size_t Offset>
 	using OffsetBy = IndexSequence<(Seq + Offset)...>;
+
+	template <template <size_t...> class Receiver>
+	using Relay = Receiver<Seq...>;
 };
 
 // Generate a sequence of indices. Count refers to the number of indices which shall prefix the

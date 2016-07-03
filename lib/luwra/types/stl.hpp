@@ -66,24 +66,22 @@ struct Value<std::map<Key, Type>> {
 };
 
 namespace internal {
-	template <typename Seq, typename...>
+	template <typename... Contents>
 	struct _TuplePusher {
-		static_assert(
-			sizeof(Seq) == -1,
-			"Invalid template parameters to _TuplePusher"
-		);
-	};
-
-	template <size_t... Indices, typename... Contents>
-	struct _TuplePusher<IndexSequence<Indices...>, Contents...> {
-		static inline
-		size_t push(State* state, const std::tuple<Contents...>& value) {
-			return pushReturn(state, std::get<Indices>(value)...);
-		}
+		template <size_t... Indices>
+		struct Pusher {
+			static inline
+			size_t push(State* state, const std::tuple<Contents...>& value) {
+				return pushReturn(state, std::get<Indices>(value)...);
+			}
+		};
 	};
 
 	template <typename... Contents>
-	using TuplePusher = _TuplePusher<MakeIndexSequence<sizeof...(Contents)>, Contents...>;
+	using TuplePusher =
+		typename MakeIndexSequence<sizeof...(Contents)>::template Relay<
+			_TuplePusher<Contents...>::template Pusher
+		>;
 }
 
 /// Enables `std::tuple` as return type
