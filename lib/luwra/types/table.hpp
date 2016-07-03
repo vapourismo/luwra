@@ -234,7 +234,7 @@ struct Value<Table> {
 
 	static inline
 	void push(State* state, const Table& value) {
-		value.ref.impl->push(state);
+		luwra::push(state, value.ref);
 	}
 };
 
