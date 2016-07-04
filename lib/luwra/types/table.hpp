@@ -126,7 +126,7 @@ struct Value<internal::TableAccessor<Accessor>> {
 	}
 };
 
-/// Lua table
+/// Allows you to inspect and modify Lua tables.
 struct Table {
 	Reference ref;
 

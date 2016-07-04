@@ -59,13 +59,13 @@
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1__StackWalker.html">luwra::internal::_StackWalker&lt; Seq,... &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1__StackWalker_3_01IndexSequence_3_01Indices_8_8_8_01_4_00_01Types_8_8_8_01_4.html">luwra::internal::_StackWalker&lt; IndexSequence&lt; Indices... &gt;, Types... &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1__StackWalker.html">luwra::internal::_StackWalker&lt; Types &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1StackMapper.html">luwra::internal::StackMapper&lt; typename &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1StackMapper_3_01void_01_4.html">luwra::internal::StackMapper&lt; void &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1__StackWalker_1_1Walker.html">luwra::internal::_StackWalker&lt; Types &gt;::Walker&lt; Indices &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
@@ -80,9 +80,9 @@ Typedefs</h2></td></tr>
 <tr class="memitem:a7df1317add8d6af6bf597d249e204a7f"><td class="memTemplParams" colspan="2">template&lt;typename... Types&gt; </td></tr>
 <tr class="memitem:a7df1317add8d6af6bf597d249e204a7f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra_1_1internal.html#a7df1317add8d6af6bf597d249e204a7f">luwra::internal::ReadResults</a> = TypeList&lt; ReturnTypeOf&lt; decltype(read&lt; Types &gt;)&gt;... &gt;</td></tr>
 <tr class="separator:a7df1317add8d6af6bf597d249e204a7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a92afa2cb60368e5087e24636eadec96c"><td class="memTemplParams" colspan="2">template&lt;typename... Types&gt; </td></tr>
-<tr class="memitem:a92afa2cb60368e5087e24636eadec96c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra_1_1internal.html#a92afa2cb60368e5087e24636eadec96c">luwra::internal::StackWalker</a> = _StackWalker&lt; MakeIndexSequence&lt; sizeof...(Types)&gt;, Types... &gt;</td></tr>
-<tr class="separator:a92afa2cb60368e5087e24636eadec96c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae20b6b6ed50b0676a78b641e0de04f83"><td class="memTemplParams" colspan="2">template&lt;typename... Types&gt; </td></tr>
+<tr class="memitem:ae20b6b6ed50b0676a78b641e0de04f83"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra_1_1internal.html#ae20b6b6ed50b0676a78b641e0de04f83">luwra::internal::StackWalker</a> = typename MakeIndexSequence&lt; sizeof...(Types)&gt;::template Relay&lt; _StackWalker&lt; Types... &gt;::template Walker &gt;</td></tr>
+<tr class="separator:ae20b6b6ed50b0676a78b641e0de04f83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
