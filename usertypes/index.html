@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <title>User Types - Luwra</title>
+  
+
+  <link rel="shortcut icon" href="../img/favicon.ico">
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "User Types";
+    var mkdocs_page_input_path = "usertypes.md";
+    var mkdocs_page_url = "/usertypes/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script src="../js/theme.js"></script> 
+
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Luwra</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        <ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="..">Home</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../values/">Values</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../stack/">Stack Interaction</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../state/">State Wrapper</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../utilities/">Utilities</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../wrapping/">Wrapping</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 current">
+        <a class="current" href="./">User Types</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#user-types">User Types</a></li>
+                
+                    <li><a class="toctree-l4" href="#register-user-type-with-constructor">Register User Type with Constructor</a></li>
+                
+                    <li><a class="toctree-l4" href="#register-user-type-without-constructor">Register User Type without Constructor</a></li>
+                
+                    <li><a class="toctree-l4" href="#usage-in-lua">Usage in Lua</a></li>
+                
+                    <li><a class="toctree-l4" href="#manually-constructing-a-user-type">Manually constructing a User Type</a></li>
+                
+                    <li><a class="toctree-l4" href="#registry-names">Registry Names</a></li>
+                
+            
+            </ul>
+        
+    </li>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Luwra</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>User Types</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        
+          <a href="https://github.com/vapourismo/luwra" class="icon icon-github"> Edit on GitHub</a>
+        
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="user-types">User Types</h1>
+<p>A user type is a collection of class members bundled into a metatable. In order to use all class
+members, one must register the type's metatable in Lua's registry.</p>
+<p>The following examples work on this class:</p>
+<pre><code class="c++">struct Point {
+    double x, y;
+
+    Point(double x, double y):
+        x(x), y(y)
+    {
+        std::cout &lt;&lt; &quot;Construct Point(&quot; &lt;&lt; x &lt;&lt; &quot;, &quot; &lt;&lt; y &lt;&lt; &quot;)&quot; &lt;&lt; std::endl;
+    }
+
+    ~Point() {
+        std::cout &lt;&lt; &quot;Destruct Point(&quot; &lt;&lt; x &lt;&lt; &quot;, &quot; &lt;&lt; y &lt;&lt; &quot;)&quot; &lt;&lt; std::endl;
+    }
+
+    void scale(double f) {
+        x *= f;
+        y *= f;
+    }
+
+    std::string __tostring() {
+        return &quot;&lt;Point(&quot; + std::to_string(x) + &quot;, &quot; + std::to_string(y) + &quot;)&gt;&quot;;
+    }
+};
+</code></pre>
+
+<h2 id="register-user-type-with-constructor">Register User Type with Constructor</h2>
+<p><a href="../reference/namespaceluwra.html#acc685345fabe835a7f8323e7098e39f6">registerUserType&lt;UserType(CtorArgs...)&gt;</a> allows you to register a
+metatable for <code>UserType</code> and a constructor for it with the parameter types <code>CtorArgs...</code> in the
+global namespace.</p>
+<p>By default, the function generates a garbage-collector hook and a string representation function.
+If you add a <code>__gc</code> or <code>__tostring</code> meta method to your type, these auto-generated functions will be
+overridden.</p>
+<pre><code class="c++">luwra::registerUserType&lt;Point(double, double)&gt;(
+    lua,
+
+    // Constructor name
+    &quot;Point&quot;,
+
+    // Methods need to be declared here
+    {
+        LUWRA_MEMBER(Point, scale),
+        LUWRA_MEMBER(Point, x),
+        LUWRA_MEMBER(Point, y)
+    },
+
+    // Meta methods may be registered aswell
+    {
+        LUWRA_MEMBER(Point, __tostring)
+    }
+);
+</code></pre>
+
+<p>The <a href="../reference/usertypes_8hpp.html#a6fb730cf9446ba2b6164dde982e73a26">LUWRA_MEMBER</a> macro generates an expression which initializes a key-value
+association.</p>
+<pre><code class="c++">LUWRA_MEMBER(Point, scale) == {&quot;scale&quot;, LUWRA_WRAP_MEMBER(Point, scale)}
+</code></pre>
+
+<p><a href="../reference/structluwra_1_1Pushable.html">Pushable</a> is constructible using every pushable type, which makes it convenient to
+add other types of fields:</p>
+<pre><code class="c++">luwra::registerUserType&lt;Point(double, double)&gt;(
+    lua,
+
+    // Constructor name
+    &quot;Point&quot;,
+
+    // Methods need to be declared here
+    {
+        {&quot;scale&quot;, LUWRA_WRAP_MEMBER(Point, scale)},
+        {&quot;x&quot;,     LUWRA_WRAP_MEMBER(Point, x)},
+        {&quot;y&quot;,     LUWRA_WRAP_MEMBER(Point, y)},
+        {&quot;magic&quot;, luwra::MemberMap {
+            {&quot;number&quot;, 1337},
+            {&quot;string&quot;, &quot;Hello World&quot;}
+        }}
+    },
+
+    // Meta methods may be registered aswell
+    {
+        {&quot;__tostring&quot;, LUWRA_WRAP_MEMBER(Point, __tostring)}
+    }
+);
+</code></pre>
+
+<h2 id="register-user-type-without-constructor">Register User Type without Constructor</h2>
+<p>To register only the metatable associated with a user type, simply omit the constructor parameters
+and name from the call to <a href="../reference/namespaceluwra.html#a0a744cd63bf0d4f611a62b8a56df714e">registerUserType</a>.</p>
+<pre><code class="c++">luwra::registerUserType&lt;Point&gt;(
+    lua,
+
+    // Methods need to be declared here
+    {
+        {&quot;scale&quot;, LUWRA_WRAP_MEMBER(Point, scale)},
+        {&quot;x&quot;,     LUWRA_WRAP_MEMBER(Point, x)},
+        {&quot;y&quot;,     LUWRA_WRAP_MEMBER(Point, y)},
+        {&quot;magic&quot;, luwra::MemberMap {
+            {&quot;number&quot;, 1337},
+            {&quot;string&quot;, &quot;Hello World&quot;}
+        }}
+    },
+
+    // Meta methods may be registered aswell
+    {
+        {&quot;__tostring&quot;, LUWRA_WRAP_MEMBER(Point, __tostring)}
+    }
+);
+</code></pre>
+
+<p>It is still possible to provide a constructor using the
+<a href="../reference/usertypes_8hpp.html#a48be8524421441d4c19e8bbc8d355df1">LUWRA_WRAP_CONSTRUCTOR</a> macro:</p>
+<pre><code class="c++">lua_CFunction ctor = LUWRA_WRAP_CONSTRUCTOR(Point, double, double);
+luwra::setGlobal(lua, &quot;Point&quot;, ctor);
+</code></pre>
+
+<h2 id="usage-in-lua">Usage in Lua</h2>
+<p>After you have registered your user type using one of the given methods, you can start using it in
+Lua:</p>
+<pre><code class="lua">-- Instantiate 'Point'
+local point = Point(13, 37)
+
+-- Invoke 'scale' method
+point:scale(1.5)
+
+-- Convert to string via '__tostring' meta method
+print(point)
+
+-- Read properties 'x' and 'y'
+print(point:x(), point:y())
+
+-- Set property 'x'
+point:x(point.magic.number)
+</code></pre>
+
+<h2 id="manually-constructing-a-user-type">Manually constructing a User Type</h2>
+<p><a href="../reference/namespaceluwra.html#af079dcca8e67d88e5cfdc7e8872cf5d7">construct</a> provides this functionality. Given the user type and constructor
+parameters, it will construct the user type on top of the stack:</p>
+<pre><code class="c++">Point&amp; my_point = luwra::construct&lt;Point&gt;(lua, 13.37, 73.31);
+
+// Changes on C++ side will be visible in Lua
+my_point.scale(2);
+</code></pre>
+
+<h2 id="registry-names">Registry Names</h2>
+<p>When registering the metatable for a user type, an automatically generated name will be used to
+store it in the registry. When Luwra is used in a single executable or shared library, name
+collisions should not happen. If your application consists of multiple seperate compiled units, it
+is highly recommended to prevent name collisions by defining the <code>LUWRA_REGISTRY_PREFIX</code> macro
+before including the Luwra headers. This macro changes the prefix for auto-generated registry names.</p>
+<pre><code class="c++">#define LUWRA_REGISTRY_PREFIX &quot;MyProject#&quot;
+#include &lt;luwra.hpp&gt;
+</code></pre>
+
+<p>Another way to prevent collisons is to give each user type its individual registry name. This can be
+done using the <a href="../reference/usertypes_8hpp.html#a76a2943226048438a52614c6881a4d36">LUWRA_DEF_REGISTRY_NAME</a> macro.</p>
+<pre><code class="c++">struct MyUserType {
+    // ...
+};
+
+LUWRA_DEF_REGISTRY_NAME(MyUserType, &quot;MyUserType&quot;)
+</code></pre>
+
+<p>This method will not prefix the registry name with the value of <code>LUWRA_REGISTRY_PREFIX</code>.
+The <a href="../reference/usertypes_8hpp.html#a76a2943226048438a52614c6881a4d36">LUWRA_DEF_REGISTRY_NAME</a> macro has to be used at the root namespace,
+using it inside a namespace scope will have no effect.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../wrapping/" class="btn btn-neutral" title="Wrapping"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+<div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/vapourismo/luwra" class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../wrapping/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+    </span>
+</div>
+
+</body>
+</html>
