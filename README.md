@@ -40,6 +40,12 @@ int my_fun(int a, int b) {
 luwra::push(lua, 13);
 luwra::push(lua, 37);
 
+// Read manually
+int a = luwra::read<int>(lua, 1);
+
+// Read with deduced type
+int b = luwra::read(lua, -1);
+
 // Apply your function
 int result = luwra::apply(lua, my_fun);
 
@@ -50,7 +56,11 @@ int result = luwra::apply(lua, 1, my_fun);
 int result = luwra::apply(lua, -2, my_fun);
 
 // All of this is essentially syntactic sugar for
-int result = my_fun(luwra::read<int>(lua, 1), luwra::read<int>(lua, 2));
+int result = my_fun(luwra::read(lua, 1), luwra::read(lua, 2));
+
+// You can also return the result to the stack
+luwra::map(lua, 1, my_fun);
+int result = luwra::read(state, -1);
 ```
 
 Generate a C function which can be used by Lua:

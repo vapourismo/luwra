@@ -1,9 +1,9 @@
 # Wrapping
 Luwra provides a simple way to generate Lua [C functions][lua-cfunction] from functions and class
-members like methods and accessors using the `LUWRA_WRAP` macro. These kind of C functions are
-useful, because they work just like regular Lua functions within the Lua virtual machine.
-Registering these functions is the most straightforward way of providing the functionality of your
-application to Lua.
+members like methods and accessors using the [LUWRA_WRAP][luwra-wrap] macro. These kind of C
+functions are useful, because they work just like regular Lua functions within the Lua virtual
+machine. Registering these functions is the most straightforward way of providing the functionality
+of your application to Lua.
 
 ## Functions
 When wrapping functions, one must consider that all parameter types must be read from the
@@ -13,13 +13,11 @@ stack and the return type must be pushed onto the stack.
 Lets assume you want to make the following function available in Lua.
 
 ```c++
-int my_function(const char* a, int b) {
-    return /* magic */;
-}
+int my_function(const char* a, int b);
 ```
 
-First, you must generate a Lua [C function][lua-cfunction]. One utilizes the `LUWRA_WRAP` macro for
-this.
+First, you must generate a Lua [C function][lua-cfunction]. One utilizes the
+[LUWRA_WRAP][luwra-wrap] macro for this.
 
 ```c++
 lua_CFunction cfun = LUWRA_WRAP(my_function);
@@ -48,39 +46,39 @@ overhead, when optimization is turned on.
 For the example above, the resulting code would look similiar to the following.
 
 ```c++
-static int cfun(lua_State* state) {
+int cfun(lua_State* state) {
 	lua_pushinteger(
 		state,
 		my_function(
 			luaL_checkstring(state, 1),
-			luaL_checkinteger(state, 1)
+			luaL_checkinteger(state, 2)
 		)
 	);
 	return 1;
 }
 ```
 
-## Class members
+## Class Members
 Although a little trickier, it is also possible to turn C++ field accessors and methods into Lua
 [C functions][lua-cfunction]. The resulting Lua functions expect the first (or `self`) parameter to
 be an instance of the type which the wrapped field or method belongs to.
 
 **Note:** Before you wrap fields and methods manually, you might want to take a look at the
-[User Types](/user-types/) section.
+[User Types](/usertypes) section.
 
 ### Example
 This example will operate on the following structure.
 
 ```c++
 struct Point {
-    double x, y;
+	double x, y;
 
-    // ...
+	// ...
 
-    void scale(double f) {
-        x *= f;
-        y *= f;
-    }
+	void scale(double f) {
+		x *= f;
+		y *= f;
+	}
 };
 ```
 
@@ -97,9 +95,10 @@ luwra::setGlobal(lua, "y", cfun_y);
 luwra::setGlobal(lua, "scale", cfun_scale);
 ```
 
-In this case, it is also possible to use `LUWRA_WRAP` to generate the C functions. The usage of
-`LUWRA_WRAP_MEMBER` is only required when working with inherited members, since it is impossible for
-the `LUWRA_WRAP` macro to be aware of inherited members.
+**Note:** In this case, it is also possible to use [LUWRA_WRAP][luwra-wrap] to generate the C
+functions. The usage of [LUWRA_WRAP_MEMBER][luwra-wrap-member] is only required when working with
+inherited members, since it is impossible for the [LUWRA_WRAP][luwra-wrap] macro to be aware of
+inherited members.
 
 For example, if you are trying to wrap a member `B::foo` where `foo` is an inherited member of class
 `A` which `B` derives from, then `LUWRA_WRAP(B::foo)` would generate a function which is only
@@ -123,4 +122,6 @@ y(my_point, 73.31)
 scale(my_point, 2)
 ```
 
+[luwra-wrap]: /reference/wrappers_8hpp.html#a5495b8ed70ac00095585f3fc7d869b8d
 [lua-cfunction]: http://www.lua.org/manual/5.3/manual.html#lua_CFunction
+[luwra-wrap-member]: /reference/wrappers_8hpp.html#a92d5de05f0a57a27b6e0601c6720585b

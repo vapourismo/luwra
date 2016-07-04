@@ -3,10 +3,12 @@ site_description: Minimal-overhead Lua wrapper for C++
 repo_url: https://github.com/vapourismo/luwra
 pages:
   - 'Home': index.md
-  - 'Stack Interaction': stack-interaction.md
-  - 'Advanced Stack Interaction': advanced-stack-interaction.md
+  - 'Values': values.md
+  - 'Stack Interaction': stack.md
+  - 'State Wrapper': state.md
+  - 'Utilities': utilities.md
   - 'Wrapping': wrapping.md
-  - 'User Types': user-types.md
+  - 'User Types': usertypes.md
 theme: readthedocs
 docs_dir: docs/mkdocs
 site_dir: docs/output

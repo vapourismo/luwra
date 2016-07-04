@@ -139,6 +139,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value_3_01Function_3_01Ret_01_4_01_4.html">Value&lt; Function&lt; Ret &gt; &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables reading/pushing Lua functions.  <a href="structluwra_1_1Value_3_01Function_3_01Ret_01_4_01_4.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value_3_01internal_1_1InferValueType_01_4.html">Value&lt; internal::InferValueType &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables reading of type-infered values.  <a href="structluwra_1_1Value_3_01internal_1_1InferValueType_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value_3_01internal_1_1Path_3_01Parent_00_01Key_01_4_01_4.html">Value&lt; internal::Path&lt; Parent, Key &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1Value_3_01internal_1_1TableAccessor_3_01Accessor_01_4_01_4.html">Value&lt; internal::TableAccessor&lt; Accessor &gt; &gt;</a></td></tr>
@@ -269,7 +272,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a613a1a664be1fd2798d418566f2abf06"><td class="memTemplItemLeft" align="right" valign="top">size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a613a1a664be1fd2798d418566f2abf06">pushReturn</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, First &amp;&amp;first, Second &amp;&amp;second, Rest &amp;&amp;...rest)</td></tr>
 <tr class="memdesc:a613a1a664be1fd2798d418566f2abf06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Push multiple return values onto the stack.  <a href="#a613a1a664be1fd2798d418566f2abf06">More...</a><br /></td></tr>
 <tr class="separator:a613a1a664be1fd2798d418566f2abf06"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c459338d5baea22fc1ea7f6184ae14d"><td class="memTemplParams" colspan="2">template&lt;typename Type &gt; </td></tr>
+<tr class="memitem:a3c459338d5baea22fc1ea7f6184ae14d"><td class="memTemplParams" colspan="2">template&lt;typename Type  = internal::InferValueType&gt; </td></tr>
 <tr class="memitem:a3c459338d5baea22fc1ea7f6184ae14d"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra.html#a3c459338d5baea22fc1ea7f6184ae14d">read</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int index) -&gt; decltype(<a class="el" href="structluwra_1_1Value.html">Value</a>&lt; Type &gt;::read(state, index))</td></tr>
 <tr class="memdesc:a3c459338d5baea22fc1ea7f6184ae14d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a value off the stack.  <a href="#a3c459338d5baea22fc1ea7f6184ae14d">More...</a><br /></td></tr>
 <tr class="separator:a3c459338d5baea22fc1ea7f6184ae14d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -959,7 +962,7 @@ template&lt;typename First , typename Second , typename... Rest&gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Type &gt; </div>
+template&lt;typename Type  = internal::InferValueType&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">

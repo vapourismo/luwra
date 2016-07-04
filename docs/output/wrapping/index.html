@@ -63,14 +63,28 @@
           
             <li>
     <li class="toctree-l1 ">
-        <a class="" href="../stack-interaction/">Stack Interaction</a>
+        <a class="" href="../values/">Values</a>
         
     </li>
 <li>
           
             <li>
     <li class="toctree-l1 ">
-        <a class="" href="../advanced-stack-interaction/">Advanced Stack Interaction</a>
+        <a class="" href="../stack/">Stack Interaction</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../state/">State Wrapper</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../utilities/">Utilities</a>
         
     </li>
 <li>
@@ -85,7 +99,7 @@
                 
                     <li><a class="toctree-l4" href="#functions">Functions</a></li>
                 
-                    <li><a class="toctree-l4" href="#class-members">Class members</a></li>
+                    <li><a class="toctree-l4" href="#class-members">Class Members</a></li>
                 
             
             </ul>
@@ -95,7 +109,7 @@
           
             <li>
     <li class="toctree-l1 ">
-        <a class="" href="../user-types/">User Types</a>
+        <a class="" href="../usertypes/">User Types</a>
         
     </li>
 <li>
@@ -138,22 +152,20 @@
               
                 <h1 id="wrapping">Wrapping</h1>
 <p>Luwra provides a simple way to generate Lua <a href="http://www.lua.org/manual/5.3/manual.html#lua_CFunction">C functions</a> from functions and class
-members like methods and accessors using the <code>LUWRA_WRAP</code> macro. These kind of C functions are
-useful, because they work just like regular Lua functions within the Lua virtual machine.
-Registering these functions is the most straightforward way of providing the functionality of your
-application to Lua.</p>
+members like methods and accessors using the <a href="../reference/wrappers_8hpp.html#a5495b8ed70ac00095585f3fc7d869b8d">LUWRA_WRAP</a> macro. These kind of C
+functions are useful, because they work just like regular Lua functions within the Lua virtual
+machine. Registering these functions is the most straightforward way of providing the functionality
+of your application to Lua.</p>
 <h2 id="functions">Functions</h2>
 <p>When wrapping functions, one must consider that all parameter types must be read from the
 stack and the return type must be pushed onto the stack.</p>
 <h3 id="example">Example</h3>
 <p>Lets assume you want to make the following function available in Lua.</p>
-<pre><code class="c++">int my_function(const char* a, int b) {
-    return /* magic */;
-}
+<pre><code class="c++">int my_function(const char* a, int b);
 </code></pre>
 
-<p>First, you must generate a Lua <a href="http://www.lua.org/manual/5.3/manual.html#lua_CFunction">C function</a>. One utilizes the <code>LUWRA_WRAP</code> macro for
-this.</p>
+<p>First, you must generate a Lua <a href="http://www.lua.org/manual/5.3/manual.html#lua_CFunction">C function</a>. One utilizes the
+<a href="../reference/wrappers_8hpp.html#a5495b8ed70ac00095585f3fc7d869b8d">LUWRA_WRAP</a> macro for this.</p>
 <pre><code class="c++">lua_CFunction cfun = LUWRA_WRAP(my_function);
 </code></pre>
 
@@ -172,24 +184,24 @@ The macro will take care of this itself. You must provide only the name of the f
 in wrapping are marked as <code>inline</code>, which means modern compilers produce wrapper functions with zero
 overhead, when optimization is turned on.</p>
 <p>For the example above, the resulting code would look similiar to the following.</p>
-<pre><code class="c++">static int cfun(lua_State* state) {
+<pre><code class="c++">int cfun(lua_State* state) {
     lua_pushinteger(
         state,
         my_function(
             luaL_checkstring(state, 1),
-            luaL_checkinteger(state, 1)
+            luaL_checkinteger(state, 2)
         )
     );
     return 1;
 }
 </code></pre>
 
-<h2 id="class-members">Class members</h2>
+<h2 id="class-members">Class Members</h2>
 <p>Although a little trickier, it is also possible to turn C++ field accessors and methods into Lua
 <a href="http://www.lua.org/manual/5.3/manual.html#lua_CFunction">C functions</a>. The resulting Lua functions expect the first (or <code>self</code>) parameter to
 be an instance of the type which the wrapped field or method belongs to.</p>
 <p><strong>Note:</strong> Before you wrap fields and methods manually, you might want to take a look at the
-<a href="../user-types/">User Types</a> section.</p>
+<a href="../usertypes">User Types</a> section.</p>
 <h3 id="example_1">Example</h3>
 <p>This example will operate on the following structure.</p>
 <pre><code class="c++">struct Point {
@@ -215,9 +227,10 @@ luwra::setGlobal(lua, &quot;y&quot;, cfun_y);
 luwra::setGlobal(lua, &quot;scale&quot;, cfun_scale);
 </code></pre>
 
-<p>In this case, it is also possible to use <code>LUWRA_WRAP</code> to generate the C functions. The usage of
-<code>LUWRA_WRAP_MEMBER</code> is only required when working with inherited members, since it is impossible for
-the <code>LUWRA_WRAP</code> macro to be aware of inherited members.</p>
+<p><strong>Note:</strong> In this case, it is also possible to use <a href="../reference/wrappers_8hpp.html#a5495b8ed70ac00095585f3fc7d869b8d">LUWRA_WRAP</a> to generate the C
+functions. The usage of <a href="../reference/wrappers_8hpp.html#a92d5de05f0a57a27b6e0601c6720585b">LUWRA_WRAP_MEMBER</a> is only required when working with
+inherited members, since it is impossible for the <a href="../reference/wrappers_8hpp.html#a5495b8ed70ac00095585f3fc7d869b8d">LUWRA_WRAP</a> macro to be aware of
+inherited members.</p>
 <p>For example, if you are trying to wrap a member <code>B::foo</code> where <code>foo</code> is an inherited member of class
 <code>A</code> which <code>B</code> derives from, then <code>LUWRA_WRAP(B::foo)</code> would generate a function which is only
 applicable on instances of <code>A</code>. But <code>LUWRA_WRAP_MEMBER(B, foo)</code> generates a function that can only
@@ -243,10 +256,10 @@ scale(my_point, 2)
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../user-types/" class="btn btn-neutral float-right" title="User Types">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../usertypes/" class="btn btn-neutral float-right" title="User Types">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../advanced-stack-interaction/" class="btn btn-neutral" title="Advanced Stack Interaction"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../utilities/" class="btn btn-neutral" title="Utilities"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -274,10 +287,10 @@ scale(my_point, 2)
           <a href="https://github.com/vapourismo/luwra" class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../advanced-stack-interaction/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../utilities/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../user-types/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../usertypes/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
