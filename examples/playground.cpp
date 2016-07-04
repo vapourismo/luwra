@@ -25,12 +25,18 @@ int main() {
 	int i = read(state, 1);
 	double d = read(state, 2);
 	std::string s = read(state, 3);
-	A u = read(state, 4);
+	A& u = read(state, 4);
 
 	std::cout << i << std::endl;
 	std::cout << d << std::endl;
 	std::cout << s << std::endl;
 	std::cout << u.foo << std::endl;
+
+	u.foo = 0;
+
+	apply(state, 4, [](A x) {
+		std::cout << x.foo << std::endl;
+	});
 
 	return 0;
 }

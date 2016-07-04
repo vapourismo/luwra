@@ -47,6 +47,11 @@ namespace internal {
 		operator Type() const && {
 			return Value<Type>::read(state, index);
 		}
+
+		template <typename Type>
+		operator Type&() const & {
+			return Value<Type&>::read(state, index);
+		}
 	};
 }
 
