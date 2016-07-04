@@ -72,29 +72,25 @@ size_t pushReturn(State* state, First&& first, Second&& second, Rest&&... rest) 
 }
 
 namespace internal {
-	// Catch usage error.
-	template <typename Seq, typename...>
+	template <typename... Types>
 	struct _StackWalker {
-		static_assert(
-			sizeof(Seq) == -1,
-			"Invalid template parameters to _StackWalker"
-		);
-	};
-
-	// Collect values from the stack and call a Callable with them.
-	template <size_t... Indices, typename... Types>
-	struct _StackWalker<IndexSequence<Indices...>, Types...> {
-		template <typename Callable, typename... Args> static inline
-		ReturnTypeOf<Callable> walk(State* state, int pos, Callable&& func, Args&&... args) {
-			return func(
-				std::forward<Args>(args)...,
-				luwra::read<Types>(state, pos + Indices)...
-			);
-		}
+		template <size_t... Indices>
+		struct Walker {
+			template <typename Callable, typename... Args> static inline
+			ReturnTypeOf<Callable> walk(State* state, int pos, Callable&& func, Args&&... args) {
+				return func(
+					std::forward<Args>(args)...,
+					luwra::read<Types>(state, pos + Indices)...
+				);
+			}
+		};
 	};
 
 	template <typename... Types>
-	using StackWalker = _StackWalker<MakeIndexSequence<sizeof...(Types)>, Types...>;
+	using StackWalker =
+		typename MakeIndexSequence<sizeof...(Types)>::template Relay<
+			_StackWalker<Types...>::template Walker
+		>;
 
 	template <typename... Types>
 	using ReadResults = TypeList<ReturnTypeOf<decltype(read<Types>)>...>;
