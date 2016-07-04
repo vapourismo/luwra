@@ -82,8 +82,6 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1__StackWalker.html">_StackWalker</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1__StackWalker_3_01IndexSequence_3_01Indices_8_8_8_01_4_00_01Types_8_8_8_01_4.html">_StackWalker&lt; IndexSequence&lt; Indices... &gt;, Types... &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1__TuplePusher.html">_TuplePusher</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1CallableInfo.html">CallableInfo</a></td></tr>
@@ -221,9 +219,9 @@ Typedefs</h2></td></tr>
 <tr class="memitem:ac3fa65a3b0dbadc6c99324109dca2148"><td class="memTemplParams" colspan="2">template&lt;typename Callable &gt; </td></tr>
 <tr class="memitem:ac3fa65a3b0dbadc6c99324109dca2148"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra_1_1internal.html#ac3fa65a3b0dbadc6c99324109dca2148">SignatureOf</a> = typename <a class="el" href="structluwra_1_1internal_1_1CallableInfo.html">CallableInfo</a>&lt; Callable &gt;::Signature</td></tr>
 <tr class="separator:ac3fa65a3b0dbadc6c99324109dca2148"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a92afa2cb60368e5087e24636eadec96c"><td class="memTemplParams" colspan="2">template&lt;typename... Types&gt; </td></tr>
-<tr class="memitem:a92afa2cb60368e5087e24636eadec96c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra_1_1internal.html#a92afa2cb60368e5087e24636eadec96c">StackWalker</a> = <a class="el" href="structluwra_1_1internal_1_1__StackWalker.html">_StackWalker</a>&lt; <a class="el" href="namespaceluwra_1_1internal.html#a8de59a6bc341c81546d0643d04667837">MakeIndexSequence</a>&lt; sizeof...(Types)&gt;, Types... &gt;</td></tr>
-<tr class="separator:a92afa2cb60368e5087e24636eadec96c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae20b6b6ed50b0676a78b641e0de04f83"><td class="memTemplParams" colspan="2">template&lt;typename... Types&gt; </td></tr>
+<tr class="memitem:ae20b6b6ed50b0676a78b641e0de04f83"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra_1_1internal.html#ae20b6b6ed50b0676a78b641e0de04f83">StackWalker</a> = typename <a class="el" href="namespaceluwra_1_1internal.html#a8de59a6bc341c81546d0643d04667837">MakeIndexSequence</a>&lt; sizeof...(Types)&gt;::template Relay&lt; <a class="el" href="structluwra_1_1internal_1_1__StackWalker.html">_StackWalker</a>&lt; Types... &gt;::template Walker &gt;</td></tr>
+<tr class="separator:ae20b6b6ed50b0676a78b641e0de04f83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8b83302eb1191090c2fd3398c8dbc13c"><td class="memTemplParams" colspan="2">template&lt;typename UserType &gt; </td></tr>
 <tr class="memitem:a8b83302eb1191090c2fd3398c8dbc13c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceluwra_1_1internal.html#a8b83302eb1191090c2fd3398c8dbc13c">StripUserType</a> = typename std::remove_cv&lt; UserType &gt;::type</td></tr>
 <tr class="separator:a8b83302eb1191090c2fd3398c8dbc13c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -351,14 +349,14 @@ template&lt;typename Callable &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a92afa2cb60368e5087e24636eadec96c"></a>
+<a class="anchor" id="ae20b6b6ed50b0676a78b641e0de04f83"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename... Types&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="namespaceluwra_1_1internal.html#a92afa2cb60368e5087e24636eadec96c">luwra::internal::StackWalker</a> = typedef <a class="el" href="structluwra_1_1internal_1_1__StackWalker.html">_StackWalker</a>&lt;<a class="el" href="namespaceluwra_1_1internal.html#a8de59a6bc341c81546d0643d04667837">MakeIndexSequence</a>&lt;sizeof...(Types)&gt;, Types...&gt;</td>
+          <td class="memname">using <a class="el" href="namespaceluwra_1_1internal.html#ae20b6b6ed50b0676a78b641e0de04f83">luwra::internal::StackWalker</a> = typedef typename <a class="el" href="namespaceluwra_1_1internal.html#a8de59a6bc341c81546d0643d04667837">MakeIndexSequence</a>&lt;sizeof...(Types)&gt;::template Relay&lt; <a class="el" href="structluwra_1_1internal_1_1__StackWalker.html">_StackWalker</a>&lt;Types...&gt;::template Walker &gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
