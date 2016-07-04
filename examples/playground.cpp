@@ -1,5 +1,6 @@
 #include <luwra.hpp>
 #include <iostream>
+#include <string>
 
 using namespace luwra;
 
@@ -16,17 +17,20 @@ struct A {
 int main() {
 	StateWrapper state;
 
-	registerUserType<A(int)>(
-		state,
-		"A",
-		{LUWRA_MEMBER(A, foo)},
-		{LUWRA_MEMBER(A, __add)}
-	);
+	push(state, 1337);
+	push(state, 13.37);
+	push(state, "Hello World");
+	push(state, A(1337));
 
-	if (state.runString("return A(13) + A(37)") == LUA_OK)
-		std::cout << read<A&>(state, -1).foo << std::endl;
-	else
-		std::cerr << read<std::string>(state, -1) << std::endl;
+	int i = read(state, 1);
+	double d = read(state, 2);
+	std::string s = read(state, 3);
+	A u = read(state, 4);
+
+	std::cout << i << std::endl;
+	std::cout << d << std::endl;
+	std::cout << s << std::endl;
+	std::cout << u.foo << std::endl;
 
 	return 0;
 }

@@ -38,6 +38,27 @@ struct Value<Type&>: Value<Type> {};
 template <typename Type>
 struct Value<Type&&>: Value<Type> {};
 
+namespace internal {
+	struct InferValueType {
+		State* state;
+		int index;
+
+		template <typename Type>
+		operator Type() const && {
+			return Value<Type>::read(state, index);
+		}
+	};
+}
+
+/// Enables reading of type-infered values
+template <>
+struct Value<internal::InferValueType> {
+	static inline
+	const internal::InferValueType read(State* state, int index) {
+		return {state, index};
+	}
+};
+
 /// Enables reading/pushing `nil`
 template <>
 struct Value<std::nullptr_t> {

@@ -42,7 +42,7 @@ void push(State* state, First&& first, Second&& second, Rest&&... rest) {
 /// \tparam Type  Type of targeted value
 /// \param  state Lua state
 /// \param  index Position of the value on the stack
-template <typename Type> inline
+template <typename Type = internal::InferValueType> inline
 auto read(State* state, int index) -> decltype(Value<Type>::read(state, index)) {
 	return Value<Type>::read(state, index);
 }
