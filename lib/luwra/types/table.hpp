@@ -75,11 +75,6 @@ namespace internal {
 		}
 
 		template <typename Type> inline
-		operator Type&() const & {
-			return accessor.template read<Type&>(state);
-		}
-
-		template <typename Type> inline
 		operator Type() const && {
 			return accessor.template read<Type>(state);
 		}
