@@ -1,6 +1,9 @@
 #include <catch.hpp>
 #include <luwra.hpp>
 
+#include <string>
+#include <memory>
+
 namespace {
 	struct A {
 		std::shared_ptr<size_t> copyCounter;
@@ -120,6 +123,29 @@ TEST_CASE("read") {
 
 		REQUIRE(luwra::read<B&&>(state, 1) == b);
 		REQUIRE(luwra::read<B&&>(state, -1) == b);
+	}
+
+	SECTION("type inference") {
+		luwra::push(state, 1337);
+		luwra::push(state, "Hello World");
+		luwra::construct<B>(state, 7331);
+
+		int i = luwra::read(state, -3);
+		REQUIRE(i == 1337);
+
+		std::string s = luwra::read(state, -2);
+		REQUIRE(s == "Hello World");
+
+		B b1 = luwra::read(state, -1);
+		REQUIRE(b1 == B(7331));
+
+		B& b2 = luwra::read(state, -1);
+		REQUIRE(b2 == B(7331));
+
+		const B& b3 = luwra::read(state, -1);
+		REQUIRE(b3 == B(7331));
+
+		REQUIRE(std::addressof(b2) == std::addressof(b3));
 	}
 }
 
