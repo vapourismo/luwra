@@ -42,6 +42,6 @@ TEST_CASE("function<void(A...)>") {
 	auto fun = state.read<std::function<void (int, int)>>(-1);
 	fun(13, 37);
 
-	int returnValue = state["returnValue"];
+	int returnValue = state.get<int>("returnValue");
 	REQUIRE(returnValue == 50);
 }
