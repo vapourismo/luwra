@@ -86,38 +86,6 @@ struct Reference {
 	Reference(State* state, int indexOrRef = -1, bool isIndex = true):
 		impl(std::make_shared<internal::ReferenceImpl>(state, indexOrRef, isIndex))
 	{}
-
-	/// Read the cell's value.
-	///
-	/// \tparam Type The expected type
-	template <typename Type> inline
-	Type read() const {
-		impl->push();
-		Type ret = Value<Type>::read(impl->state, -1);
-
-		lua_pop(impl->state, 1);
-		return ret;
-	}
-
-	/// Alias for @ref read<Type>
-	template <typename Type> inline
-	operator Type() const {
-		return read<Type>();
-	}
-
-	/// Set the cell's value.
-	template <typename Type> inline
-	const Reference& write(Type&& value) const {
-		push(impl->state, std::forward<Type>(value));
-		impl->update();
-		return *this;
-	}
-
-	/// Alias for @ref write
-	template <typename Type> inline
-	const Reference& operator =(Type&& value) const {
-		return write(std::forward<Type>(value));
-	}
 };
 
 /// Enables referencing/dereferencing values
