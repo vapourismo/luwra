@@ -16,7 +16,7 @@ LUWRA_NS_BEGIN
 
 namespace internal {
 	// Create reference the value pointed to by `index`. Does not remove the referenced value.
-	static inline
+	inline
 	int referenceValue(State* state, int index) {
 		lua_pushvalue(state, index);
 		return luaL_ref(state, LUA_REGISTRYINDEX);

@@ -18,16 +18,6 @@
 LUWRA_NS_BEGIN
 
 namespace internal {
-	/// Retrieve the table responsible for the global namespace.
-	inline
-	Table getGlobalsTable(State* state) {
-		#if LUA_VERSION_NUM <= 501
-			return {{state, internal::referenceValue(state, LUA_GLOBALSINDEX), false}};
-		#else
-			return {{state, LUA_RIDX_GLOBALS, false}};
-		#endif
-	}
-
 	struct StateBundle {
 		State* state;
 		bool close_state;
