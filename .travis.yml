@@ -3,10 +3,6 @@ language: cpp
 matrix:
   include:
     # Lua 5.3
-    - env: LUA_VERSION=5.3.3 COMPILER=g++-4.8
-      compiler: gcc
-      addons:
-        apt: {sources: ['ubuntu-toolchain-r-test'], packages: ['g++-4.8']}
     - env: LUA_VERSION=5.3.3 COMPILER=g++-4.9
       compiler: gcc
       addons:
@@ -21,10 +17,6 @@ matrix:
         apt: {sources: ['ubuntu-toolchain-r-test'], packages: ['g++-6']}
 
     # Lua 5.2
-    - env: LUA_VERSION=5.2.4 COMPILER=g++-4.8
-      compiler: gcc
-      addons:
-        apt: {sources: ['ubuntu-toolchain-r-test'], packages: ['g++-4.8']}
     - env: LUA_VERSION=5.2.4 COMPILER=g++-4.9
       compiler: gcc
       addons:
@@ -39,10 +31,6 @@ matrix:
         apt: {sources: ['ubuntu-toolchain-r-test'], packages: ['g++-6']}
 
     # Lua 5.1
-    - env: LUA_VERSION=5.1.5 COMPILER=g++-4.8
-      compiler: gcc
-      addons:
-        apt: {sources: ['ubuntu-toolchain-r-test'], packages: ['g++-4.8']}
     - env: LUA_VERSION=5.1.5 COMPILER=g++-4.9
       compiler: gcc
       addons:
