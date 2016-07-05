@@ -17,26 +17,19 @@ struct A {
 int main() {
 	StateWrapper state;
 
-	push(state, 1337);
-	push(state, 13.37);
-	push(state, "Hello World");
-	push(state, A(1337));
-
-	int i = read(state, 1);
-	double d = read(state, 2);
-	std::string s = read(state, 3);
-	A& u = read(state, 4);
-
-	std::cout << i << std::endl;
-	std::cout << d << std::endl;
-	std::cout << s << std::endl;
-	std::cout << u.foo << std::endl;
-
-	u.foo = 0;
-
-	apply(state, 4, [](A x) {
-		std::cout << x.foo << std::endl;
+	push(state, MemberMap {
+		{"a", A(1337)}
 	});
+
+	Table table(state, -1);
+
+	A& a1 = table["a"];
+	const A& a2 = table["a"];
+	A a3 = table["a"];
+
+	std::cout << a1.foo << std::endl;
+	std::cout << a2.foo << std::endl;
+	std::cout << a3.foo << std::endl;
 
 	return 0;
 }
