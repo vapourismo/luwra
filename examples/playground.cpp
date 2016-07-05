@@ -4,39 +4,44 @@
 
 using namespace luwra;
 
-struct A {
-	int foo;
+struct StateBundle {
+	State* state;
+	bool close_state;
 
-	A(int foo): foo(foo) {}
+	inline
+	StateBundle():
+		state(luaL_newstate()),
+		close_state(true)
+	{}
 
-	A __add(const A& other) {
-		return A(foo + other.foo);
+	inline
+	StateBundle(State* state):
+		state(state),
+		close_state(false)
+	{}
+
+	inline
+	~StateBundle() {
+		if (close_state) lua_close(state);
 	}
 };
 
+struct StateWrapper2: StateBundle, Table {
+	inline
+	StateWrapper2():
+		StateBundle(),
+		Table({state, LUA_RIDX_GLOBALS, false})
+	{}
+
+	inline
+	StateWrapper2(State* state):
+		StateBundle(state),
+		Table({state, LUA_RIDX_GLOBALS, false})
+	{}
+};
+
 int main() {
-	StateWrapper state;
-
-	push(state, 1337);
-	push(state, 13.37);
-	push(state, "Hello World");
-	push(state, A(1337));
-
-	int i = read(state, 1);
-	double d = read(state, 2);
-	std::string s = read(state, 3);
-	A& u = read(state, 4);
-
-	std::cout << i << std::endl;
-	std::cout << d << std::endl;
-	std::cout << s << std::endl;
-	std::cout << u.foo << std::endl;
-
-	u.foo = 0;
-
-	apply(state, 4, [](A x) {
-		std::cout << x.foo << std::endl;
-	});
+	StateWrapper2 state(luaL_newstate());
 
 	return 0;
 }

@@ -27,34 +27,53 @@ namespace internal {
 			return {{state, LUA_RIDX_GLOBALS, false}};
 		#endif
 	}
+
+	struct StateBundle {
+		State* state;
+		bool close_state;
+
+		inline
+		StateBundle():
+			state(luaL_newstate()),
+			close_state(true)
+		{}
+
+		inline
+		StateBundle(State* state):
+			state(state),
+			close_state(false)
+		{}
+
+		inline
+		~StateBundle() {
+			if (close_state) lua_close(state);
+		}
+	};
 }
 
 /// Wrapper for a Lua state
-struct StateWrapper: Table {
-	State* state;
-	bool close_state;
+struct StateWrapper: internal::StateBundle, Table {
+	/// Create a new Lua state.
+	inline
+	StateWrapper():
+		internal::StateBundle(),
+		#if LUA_VERSION_NUM <= 501
+			Table(state, LUA_GLOBALSINDEX)
+		#else
+			Table({state, LUA_RIDX_GLOBALS, false})
+		#endif
+	{}
 
 	/// Operate on a foreign state instance.
 	inline
 	StateWrapper(State* state):
-		Table(internal::getGlobalsTable(state)),
-		state(state),
-		close_state(false)
+		internal::StateBundle(state),
+		#if LUA_VERSION_NUM <= 501
+			Table(state, LUA_GLOBALSINDEX)
+		#else
+			Table({state, LUA_RIDX_GLOBALS, false})
+		#endif
 	{}
-
-	/// Create a new Lua state.
-	inline
-	StateWrapper():
-		Table(internal::getGlobalsTable(luaL_newstate())),
-		state(ref.impl->state),
-		close_state(true)
-	{}
-
-	inline
-	~StateWrapper() {
-		if (close_state)
-			lua_close(state);
-	}
 
 	/// Convert to `lua_State`.
 	inline
