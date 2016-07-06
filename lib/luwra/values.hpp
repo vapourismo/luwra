@@ -43,12 +43,12 @@ namespace internal {
 		State* state;
 		int index;
 
-		template <typename Type>
+		template <typename Type> inline
 		operator Type() const && {
 			return Value<Type>::read(state, index);
 		}
 
-		template <typename Type>
+		template <typename Type> inline
 		operator Type&() const & {
 			return Value<Type&>::read(state, index);
 		}
