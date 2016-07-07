@@ -86,9 +86,15 @@ The template [ReturnValues][luwra-returnvalue] extends the `push` functionality 
 return type of user-provided functions in order to mimic the ability of Lua functions to return
 multiple values at once.
 
+# Read and Type Errors
+Luwra does not handle errors. Instead it delegates the error handling to Lua.
+See [Error Handling in C][lua-errorhandling] for more information.
+
+
 [luwra-value]: /reference/structluwra_1_1Value.html
 [lua-cfunction]: http://www.lua.org/manual/5.3/manual.html#lua_CFunction
 [luwra-function]: /reference/structluwra_1_1Function.html
 [luwra-table]: /reference/structluwra_1_1Table.html
 [lua-userdata]: http://www.lua.org/manual/5.3/manual.html#lua_newuserdata
 [luwra-returnvalue]: /reference/structluwra_1_1ReturnValue.html
+[lua-errorhandling]: http://www.lua.org/manual/5.3/manual.html#4.6

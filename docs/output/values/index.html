@@ -79,6 +79,9 @@
                 <li class="toctree-l3"><a href="#return-values">Return Values</a></li>
                 
             
+                <li class="toctree-l3"><a href="#read-and-type-errors">Read and Type Errors</a></li>
+                
+            
             </ul>
         
     </li>
@@ -354,6 +357,9 @@ snippet and insert it outside of any namespace.</p>
 <p><a href="../reference/structluwra_1_1ReturnValue.html">ReturnValues</a> makes it possible to use <code>std::tuple&lt;...&gt;</code> or <code>std::pair&lt;...&gt;</code> as
 return type of user-provided functions in order to mimic the ability of Lua functions to return
 multiple values at once.</p>
+<h1 id="read-and-type-errors">Read and Type Errors</h1>
+<p>Luwra does not handle errors. Instead it delegates the error handling to Lua.
+See <a href="http://www.lua.org/manual/5.3/manual.html#4.6">Error Handling in C</a> for more information.</p>
               
             </div>
           </div>
