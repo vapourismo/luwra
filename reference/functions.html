@@ -119,7 +119,7 @@
 : <a class="el" href="structluwra_1_1internal_1_1UserTypeWrapper.html#a0931c07116e8aaa5ce843c9b0923c83b">luwra::internal::UserTypeWrapper&lt; UserType &gt;</a>
 </li>
 <li>close_state
-: <a class="el" href="structluwra_1_1StateWrapper.html#a55f83661f04e7c7ad21456207feeef01">luwra::StateWrapper</a>
+: <a class="el" href="structluwra_1_1internal_1_1StateBundle.html#a7f837faddc11ceaf8e549743f91b6891">luwra::internal::StateBundle</a>
 </li>
 <li>ConstructSignature
 : <a class="el" href="structluwra_1_1internal_1_1With.html#ab6e9739bd763d44813f9d7463ee5dd71">luwra::internal::With&lt; Type &gt;</a>
@@ -245,10 +245,10 @@
 <li>operator Type()
 : <a class="el" href="structluwra_1_1internal_1_1InferValueType.html#a0be4f019fd56ca5ab16a27cf90c6f85e">luwra::internal::InferValueType</a>
 , <a class="el" href="structluwra_1_1internal_1_1TableAccessor.html#a9464d5c6f497cd07dd14e910f2cff465">luwra::internal::TableAccessor&lt; Accessor &gt;</a>
-, <a class="el" href="structluwra_1_1Reference.html#a79c34ca4214661e85f33854dcf2d509d">luwra::Reference</a>
 </li>
 <li>operator Type &amp;()
 : <a class="el" href="structluwra_1_1internal_1_1InferValueType.html#a00ec5a69a332272fddd27e9e28c63682">luwra::internal::InferValueType</a>
+, <a class="el" href="structluwra_1_1internal_1_1TableAccessor.html#a6c7907058de3c83c833bf8c4f48af8dd">luwra::internal::TableAccessor&lt; Accessor &gt;</a>
 </li>
 <li>operator()()
 : <a class="el" href="structluwra_1_1Function.html#a88f7a81cd14996ed375cc71ed17c7d78">luwra::Function&lt; Ret &gt;</a>
@@ -261,9 +261,8 @@
 : <a class="el" href="structluwra_1_1StateWrapper.html#aea67c9ad0c61379c1750e5c56efbae69">luwra::StateWrapper</a>
 </li>
 <li>operator=()
-: <a class="el" href="structluwra_1_1internal_1_1ReferenceImpl.html#a630f438110ef900d2614bf1d87f7accc">luwra::internal::ReferenceImpl</a>
+: <a class="el" href="structluwra_1_1internal_1_1ReferenceImpl.html#a2be72621fe8ef57bb4692c9cb20cc49b">luwra::internal::ReferenceImpl</a>
 , <a class="el" href="structluwra_1_1internal_1_1TableAccessor.html#a5125caf27dd7a4b1129b9212d451ed7c">luwra::internal::TableAccessor&lt; Accessor &gt;</a>
-, <a class="el" href="structluwra_1_1Reference.html#a0a2799c2dbb7e7ec0b3ea4afe9620ea2">luwra::Reference</a>
 </li>
 <li>operator[]()
 : <a class="el" href="structluwra_1_1internal_1_1TableAccessor.html#af92c4030eece4a651ead67fe5e3042d7">luwra::internal::TableAccessor&lt; Accessor &gt;</a>
@@ -324,7 +323,6 @@
 , <a class="el" href="structluwra_1_1internal_1_1NumericValueBase.html#aa56a21e6fe2b4e1092d71551f360f68e">luwra::internal::NumericValueBase&lt; Type, Transport &gt;</a>
 , <a class="el" href="structluwra_1_1internal_1_1Path.html#a4f7b3512a87c685a98d328318ac81465">luwra::internal::Path&lt; Parent, Key &gt;</a>
 , <a class="el" href="structluwra_1_1internal_1_1TableAccessor.html#afd3d5697fcd5dfc23a9e9919e5e183e3">luwra::internal::TableAccessor&lt; Accessor &gt;</a>
-, <a class="el" href="structluwra_1_1Reference.html#a23df7d01c19295e9cc2e0105bffa156a">luwra::Reference</a>
 , <a class="el" href="structluwra_1_1StateWrapper.html#a6dc6469188239b80947d10309e382c19">luwra::StateWrapper</a>
 , <a class="el" href="structluwra_1_1Value.html#acd8d7630cafb71e012c44948542e84b0">luwra::Value&lt; UserType &gt;</a>
 , <a class="el" href="structluwra_1_1Value_3_01bool_01_4.html#aeb26d3b2929e1e3d5d7fc0ea83fc0c2d">luwra::Value&lt; bool &gt;</a>
@@ -354,7 +352,7 @@
 : <a class="el" href="structluwra_1_1Reference.html#a57355c2fcd62e60d189c57b0060cc153">luwra::Reference</a>
 </li>
 <li>ReferenceImpl()
-: <a class="el" href="structluwra_1_1internal_1_1ReferenceImpl.html#aabb686c52d7210d65b3dedee55bffe0c">luwra::internal::ReferenceImpl</a>
+: <a class="el" href="structluwra_1_1internal_1_1ReferenceImpl.html#a0d06593683d108d2ee9c6b7c3754a49f">luwra::internal::ReferenceImpl</a>
 </li>
 <li>registerUserType()
 : <a class="el" href="structluwra_1_1StateWrapper.html#a79ad89230ac9826241bd597b87c5db7b">luwra::StateWrapper</a>
@@ -399,8 +397,11 @@
 <li>state
 : <a class="el" href="structluwra_1_1internal_1_1InferValueType.html#a047baba9c0faf389305cd7e53133ab6c">luwra::internal::InferValueType</a>
 , <a class="el" href="structluwra_1_1internal_1_1ReferenceImpl.html#a2190674d9b7762db0e96df4e319b2616">luwra::internal::ReferenceImpl</a>
+, <a class="el" href="structluwra_1_1internal_1_1StateBundle.html#a4e38963dae7e57f9d13dad12aa8fa0e6">luwra::internal::StateBundle</a>
 , <a class="el" href="structluwra_1_1internal_1_1TableAccessor.html#a42f58dce3c2b1b0b66c85325479bd578">luwra::internal::TableAccessor&lt; Accessor &gt;</a>
-, <a class="el" href="structluwra_1_1StateWrapper.html#ab5c6fb20675aec5710857c6962c598ff">luwra::StateWrapper</a>
+</li>
+<li>StateBundle()
+: <a class="el" href="structluwra_1_1internal_1_1StateBundle.html#a5ea1b2e126142ed51c1fd9d8076568ec">luwra::internal::StateBundle</a>
 </li>
 <li>StateWrapper()
 : <a class="el" href="structluwra_1_1StateWrapper.html#aa759d636fc1779af97b53383164d1ede">luwra::StateWrapper</a>
@@ -443,7 +444,6 @@
 <li>write()
 : <a class="el" href="structluwra_1_1internal_1_1Path.html#a16fe8d197fba5ec4da2a3fdbc9f8a532">luwra::internal::Path&lt; Parent, Key &gt;</a>
 , <a class="el" href="structluwra_1_1internal_1_1TableAccessor.html#a32ea615e3ad1294974d89815cd1cff2d">luwra::internal::TableAccessor&lt; Accessor &gt;</a>
-, <a class="el" href="structluwra_1_1Reference.html#aede00c683cfebf554708be72d2505279">luwra::Reference</a>
 </li>
 </ul>
 
@@ -452,8 +452,8 @@
 <li>~ReferenceImpl()
 : <a class="el" href="structluwra_1_1internal_1_1ReferenceImpl.html#aa70276514a7190f209a8cf543bacb021">luwra::internal::ReferenceImpl</a>
 </li>
-<li>~StateWrapper()
-: <a class="el" href="structluwra_1_1StateWrapper.html#a9022ffd5a9777088b9be4e03f43287c9">luwra::StateWrapper</a>
+<li>~StateBundle()
+: <a class="el" href="structluwra_1_1internal_1_1StateBundle.html#a844a6daa2fee2a9a6534ba35900b7873">luwra::internal::StateBundle</a>
 </li>
 </ul>
 </div><!-- contents -->

@@ -200,6 +200,8 @@ the previous section, you can extract the values like so.</p>
 <pre><code class="c++">MyUserType&amp; u = luwra::read(state, 4);
 </code></pre>
 
+<p><strong>Note:</strong> Type inference does not work with every compiler. Particularly GCC before version 4.9.2 is
+affected by this problem.</p>
 <h2 id="invoke-callables-with-stack-values">Invoke Callables with Stack Values</h2>
 <p><a href="../reference/namespaceluwra.html#aa9fee091aaa7a0073108054e316ffb28">apply</a> is a function that retrieves values from the stack in order to invoke a given
 <code>Callable</code>. The types of values on the stack are deduced from the parameter types to the <code>Callable</code>.</p>
