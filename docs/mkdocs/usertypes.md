@@ -187,8 +187,8 @@ This method will not prefix the registry name with the value of `LUWRA_REGISTRY_
 The [LUWRA_DEF_REGISTRY_NAME][luwra-def-registry-name] macro has to be used at the root namespace,
 using it inside a namespace scope will have no effect.
 
-[luwra-registerusertype]: /reference/namespaceluwra.html#acc685345fabe835a7f8323e7098e39f6
-[luwra-registerusertype-2]: /reference/namespaceluwra.html#a0a744cd63bf0d4f611a62b8a56df714e
+[luwra-registerusertype]: /reference/namespaceluwra.html#a06485564f429e1c3f8b42df78fac917c
+[luwra-registerusertype-2]: /reference/namespaceluwra.html#a0eb06735b4dcd8d26173cf609260673b
 [luwra-membermap]: /reference/namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a
 [luwra-construct]: /reference/namespaceluwra.html#af079dcca8e67d88e5cfdc7e8872cf5d7
 [luwra-member]: /reference/usertypes_8hpp.html#a6fb730cf9446ba2b6164dde982e73a26

@@ -170,6 +170,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1StackMapper_3_01void_01_4.html">StackMapper&lt; void &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1StateBundle.html">StateBundle</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1TableAccessor.html">TableAccessor</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structluwra_1_1internal_1_1TypeList.html">TypeList</a></td></tr>
@@ -236,11 +238,8 @@ Typedefs</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a2658bf12f697c6eb6af69f43dd6a100d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structluwra_1_1Table.html">Table</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceluwra_1_1internal.html#a2658bf12f697c6eb6af69f43dd6a100d">getGlobalsTable</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state)</td></tr>
-<tr class="memdesc:a2658bf12f697c6eb6af69f43dd6a100d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the table responsible for the global namespace.  <a href="#a2658bf12f697c6eb6af69f43dd6a100d">More...</a><br /></td></tr>
-<tr class="separator:a2658bf12f697c6eb6af69f43dd6a100d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a507da957e773effd949e3ab9454c1f28"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceluwra_1_1internal.html#a507da957e773effd949e3ab9454c1f28">referenceValue</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int index)</td></tr>
-<tr class="separator:a507da957e773effd949e3ab9454c1f28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f1730c8287dc041b2e0f19edc4d42ea"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceluwra_1_1internal.html#a8f1730c8287dc041b2e0f19edc4d42ea">referenceValue</a> (<a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *state, int index)</td></tr>
+<tr class="separator:a8f1730c8287dc041b2e0f19edc4d42ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a class="anchor" id="a103861b7ae25ed140c3215e748c2a196"></a>
@@ -408,7 +407,7 @@ template&lt;typename... Contents&gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a2658bf12f697c6eb6af69f43dd6a100d"></a>
+<a class="anchor" id="a8f1730c8287dc041b2e0f19edc4d42ea"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -416,33 +415,7 @@ template&lt;typename... Contents&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structluwra_1_1Table.html">Table</a> luwra::internal::getGlobalsTable </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *&#160;</td>
-          <td class="paramname"><em>state</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Retrieve the table responsible for the global namespace. </p>
-
-</div>
-</div>
-<a class="anchor" id="a507da957e773effd949e3ab9454c1f28"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static int luwra::internal::referenceValue </td>
+          <td class="memname">int luwra::internal::referenceValue </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d">State</a> *&#160;</td>
           <td class="paramname"><em>state</em>, </td>
@@ -461,7 +434,7 @@ template&lt;typename... Contents&gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

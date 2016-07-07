@@ -185,7 +185,7 @@ members, one must register the type's metatable in Lua's registry.</p>
 </code></pre>
 
 <h2 id="register-user-type-with-constructor">Register User Type with Constructor</h2>
-<p><a href="../reference/namespaceluwra.html#acc685345fabe835a7f8323e7098e39f6">registerUserType&lt;UserType(CtorArgs...)&gt;</a> allows you to register a
+<p><a href="../reference/namespaceluwra.html#a06485564f429e1c3f8b42df78fac917c">registerUserType&lt;UserType(CtorArgs...)&gt;</a> allows you to register a
 metatable for <code>UserType</code> and a constructor for it with the parameter types <code>CtorArgs...</code> in the
 global namespace.</p>
 <p>By default, the function generates a garbage-collector hook and a string representation function.
@@ -244,7 +244,7 @@ add other types of fields:</p>
 
 <h2 id="register-user-type-without-constructor">Register User Type without Constructor</h2>
 <p>To register only the metatable associated with a user type, simply omit the constructor parameters
-and name from the call to <a href="../reference/namespaceluwra.html#a0a744cd63bf0d4f611a62b8a56df714e">registerUserType</a>.</p>
+and name from the call to <a href="../reference/namespaceluwra.html#a0eb06735b4dcd8d26173cf609260673b">registerUserType</a>.</p>
 <pre><code class="c++">luwra::registerUserType&lt;Point&gt;(
     lua,
 

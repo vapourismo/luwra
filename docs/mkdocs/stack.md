@@ -55,6 +55,9 @@ std::string s = luwra::read(state, 3);
 MyUserType& u = luwra::read(state, 4);
 ```
 
+**Note:** Type inference does not work with every compiler. Particularly GCC before version 4.9.2 is
+affected by this problem.
+
 ## Invoke Callables with Stack Values
 [apply][luwra-apply] is a function that retrieves values from the stack in order to invoke a given
 `Callable`. The types of values on the stack are deduced from the parameter types to the `Callable`.
