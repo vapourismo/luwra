@@ -1,47 +1,30 @@
-#include <luwra.hpp>
 #include <iostream>
-#include <string>
+#include <luwra.hpp>
 
-using namespace luwra;
+struct Test {
+	int value;
 
-struct StateBundle {
-	State* state;
-	bool close_state;
+	void set(int v) {
+		value = v;
+	}
 
-	inline
-	StateBundle():
-		state(luaL_newstate()),
-		close_state(true)
-	{}
-
-	inline
-	StateBundle(State* state):
-		state(state),
-		close_state(false)
-	{}
-
-	inline
-	~StateBundle() {
-		if (close_state) lua_close(state);
+	int get() {
+		return value;
 	}
 };
 
-struct StateWrapper2: StateBundle, Table {
-	inline
-	StateWrapper2():
-		StateBundle(),
-		Table({state, LUA_RIDX_GLOBALS, false})
-	{}
-
-	inline
-	StateWrapper2(State* state):
-		StateBundle(state),
-		Table({state, LUA_RIDX_GLOBALS, false})
-	{}
-};
-
 int main() {
-	StateWrapper2 state(luaL_newstate());
+	luwra::StateWrapper state;
+
+	state.registerUserType<Test>({
+		LUWRA_MEMBER(Test, set),
+		LUWRA_MEMBER(Test, get)
+	});
+
+	state["test"] = Test {1337};
+
+	if (state.runString("test:set(test:get() + 100)") != LUA_OK)
+		std::cout << state.read<std::string>(-1) << std::endl;
 
 	return 0;
 }

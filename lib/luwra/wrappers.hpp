@@ -34,29 +34,50 @@ namespace internal {
 			"Instances of MethodPointer are not part of Klass"
 		);
 
-		using Ret = ReturnTypeOf<MethodPointer>;
-
-		// This class will receive the argument types of MethodPointer.
 		template <typename... Args>
-		struct ArgumentsReceiver {
-			using MapSignature = Ret (Klass*, Args...);
-
-			template <MethodPointer meth> static inline
-			Ret hook(Klass* parent, Args&&... args) {
-				return (parent->*meth)(std::forward<Args>(args)...);
-			}
+		struct _ImplementerNonVoid {
+			template <size_t... Indices>
+			struct SeqReceiver {
+				template <MethodPointer meth> static inline
+				int invoke(State* state) {
+					return static_cast<int>(
+						pushReturn(
+							state,
+							(read<Klass*>(state, 1)->*meth)(read<Args>(state, 2 + Indices)...)
+						)
+					);
+				}
+			};
 		};
 
-		// Relay argument types in order to find the appropriate MapSignature and hook function.
-		using Receiver =
-			typename ArgumentsOf<MethodPointer>::template Relay<ArgumentsReceiver>;
+		template <typename... Args>
+		struct _ImplementerVoid {
+			template <size_t... Indices>
+			struct SeqReceiver {
+				template <MethodPointer meth> static inline
+				int invoke(State* state) {
+					(read<Klass*>(state, 1)->*meth)(read<Args>(state, 2 + Indices)...);
+					return 0;
+				}
+			};
+		};
 
-		template <MethodPointer meth> static inline
-		int invoke(State* state) {
-			return static_cast<int>(
-				map(state, 1, &Receiver::template hook<meth>)
-			);
-		}
+		template <typename... Types>
+		using _Implementer =
+			typename std::conditional<
+				std::is_same<ReturnTypeOf<MethodPointer>, void>::value,
+				_ImplementerVoid<Types...>,
+				_ImplementerNonVoid<Types...>
+			>::type;
+
+		template <typename... Types>
+		using Implementer =
+			typename MakeIndexSequence<sizeof...(Types)>::template Relay<
+				_Implementer<Types...>::template SeqReceiver
+			>;
+
+		using Implementation =
+			typename ArgumentsOf<MethodPointer>::template Relay<Implementer>;
 	};
 
 	// Catch attempts to wrap non-member pointers.
@@ -74,22 +95,22 @@ namespace internal {
 	// Wrap methods that expect 'this' to be const-volatile-qualified.
 	template <typename Klass, typename BaseKlass, typename Ret, typename... Args>
 	struct MemberWrapper<Ret (BaseKlass::*)(Args...) const volatile, Klass>:
-		MemberMethodImpl<Ret (BaseKlass::*)(Args...) const volatile, Klass> {};
+		MemberMethodImpl<Ret (BaseKlass::*)(Args...) const volatile, Klass>::Implementation {};
 
 	// Wrap methods that expect 'this' to be const-qualified.
 	template <typename Klass, typename BaseKlass, typename Ret, typename... Args>
 	struct MemberWrapper<Ret (BaseKlass::*)(Args...) const, Klass>:
-		MemberMethodImpl<Ret (BaseKlass::*)(Args...) const, Klass> {};
+		MemberMethodImpl<Ret (BaseKlass::*)(Args...) const, Klass>::Implementation {};
 
 	// Wrap methods that expect 'this' to be volatile-qualified.
 	template <typename Klass, typename BaseKlass, typename Ret, typename... Args>
 	struct MemberWrapper<Ret (BaseKlass::*)(Args...) volatile, Klass>:
-		MemberMethodImpl<Ret (BaseKlass::*)(Args...) volatile, Klass> {};
+		MemberMethodImpl<Ret (BaseKlass::*)(Args...) volatile, Klass>::Implementation {};
 
 	// Wrap methods that expect 'this' to be unqualified.
 	template <typename Klass, typename BaseKlass, typename Ret, typename... Args>
 	struct MemberWrapper<Ret (BaseKlass::*)(Args...), Klass>:
-		MemberMethodImpl<Ret (BaseKlass::*)(Args...), Klass> {};
+		MemberMethodImpl<Ret (BaseKlass::*)(Args...), Klass>::Implementation {};
 
 	// Wrap const-qualified field, provides only the getter.
 	template <typename Klass, typename BaseKlass, typename FieldType>
@@ -161,22 +182,22 @@ namespace internal {
 	// Wrap methods that expect `this` to be 'const volatile'-qualified.
 	template <typename Klasss, typename Ret, typename... Args>
 	struct Wrapper<Ret (Klasss::*)(Args...) const volatile>:
-		MemberWrapper<Ret (Klasss::*)(Args...) const volatile>{};
+		MemberWrapper<Ret (Klasss::*)(Args...) const volatile> {};
 
 	// Wrap methods that expect `this` to be 'const'-qualified.
 	template <typename Klasss, typename Ret, typename... Args>
 	struct Wrapper<Ret (Klasss::*)(Args...) const>:
-		MemberWrapper<Ret (Klasss::*)(Args...) const>{};
+		MemberWrapper<Ret (Klasss::*)(Args...) const> {};
 
 	// Wrap methods that expect `this` to be 'volatile'-qualified.
 	template <typename Klasss, typename Ret, typename... Args>
 	struct Wrapper<Ret (Klasss::*)(Args...) volatile>:
-		MemberWrapper<Ret (Klasss::*)(Args...) volatile>{};
+		MemberWrapper<Ret (Klasss::*)(Args...) volatile> {};
 
 	// Wrap methods that expect `this` to be unqualified.
 	template <typename Klasss, typename Ret, typename... Args>
 	struct Wrapper<Ret (Klasss::*)(Args...)>:
-		MemberWrapper<Ret (Klasss::*)(Args...)>{};
+		MemberWrapper<Ret (Klasss::*)(Args...)> {};
 
 	// Wrap field.
 	template <typename Klasss, typename Ret>
