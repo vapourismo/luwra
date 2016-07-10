@@ -1,29 +1,23 @@
 #include <iostream>
 #include <luwra.hpp>
 
-struct Test {
-	int value;
+static int value = 1337;
 
-	void set(int v) {
-		value = v;
-	}
+int get() {
+	return value;
+}
 
-	int get() {
-		return value;
-	}
-};
+void set(int v) {
+	value = v;
+}
 
 int main() {
 	luwra::StateWrapper state;
 
-	state.registerUserType<Test>({
-		LUWRA_MEMBER(Test, set),
-		LUWRA_MEMBER(Test, get)
-	});
+	state["get"] = LUWRA_WRAP(get);
+	state["set"] = LUWRA_WRAP(set);
 
-	state["test"] = Test {1337};
-
-	if (state.runString("test:set(test:get() + 100)") != LUA_OK)
+	if (state.runString("set(get() + 100)") != LUA_OK)
 		std::cout << state.read<std::string>(-1) << std::endl;
 
 	return 0;

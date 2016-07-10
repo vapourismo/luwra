@@ -24,7 +24,7 @@ namespace internal {
 		typename MethodPointer,
 		typename Klass = typename MemberInfo<MethodPointer>::MemberOf
 	>
-	struct MemberMethodImpl {
+	struct MemberMethodWrapperImpl {
 		using BaseKlass = typename MemberInfo<MethodPointer>::MemberOf;
 
 		// Make sure that a member pointer with type MethodPointer is member of a base class that
@@ -95,22 +95,22 @@ namespace internal {
 	// Wrap methods that expect 'this' to be const-volatile-qualified.
 	template <typename Klass, typename BaseKlass, typename Ret, typename... Args>
 	struct MemberWrapper<Ret (BaseKlass::*)(Args...) const volatile, Klass>:
-		MemberMethodImpl<Ret (BaseKlass::*)(Args...) const volatile, Klass>::Implementation {};
+		MemberMethodWrapperImpl<Ret (BaseKlass::*)(Args...) const volatile, Klass>::Implementation {};
 
 	// Wrap methods that expect 'this' to be const-qualified.
 	template <typename Klass, typename BaseKlass, typename Ret, typename... Args>
 	struct MemberWrapper<Ret (BaseKlass::*)(Args...) const, Klass>:
-		MemberMethodImpl<Ret (BaseKlass::*)(Args...) const, Klass>::Implementation {};
+		MemberMethodWrapperImpl<Ret (BaseKlass::*)(Args...) const, Klass>::Implementation {};
 
 	// Wrap methods that expect 'this' to be volatile-qualified.
 	template <typename Klass, typename BaseKlass, typename Ret, typename... Args>
 	struct MemberWrapper<Ret (BaseKlass::*)(Args...) volatile, Klass>:
-		MemberMethodImpl<Ret (BaseKlass::*)(Args...) volatile, Klass>::Implementation {};
+		MemberMethodWrapperImpl<Ret (BaseKlass::*)(Args...) volatile, Klass>::Implementation {};
 
 	// Wrap methods that expect 'this' to be unqualified.
 	template <typename Klass, typename BaseKlass, typename Ret, typename... Args>
 	struct MemberWrapper<Ret (BaseKlass::*)(Args...), Klass>:
-		MemberMethodImpl<Ret (BaseKlass::*)(Args...), Klass>::Implementation {};
+		MemberMethodWrapperImpl<Ret (BaseKlass::*)(Args...), Klass>::Implementation {};
 
 	// Wrap const-qualified field, provides only the getter.
 	template <typename Klass, typename BaseKlass, typename FieldType>
@@ -151,6 +151,44 @@ namespace internal {
 		}
 	};
 
+	template <typename Ret, typename... Args>
+	struct FunctionWrapperImpl {
+		template <size_t... Indices>
+		struct _ImplementerNonVoid {
+			template <Ret (* func)(Args...)> static inline
+			int invoke(State* state) {
+				return static_cast<int>(
+					pushReturn(
+						state,
+						func(read<Args>(state, 1 + Indices)...)
+					)
+				);
+			}
+		};
+
+		template <size_t... Indices>
+		struct _ImplementerVoid {
+			template <void (* func)(Args...)> static inline
+			int invoke(State* state) {
+				func(read<Args>(state, 1 + Indices)...);
+				return 0;
+			}
+		};
+
+		template <size_t... Indices>
+		using Implementer =
+			typename std::conditional<
+				std::is_same<Ret, void>::value,
+				_ImplementerVoid<Indices...>,
+				_ImplementerNonVoid<Indices...>
+			>::type;
+
+		using Implementation =
+			typename MakeIndexSequence<sizeof...(Args)>::template Relay<
+				Implementer
+			>;
+	};
+
 	// Catch attempts to wrap unwrappable types.
 	template <typename ToBeWrapped>
 	struct Wrapper {
@@ -164,14 +202,8 @@ namespace internal {
 	// specialization and subsequently passed to the function. The returned value will be pushed
 	// onto the stack.
 	template <typename Ret, typename... Args>
-	struct Wrapper<Ret (Args...)> {
-		template <Ret (* fun)(Args...)> static inline
-		int invoke(State* state) {
-			return static_cast<int>(
-				map(state, 1, fun)
-			);
-		}
-	};
+	struct Wrapper<Ret (Args...)>:
+		FunctionWrapperImpl<Ret, Args...>::Implementation {};
 
 	// An alias for the `Ret (Args...)` specialization. It primarily exists because functions aren't
 	// passable as values, instead they are referenced using a function pointer.
