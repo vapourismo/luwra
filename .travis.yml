@@ -183,6 +183,10 @@ before_install:
   - if [[ -n "$COMPILER" ]]; then export CXX="$COMPILER"; fi
 
 install:
+  - rm -rfv deps/lua-$LUA_VERSION.tar.gz
+  - rm -rfv deps/lua-$LUA_VERSION
+  - rm -rfv deps/LuaJIT-$LUAJIT_VERSION.tar.gz
+  - rm -rfv deps/LuaJIT-$LUAJIT_VERSION
   - source ext/install-lua.sh
   - test -e "$LUA_SRCDIR/lib$LUA_LIBNAME.a"
   - test -e "$LUA_SRCDIR/lua.h"
