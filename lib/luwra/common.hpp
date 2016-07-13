@@ -25,7 +25,7 @@ extern "C" {
 // Version MAJOR.MINOR.PATCH
 #define LUWRA_VERSION_MAJOR 0
 #define LUWRA_VERSION_MINOR 4
-#define LUWRA_VERSION_PATCH 0
+#define LUWRA_VERSION_PATCH 1
 
 // LUA_OK does not exist in Lua 5.1 and earlier
 #ifndef LUA_OK
