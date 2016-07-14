@@ -1,6 +1,8 @@
 #include <catch.hpp>
 #include <luwra.hpp>
 
+#include <stdexcept>
+
 TEST_CASE("equal") {
 	luwra::StateWrapper state;
 
@@ -73,4 +75,38 @@ TEST_CASE("getField") {
 
 	REQUIRE(state.runString("return {hello = 123}") == LUA_OK);
 	REQUIRE(luwra::getField<int>(state, -1, "hello") == 123);
+}
+
+static
+void throw_runtime_error() {
+	throw std::runtime_error("Halp");
+}
+
+TEST_CASE("StackUnwinding") {
+	luwra::StateWrapper state;
+	lua_atpanic(state, LUWRA_WRAP(throw_runtime_error));
+
+	size_t counter = 0;
+
+	try {
+		struct PleaseDestructMe {
+			size_t& r;
+
+			PleaseDestructMe(size_t& c): r(c) {
+				r++;
+			}
+
+			~PleaseDestructMe() {
+				r--;
+			}
+		} pdm(counter);
+
+		REQUIRE(counter == 1);
+
+		// Force Lua error
+		lua_pushnil(state);
+		lua_call(state, 0, 0);
+	} catch (...) {}
+
+	REQUIRE(counter == 0);
 }

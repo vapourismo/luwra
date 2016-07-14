@@ -1,24 +1,36 @@
 #include <iostream>
+#include <stdexcept>
 #include <luwra.hpp>
 
-static int value = 1337;
+using namespace luwra;
 
-int get() {
-	return value;
-}
+struct D {
+	D() {
+		std::cout << "D()" << std::endl;
+	}
 
-void set(int v) {
-	value = v;
+	~D() {
+		std::cout << "~D()" << std::endl;
+	}
+};
+
+void atpanic(const Reference& ref) {
+	throw std::runtime_error("Ellol");
 }
 
 int main() {
-	luwra::StateWrapper state;
+	StateWrapper state;
+	lua_atpanic(state, LUWRA_WRAP(atpanic));
 
-	state["get"] = LUWRA_WRAP(get);
-	state["set"] = LUWRA_WRAP(set);
+	{
+		try {
+			D d;
+			lua_pushnil(state);
+			lua_call(state, 0, 0);
+		} catch (...) {
 
-	if (state.runString("set(get() + 100)") != LUA_OK)
-		std::cout << state.read<std::string>(-1) << std::endl;
+		}
+	}
 
 	return 0;
 }
