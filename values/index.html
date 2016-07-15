@@ -360,6 +360,9 @@ multiple values at once.</p>
 <h1 id="read-and-type-errors">Read and Type Errors</h1>
 <p>Luwra does not handle errors. Instead it delegates the error handling to Lua.
 See <a href="http://www.lua.org/manual/5.3/manual.html#4.6">Error Handling in C</a> for more information.</p>
+<p>It is highly recommended that you use a version of Lua that has been compiled as C++. Doing
+otherwise might lead to improper stack unwinding in case of an error which causes resources to be
+leaked, since the calling of destructors is not guaranteed.</p>
               
             </div>
           </div>
