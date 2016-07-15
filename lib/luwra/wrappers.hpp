@@ -24,7 +24,7 @@ namespace internal {
 		typename MethodPointer,
 		typename Klass = typename MemberInfo<MethodPointer>::MemberOf
 	>
-	struct MemberMethodWrapperImpl {
+	struct MethodWrapperImpl {
 		using BaseKlass = typename MemberInfo<MethodPointer>::MemberOf;
 
 		// Make sure that a member pointer with type MethodPointer is member of a base class that
@@ -34,8 +34,9 @@ namespace internal {
 			"Instances of MethodPointer are not part of Klass"
 		);
 
+		// Implements 'invoke' for methods with a return value.
 		template <typename... Args>
-		struct _ImplementerNonVoid {
+		struct ImplementationNonVoid {
 			template <size_t... Indices>
 			struct SeqReceiver {
 				template <MethodPointer meth> static inline
@@ -43,41 +44,54 @@ namespace internal {
 					return static_cast<int>(
 						pushReturn(
 							state,
-							(read<Klass*>(state, 1)->*meth)(read<Args>(state, 2 + Indices)...)
+							// Read user type instance and resolve method.
+							(read<Klass*>(state, 1)->*meth)(
+								// Retrieve parameters from the stack and pass them to the method.
+								read<Args>(state, 2 + Indices)...
+							)
 						)
 					);
 				}
 			};
 		};
 
+		// Implements 'invoke' for methods without a return value.
 		template <typename... Args>
-		struct _ImplementerVoid {
+		struct ImplementationVoid {
 			template <size_t... Indices>
 			struct SeqReceiver {
 				template <MethodPointer meth> static inline
 				int invoke(State* state) {
-					(read<Klass*>(state, 1)->*meth)(read<Args>(state, 2 + Indices)...);
+					// Read user type instance and resolve method.
+					(read<Klass*>(state, 1)->*meth)(
+						// Retrieve parameters from the stack and pass them to the method.
+						read<Args>(state, 2 + Indices)...
+					);
+
 					return 0;
 				}
 			};
 		};
 
 		template <typename... Types>
-		using _Implementer =
+		using ImplementationPicker =
+			// Choose which implementation to use based on the return type of the given method.
 			typename std::conditional<
 				std::is_same<ReturnTypeOf<MethodPointer>, void>::value,
-				_ImplementerVoid<Types...>,
-				_ImplementerNonVoid<Types...>
+				ImplementationVoid<Types...>,
+				ImplementationNonVoid<Types...>
 			>::type;
 
-		template <typename... Types>
-		using Implementer =
-			typename MakeIndexSequence<sizeof...(Types)>::template Relay<
-				_Implementer<Types...>::template SeqReceiver
-			>;
-
 		using Implementation =
-			typename ArgumentsOf<MethodPointer>::template Relay<Implementer>;
+			// Generate an index sequence based on the number of parameters. This sequence is
+			// needed by SeqReceiver in order to efficiently unpack the parameters.
+			typename MakeIndexSequence<ArgumentsOf<MethodPointer>::Length>::template Relay<
+				// Relay a template parameter pack which contains the parameter types to
+				// ImplementationPicker.
+				ArgumentsOf<MethodPointer>::template Relay<
+					ImplementationPicker
+				>::template SeqReceiver
+			>;
 	};
 
 	// Catch attempts to wrap non-member pointers.
@@ -95,22 +109,22 @@ namespace internal {
 	// Wrap methods that expect 'this' to be const-volatile-qualified.
 	template <typename Klass, typename BaseKlass, typename Ret, typename... Args>
 	struct MemberWrapper<Ret (BaseKlass::*)(Args...) const volatile, Klass>:
-		MemberMethodWrapperImpl<Ret (BaseKlass::*)(Args...) const volatile, Klass>::Implementation {};
+		MethodWrapperImpl<Ret (BaseKlass::*)(Args...) const volatile, Klass>::Implementation {};
 
 	// Wrap methods that expect 'this' to be const-qualified.
 	template <typename Klass, typename BaseKlass, typename Ret, typename... Args>
 	struct MemberWrapper<Ret (BaseKlass::*)(Args...) const, Klass>:
-		MemberMethodWrapperImpl<Ret (BaseKlass::*)(Args...) const, Klass>::Implementation {};
+		MethodWrapperImpl<Ret (BaseKlass::*)(Args...) const, Klass>::Implementation {};
 
 	// Wrap methods that expect 'this' to be volatile-qualified.
 	template <typename Klass, typename BaseKlass, typename Ret, typename... Args>
 	struct MemberWrapper<Ret (BaseKlass::*)(Args...) volatile, Klass>:
-		MemberMethodWrapperImpl<Ret (BaseKlass::*)(Args...) volatile, Klass>::Implementation {};
+		MethodWrapperImpl<Ret (BaseKlass::*)(Args...) volatile, Klass>::Implementation {};
 
 	// Wrap methods that expect 'this' to be unqualified.
 	template <typename Klass, typename BaseKlass, typename Ret, typename... Args>
 	struct MemberWrapper<Ret (BaseKlass::*)(Args...), Klass>:
-		MemberMethodWrapperImpl<Ret (BaseKlass::*)(Args...), Klass>::Implementation {};
+		MethodWrapperImpl<Ret (BaseKlass::*)(Args...), Klass>::Implementation {};
 
 	// Wrap const-qualified field, provides only the getter.
 	template <typename Klass, typename BaseKlass, typename FieldType>
@@ -151,41 +165,55 @@ namespace internal {
 		}
 	};
 
+	// Function wrapper implementation for functions with the return type Ret and the parmeter types
+	// Args...
 	template <typename Ret, typename... Args>
 	struct FunctionWrapperImpl {
+		// Implements 'invoke' for function with a return value.
 		template <size_t... Indices>
-		struct _ImplementerNonVoid {
+		struct ImplementationNonVoid {
 			template <Ret (* func)(Args...)> static inline
 			int invoke(State* state) {
 				return static_cast<int>(
 					pushReturn(
 						state,
-						func(read<Args>(state, 1 + Indices)...)
+						func(
+							// Read parameters off the stack and pass them to the function.
+							read<Args>(state, 1 + Indices)...
+						)
 					)
 				);
 			}
 		};
 
+		// Implement 'invoke' for functions without a return value.
 		template <size_t... Indices>
-		struct _ImplementerVoid {
+		struct ImplementationVoid {
 			template <void (* func)(Args...)> static inline
 			int invoke(State* state) {
-				func(read<Args>(state, 1 + Indices)...);
+				func(
+					// Read parameters off the stack and pass them to the function.
+					read<Args>(state, 1 + Indices)...
+				);
+
 				return 0;
 			}
 		};
 
 		template <size_t... Indices>
-		using Implementer =
+		using ImplementationPicker =
+			// Choose which implementation to use based on the return type of the function.
 			typename std::conditional<
 				std::is_same<Ret, void>::value,
-				_ImplementerVoid<Indices...>,
-				_ImplementerNonVoid<Indices...>
+				ImplementationVoid<Indices...>,
+				ImplementationNonVoid<Indices...>
 			>::type;
 
 		using Implementation =
+			// Generate an index sequence which is used by the selected implementation in order to
+			// efficiently retrieve the parameters from the stack.
 			typename MakeIndexSequence<sizeof...(Args)>::template Relay<
-				Implementer
+				ImplementationPicker
 			>;
 	};
 
@@ -240,12 +268,18 @@ namespace internal {
 LUWRA_NS_END
 
 /// Generate a `lua_CFunction` wrapper for a field, method or function.
+///
+/// \param entity Qualified named of the entity that shall be wrapped
 /// \returns Wrapped entity as `lua_CFunction`
 #define LUWRA_WRAP(entity) \
 	(&luwra::internal::Wrapper<decltype(&entity)>::template invoke<&entity>)
 
 /// Same as `LUWRA_WRAP` but specifically for members of a class. It is imperative that you use this
 /// macro instead of `LUWRA_WRAP` when working with inherited members.
+///
+/// \param base Qualified name of the targeted class
+/// \param name Unqualified name of the member that shall be wrapped
+/// \returns Wrapped entity as `lua_CFunction`
 #define LUWRA_WRAP_MEMBER(base, name) \
 	(&luwra::internal::MemberWrapper<decltype(&__LUWRA_NS_RESOLVE(base, name)), base>::template invoke<&__LUWRA_NS_RESOLVE(base, name)>)
 

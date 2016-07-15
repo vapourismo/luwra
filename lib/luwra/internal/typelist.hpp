@@ -97,6 +97,10 @@ struct _Match<Compare, TypeList<Left, LeftTail...>, TypeList<Right, RightTail...
 // types by matching against this template's parameters.
 template <typename... Types>
 struct TypeList {
+	// Number of elements in the parameter pack.
+	constexpr static
+	size_t Length = sizeof...(Types);
+
 	// Create a new TypeList which contains the current list of types followed by the ones given to
 	// this alias.
 	template <typename... OtherTypes>

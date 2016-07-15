@@ -109,7 +109,7 @@
 
 <h3><a class="anchor" id="index_b"></a>- b -</h3><ul>
 <li>BaseKlass
-: <a class="el" href="structluwra_1_1internal_1_1MemberMethodImpl.html#aa98dd18091e93ff97ed394bfe43c19f2">luwra::internal::MemberMethodImpl&lt; MethodPointer, Klass &gt;</a>
+: <a class="el" href="structluwra_1_1internal_1_1MethodWrapperImpl.html#aa1d4145e815d9d8656dfd2a3ebb7ace3">luwra::internal::MethodWrapperImpl&lt; MethodPointer, Klass &gt;</a>
 </li>
 </ul>
 
@@ -166,9 +166,6 @@
 <li>has()
 : <a class="el" href="structluwra_1_1Table.html#a3621238d9f35f951e094387df9b74bc8">luwra::Table</a>
 </li>
-<li>hook()
-: <a class="el" href="structluwra_1_1internal_1_1MemberMethodImpl_1_1ArgumentsReceiver.html#a16c7df97e2b5661f688e8c425f128f84">luwra::internal::MemberMethodImpl&lt; MethodPointer, Klass &gt;::ArgumentsReceiver&lt; Args &gt;</a>
-</li>
 </ul>
 
 
@@ -179,6 +176,14 @@
 <li>impl
 : <a class="el" href="structluwra_1_1Reference.html#aab7b0d5abad93dfae819d41853d93dd5">luwra::Reference</a>
 </li>
+<li>Implementation
+: <a class="el" href="structluwra_1_1internal_1_1FunctionWrapperImpl.html#a8a0d932596443294d950e2ecbb3dab1f">luwra::internal::FunctionWrapperImpl&lt; Ret, Args &gt;</a>
+, <a class="el" href="structluwra_1_1internal_1_1MethodWrapperImpl.html#a6bad09410a691545c621d785c45ff5ba">luwra::internal::MethodWrapperImpl&lt; MethodPointer, Klass &gt;</a>
+</li>
+<li>ImplementationPicker
+: <a class="el" href="structluwra_1_1internal_1_1FunctionWrapperImpl.html#a0eaab71182b6eff8d0a4ce21a9b22ab0">luwra::internal::FunctionWrapperImpl&lt; Ret, Args &gt;</a>
+, <a class="el" href="structluwra_1_1internal_1_1MethodWrapperImpl.html#a296d9913cb3d41c318f2d8d711369758">luwra::internal::MethodWrapperImpl&lt; MethodPointer, Klass &gt;</a>
+</li>
 <li>index
 : <a class="el" href="structluwra_1_1internal_1_1InferValueType.html#afaf705e0c3de46cf1b8b149f6714c61c">luwra::internal::InferValueType</a>
 </li>
@@ -186,11 +191,13 @@
 : <a class="el" href="structluwra_1_1Pushable.html#a900fc393e150689b35055654596a5707">luwra::Pushable</a>
 </li>
 <li>invoke()
-: <a class="el" href="structluwra_1_1internal_1_1MemberMethodImpl.html#a97bc25848e59b0614d3416c5aa30aa10">luwra::internal::MemberMethodImpl&lt; MethodPointer, Klass &gt;</a>
+: <a class="el" href="structluwra_1_1internal_1_1FunctionWrapperImpl_1_1ImplementationNonVoid.html#a5b6d033c6d068e02752f260ec43528d8">luwra::internal::FunctionWrapperImpl&lt; Ret, Args &gt;::ImplementationNonVoid&lt; Indices &gt;</a>
+, <a class="el" href="structluwra_1_1internal_1_1FunctionWrapperImpl_1_1ImplementationVoid.html#a50fc00ad2480c82da934ef92c60737c0">luwra::internal::FunctionWrapperImpl&lt; Ret, Args &gt;::ImplementationVoid&lt; Indices &gt;</a>
 , <a class="el" href="structluwra_1_1internal_1_1MemberWrapper_3_01const_01FieldType_01BaseKlass_1_1_5_00_01Klass_01_4.html#a61063417a6fe0c7019b13ff3bf5bf3fd">luwra::internal::MemberWrapper&lt; const FieldType BaseKlass::*, Klass &gt;</a>
 , <a class="el" href="structluwra_1_1internal_1_1MemberWrapper_3_01FieldType_01BaseKlass_1_1_5_00_01Klass_01_4.html#a63f00573335638b63b7a62c6d552089f">luwra::internal::MemberWrapper&lt; FieldType BaseKlass::*, Klass &gt;</a>
+, <a class="el" href="structluwra_1_1internal_1_1MethodWrapperImpl_1_1ImplementationNonVoid_1_1SeqReceiver.html#a16d3aeba2906c8c42fbc1095a49d8ca6">luwra::internal::MethodWrapperImpl&lt; MethodPointer, Klass &gt;::ImplementationNonVoid&lt; Args &gt;::SeqReceiver&lt; Indices &gt;</a>
+, <a class="el" href="structluwra_1_1internal_1_1MethodWrapperImpl_1_1ImplementationVoid_1_1SeqReceiver.html#ac4b4e19416c7a85ceb59d19bcdfe64c6">luwra::internal::MethodWrapperImpl&lt; MethodPointer, Klass &gt;::ImplementationVoid&lt; Args &gt;::SeqReceiver&lt; Indices &gt;</a>
 , <a class="el" href="structluwra_1_1internal_1_1UserTypeWrapper_1_1ConstructorWrapper.html#a6eeebf02c684fcfbd07a19e5286bfc13">luwra::internal::UserTypeWrapper&lt; UserType &gt;::ConstructorWrapper&lt; Args &gt;</a>
-, <a class="el" href="structluwra_1_1internal_1_1Wrapper_3_01Ret_07Args_8_8_8_08_4.html#aafa1a53670a091e4f43ae80dde7af664">luwra::internal::Wrapper&lt; Ret(Args...)&gt;</a>
 </li>
 </ul>
 
@@ -203,6 +210,9 @@
 
 
 <h3><a class="anchor" id="index_l"></a>- l -</h3><ul>
+<li>Length
+: <a class="el" href="structluwra_1_1internal_1_1TypeList.html#a0e0277816dc46c4cd19734ec8ee18a76">luwra::internal::TypeList&lt; Types &gt;</a>
+</li>
 <li>loadStandardLibrary()
 : <a class="el" href="structluwra_1_1StateWrapper.html#af37599e0af7073b545d4668083228dac">luwra::StateWrapper</a>
 </li>
@@ -214,9 +224,6 @@
 : <a class="el" href="structluwra_1_1internal_1_1StackMapper.html#ad8d260b1e36a0aabe6deb1d177e68440">luwra::internal::StackMapper&lt; typename &gt;</a>
 , <a class="el" href="structluwra_1_1internal_1_1StackMapper_3_01void_01_4.html#ae1fd5e10c185e292dfd892feae74b48a">luwra::internal::StackMapper&lt; void &gt;</a>
 , <a class="el" href="structluwra_1_1StateWrapper.html#adb0cca10a1b57b9d97f232c431ee28c6">luwra::StateWrapper</a>
-</li>
-<li>MapSignature
-: <a class="el" href="structluwra_1_1internal_1_1MemberMethodImpl_1_1ArgumentsReceiver.html#a37ef1d021d1fbc7f4bd5a248623b8933">luwra::internal::MemberMethodImpl&lt; MethodPointer, Klass &gt;::ArgumentsReceiver&lt; Args &gt;</a>
 </li>
 <li>Match
 : <a class="el" href="structluwra_1_1internal_1_1TypeList.html#a670e742df1e0f137756d4885c104ccf3">luwra::internal::TypeList&lt; Types &gt;</a>
@@ -339,9 +346,6 @@
 , <a class="el" href="structluwra_1_1Value_3_01UserType_01_5_01_4.html#aad2a2c0833f2efd8ab5d14f75da930d7">luwra::Value&lt; UserType * &gt;</a>
 , <a class="el" href="structluwra_1_1Value_3_01void_01_5_01_4.html#ac1e6d1dd8b2f2ad180814287dc1ddf5c">luwra::Value&lt; void * &gt;</a>
 </li>
-<li>Receiver
-: <a class="el" href="structluwra_1_1internal_1_1MemberMethodImpl.html#a7f5e56058c97e3dac8dc0f200975b166">luwra::internal::MemberMethodImpl&lt; MethodPointer, Klass &gt;</a>
-</li>
 <li>ref
 : <a class="el" href="structluwra_1_1Function.html#af9be56cc4b17f0f105481f2fa30da6cc">luwra::Function&lt; Ret &gt;</a>
 , <a class="el" href="structluwra_1_1Function_3_01void_01_4.html#ad480fa26f9a7501f86e6e40375c1a878">luwra::Function&lt; void &gt;</a>
@@ -368,9 +372,6 @@
 : <a class="el" href="structluwra_1_1internal_1_1__DropFromList.html#a5cf157b4090f75618c13b6d520a1b444">luwra::internal::_DropFromList&lt; Seq, Types &gt;</a>
 , <a class="el" href="structluwra_1_1internal_1_1__DropFromList_3_01IndexSequence_3_4_00_01Types_8_8_8_01_4.html#a9f66de3a383bb4c82fffae99001ecc7c">luwra::internal::_DropFromList&lt; IndexSequence&lt;&gt;, Types... &gt;</a>
 , <a class="el" href="structluwra_1_1internal_1_1__MakeIndexSequence_3_010_00_01Indices_8_8_8_01_4.html#adf70f77bc24268372ec4f8379fa28cef">luwra::internal::_MakeIndexSequence&lt; 0, Indices... &gt;</a>
-</li>
-<li>Ret
-: <a class="el" href="structluwra_1_1internal_1_1MemberMethodImpl.html#a7bf0bb2560557989b33499f7db14e977">luwra::internal::MemberMethodImpl&lt; MethodPointer, Klass &gt;</a>
 </li>
 <li>ReturnType
 : <a class="el" href="structluwra_1_1internal_1_1CallableInfo_3_01Ret_07Args_8_8_8_08_4.html#a2be4c57e78b6668d78067fdd42e75a2a">luwra::internal::CallableInfo&lt; Ret(Args...)&gt;</a>
