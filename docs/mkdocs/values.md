@@ -90,6 +90,9 @@ multiple values at once.
 Luwra does not handle errors. Instead it delegates the error handling to Lua.
 See [Error Handling in C][lua-errorhandling] for more information.
 
+It is highly recommended that you use a version of Lua that has been compiled as C++. Doing
+otherwise might lead to improper stack unwinding in case of an error which causes resources to be
+leaked, since the calling of destructors is not guaranteed.
 
 [luwra-value]: /reference/structluwra_1_1Value.html
 [lua-cfunction]: http://www.lua.org/manual/5.3/manual.html#lua_CFunction
