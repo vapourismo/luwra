@@ -183,7 +183,7 @@ before_install:
   - if [[ -n "$COMPILER" ]]; then export CXX="$COMPILER"; fi
 
 install:
-  - source ext/install-lua.sh
+  - source deps/install-lua.sh
   - test -e "$LUA_SRCDIR/lib$LUA_LIBNAME.a"
   - test -e "$LUA_SRCDIR/lua.h"
 
