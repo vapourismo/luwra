@@ -1,36 +1,25 @@
 #include <iostream>
-#include <stdexcept>
+#include <memory>
 #include <luwra.hpp>
 
 using namespace luwra;
 
-struct D {
-	D() {
-		std::cout << "D()" << std::endl;
-	}
-
-	~D() {
-		std::cout << "~D()" << std::endl;
-	}
-};
-
-void atpanic(const Reference& ref) {
-	throw std::runtime_error("Ellol");
-}
-
 int main() {
 	StateWrapper state;
-	lua_atpanic(state, LUWRA_WRAP(atpanic));
+
+	state.push(13);
 
 	{
-		try {
-			D d;
-			lua_pushnil(state);
-			lua_call(state, 0, 0);
-		} catch (...) {
+		StateWrapper stateCopy(state);
+		state.push(37);
 
-		}
+		std::cout << stateCopy.state.use_count() << std::endl;
 	}
+
+	int a = state.read(1);
+	int b = state.read(2);
+
+	std::cout << a << std::endl << b << std::endl;
 
 	return 0;
 }

@@ -14,30 +14,23 @@
 #include "types/table.hpp"
 
 #include <utility>
+#include <memory>
 
 LUWRA_NS_BEGIN
 
 namespace internal {
 	struct StateBundle {
-		State* state;
-		bool close_state;
+		std::shared_ptr<State> state;
 
 		inline
 		StateBundle():
-			state(luaL_newstate()),
-			close_state(true)
+			state(luaL_newstate(), lua_close)
 		{}
 
 		inline
-		StateBundle(State* state):
-			state(state),
-			close_state(false)
+		StateBundle(State* other):
+			state(other, [](State*) {})
 		{}
-
-		inline
-		~StateBundle() {
-			if (close_state) lua_close(state);
-		}
 	};
 }
 
@@ -48,33 +41,33 @@ struct StateWrapper: internal::StateBundle, Table {
 	StateWrapper():
 		internal::StateBundle(),
 		#if LUA_VERSION_NUM <= 501
-			Table(state, LUA_GLOBALSINDEX)
+			Table(state.get(), LUA_GLOBALSINDEX)
 		#else
-			Table({state, LUA_RIDX_GLOBALS, false})
+			Table({state.get(), LUA_RIDX_GLOBALS, false})
 		#endif
 	{}
 
 	/// Operate on a foreign state instance.
 	inline
-	StateWrapper(State* state):
-		internal::StateBundle(state),
+	StateWrapper(State* other):
+		internal::StateBundle(other),
 		#if LUA_VERSION_NUM <= 501
-			Table(state, LUA_GLOBALSINDEX)
+			Table(state.get(), LUA_GLOBALSINDEX)
 		#else
-			Table({state, LUA_RIDX_GLOBALS, false})
+			Table({state.get(), LUA_RIDX_GLOBALS, false})
 		#endif
 	{}
 
 	/// Convert to `lua_State`.
 	inline
 	operator State*() const {
-		return state;
+		return state.get();
 	}
 
 	/// Load all built-in libraries.
 	inline
 	void loadStandardLibrary() const {
-		luaL_openlibs(state);
+		luaL_openlibs(state.get());
 	}
 
 	/// See [luwra::registerUserType](@ref luwra::registerUserType).
@@ -84,7 +77,7 @@ struct StateWrapper: internal::StateBundle, Table {
 		const MemberMap& methods = MemberMap(),
 		const MemberMap& meta_methods = MemberMap()
 	) const {
-		luwra::registerUserType<Sig>(state, ctor_name, methods, meta_methods);
+		luwra::registerUserType<Sig>(state.get(), ctor_name, methods, meta_methods);
 	}
 
 	/// See [luwra::registerUserType](@ref luwra::registerUserType).
@@ -93,20 +86,20 @@ struct StateWrapper: internal::StateBundle, Table {
 		const MemberMap& methods = MemberMap(),
 		const MemberMap& meta_methods = MemberMap()
 	) const {
-		luwra::registerUserType<UserType>(state, methods, meta_methods);
+		luwra::registerUserType<UserType>(state.get(), methods, meta_methods);
 	}
 
 	/// See [luwra::push](@ref luwra::push).
 	template <typename Type> inline
 	void push(Type&& value) const {
-		luwra::push(state, std::forward<Type>(value));
+		luwra::push(state.get(), std::forward<Type>(value));
 	}
 
 	/// See [luwra::push](@ref luwra::push).
 	template <typename First, typename Second, typename... Rest> inline
 	void push(First&& first, Second&& second, Rest&&... rest) const {
 		luwra::push(
-			state,
+			state.get(),
 			std::forward<First>(first),
 			std::forward<Second>(second),
 			std::forward<Rest>(rest)...
@@ -121,9 +114,9 @@ struct StateWrapper: internal::StateBundle, Table {
 	}
 
 	/// See [luwra::read](@ref luwra::read).
-	template <typename Type> inline
+	template <typename Type = internal::InferValueType> inline
 	Type read(int index) const {
-		return luwra::read<Type>(state, index);
+		return luwra::read<Type>(state.get(), index);
 	}
 
 	/// See [luwra::apply](@ref luwra::apply).
@@ -134,7 +127,7 @@ struct StateWrapper: internal::StateBundle, Table {
 		ExtraArgs&&... args
 	) const {
 		return luwra::apply(
-			state,
+			state.get(),
 			pos,
 			std::forward<Callable>(func),
 			std::forward<ExtraArgs>(args)...
@@ -145,7 +138,7 @@ struct StateWrapper: internal::StateBundle, Table {
 	template <typename Callable, typename... ExtraArgs> inline
 	size_t map(int pos, Callable&& func, ExtraArgs&&... args) const {
 		return luwra::map(
-			state,
+			state.get(),
 			pos,
 			std::forward<Callable>(func),
 			std::forward<ExtraArgs>(args)...
@@ -154,24 +147,24 @@ struct StateWrapper: internal::StateBundle, Table {
 
 	/// See [luwra::equal](@ref luwra::equal).
 	bool equal(int index1, int index2) const {
-		return luwra::equal(state, index1, index2);
+		return luwra::equal(state.get(), index1, index2);
 	}
 
 	/// See [luwra::setMetatable](@ref luwra::setMetatable).
 	void setMetatable(const char* name) const {
-		luwra::setMetatable(state, name);
+		luwra::setMetatable(state.get(), name);
 	}
 
 	/// Execute a piece of code.
 	inline
 	int runString(const char* code) const {
-		return luaL_dostring(state, code);
+		return luaL_dostring(state.get(), code);
 	}
 
 	/// Execute a file.
 	inline
 	int runFile(const char* filepath) const {
-		return luaL_dofile(state, filepath);
+		return luaL_dofile(state.get(), filepath);
 	}
 };
 
