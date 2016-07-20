@@ -25,7 +25,7 @@ template <typename Type>
 struct Value<std::vector<Type>> {
 	static inline
 	void push(State* state, const std::vector<Type>& vec) {
-		lua_createtable(state, vec.size(), 0);
+		lua_createtable(state, static_cast<int>(vec.size()), 0);
 
 		int size = static_cast<int>(vec.size());
 		for (int i = 0; i < size; i++) {
@@ -40,7 +40,7 @@ template <typename Type>
 struct Value<std::list<Type>> {
 	static inline
 	void push(State* state, const std::list<Type>& lst) {
-		lua_createtable(state, lst.size(), 0);
+		lua_createtable(state, static_cast<int>(lst.size()), 0);
 
 		int i = 0;
 		for (const Type& item: lst) {
@@ -55,7 +55,7 @@ template <typename Key, typename Type>
 struct Value<std::map<Key, Type>> {
 	static inline
 	void push(State* state, const std::map<Key, Type>& map) {
-		lua_createtable(state, 0, map.size());
+		lua_createtable(state, 0, static_cast<int>(map.size()));
 
 		for (const auto& entry: map) {
 			luwra::push(state, entry.first);
