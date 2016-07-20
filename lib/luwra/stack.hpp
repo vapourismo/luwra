@@ -92,18 +92,19 @@ namespace internal {
 			_StackWalker<Types...>::template Walker
 		>;
 
+	// Why you may ask? Because VS 2015.
 	template <typename... Types>
-	struct ReadResults_ {
-		typedef TypeList<ReturnTypeOf<decltype(read<Types>)>...> type;
+	struct _ReadResults {
+		using Type = TypeList<ReturnTypeOf<decltype(read<Types>)>...>;
 	};
 
 	template <>
-	struct ReadResults_<> {
-		typedef TypeList<> type;
+	struct _ReadResults<> {
+		using Type = TypeList<>;
 	};
 
 	template <typename... Types>
-	using ReadResults = typename ReadResults_<Types...>::type;
+	using ReadResults = typename _ReadResults<Types...>::Type;
 }
 
 /// Retrieve values from the stack in order to invoke a `Callable` with them.
