@@ -93,7 +93,17 @@ namespace internal {
 		>;
 
 	template <typename... Types>
-	using ReadResults = TypeList<ReturnTypeOf<decltype(read<Types>)>...>;
+	struct ReadResults_ {
+		typedef TypeList<ReturnTypeOf<decltype(read<Types>)>...> type;
+	};
+
+	template <>
+	struct ReadResults_<> {
+		typedef TypeList<> type;
+	};
+
+	template <typename... Types>
+	using ReadResults = typename ReadResults_<Types...>::type;
 }
 
 /// Retrieve values from the stack in order to invoke a `Callable` with them.
