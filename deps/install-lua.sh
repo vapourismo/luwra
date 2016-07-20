@@ -3,7 +3,7 @@
 install_lua() {
 	lua_identifier="lua-$LUA_VERSION"
 
-	[[ -e "$lua_identifier.tar.gz" ]] || wget -v "http://www.lua.org/ftp/$lua_identifier.tar.gz"
+	[[ -e "$lua_identifier.tar.gz" ]] || travis_retry wget -v "http://www.lua.org/ftp/$lua_identifier.tar.gz"
 	tar xvfz "$lua_identifier.tar.gz"
 
 	pushd "$lua_identifier/src"
@@ -19,7 +19,7 @@ install_lua() {
 install_luajit() {
 	luajit_identifier="LuaJIT-$LUAJIT_VERSION"
 
-	[[ -e "$luajit_identifier.tar.gz" ]] || wget -v "http://luajit.org/download/$luajit_identifier.tar.gz"
+	[[ -e "$luajit_identifier.tar.gz" ]] || travis_retry wget -v "http://luajit.org/download/$luajit_identifier.tar.gz"
 	tar xvfz "$luajit_identifier.tar.gz"
 
 	pushd "$luajit_identifier/src"
