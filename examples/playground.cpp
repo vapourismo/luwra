@@ -7,19 +7,12 @@ using namespace luwra;
 int main() {
 	StateWrapper state;
 
-	state.push(13);
+	push(state, 1337);
+	push(state, 7731, 1337);
 
-	{
-		StateWrapper stateCopy(state);
-		state.push(37);
-
-		std::cout << stateCopy.state.use_count() << std::endl;
-	}
-
-	int a = state.read(1);
-	int b = state.read(2);
-
-	std::cout << a << std::endl << b << std::endl;
+	std::cout << read<int>(state, -3) << std::endl
+	          << read<int>(state, -2) << std::endl
+	          << read<int>(state, -1) << std::endl;
 
 	return 0;
 }

@@ -16,25 +16,16 @@
 
 LUWRA_NS_BEGIN
 
-/// Push a value onto the stack.
-///
-/// \param state Lua state
-/// \param value To be pushed
-template <typename Type> inline
-void push(State* state, Type&& value) {
-	Value<Type>::push(state, std::forward<Type>(value));
-}
-
-/// Push two or more values onto the stack.
+/// Push zero or more values onto the stack.
 ///
 /// \param state  Lua state
 /// \param first  First value
 /// \param second Second value
 /// \param rest   Remaining values
-template <typename First, typename Second, typename... Rest> inline
-void push(State* state, First&& first, Second&& second, Rest&&... rest) {
-	push(state, std::forward<First>(first));
-	push(state, std::forward<Second>(second), std::forward<Rest>(rest)...);
+template <typename... Types> inline
+void push(State* state, Types&&... rest) {
+	using Ew = int[];
+	(void) Ew {(Value<Types>::push(state, std::forward<Types>(rest)), 0)...};
 }
 
 /// Read a value off the stack.
