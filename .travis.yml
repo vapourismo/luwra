@@ -176,8 +176,7 @@ matrix:
 
 cache:
   directories:
-    - deps/lua-$LUA_VERSION.tar.gz
-    - deps/LuaJIT-$LUAJIT_VERSION.tar.gz
+    - deps/download-cache
 
 before_install:
   - if [[ -n "$COMPILER" ]]; then export CXX="$COMPILER"; fi

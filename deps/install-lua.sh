@@ -32,7 +32,8 @@ install_luajit() {
 	popd
 }
 
-pushd deps
+mkdir -p deps/download-cache
+pushd deps/download-cache
 
 [[ -n $LUA_VERSION ]] && install_lua
 [[ -n $LUAJIT_VERSION ]] && install_luajit
