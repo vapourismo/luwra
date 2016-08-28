@@ -13,19 +13,18 @@
 #include "internal/types.hpp"
 
 #include <utility>
+#include <numeric>
 
 LUWRA_NS_BEGIN
 
 /// Push zero or more values onto the stack.
 ///
 /// \param state  Lua state
-/// \param first  First value
-/// \param second Second value
-/// \param rest   Remaining values
+/// \param values Values to push
 template <typename... Types> inline
-void push(State* state, Types&&... rest) {
+void push(State* state, Types&&... values) {
 	using Ew = int[];
-	(void) Ew {(Value<Types>::push(state, std::forward<Types>(rest)), 0)...};
+	(void) Ew {(Value<Types>::push(state, std::forward<Types>(values)), 0)...};
 }
 
 /// Read a value off the stack.
@@ -38,28 +37,22 @@ auto read(State* state, int index) -> decltype(Value<Type>::read(state, index)) 
 	return Value<Type>::read(state, index);
 }
 
-/// Push a return value onto the stack.
+/// Push zero or more return values onto the stack.
 ///
-/// \param state Lua state
-/// \param value Return value
+/// \param state  Lua state
+/// \param values Values to push
 /// \returns Number of Lua values that have been pushed onto the stack
-template <typename Type> inline
-size_t pushReturn(State* state, Type&& value) {
-	return ReturnValue<Type>::push(state, std::forward<Type>(value));
-}
+template <typename... Types> inline
+size_t pushReturn(State* state, Types&&... values) {
+	size_t results[sizeof...(Types)] {
+		ReturnValue<Types>::push(state, std::forward<Types>(values))...
+	};
 
-/// Push multiple return values onto the stack.
-///
-/// \param state   Lua state
-/// \param first   First return value
-/// \param second  Second return value
-/// \param rest    More return values
-/// \returns Number of Lua values that have been pushed onto the stack
-template <typename First, typename Second, typename... Rest> inline
-size_t pushReturn(State* state, First&& first, Second&& second, Rest&&... rest) {
-	return
-		pushReturn(state, std::forward<First>(first)) +
-		pushReturn(state, std::forward<Second>(second), std::forward<Rest>(rest)...);
+	size_t sum = 0;
+	for (size_t i = 0; i < sizeof...(Types); i++)
+		sum += results[i];
+
+	return sum;
 }
 
 namespace internal {
