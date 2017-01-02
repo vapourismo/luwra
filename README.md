@@ -1,4 +1,3 @@
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/vapourismo/luwra)
 [![Build Status](https://travis-ci.org/vapourismo/luwra.svg?branch=master)](https://travis-ci.org/vapourismo/luwra)
 # Luwra
 A header-only C++ library which provides a Lua wrapper with minimal overhead.
@@ -7,7 +6,7 @@ A header-only C++ library which provides a Lua wrapper with minimal overhead.
 Refer to the [documentation](http://luwra.vprsm.de/). In order to use the library you must clone
 this repository and include `lib/luwra.hpp`.
 
-Have a question? Simply [ask](https://gitter.im/vapourismo/luwra) or open an issue.
+Have a question? Simply send me a an email or open an issue.
 
 ## Examples
 In the following examples `lua` refers to an instance of `lua_State*`.
