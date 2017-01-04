@@ -1,6 +1,7 @@
 #include <catch.hpp>
 #include <luwra.hpp>
 
+#include <vector>
 #include <stdexcept>
 
 TEST_CASE("equal") {
@@ -10,13 +11,20 @@ TEST_CASE("equal") {
 	luwra::push(state, 2);
 	luwra::push(state, 1);
 
-	REQUIRE(!luwra::equal(state, -1, -2));
-	REQUIRE(!luwra::equal(state, -2, -1));
+	SECTION("two indices") {
+		REQUIRE(!luwra::equal(state, -1, -2));
+		REQUIRE(!luwra::equal(state, -2, -1));
 
-	REQUIRE(luwra::equal(state, -1, -3));
-	REQUIRE(luwra::equal(state, -3, -1));
-	REQUIRE(luwra::equal(state, -3, -3));
-	REQUIRE(luwra::equal(state, -1, -1));
+		REQUIRE(luwra::equal(state, -1, -3));
+		REQUIRE(luwra::equal(state, -3, -1));
+		REQUIRE(luwra::equal(state, -3, -3));
+		REQUIRE(luwra::equal(state, -1, -1));
+	}
+
+	SECTION("iterable") {
+		std::vector<int> indices {-1, -3, 1, 3};
+		REQUIRE(luwra::equal(state, indices));
+	}
 }
 
 TEST_CASE("setGlobal") {

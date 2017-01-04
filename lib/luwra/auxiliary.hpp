@@ -34,8 +34,8 @@ bool equal(State* state, int index1, int index2) {
 ///
 /// \param state   Lua state
 /// \param indices Indices of values to compare
-inline
-bool equal(State* state, const std::initializer_list<int>& indices) {
+template <typename Iterable> inline
+bool equal(State* state, const Iterable& indices) {
 	auto it = indices.begin();
 	auto end = indices.end();
 
