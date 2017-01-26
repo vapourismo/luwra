@@ -190,7 +190,7 @@ using it inside a namespace scope will have no effect.
 [luwra-registerusertype]: /reference/namespaceluwra.html#a06485564f429e1c3f8b42df78fac917c
 [luwra-registerusertype-2]: /reference/namespaceluwra.html#a0eb06735b4dcd8d26173cf609260673b
 [luwra-membermap]: /reference/namespaceluwra.html#a2e12e40b973f0f56cb9a1dc91bef882a
-[luwra-construct]: /reference/namespaceluwra.html#af079dcca8e67d88e5cfdc7e8872cf5d7
+[luwra-construct]: /reference/namespaceluwra.html#a0fc25bff458c0a1197bfab36be8c5185
 [luwra-member]: /reference/usertypes_8hpp.html#a6fb730cf9446ba2b6164dde982e73a26
 [luwra-pushable]: /reference/structluwra_1_1Pushable.html
 [luwra-wrap-constructor]: /reference/usertypes_8hpp.html#a48be8524421441d4c19e8bbc8d355df1

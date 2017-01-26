@@ -99,8 +99,7 @@ std::string result = luwra::apply(state, 1, [](const std::string& str, size_t le
 });
 ```
 
-[luwra-push]: /reference/namespaceluwra.html#a1335e9b5358d53d947b5e371cccc5dfa
-[luwra-push-2]: /reference/namespaceluwra.html#a593a361b978a74274664828f0f0fe176
+[luwra-push]: /reference/namespaceluwra.html#a4c1508ab699fc422f442ad0900f292fc
 [luwra-read]: /reference/namespaceluwra.html#a3c459338d5baea22fc1ea7f6184ae14d
-[luwra-apply]: /reference/namespaceluwra.html#aa9fee091aaa7a0073108054e316ffb28
-[luwra-map]: /reference/namespaceluwra.html#a79e1ea58201d5ceec4097570c5f0237a
+[luwra-apply]: /reference/namespaceluwra.html#a7e89507a6f5ed6a66e3ded8e16d8b20c
+[luwra-map]: /reference/namespaceluwra.html#ac66787724855af9a09865154747f1e22
