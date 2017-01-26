@@ -74,8 +74,8 @@ luwra::push(state, 5);
 // Retrieve values and invoke 'substring'.
 std::string result = luwra::apply(state, 1, substring);
 
-// The string is essentially equal to the following.
-std::result result = substring(luwra::read(state, 1), luwra::read(state, 2));
+// This is essentially equal to the following.
+std::string result = substring(luwra::read(state, 1), luwra::read(state, 2));
 
 // You can also provide your own arguments before the stack values.
 std::string result = luwra::apply(state, 2, substring, "My Own String");
