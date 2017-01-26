@@ -146,7 +146,7 @@
                 <h1 id="stack-interaction">Stack Interaction</h1>
 <p>Luwra provides several easy ways to interact with the Lua virtual stack.</p>
 <h2 id="pushing-values">Pushing Values</h2>
-<p>To get values onto the stack, use <a href="../reference/namespaceluwra.html#a1335e9b5358d53d947b5e371cccc5dfa">push</a>.</p>
+<p>To get values onto the stack, use <a href="../reference/namespaceluwra.html#a4c1508ab699fc422f442ad0900f292fc">push</a>.</p>
 <pre><code class="c++">luwra::push(state, 1337);
 </code></pre>
 
@@ -194,7 +194,7 @@ the previous section, you can extract the values like so.</p>
 <p><strong>Note:</strong> Type inference does not work with every compiler. Particularly GCC before version 4.9.2 is
 affected by this problem.</p>
 <h2 id="invoke-callables-with-stack-values">Invoke Callables with Stack Values</h2>
-<p><a href="../reference/namespaceluwra.html#aa9fee091aaa7a0073108054e316ffb28">apply</a> is a function that retrieves values from the stack in order to invoke a given
+<p><a href="../reference/namespaceluwra.html#a7e89507a6f5ed6a66e3ded8e16d8b20c">apply</a> is a function that retrieves values from the stack in order to invoke a given
 <code>Callable</code>. The types of values on the stack are deduced from the parameter types to the <code>Callable</code>.</p>
 <pre><code class="c++">std::string substring(const std::string&amp; str, size_t len) {
     return str.substr(0, len);
@@ -217,12 +217,12 @@ std::string result = luwra::apply(state, 2, substring, &quot;My Own String&quot;
 std::string result = substring(&quot;My Own String&quot;, luwra::read(state, 2));
 </code></pre>
 
-<p>If you wish to return the result of your function to the stack, simply use <a href="../reference/namespaceluwra.html#a79e1ea58201d5ceec4097570c5f0237a">map</a>.</p>
+<p>If you wish to return the result of your function to the stack, simply use <a href="../reference/namespaceluwra.html#ac66787724855af9a09865154747f1e22">map</a>.</p>
 <pre><code class="c++">luwra::map(state, 1, substring);
 std::string result = luwra::read(state, -1);
 </code></pre>
 
-<p>You can also provide function objects or lambdas to <a href="../reference/namespaceluwra.html#aa9fee091aaa7a0073108054e316ffb28">apply</a> and <a href="../reference/namespaceluwra.html#a79e1ea58201d5ceec4097570c5f0237a">map</a>.</p>
+<p>You can also provide function objects or lambdas to <a href="../reference/namespaceluwra.html#a7e89507a6f5ed6a66e3ded8e16d8b20c">apply</a> and <a href="../reference/namespaceluwra.html#ac66787724855af9a09865154747f1e22">map</a>.</p>
 <pre><code class="c++">std::string result = luwra::apply(state, 1, [](const std::string&amp; str, size_t len) {
     return str.substr(0, len);
 });
