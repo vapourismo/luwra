@@ -15,13 +15,46 @@
 LUWRA_NS_BEGIN
 
 namespace internal {
-	// Create reference the value pointed to by `index`. Does not remove the referenced value.
+	// Create reference to the value pointed to by `index`. Does not remove the referenced value.
 	inline
 	int referenceValue(State* state, int index) {
 		lua_pushvalue(state, index);
 		return luaL_ref(state, LUA_REGISTRYINDEX);
 	}
+}
 
+/// Lifecyle of a reference
+struct RefLifecycle {
+	/// State with the reference registry
+	State* state;
+
+	/// Reference identification
+	int ref;
+
+	/// Create a reference to a value on the stack.
+	RefLifecycle(State* state, int index): state(state) {
+		lua_pushvalue(state, index);
+		ref = luaL_ref(state, LUA_REGISTRYINDEX);
+	}
+
+	/// Create a reference using an existing one. The lifecycles of these references are
+	/// independent.
+	RefLifecycle(const RefLifecycle& other): state(other.state) {
+		lua_rawgeti(other.state, LUA_REGISTRYINDEX, other.ref);
+		ref = luaL_ref(state, LUA_REGISTRYINDEX);
+	}
+
+	/// Take over an existing reference. The given reference's lifecycle is terminated.
+	RefLifecycle(RefLifecycle&& other): state(other.state), ref(other.ref) {
+		other.ref = LUA_NOREF;
+	}
+
+	~RefLifecycle() {
+		luaL_unref(state, LUA_REGISTRYINDEX, ref);
+	}
+};
+
+namespace internal {
 	// Implementation of a reference which takes care of the lifetime of a Lua reference
 	struct ReferenceImpl {
 		State* state;
