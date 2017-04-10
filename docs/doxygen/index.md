@@ -1,3 +1,0 @@
-# Luwra
-
-Hello!

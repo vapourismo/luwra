@@ -236,20 +236,20 @@ struct Value<bool> {
 	}
 };
 
-/// Alias for @ref Value<const char*>
+/// Alias for `Value<const char*>`
 template <>
 struct Value<char*>: Value<const char*> {};
 
-/// Alias for @ref Value<const char*>
+/// Alias for `Value<const char*>`
 template <size_t N>
 struct Value<char[N]>: Value<const char*> {};
 
-/// Alias for @ref Value<const char*>
+/// Alias for `Value<const char*>`
 template <size_t N>
 struct Value<const char[N]>: Value<const char*> {};
 
-/// A version of @ref Value for pushing return values onto the stack. @ref ReturnValue inherits
-/// `push` implementations from @ref Value.
+/// A version of `Value` for pushing return values onto the stack. `ReturnValue` inherits
+/// `push` implementations from `Value`.
 template <typename Type>
 struct ReturnValue {
 	template <typename... Args> static inline

@@ -25,13 +25,13 @@ struct Function {
 	/// Internal reference to the Lua value
 	Reference ref;
 
-	/// Create from reference.
+	/// Create using a `Reference`.
 	inline
 	Function(const Reference& ref):
 		ref(ref)
 	{}
 
-	/// Create from callable on the stack.
+	/// Create using a `Callable` on the stack.
 	inline
 	Function(State* state, int index):
 		ref(state, index)
