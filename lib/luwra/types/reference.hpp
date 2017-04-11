@@ -77,6 +77,20 @@ struct RefLifecycle {
 	}
 };
 
+///
+template <>
+struct Value<RefLifecycle> {
+	static inline
+	RefLifecycle read(State* state, int index) {
+		return {state, index};
+	}
+
+	static inline
+	void push(State* state, const RefLifecycle& life) {
+		life.push(state);
+	}
+};
+
 /// Handle for a reference
 struct Reference {
 	/// Smart pointer to the reference's lifecycle manager
