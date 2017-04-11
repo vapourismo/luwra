@@ -52,7 +52,7 @@ struct Function {
 	Ret operator ()() const {
 		auto life = *ref.life;
 
-		life.load();
+		life.push();
 
 		lua_call(life.state, 0, 1);
 		Ret returnValue = read<Ret>(life.state, -1);
@@ -66,7 +66,7 @@ struct Function {
 	Ret operator ()(Args&&... args) const {
 		auto life = *ref.life;
 
-		life.load();
+		life.push();
 		push(life.state, std::forward<Args>(args)...);
 
 		lua_call(life.state, sizeof...(Args), 1);
@@ -110,7 +110,7 @@ struct Function<void> {
 	void operator ()() const {
 		auto life = *ref.life;
 
-		life.load();
+		life.push();
 		lua_call(life.state, 0, 0);
 	}
 
@@ -119,7 +119,7 @@ struct Function<void> {
 	void operator ()(Args&&... args) const {
 		auto life = *ref.life;
 
-		life.load();
+		life.push();
 		push(life.state, std::forward<Args>(args)...);
 
 		lua_call(life.state, sizeof...(Args), 0);

@@ -63,16 +63,19 @@ struct RefLifecycle {
 
 	/// Push the value inside the reference cell onto the originating Lua stack.
 	inline
-	void load() const {
-		lua_rawgeti(state, LUA_REGISTRYINDEX, ref);
+	void push() const {
+		if (ref == LUA_NOREF || ref == LUA_REFNIL)
+			lua_pushnil(state);
+		else
+			lua_rawgeti(state, LUA_REGISTRYINDEX, ref);
 	}
 
 	/// Push the value inside the reference cell onto the given Lua stack.
 	inline
-	void load(State* target) const {
-		lua_rawgeti(state, LUA_REGISTRYINDEX, ref);
+	void push(State* target) const {
+		push();
 
-		if (target != state)
+		if (state != target)
 			lua_xmove(state, target, 1);
 	}
 };
@@ -127,7 +130,7 @@ struct Value<Reference> {
 			return;
 		}
 
-		value.life->load(state);
+		value.life->push(state);
 	}
 };
 
