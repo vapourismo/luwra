@@ -50,25 +50,29 @@ struct Function {
 	/// Invoke the callable without arguments.
 	inline
 	Ret operator ()() const {
-		ref.impl->push();
+		auto life = *ref.life;
 
-		lua_call(ref.impl->state, 0, 1);
-		Ret returnValue = read<Ret>(ref.impl->state, -1);
+		life.load();
 
-		lua_pop(ref.impl->state, 1);
+		lua_call(life.state, 0, 1);
+		Ret returnValue = read<Ret>(life.state, -1);
+
+		lua_pop(life.state, 1);
 		return returnValue;
 	}
 
 	/// Invoke the callable with arguments.
 	template <typename... Args> inline
 	Ret operator ()(Args&&... args) const {
-		ref.impl->push();
-		push(ref.impl->state, std::forward<Args>(args)...);
+		auto life = *ref.life;
 
-		lua_call(ref.impl->state, sizeof...(Args), 1);
-		Ret returnValue = read<Ret>(ref.impl->state, -1);
+		life.load();
+		push(life.state, std::forward<Args>(args)...);
 
-		lua_pop(ref.impl->state, 1);
+		lua_call(life.state, sizeof...(Args), 1);
+		Ret returnValue = read<Ret>(life.state, -1);
+
+		lua_pop(life.state, 1);
 		return returnValue;
 	}
 };
@@ -104,17 +108,21 @@ struct Function<void> {
 	/// Invoke the callable without arguments.
 	inline
 	void operator ()() const {
-		ref.impl->push();
-		lua_call(ref.impl->state, 0, 0);
+		auto life = *ref.life;
+
+		life.load();
+		lua_call(life.state, 0, 0);
 	}
 
 	/// Invoke the callable with arguments.
 	template <typename... Args> inline
 	void operator ()(Args&&... args) const {
-		ref.impl->push();
-		push(ref.impl->state, std::forward<Args>(args)...);
+		auto life = *ref.life;
 
-		lua_call(ref.impl->state, sizeof...(Args), 0);
+		life.load();
+		push(life.state, std::forward<Args>(args)...);
+
+		lua_call(life.state, sizeof...(Args), 0);
 	}
 };
 

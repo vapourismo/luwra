@@ -40,22 +40,34 @@ struct StateWrapper: internal::StateBundle, Table {
 	inline
 	StateWrapper():
 		internal::StateBundle(),
-		#if LUA_VERSION_NUM <= 501
-			Table(state.get(), LUA_GLOBALSINDEX)
-		#else
-			Table({state.get(), LUA_RIDX_GLOBALS, false})
-		#endif
+
+#if LUA_VERSION_NUM <= 501
+		Table(state.get(), LUA_GLOBALSINDEX)
+#else
+		Table(
+			Reference {
+				(lua_rawgeti(state.get(), LUA_REGISTRYINDEX, LUA_RIDX_GLOBALS), state.get())
+			}
+		)
+#endif
+
 	{}
 
 	/// Operate on a foreign state instance.
 	inline
 	StateWrapper(State* other):
 		internal::StateBundle(other),
-		#if LUA_VERSION_NUM <= 501
-			Table(state.get(), LUA_GLOBALSINDEX)
-		#else
-			Table({state.get(), LUA_RIDX_GLOBALS, false})
-		#endif
+
+#if LUA_VERSION_NUM <= 501
+		Table(state.get(), LUA_GLOBALSINDEX)
+#else
+		Table(
+			Reference {
+				(lua_rawgeti(state.get(), LUA_REGISTRYINDEX, LUA_RIDX_GLOBALS), state.get())
+			}
+		)
+#endif
+
 	{}
 
 	/// Convert to `lua_State`.

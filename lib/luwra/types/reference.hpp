@@ -31,7 +31,12 @@ struct RefLifecycle {
 	/// Reference identification
 	int ref;
 
-	/// Create a reference to a value on the stack.
+	/// Create a reference using the value on top of the stack. Consumes the value.
+	inline
+	RefLifecycle(State* state): state(state), ref(luaL_ref(state, LUA_REGISTRYINDEX)) {}
+
+	/// Create a reference to a value on the stack. Does not consume the value.
+	inline
 	RefLifecycle(State* state, int index): state(state) {
 		lua_pushvalue(state, index);
 		ref = luaL_ref(state, LUA_REGISTRYINDEX);
@@ -39,85 +44,57 @@ struct RefLifecycle {
 
 	/// Create a reference using an existing one. The lifecycles of these references are
 	/// independent.
+	inline
 	RefLifecycle(const RefLifecycle& other): state(other.state) {
 		lua_rawgeti(other.state, LUA_REGISTRYINDEX, other.ref);
 		ref = luaL_ref(state, LUA_REGISTRYINDEX);
 	}
 
 	/// Take over an existing reference. The given reference's lifecycle is terminated.
+	inline
 	RefLifecycle(RefLifecycle&& other): state(other.state), ref(other.ref) {
 		other.ref = LUA_NOREF;
 	}
 
+	inline
 	~RefLifecycle() {
 		luaL_unref(state, LUA_REGISTRYINDEX, ref);
 	}
+
+	/// Push the value inside the reference cell onto the originating Lua stack.
+	inline
+	void load() const {
+		lua_rawgeti(state, LUA_REGISTRYINDEX, ref);
+	}
+
+	/// Push the value inside the reference cell onto the given Lua stack.
+	inline
+	void load(State* target) const {
+		lua_rawgeti(state, LUA_REGISTRYINDEX, ref);
+
+		if (target != state)
+			lua_xmove(state, target, 1);
+	}
 };
 
-namespace internal {
-	// Implementation of a reference which takes care of the lifetime of a Lua reference
-	struct ReferenceImpl {
-		State* state;
-		int ref;
-		bool autoUnref = true;
-
-		// Reference a value at an index.
-		inline
-		ReferenceImpl(State* state, int indexOrRef, bool isIndex = true):
-			state(state),
-			ref(isIndex ? referenceValue(state, indexOrRef) : indexOrRef),
-			autoUnref(isIndex)
-		{}
-
-		// Reference the value on top of stack.
-		inline
-		ReferenceImpl(State* state):
-			state(state),
-			ref(luaL_ref(state, LUA_REGISTRYINDEX))
-		{}
-
-		// A (smart) pointer to an instance may be copied and moved, but the instance itself must
-		// not be copied or moved. This allows us to have only one instance of `ReferenceImpl` per
-		// Lua reference.
-		ReferenceImpl(const ReferenceImpl& other) = delete;
-		ReferenceImpl(ReferenceImpl&& other) = delete;
-		ReferenceImpl& operator =(const ReferenceImpl&) = delete;
-		ReferenceImpl& operator =(ReferenceImpl&&) = delete;
-
-		inline
-		~ReferenceImpl() {
-			if (ref >= 0 && autoUnref) luaL_unref(state, LUA_REGISTRYINDEX, ref);
-		}
-
-		// Push the referenced value onto the stack.
-		inline
-		void push() const {
-			lua_rawgeti(state, LUA_REGISTRYINDEX, ref);
-		}
-
-		// Reset the referenced value.
-		inline
-		void update() const {
-			lua_rawseti(state, LUA_REGISTRYINDEX, ref);
-		}
-	};
-
-	using SharedReferenceImpl = std::shared_ptr<const internal::ReferenceImpl>;
-}
-
-/// %Reference cell which contains a Lua value
+/// Handle for a reference
 struct Reference {
-	const internal::SharedReferenceImpl impl;
-
-	/// Copy the value at the given index or reference into a new reference cell.
-	/// The value will not be removed.
+	/// Smart pointer to the reference's lifecycle manager
 	///
-	/// \param state      Lua state
-	/// \param indexOrRef Index or reference identifier
-	/// \param isIndex    Is `indexOrRef` an index?
+	/// Why a smart pointer? Copying RefLifecycle creates new Lua references, which we want to
+	/// avoid. Therefore we use shared_ptr which gives us cheap reference counting.
+	std::shared_ptr<const RefLifecycle> life;
+
+	/// Create a reference using the value on top of the stack. Consumes the value.
 	inline
-	Reference(State* state, int indexOrRef = -1, bool isIndex = true):
-		impl(std::make_shared<internal::ReferenceImpl>(state, indexOrRef, isIndex))
+	Reference(State* state):
+		life(std::make_shared<RefLifecycle>(state))
+	{}
+
+	/// Create a reference to a value on the stack. Does not consume the value.
+	inline
+	Reference(State* state, int index):
+		life(std::make_shared<RefLifecycle>(state, index))
 	{}
 };
 
@@ -126,15 +103,17 @@ template <>
 struct Value<Reference> {
 	static inline
 	Reference read(State* state, int index) {
-		return {state, index, true};
+		return {state, index};
 	}
 
 	static inline
 	void push(State* state, const Reference& value) {
-		value.impl->push();
+		if (!value.life) {
+			lua_pushnil(state);
+			return;
+		}
 
-		if (value.impl->state != state)
-			lua_xmove(value.impl->state, state, 1);
+		value.life->load(state);
 	}
 };
 

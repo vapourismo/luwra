@@ -142,17 +142,15 @@ struct Table {
 
 	/// Create from table on the stack.
 	Table(State* state, int index):
-		ref(state, index, true)
+		ref(state, index)
 	{
 		luaL_checktype(state, index, LUA_TTABLE);
 	}
 
 	/// Create a new table.
 	Table(State* state):
-		Table(state, (lua_newtable(state), -1))
-	{
-		lua_pop(state, 1);
-	}
+		ref((lua_newtable(state), state))
+	{}
 
 	/// Create a new table with the given fields.
 	Table(State* state, const MemberMap& fields):
@@ -185,7 +183,7 @@ struct Table {
 	template <typename Key> inline
 	const internal::TableAccessorPath<const Reference&, Key> operator [](Key&& key) const {
 		return internal::TableAccessorPath<const Reference&, Key> {
-			ref.impl->state,
+			ref.life->state,
 			internal::Path<const Reference&, Key> {
 				ref,
 				std::forward<Key>(key)
@@ -196,7 +194,7 @@ struct Table {
 	/// Update the table using the given map of members.
 	inline
 	void update(const MemberMap& fields) const {
-		State* state = ref.impl->state;
+		State* state = ref.life->state;
 
 		push(state, ref);
 		setFields(state, -1, fields);
@@ -207,7 +205,7 @@ struct Table {
 	/// Check if the value associated with a key is not `nil`.
 	template <typename Key> inline
 	bool has(Key&& key) const {
-		State* state = ref.impl->state;
+		State* state = ref.life->state;
 
 		push(state, ref);
 		push(state, std::forward<Key>(key));
@@ -222,7 +220,7 @@ struct Table {
 	/// Update a field.
 	template <typename Type, typename Key> inline
 	void set(Key&& key, Type&& value) const {
-		State* state = ref.impl->state;
+		State* state = ref.life->state;
 		push(state, ref);
 		push(state, std::forward<Key>(key));
 		push(state, std::forward<Type>(value));
@@ -234,7 +232,7 @@ struct Table {
 	/// Retrieve the value of a field.
 	template <typename Type, typename Key> inline
 	Type get(Key&& key) const {
-		State* state = ref.impl->state;
+		State* state = ref.life->state;
 
 		push(state, ref);
 		push(state, std::forward<Key>(key));
