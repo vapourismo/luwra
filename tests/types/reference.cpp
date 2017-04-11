@@ -5,36 +5,49 @@
 
 using namespace luwra;
 
-TEST_CASE("RefHandle") {
+// Set the referenced boolean to true upon garbage collection
+struct GCTrigger {
+	bool& target;
+
+	GCTrigger(bool& target): target(target) {
+		target = false;
+	}
+
+	~GCTrigger() {
+		target = true;
+	}
+};
+
+TEST_CASE("RefLifecycle") {
 	StateWrapper state;
+
 	state.loadStandardLibrary();
+	state.registerUserType<GCTrigger>();
 
-	state["didCollect"] = false;
+	bool didCollect;
 
-	REQUIRE(state.runString(
-		"return setmetatable({}, {\n"
-			"__gc = function () didCollect = true end"
-		"})"
-	) == LUA_OK);
+	// We instantiate a type which will set didCollect to true upon garbage collection
+	construct<GCTrigger>(state, didCollect);
 
-	bool didCollect = state["didCollect"];
+	// didCollect starts off as false
 	REQUIRE(!didCollect);
 
 	{
-		RefLifecycle ref(state, -1);
+		// Create the reference
+		RefLifecycle refLife(state, -1);
+
+		// Remove the user data from the stack and perform a full garbage collection cycle
 		lua_pop(state, 1);
-
-		didCollect = state["didCollect"];
-		REQUIRE(!didCollect);
-
 		lua_gc(state, LUA_GCCOLLECT, 0);
 
-		didCollect = state["didCollect"];
+		// Since the reference still exists, the user data must not have been collected
 		REQUIRE(!didCollect);
 	}
 
+	// Our reference goes out of scope, therefore making the user data unreachable. In order to
+	// trigger the finalizers, we must collect the dead user data.
 	lua_gc(state, LUA_GCCOLLECT, 0);
 
-	didCollect = state["didCollect"];
+	// At this point, the finalizer should have been invoked
 	REQUIRE(didCollect);
 }
