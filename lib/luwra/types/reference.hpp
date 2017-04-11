@@ -23,7 +23,7 @@ namespace internal {
 	}
 }
 
-/// Lifecyle of a reference
+/// Lifecycle of a reference
 struct RefLifecycle {
 	/// State with the reference registry
 	State* state;
