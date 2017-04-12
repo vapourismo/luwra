@@ -140,7 +140,7 @@ struct Table {
 		ref(ref)
 	{}
 
-	/// Create from table on the stack.
+	/// Create from table on the stack. This will retain a reference to the table.
 	Table(State* state, int index):
 		ref(state, index)
 	{
@@ -154,10 +154,8 @@ struct Table {
 
 	/// Create a new table with the given fields.
 	Table(State* state, const MemberMap& fields):
-		Table(state, (luwra::push(state, fields), -1))
-	{
-		lua_pop(state, 1);
-	}
+		ref((luwra::push(state, fields), state))
+	{}
 
 	/// Identical to @ref operator[].
 	template <typename Key> inline

@@ -32,6 +32,12 @@ namespace internal {
 			state(other, [](State*) {})
 		{}
 	};
+
+	inline
+	Reference getGlobalsTable(State* state) {
+		lua_rawgeti(state, LUA_REGISTRYINDEX, LUA_RIDX_GLOBALS);
+		return {state};
+	}
 }
 
 /// Wrapper for a Lua state
@@ -44,11 +50,7 @@ struct StateWrapper: internal::StateBundle, Table {
 #if LUA_VERSION_NUM <= 501
 		Table(state.get(), LUA_GLOBALSINDEX)
 #else
-		Table(
-			Reference {
-				(lua_rawgeti(state.get(), LUA_REGISTRYINDEX, LUA_RIDX_GLOBALS), state.get())
-			}
-		)
+		Table(internal::getGlobalsTable(state.get()))
 #endif
 
 	{}
@@ -61,11 +63,7 @@ struct StateWrapper: internal::StateBundle, Table {
 #if LUA_VERSION_NUM <= 501
 		Table(state.get(), LUA_GLOBALSINDEX)
 #else
-		Table(
-			Reference {
-				(lua_rawgeti(state.get(), LUA_REGISTRYINDEX, LUA_RIDX_GLOBALS), state.get())
-			}
-		)
+		Table(internal::getGlobalsTable(state.get()))
 #endif
 
 	{}
