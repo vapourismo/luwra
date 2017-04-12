@@ -33,11 +33,14 @@ namespace internal {
 		{}
 	};
 
+#if LUA_VERSION_NUM > 501
 	inline
 	Reference getGlobalsTable(State* state) {
 		lua_rawgeti(state, LUA_REGISTRYINDEX, LUA_RIDX_GLOBALS);
 		return {state};
 	}
+#endif
+
 }
 
 /// Wrapper for a Lua state
