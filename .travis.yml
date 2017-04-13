@@ -24,19 +24,33 @@ matrix:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-6']
 
+    - env: LUA_VERSION=5.3.4 COMPILER=clang++-6.0
+      compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-6.0']
+          packages: ['clang-6.0']
+
+    - env: LUA_VERSION=5.3.4 COMPILER=clang++-5.0
+      compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-5.0']
+          packages: ['clang-5.0']
+
+    - env: LUA_VERSION=5.3.4 COMPILER=clang++-4.0
+      compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-4.0']
+          packages: ['clang-4.0']
+
     - env: LUA_VERSION=5.3.4 COMPILER=clang++-3.9
       compiler: clang
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.9']
           packages: ['clang-3.9']
-
-    # - env: LUA_VERSION=5.3.4 COMPILER=clang++-4.0
-    #   compiler: clang
-    #   addons:
-    #     apt:
-    #       sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise']
-    #       packages: ['clang-4.0']
 
     - env: LUA_VERSION=5.3.4 COMPILER=clang++-3.8
       compiler: clang
@@ -74,20 +88,33 @@ matrix:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-6']
 
+    - env: LUA_VERSION=5.2.4 COMPILER=clang++-6.0
+      compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-6.0']
+          packages: ['clang-6.0']
+
+    - env: LUA_VERSION=5.2.4 COMPILER=clang++-5.0
+      compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-5.0']
+          packages: ['clang-5.0']
+
+    - env: LUA_VERSION=5.2.4 COMPILER=clang++-4.0
+      compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-4.0']
+          packages: ['clang-4.0']
+
     - env: LUA_VERSION=5.2.4 COMPILER=clang++-3.9
       compiler: clang
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.9']
           packages: ['clang-3.9']
-
-    # - env: LUA_VERSION=5.2.4 COMPILER=clang++-4.0
-    #   compiler: clang
-    #   addons:
-    #     apt:
-    #       sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise']
-    #       packages: ['clang-4.0']
-
 
     - env: LUA_VERSION=5.2.4 COMPILER=clang++-3.8
       compiler: clang
@@ -125,19 +152,33 @@ matrix:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-6']
 
+    - env: LUA_VERSION=5.1.5 COMPILER=clang++-6.0
+      compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-6.0']
+          packages: ['clang-6.0']
+
+    - env: LUA_VERSION=5.1.5 COMPILER=clang++-5.0
+      compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-5.0']
+          packages: ['clang-5.0']
+
+    - env: LUA_VERSION=5.1.5 COMPILER=clang++-4.0
+      compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-4.0']
+          packages: ['clang-4.0']
+
     - env: LUA_VERSION=5.1.5 COMPILER=clang++-3.9
       compiler: clang
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.9']
           packages: ['clang-3.9']
-
-    # - env: LUA_VERSION=5.1.5 COMPILER=clang++-4.0
-    #   compiler: clang
-    #   addons:
-    #     apt:
-    #       sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise']
-    #       packages: ['clang-4.0']
 
     - env: LUA_VERSION=5.1.5 COMPILER=clang++-3.8
       compiler: clang
@@ -175,19 +216,33 @@ matrix:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-6']
 
+    - env: LUAJIT_VERSION=2.0.4 COMPILER=clang++-6.0
+      compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-6.0']
+          packages: ['clang-6.0']
+
+    - env: LUAJIT_VERSION=2.0.4 COMPILER=clang++-5.0
+      compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-5.0']
+          packages: ['clang-5.0']
+
+    - env: LUAJIT_VERSION=2.0.4 COMPILER=clang++-4.0
+      compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-4.0']
+          packages: ['clang-4.0']
+
     - env: LUAJIT_VERSION=2.0.4 COMPILER=clang++-3.9
       compiler: clang
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.9']
           packages: ['clang-3.9']
-
-    # - env: LUAJIT_VERSION=2.0.4 COMPILER=clang++-4.0
-    #   compiler: clang
-    #   addons:
-    #     apt:
-    #       sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise']
-    #       packages: ['clang-4.0']
 
     - env: LUAJIT_VERSION=2.0.4 COMPILER=clang++-3.8
       compiler: clang
