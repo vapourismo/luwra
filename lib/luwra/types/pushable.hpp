@@ -20,6 +20,8 @@ namespace internal {
 	struct PushableI {
 		virtual
 		void push(State* state) const = 0;
+
+		virtual ~PushableI() {}
 	};
 
 	template <typename Type>
@@ -33,6 +35,8 @@ namespace internal {
 		void push(State* state) const {
 			luwra::push(state, value);
 		}
+
+		virtual ~PushableT() {}
 	};
 
 	using SharedPushableImpl = std::shared_ptr<PushableI>;

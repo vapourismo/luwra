@@ -28,10 +28,25 @@ TEST_CASE("Function<void>") {
 TEST_CASE("function<R(A...)>") {
 	luwra::StateWrapper state;
 
-	REQUIRE(state.runString("return function (x, y) return x + y end") == LUA_OK);
+	SECTION("read") {
+		REQUIRE(state.runString("return function (x, y) return x + y end") == LUA_OK);
 
-	auto fun = state.read<std::function<int (int, int)>>(-1);
-	REQUIRE(fun(13, 37) == 50);
+		auto fun = state.read<std::function<int (int, int)>>(-1);
+		REQUIRE(fun(13, 37) == 50);
+	}
+
+	SECTION("push") {
+		std::function<int (int, int)> func = [](int a, int b) -> int {
+			return a + b;
+		};
+
+		state.push(func);
+		state.push(13);
+		state.push(37);
+
+		lua_call(state, 2, 1);
+		REQUIRE(state.read<int>(-1) == 50);
+	}
 }
 
 TEST_CASE("function<void(A...)>") {

@@ -140,12 +140,29 @@ struct Value<Function<Ret>> {
 	}
 };
 
+namespace internal {
+	template <typename Sig> static
+	int wrapCallable(State* state) {
+		std::function<Sig>& func = *static_cast<std::function<Sig>*>(
+			lua_touserdata(state, lua_upvalueindex(1))
+		);
+
+		return static_cast<int>(map(state, 1, func));
+	}
+}
+
 /// Enables reading Lua functions as `std::function`
 template <typename Ret, typename... Args>
 struct Value<std::function<Ret (Args...)>> {
 	static inline
 	std::function<Ret (Args...)> read(State* state, int index) {
 		return {Value<Function<Ret>>::read(state, index)};
+	}
+
+	static inline
+	void push(State* state, std::function<Ret (Args...)>& func) {
+		lua_pushlightuserdata(state, static_cast<void*>(&func));
+		lua_pushcclosure(state, &internal::wrapCallable<Ret (Args...)>, 1);
 	}
 };
 
