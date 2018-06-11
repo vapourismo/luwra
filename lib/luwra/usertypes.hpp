@@ -341,7 +341,7 @@ LUWRA_NS_END
 ///   local a = A("Hello World", 11)
 /// ```
 #define LUWRA_WRAP_CONSTRUCTOR(type, ...) \
-	(&luwra::internal::UserTypeWrapper<ype>::ConstructorWrapper<__VA_ARGS__>::invoke)
+	(&luwra::internal::UserTypeWrapper<type>::ConstructorWrapper<__VA_ARGS__>::invoke)
 
 /// Define the registry name for a user type. This macro has to be used outside of any namespace.
 ///
