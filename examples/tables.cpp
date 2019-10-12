@@ -19,12 +19,27 @@ int main() {
 		}
 	}
 
-	state.runString("t2 = {a = 13, b = 37}");
+	state.runString("t2 = {a = 13, b = 'Hello'}");
 
-	Table t2 = state["t2"];
+	std::map<std::string, Reference> ret = state["t2"];
+	for (auto pair: ret) {
+		std::cout << pair.first << ": ";
+		switch (pair.second.read<LuaType>()) {
+			case LuaType::Number:
+				std::cout << pair.second.read<int>();
+				break;
 
-	LuaType type = t2["a"];
-	std::cout << (type == LuaType::Number) << std::endl;
+			case LuaType::String:
+				std::cout << pair.second.read<std::string>();
+				break;
+
+			default:
+				std::cout << "Unknown";
+				break;
+
+		}
+		std::cout << std::endl;
+	}
 
 	return 0;
 }

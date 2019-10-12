@@ -113,6 +113,15 @@ struct Reference {
 	Reference(State* state, int index):
 		life(std::make_shared<RefLifecycle>(state, index))
 	{}
+
+	/// Read the value that is being referenced.
+	template <typename Type> inline
+	Type read() {
+		life->push();
+		Type value = luwra::read<Type>(life->state, -1);
+		lua_pop(life->state, 1);
+		return value;
+	}
 };
 
 /// Enables referencing/dereferencing values

@@ -32,7 +32,7 @@ std::string                    | yes      | yes      | string
 std::nullptr_t                 | yes      | yes      | nil
 std::vector&lt;T&gt;           | yes      | no       | table
 std::list&lt;T&gt;             | yes      | no       | table
-std::map&lt;K, V&gt;           | yes      | no       | table
+std::map&lt;K, V&gt;           | yes      | yes      | table
 [lua_CFunction][lua-cfunction] | yes      | no       | function
 [Function][luwra-function]     | yes      | yes      | function, table or userdata
 [Table][luwra-table]           | yes      | yes      | table

@@ -50,9 +50,31 @@ struct Value<std::list<Type>> {
 	}
 };
 
-/// Enables pushing for `std::map` assuming `Key` and `Type` are pushable
+/// Enables pushing and reading for `std::map` assuming `Key` and `Type` are pushable or readable.
 template <typename Key, typename Type>
 struct Value<std::map<Key, Type>> {
+	static inline
+	std::map<Key, Type> read(State* state, int n) {
+		std::map<Key, Type> ret;
+
+		// We need to push the table onto the stack because the indices become unpredictable 
+		// otherwise.
+		lua_pushvalue(state, n);
+
+		lua_pushnil(state);
+		while (lua_next(state, -2) != 0) {
+			ret.insert(std::make_pair(luwra::read<Key>(state, -2), luwra::read<Type>(state, -1)));
+
+			// Only remove the value, leave the key.
+			lua_pop(state, 1);
+		}
+
+		// Remove the reference to the table that we pushed first.
+		lua_pop(state, 1);
+
+		return ret;
+	}
+
 	static inline
 	void push(State* state, const std::map<Key, Type>& map) {
 		lua_createtable(state, 0, static_cast<int>(map.size()));
