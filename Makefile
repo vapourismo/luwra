@@ -26,9 +26,9 @@ PLAYGROUND_DEP  := $(PLAYGROUND_SRC:%.cpp=$(EXAMPLE_DIR)/%.d)
 PLAYGROUND_OBJ  := $(PLAYGROUND_SRC:%.cpp=$(EXAMPLE_DIR)/%.out)
 
 # Lua-specific
-LUA_INCDIR      = /usr/include
-LUA_LIBDIR      = /usr/lib
-LUA_LIBNAME     = lua
+LUA_INCDIR      ?= /usr/include
+LUA_LIBDIR      ?= /usr/lib
+LUA_LIBNAME     ?= lua
 
 # Compiler
 CXX             ?= clang++
