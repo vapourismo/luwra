@@ -116,11 +116,16 @@ struct Reference {
 
 	/// Read the value that is being referenced.
 	template <typename Type> inline
-	Type read() {
+	Type read() const {
 		life->push();
 		Type value = luwra::read<Type>(life->state, -1);
 		lua_pop(life->state, 1);
 		return value;
+	}
+
+	template <typename Type> inline
+	operator Type() const {
+		return this->read<Type>();
 	}
 };
 

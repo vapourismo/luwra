@@ -21,10 +21,20 @@ int main() {
 
 	state.runString("t2 = {a = 13, b = 'Hello'}");
 
+	state.runString("t2 = {a = 13, b = 'Hello'}");
+	Table t2 = state["t2"];
+
+	LuaType bt = t2["b"];
+	if (bt == LuaType::String) {
+		std::string b = t2["b"];
+		std::cout << b << std::endl;
+	}
+
 	std::map<std::string, Reference> ret = state["t2"];
 	for (auto pair: ret) {
 		std::cout << pair.first << ": ";
-		switch (pair.second.read<LuaType>()) {
+		LuaType typ = pair.second;
+		switch (typ) {
 			case LuaType::Number:
 				std::cout << pair.second.read<int>();
 				break;
