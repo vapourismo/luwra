@@ -224,3 +224,16 @@ TEST_CASE("Value<map>") {
 	REQUIRE(luwra::read<int>(state, -2) == 13);
 	REQUIRE(luwra::read<std::string>(state, -1) == "world");
 }
+
+TEST_CASE("Value<LuaType>") {
+	luwra::StateWrapper state;
+
+	luwra::push(state, 1337);
+	REQUIRE(luwra::read<luwra::LuaType>(state, -1) == luwra::LuaType::Number);
+
+	luwra::push(state, "Hello World");
+	REQUIRE(luwra::read<luwra::LuaType>(state, -1) == luwra::LuaType::String);
+
+	luwra::push(state, luwra::Table(state));
+	REQUIRE(luwra::read<luwra::LuaType>(state, -1) == luwra::LuaType::Table);
+}

@@ -236,6 +236,28 @@ struct Value<bool> {
 	}
 };
 
+/// Indicates the type of a Lua value
+enum class LuaType {
+	Nil = LUA_TNIL,
+	Number = LUA_TNUMBER,
+	Boolean = LUA_TBOOLEAN,
+	String = LUA_TSTRING,
+	Table = LUA_TTABLE,
+	Function = LUA_TFUNCTION,
+	Userdata = LUA_TUSERDATA,
+	LightUserdata = LUA_TLIGHTUSERDATA,
+	Thread = LUA_TTHREAD
+};
+
+/// Enables reading the type of a value.
+template<>
+struct Value<LuaType> {
+	static inline
+	LuaType read(State* state, int n) {
+		return static_cast<LuaType>(lua_type(state, n));
+	}
+};
+
 /// Alias for `Value<const char*>`
 template <>
 struct Value<char*>: Value<const char*> {};
