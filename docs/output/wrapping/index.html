@@ -13,18 +13,19 @@
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
-  <link rel="stylesheet" href="../css/highlight.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
   
   <script>
     // Current page data
     var mkdocs_page_name = "Wrapping";
     var mkdocs_page_input_path = "wrapping.md";
-    var mkdocs_page_url = "/wrapping/";
+    var mkdocs_page_url = null;
   </script>
   
-  <script src="../js/jquery-2.1.1.min.js"></script>
-  <script src="../js/modernizr-2.8.3.min.js"></script>
-  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
   
 </head>
 
@@ -38,73 +39,63 @@
         <a href=".." class="icon icon-home"> Luwra</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
   </form>
 </div>
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
 	<ul class="current">
+	  
           
-            <li>
-    <li class="toctree-l1 ">
-        <a class="" href="..">Home</a>
-        
-    </li>
-<li>
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Home</a>
+	    </li>
           
-            <li>
-    <li class="toctree-l1 ">
-        <a class="" href="../values/">Values</a>
-        
-    </li>
-<li>
+            <li class="toctree-l1">
+		
+    <a class="" href="../values/">Values</a>
+	    </li>
           
-            <li>
-    <li class="toctree-l1 ">
-        <a class="" href="../stack/">Stack Interaction</a>
-        
-    </li>
-<li>
+            <li class="toctree-l1">
+		
+    <a class="" href="../stack/">Stack Interaction</a>
+	    </li>
           
-            <li>
-    <li class="toctree-l1 ">
-        <a class="" href="../state/">State Wrapper</a>
-        
-    </li>
-<li>
+            <li class="toctree-l1">
+		
+    <a class="" href="../state/">State Wrapper</a>
+	    </li>
           
-            <li>
-    <li class="toctree-l1 ">
-        <a class="" href="../utilities/">Utilities</a>
-        
-    </li>
-<li>
+            <li class="toctree-l1">
+		
+    <a class="" href="../utilities/">Utilities</a>
+	    </li>
           
-            <li>
-    <li class="toctree-l1 current">
-        <a class="current" href="./">Wrapping</a>
-        
-            <ul>
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">Wrapping</a>
+    <ul class="subnav">
             
-                <li class="toctree-l3"><a href="#wrapping">Wrapping</a></li>
-                
-                    <li><a class="toctree-l4" href="#functions">Functions</a></li>
-                
-                    <li><a class="toctree-l4" href="#class-members">Class Members</a></li>
-                
-            
-            </ul>
+    <li class="toctree-l2"><a href="#wrapping">Wrapping</a></li>
+    
+        <ul>
         
-    </li>
-<li>
+            <li><a class="toctree-l3" href="#functions">Functions</a></li>
+        
+            <li><a class="toctree-l3" href="#class-members">Class Members</a></li>
+        
+        </ul>
+    
+
+    </ul>
+	    </li>
           
-            <li>
-    <li class="toctree-l1 ">
-        <a class="" href="../usertypes/">User Types</a>
-        
-    </li>
-<li>
+            <li class="toctree-l1">
+		
+    <a class="" href="../usertypes/">User Types</a>
+	    </li>
           
         </ul>
       </div>
@@ -143,7 +134,7 @@
               
                 <h1 id="wrapping">Wrapping</h1>
 <p>Luwra provides a simple way to generate Lua <a href="http://www.lua.org/manual/5.3/manual.html#lua_CFunction">C functions</a> from functions and class
-members like methods and accessors using the <a href="../reference/wrappers_8hpp.html#a5495b8ed70ac00095585f3fc7d869b8d">LUWRA_WRAP</a> macro. These kind of C
+members like methods and accessors using the <a href="/reference/wrappers_8hpp.html#a5495b8ed70ac00095585f3fc7d869b8d">LUWRA_WRAP</a> macro. These kind of C
 functions are useful, because they work just like regular Lua functions within the Lua virtual
 machine. Registering these functions is the most straightforward way of providing the functionality
 of your application to Lua.</p>
@@ -156,7 +147,7 @@ stack and the return type must be pushed onto the stack.</p>
 </code></pre>
 
 <p>First, you must generate a Lua <a href="http://www.lua.org/manual/5.3/manual.html#lua_CFunction">C function</a>. One utilizes the
-<a href="../reference/wrappers_8hpp.html#a5495b8ed70ac00095585f3fc7d869b8d">LUWRA_WRAP</a> macro for this.</p>
+<a href="/reference/wrappers_8hpp.html#a5495b8ed70ac00095585f3fc7d869b8d">LUWRA_WRAP</a> macro for this.</p>
 <pre><code class="c++">lua_CFunction cfun = LUWRA_WRAP(my_function);
 </code></pre>
 
@@ -192,7 +183,7 @@ overhead, when optimization is turned on.</p>
 <a href="http://www.lua.org/manual/5.3/manual.html#lua_CFunction">C functions</a>. The resulting Lua functions expect the first (or <code>self</code>) parameter to
 be an instance of the type which the wrapped field or method belongs to.</p>
 <p><strong>Note:</strong> Before you wrap fields and methods manually, you might want to take a look at the
-<a href="../usertypes">User Types</a> section.</p>
+<a href="/usertypes">User Types</a> section.</p>
 <h3 id="example_1">Example</h3>
 <p>This example will operate on the following structure.</p>
 <pre><code class="c++">struct Point {
@@ -218,9 +209,9 @@ luwra::setGlobal(lua, &quot;y&quot;, cfun_y);
 luwra::setGlobal(lua, &quot;scale&quot;, cfun_scale);
 </code></pre>
 
-<p><strong>Note:</strong> In this case, it is also possible to use <a href="../reference/wrappers_8hpp.html#a5495b8ed70ac00095585f3fc7d869b8d">LUWRA_WRAP</a> to generate the C
-functions. The usage of <a href="../reference/wrappers_8hpp.html#a92d5de05f0a57a27b6e0601c6720585b">LUWRA_WRAP_MEMBER</a> is only required when working with
-inherited members, since it is impossible for the <a href="../reference/wrappers_8hpp.html#a5495b8ed70ac00095585f3fc7d869b8d">LUWRA_WRAP</a> macro to be aware of
+<p><strong>Note:</strong> In this case, it is also possible to use <a href="/reference/wrappers_8hpp.html#a5495b8ed70ac00095585f3fc7d869b8d">LUWRA_WRAP</a> to generate the C
+functions. The usage of <a href="/reference/wrappers_8hpp.html#a92d5de05f0a57a27b6e0601c6720585b">LUWRA_WRAP_MEMBER</a> is only required when working with
+inherited members, since it is impossible for the <a href="/reference/wrappers_8hpp.html#a5495b8ed70ac00095585f3fc7d869b8d">LUWRA_WRAP</a> macro to be aware of
 inherited members.</p>
 <p>For example, if you are trying to wrap a member <code>B::foo</code> where <code>foo</code> is an inherited member of class
 <code>A</code> which <code>B</code> derives from, then <code>LUWRA_WRAP(B::foo)</code> would generate a function which is only
@@ -264,18 +255,18 @@ scale(my_point, 2)
 
   Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
-	  
+      
         </div>
       </div>
 
     </section>
-    
+
   </div>
 
   <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
       
-          <a href="https://github.com/vapourismo/luwra" class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
+          <a href="https://github.com/vapourismo/luwra/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
         <span><a href="../utilities/" style="color: #fcfcfc;">&laquo; Previous</a></span>
@@ -285,7 +276,9 @@ scale(my_point, 2)
       
     </span>
 </div>
-    <script src="../js/theme.js"></script>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
 
 </body>
 </html>
