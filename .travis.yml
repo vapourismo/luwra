@@ -3,49 +3,49 @@ language: cpp
 matrix:
   include:
     # Lua 5.3
-    - env: LUA_VERSION=5.3.4 COMPILER=g++-4.9
+    - env: LUA_VERSION=5.3.5 COMPILER=g++-4.9
       compiler: gcc
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-4.9']
 
-    - env: LUA_VERSION=5.3.4 COMPILER=g++-5
+    - env: LUA_VERSION=5.3.5 COMPILER=g++-5
       compiler: gcc
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-5']
 
-    - env: LUA_VERSION=5.3.4 COMPILER=g++-6
+    - env: LUA_VERSION=5.3.5 COMPILER=g++-6
       compiler: gcc
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-6']
 
-    - env: LUA_VERSION=5.3.4 COMPILER=clang++-3.9
+    - env: LUA_VERSION=5.3.5 COMPILER=clang++-3.9
       compiler: clang
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.9']
           packages: ['clang-3.9']
 
-    # - env: LUA_VERSION=5.3.4 COMPILER=clang++-4.0
+    # - env: LUA_VERSION=5.3.5 COMPILER=clang++-4.0
     #   compiler: clang
     #   addons:
     #     apt:
     #       sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise']
     #       packages: ['clang-4.0']
 
-    - env: LUA_VERSION=5.3.4 COMPILER=clang++-3.8
+    - env: LUA_VERSION=5.3.5 COMPILER=clang++-3.8
       compiler: clang
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.8']
           packages: ['clang-3.8']
 
-    - env: LUA_VERSION=5.3.4 COMPILER=clang++-3.7
+    - env: LUA_VERSION=5.3.5 COMPILER=clang++-3.7
       compiler: clang
       addons:
         apt:
