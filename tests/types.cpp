@@ -45,6 +45,12 @@ TEST_CASE("Value<Integer>") {
 		REQUIRE(luwra::read<luwra::Integer>(state, -1) == value);
 	}
 
+	SECTION("read (string)") {
+		lua_pushstring(state, "1337");
+		REQUIRE(luwra::read<luwra::Integer>(state, -1) == 1337);
+		REQUIRE(luwra::read<luwra::LuaType>(state, -1) == luwra::LuaType::String);
+	}
+
 	SECTION("push") {
 		luwra::push(state, value);
 		REQUIRE(lua_type(state, -1) == LUA_TNUMBER);
@@ -59,6 +65,12 @@ TEST_CASE("Value<Number>") {
 	SECTION("read") {
 		lua_pushnumber(state, value);
 		REQUIRE(luwra::read<luwra::Number>(state, -1) == value);
+	}
+
+	SECTION("read (string)") {
+		lua_pushstring(state, "1337");
+		REQUIRE(luwra::read<luwra::Number>(state, -1) == 1337);
+		REQUIRE(luwra::read<luwra::LuaType>(state, -1) == luwra::LuaType::String);
 	}
 
 	SECTION("push") {
@@ -76,6 +88,13 @@ TEST_CASE("Value<const char*>") {
 		lua_pushstring(state, value);
 		REQUIRE(strcmp(luwra::read<const char*>(state, -1), value) == 0);
 	}
+	
+	SECTION("read (int)") {
+		lua_pushinteger(state, 1337);
+		const char* valueCmp = "1337";
+		REQUIRE(strcmp(luwra::read<const char*>(state, -1), valueCmp) == 0);
+		REQUIRE(luwra::read<luwra::LuaType>(state, -1) == luwra::LuaType::Number);
+	}
 
 	SECTION("push") {
 		luwra::push(state, value);
@@ -91,6 +110,12 @@ TEST_CASE("Value<string>") {
 	SECTION("read") {
 		lua_pushstring(state, value.c_str());
 		REQUIRE(luwra::read<std::string>(state, -1) == value);
+	}
+
+	SECTION("read (int)") {
+		lua_pushinteger(state, 1337);
+		REQUIRE(luwra::read<std::string>(state, -1) == "1337");
+		REQUIRE(luwra::read<luwra::LuaType>(state, -1) == luwra::LuaType::Number);
 	}
 
 	SECTION("push") {

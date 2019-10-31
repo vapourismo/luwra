@@ -128,7 +128,12 @@ namespace internal {
 	struct NumericTransportValue<Integer> {
 		static inline
 		Integer read(State* state, int index) {
-			return luaL_checkinteger(state, index);
+			// We have to copy the value at the given index because luaL_checkinteger might change
+			// the value.
+			lua_pushvalue(state, index);
+			Integer ret = luaL_checkinteger(state, -1);
+			lua_pop(state, 1);
+			return ret;
 		}
 
 		static inline
@@ -142,7 +147,12 @@ namespace internal {
 	struct NumericTransportValue<Number> {
 		static inline
 		Number read(State* state, int index) {
-			return luaL_checknumber(state, index);
+			// We have to copy the value at the given index because luaL_checknumber might change
+			// the value.
+			lua_pushvalue(state, index);
+			Number ret = luaL_checknumber(state, -1);
+			lua_pop(state, 1);
+			return ret;
 		}
 
 		static inline
@@ -195,8 +205,12 @@ LUWRA_DEF_NUMERIC(Integer, unsigned long long int)
 template <>
 struct Value<const char*> {
 	static inline
-	const char* read(State* state, int n) {
-		return luaL_checkstring(state, n);
+	const char* read(State* state, int index) {
+		// We have to copy the value at the given index because luaL_checkstring might change it.
+		lua_pushvalue(state, index);
+		const char* ret = luaL_checkstring(state, -1);
+		lua_pop(state, 1);
+		return ret;
 	}
 
 	static inline
@@ -209,9 +223,12 @@ struct Value<const char*> {
 template <>
 struct Value<std::string> {
 	static inline
-	std::string read(State* state, int n) {
+	std::string read(State* state, int index) {
+		// We have to copy the value at the given index because luaL_checklstring might change it.
+		lua_pushvalue(state, index);
 		size_t length;
-		const char* value = luaL_checklstring(state, n, &length);
+		const char* value = luaL_checklstring(state, -1, &length);
+		lua_pop(state, 1);
 		return {value, length};
 	}
 
