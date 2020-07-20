@@ -171,3 +171,40 @@ TEST_CASE("UserTypeGarbageCollectionRef") {
 	lua_close(state);
 	REQUIRE(shared_var.use_count() == 1);
 }
+
+TEST_CASE("UserTypeUniqueMetatables") {
+	luwra::StateWrapper state;
+	state.loadStandardLibrary();
+
+	// Registration
+	state.registerUserType<B>(
+		{
+			LUWRA_MEMBER(B, n),
+			LUWRA_MEMBER(B, cn),
+			LUWRA_MEMBER(B, vn),
+			LUWRA_MEMBER(B, cvn)
+		}
+	);
+
+	state.registerUserType<C>(
+		{
+			LUWRA_MEMBER(C, foo1),
+			LUWRA_MEMBER(C, foo2),
+			LUWRA_MEMBER(C, foo3),
+			LUWRA_MEMBER(C, foo4)
+		}
+	);
+
+	// Construct types to compare metatables
+	luwra::construct<B>(state, 1337);
+	lua_setglobal(state, "type_b");
+
+	luwra::construct<C>(state, 1337);
+	lua_setglobal(state, "type_c");
+
+	state.runString("return getmetatable(type_b) ~= getmetatable(type_c)");
+
+	// Check metatables are unique
+	REQUIRE(state.read<bool>(-1));
+}
+

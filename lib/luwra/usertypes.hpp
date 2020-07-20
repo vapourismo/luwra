@@ -24,17 +24,10 @@ namespace internal {
 	// User type registry identifiers
 	template <typename UserType>
 	struct UserTypeReg {
-		// Dummy field which is used because it has a seperate address for each instance of UserType
-		static
-		const int id;
-
 		// Registry name for a metatable which is associated with a user type
 		static
 		const std::string name;
 	};
-
-	template <typename UserType>
-	const int UserTypeReg<UserType>::id = INT_MAX;
 
 	#ifndef LUWRA_REGISTRY_PREFIX
 		#define LUWRA_REGISTRY_PREFIX "Luwra#"
@@ -42,7 +35,7 @@ namespace internal {
 
 	template <typename UserType>
 	const std::string UserTypeReg<UserType>::name =
-		LUWRA_REGISTRY_PREFIX + std::to_string(uintptr_t(&id));
+		LUWRA_REGISTRY_PREFIX + std::to_string(uintptr_t(&name));
 
 	template <typename UserType>
 	struct UserTypeWrapper: UserTypeReg<StripUserType<UserType>> {
