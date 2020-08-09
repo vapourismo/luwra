@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/vapourismo/luwra.svg?branch=master)](https://travis-ci.org/vapourismo/luwra)
+[![Integration](https://github.com/vapourismo/luwra/workflows/Integration/badge.svg)](https://github.com/vapourismo/luwra/actions?query=workflow%3AIntegration)
+
 # Luwra
 A header-only C++ library which provides a Lua wrapper with minimal overhead.
 

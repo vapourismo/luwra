@@ -1,0 +1,89 @@
+name: Integration
+
+on:
+  push: {}
+
+  pull_request:
+    branches:
+      - master
+
+  schedule:
+    - cron: "0 17 * * *"
+
+jobs:
+  Lua:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        luaVersion:
+          - "5.1.5"
+          - "5.2.4"
+          - "5.3.5"
+          - "5.4.0"
+            # - "luajit-2.0.5"
+            # - "luajit-2.1.0-beta3"
+            # - "luajit-openresty"
+
+        compiler:
+          - "clang++"
+          - "g++"
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - uses: leafo/gh-actions-lua@v6
+        with:
+          luaVersion: ${{ matrix.luaVersion }}
+        env:
+          CXX: ${{ matrix.compiler }}
+
+      - run: lua -v
+
+      - run: '$CXX -v'
+        env:
+          CXX: ${{ matrix.compiler }}
+
+      - run: make LUA_LIBDIR=.lua/lib LUA_INCDIR=.lua/include all
+        env:
+          LD_LIBRARY_PATH: .lua/lib
+          CXX: ${{ matrix.compiler }}
+
+  LuaJIT:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        luaVersion:
+          - "luajit-2.0.5"
+          - "luajit-2.1.0-beta3"
+          - "luajit-openresty"
+
+        compiler:
+          - "clang++"
+          - "g++"
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - uses: leafo/gh-actions-lua@v6
+        with:
+          luaVersion: ${{ matrix.luaVersion }}
+        env:
+          CXX: ${{ matrix.compiler }}
+
+      - run: lua -v
+
+      - run: '$CXX -v'
+        env:
+          CXX: ${{ matrix.compiler }}
+
+      - run: make LUA_LIBDIR=.lua/lib LUA_LIBNAME=luajit-5.1 all
+        env:
+          LD_LIBRARY_PATH: .lua/lib
+          CXX: ${{ matrix.compiler }}
+          CXXFLAGS: -I.lua/include/luajit-2.0 -I.lua/include/luajit-2.1
