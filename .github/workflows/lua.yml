@@ -20,10 +20,7 @@ jobs:
           - "5.1.5"
           - "5.2.4"
           - "5.3.5"
-          - "5.4.0"
-            # - "luajit-2.0.5"
-            # - "luajit-2.1.0-beta3"
-            # - "luajit-openresty"
+          - "5.4.3"
 
         compiler:
           - "clang++"
@@ -42,7 +39,7 @@ jobs:
 
       - run: lua -v
 
-      - run: '$CXX -v'
+      - run: "$CXX -v"
         env:
           CXX: ${{ matrix.compiler }}
 
@@ -78,7 +75,7 @@ jobs:
 
       - run: lua -v
 
-      - run: '$CXX -v'
+      - run: "$CXX -v"
         env:
           CXX: ${{ matrix.compiler }}
 
