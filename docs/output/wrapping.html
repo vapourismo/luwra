@@ -7,13 +7,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   
-  <link rel="shortcut icon" href="../img/favicon.ico">
+  
+  <link rel="shortcut icon" href="img/favicon.ico">
   <title>Wrapping - Luwra</title>
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
 
-  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
   
   <script>
     // Current page data
@@ -22,11 +23,10 @@
     var mkdocs_page_url = null;
   </script>
   
-  <script src="../js/jquery-2.1.1.min.js" defer></script>
-  <script src="../js/modernizr-2.8.3.min.js" defer></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script src="js/jquery-2.1.1.min.js" defer></script>
+  <script src="js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script> 
-  
 </head>
 
 <body class="wy-body-for-nav" role="document">
@@ -35,71 +35,63 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
-        <a href=".." class="icon icon-home"> Luwra</a>
+        <a href="index.html" class="icon icon-home"> Luwra</a>
         <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
   </form>
 </div>
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-	<ul class="current">
-	  
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="..">Home</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../values/">Values</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../stack/">Stack Interaction</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../state/">State Wrapper</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../utilities/">Utilities</a>
-	    </li>
-          
-            <li class="toctree-l1 current">
-		
-    <a class="current" href="./">Wrapping</a>
-    <ul class="subnav">
-            
-    <li class="toctree-l2"><a href="#wrapping">Wrapping</a></li>
-    
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="index.html">Home</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="values.html">Values</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="stack.html">Stack Interaction</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="state.html">State Wrapper</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a>
+                    </li>
+                </ul>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="wrapping.html">Wrapping</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#functions">Functions</a>
         <ul>
-        
-            <li><a class="toctree-l3" href="#functions">Functions</a></li>
-        
-            <li><a class="toctree-l3" href="#class-members">Class Members</a></li>
-        
+    <li class="toctree-l3"><a class="reference internal" href="#example">Example</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#performance">Performance</a>
+    </li>
         </ul>
-    
-
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#class-members">Class Members</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#example_1">Example</a>
+    </li>
+        </ul>
+    </li>
     </ul>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../usertypes/">User Types</a>
-	    </li>
-          
-        </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="usertypes.html">User Types</a>
+                    </li>
+                </ul>
       </div>
-      &nbsp;
+    </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -107,7 +99,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="..">Luwra</a>
+        <a href="index.html">Luwra</a>
       </nav>
 
       
@@ -115,7 +107,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="..">Docs</a> &raquo;</li>
+    <li><a href="index.html">Docs</a> &raquo;</li>
     
       
     
@@ -127,8 +119,10 @@
       
     </li>
   </ul>
+  
   <hr/>
 </div>
+
           <div role="main">
             <div class="section">
               
@@ -143,30 +137,26 @@ of your application to Lua.</p>
 stack and the return type must be pushed onto the stack.</p>
 <h3 id="example">Example</h3>
 <p>Lets assume you want to make the following function available in Lua.</p>
-<pre><code class="c++">int my_function(const char* a, int b);
+<pre><code class="language-c++">int my_function(const char* a, int b);
 </code></pre>
-
 <p>First, you must generate a Lua <a href="http://www.lua.org/manual/5.3/manual.html#lua_CFunction">C function</a>. One utilizes the
 <a href="/reference/wrappers_8hpp.html#a5495b8ed70ac00095585f3fc7d869b8d">LUWRA_WRAP</a> macro for this.</p>
-<pre><code class="c++">lua_CFunction cfun = LUWRA_WRAP(my_function);
+<pre><code class="language-c++">lua_CFunction cfun = LUWRA_WRAP(my_function);
 </code></pre>
-
 <p><strong>Note:</strong> Do not provide the address of your function (e.g. <code>&amp;my_function</code>) to any wrapping macro.
 The macro will take care of this itself. You must provide only the name of the function.</p>
 <p>Once you have the C function, you can register it in the global namespace.</p>
-<pre><code class="c++">luwra::setGlobal(lua, &quot;my_function&quot;, cfun);
+<pre><code class="language-c++">luwra::setGlobal(lua, &quot;my_function&quot;, cfun);
 </code></pre>
-
 <p>Invoking the function in Lua is fairly straightforward.</p>
-<pre><code class="lua">print(my_function(&quot;Hello World&quot;, 1337))
+<pre><code class="language-lua">print(my_function(&quot;Hello World&quot;, 1337))
 </code></pre>
-
 <h3 id="performance">Performance</h3>
 <p><a href="http://www.lua.org/manual/5.3/manual.html#lua_CFunction">C functions</a> are dynamically created at compile-time. All of the functions involved
 in wrapping are marked as <code>inline</code>, which means modern compilers produce wrapper functions with zero
 overhead, when optimization is turned on.</p>
 <p>For the example above, the resulting code would look similiar to the following.</p>
-<pre><code class="c++">int cfun(lua_State* state) {
+<pre><code class="language-c++">int cfun(lua_State* state) {
     lua_pushinteger(
         state,
         my_function(
@@ -177,7 +167,6 @@ overhead, when optimization is turned on.</p>
     return 1;
 }
 </code></pre>
-
 <h2 id="class-members">Class Members</h2>
 <p>Although a little trickier, it is also possible to turn C++ field accessors and methods into Lua
 <a href="http://www.lua.org/manual/5.3/manual.html#lua_CFunction">C functions</a>. The resulting Lua functions expect the first (or <code>self</code>) parameter to
@@ -186,7 +175,7 @@ be an instance of the type which the wrapped field or method belongs to.</p>
 <a href="/usertypes">User Types</a> section.</p>
 <h3 id="example_1">Example</h3>
 <p>This example will operate on the following structure.</p>
-<pre><code class="c++">struct Point {
+<pre><code class="language-c++">struct Point {
     double x, y;
 
     // ...
@@ -197,9 +186,8 @@ be an instance of the type which the wrapped field or method belongs to.</p>
     }
 };
 </code></pre>
-
 <p>Wrapping field accessors and methods works similar to wrapping functions.</p>
-<pre><code class="c++">lua_CFunction cfun_x     = LUWRA_WRAP_MEMBER(Point, x),
+<pre><code class="language-c++">lua_CFunction cfun_x     = LUWRA_WRAP_MEMBER(Point, x),
               cfun_y     = LUWRA_WRAP_MEMBER(Point, y),
               cfun_scale = LUWRA_WRAP_MEMBER(Point, scale);
 
@@ -208,7 +196,6 @@ luwra::setGlobal(lua, &quot;x&quot;, cfun_x);
 luwra::setGlobal(lua, &quot;y&quot;, cfun_y);
 luwra::setGlobal(lua, &quot;scale&quot;, cfun_scale);
 </code></pre>
-
 <p><strong>Note:</strong> In this case, it is also possible to use <a href="/reference/wrappers_8hpp.html#a5495b8ed70ac00095585f3fc7d869b8d">LUWRA_WRAP</a> to generate the C
 functions. The usage of <a href="/reference/wrappers_8hpp.html#a92d5de05f0a57a27b6e0601c6720585b">LUWRA_WRAP_MEMBER</a> is only required when working with
 inherited members, since it is impossible for the <a href="/reference/wrappers_8hpp.html#a5495b8ed70ac00095585f3fc7d869b8d">LUWRA_WRAP</a> macro to be aware of
@@ -218,7 +205,7 @@ inherited members.</p>
 applicable on instances of <code>A</code>. But <code>LUWRA_WRAP_MEMBER(B, foo)</code> generates a function that can only
 be applied to instances of <code>B</code>.</p>
 <p>Usage in Lua is analogous to function usage.</p>
-<pre><code class="lua">-- Instantiate 'Point' here, have a look at the User Types section to find out how to do this
+<pre><code class="language-lua">-- Instantiate 'Point' here, have a look at the User Types section to find out how to do this
 local my_point = ...
 
 -- Access 'x' and 'y' field
@@ -238,10 +225,10 @@ scale(my_point, 2)
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../usertypes/" class="btn btn-neutral float-right" title="User Types">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="usertypes.html" class="btn btn-neutral float-right" title="User Types">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../utilities/" class="btn btn-neutral" title="Utilities"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="utilities.html" class="btn btn-neutral" title="Utilities"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -253,7 +240,7 @@ scale(my_point, 2)
     
   </div>
 
-  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
       
         </div>
@@ -263,22 +250,30 @@ scale(my_point, 2)
 
   </div>
 
-  <div class="rst-versions" role="note" style="cursor: pointer">
-    <span class="rst-current-version" data-toggle="rst-current-version">
-      
-          <a href="https://github.com/vapourismo/luwra/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
-      
-      
-        <span><a href="../utilities/" style="color: #fcfcfc;">&laquo; Previous</a></span>
-      
-      
-        <span style="margin-left: 15px"><a href="../usertypes/" style="color: #fcfcfc">Next &raquo;</a></span>
-      
-    </span>
+  <div class="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/vapourismo/luwra/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="utilities.html" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="usertypes.html" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
 </div>
-    <script>var base_url = '..';</script>
-    <script src="../js/theme.js" defer></script>
-      <script src="../search/main.js" defer></script>
+    <script>var base_url = '.';</script>
+    <script src="js/theme_extra.js" defer></script>
+    <script src="js/theme.js" defer></script>
+      <script src="search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
 
 </body>
 </html>
