@@ -1,7 +1,7 @@
 site_name: Luwra
 site_description: Minimal-overhead Lua wrapper for C++
 repo_url: https://github.com/vapourismo/luwra
-pages:
+nav:
   - 'Home': index.md
   - 'Values': values.md
   - 'Stack Interaction': stack.md
