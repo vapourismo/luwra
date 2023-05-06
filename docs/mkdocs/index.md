@@ -24,5 +24,5 @@ A reference manual exists [here][luwra-refmanual].
 [lua-state]: http://www.lua.org/manual/5.3/manual.html#lua_State
 [luwra-repo]: https://github.com/vapourismo/luwra
 [luwra-download]: https://github.com/vapourismo/luwra/archive/master.zip
-[luwra-refmanual]: /reference/namespaceluwra.html
-[luwra-state]: /reference/namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d
+[luwra-refmanual]: ./reference/namespaceluwra.html
+[luwra-state]: ./reference/namespaceluwra.html#a2c037b44385367826eb4e931b5b8197d
