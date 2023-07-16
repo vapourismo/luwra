@@ -15,12 +15,12 @@ struct Point {
 		std::cout << "Destruct Point(" << x << ", " << y << ")" << std::endl;
 	}
 
-	void scale(double f) {
+	void scale(double f) noexcept {
 		x *= f;
 		y *= f;
 	}
 
-	std::string __tostring() const {
+	std::string __tostring() const noexcept {
 		return "<Point(" + std::to_string(x) + ", " + std::to_string(y) + ")>";
 	}
 };
