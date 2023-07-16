@@ -67,6 +67,35 @@ template <typename Klass, typename Ret, typename... Args>
 struct CallableInfo<Ret (Klass::*)(Args...) const volatile>:
 	CallableInfo<Ret (Args...)> {};
 
+#if __cplusplus >= 201703L
+
+// Function pointer
+template <typename Ret, typename... Args>
+struct CallableInfo<Ret (*)(Args...) noexcept>:
+	CallableInfo<Ret (Args...)> {};
+
+// Method pointer
+template <typename Klass, typename Ret, typename... Args>
+struct CallableInfo<Ret (Klass::*)(Args...) noexcept>:
+	CallableInfo<Ret (Args...)> {};
+
+// Method pointer on const-qualified this
+template <typename Klass, typename Ret, typename... Args>
+struct CallableInfo<Ret (Klass::*)(Args...) const noexcept>:
+	CallableInfo<Ret (Args...)> {};
+
+// Method pointer on volatile-qualified this
+template <typename Klass, typename Ret, typename... Args>
+struct CallableInfo<Ret (Klass::*)(Args...) volatile noexcept>:
+	CallableInfo<Ret (Args...)> {};
+
+// Method pointer on const-volatile-qualified this
+template <typename Klass, typename Ret, typename... Args>
+struct CallableInfo<Ret (Klass::*)(Args...) const volatile noexcept>:
+	CallableInfo<Ret (Args...)> {};
+
+#endif
+
 // Remove const qualification
 template <typename Callable>
 struct CallableInfo<const Callable>:
