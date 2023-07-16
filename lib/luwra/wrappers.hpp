@@ -126,6 +126,30 @@ namespace internal {
 	struct MemberWrapper<Ret (BaseKlass::*)(Args...), Klass>:
 		MethodWrapperImpl<Ret (BaseKlass::*)(Args...), Klass>::Implementation {};
 
+#if __cplusplus >= 201703L
+
+	// Wrap methods that expect 'this' to be const-volatile-qualified.
+	template <typename Klass, typename BaseKlass, typename Ret, typename... Args>
+	struct MemberWrapper<Ret (BaseKlass::*)(Args...) const volatile noexcept, Klass>:
+		MethodWrapperImpl<Ret (BaseKlass::*)(Args...) const volatile noexcept, Klass>::Implementation {};
+
+	// Wrap methods that expect 'this' to be const-qualified.
+	template <typename Klass, typename BaseKlass, typename Ret, typename... Args>
+	struct MemberWrapper<Ret (BaseKlass::*)(Args...) const noexcept, Klass>:
+		MethodWrapperImpl<Ret (BaseKlass::*)(Args...) const noexcept, Klass>::Implementation {};
+
+	// Wrap methods that expect 'this' to be volatile-qualified.
+	template <typename Klass, typename BaseKlass, typename Ret, typename... Args>
+	struct MemberWrapper<Ret (BaseKlass::*)(Args...) volatile noexcept, Klass>:
+		MethodWrapperImpl<Ret (BaseKlass::*)(Args...) volatile noexcept, Klass>::Implementation {};
+
+	// Wrap methods that expect 'this' to be unqualified.
+	template <typename Klass, typename BaseKlass, typename Ret, typename... Args>
+	struct MemberWrapper<Ret (BaseKlass::*)(Args...) noexcept, Klass>:
+		MethodWrapperImpl<Ret (BaseKlass::*)(Args...) noexcept, Klass>::Implementation {};
+
+#endif
+
 	// Wrap const-qualified field, provides only the getter.
 	template <typename Klass, typename BaseKlass, typename FieldType>
 	struct MemberWrapper<const FieldType BaseKlass::*, Klass> {
