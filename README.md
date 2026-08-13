@@ -1,4 +1,8 @@
-[![Integration](https://github.com/vapourismo/luwra/workflows/Integration/badge.svg)](https://github.com/vapourismo/luwra/actions?query=workflow%3AIntegration)
+**This repository is no longer maintained.**
+
+<!-- List forks? -->
+
+---
 
 # Luwra
 A header-only C++ library which provides a Lua wrapper with minimal overhead.
